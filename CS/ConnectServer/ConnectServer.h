@@ -1,0 +1,10 @@
+// ConnectServer.h
+#pragma once
+#include "Resource.h"
+#include "MiniDump.h"
+#include "Util.h"
+#include "Log.h"
+#include "ServerConfig.h"
+#include "SocketManager.h"
+#include "SocketManagerUDP.h"
+#include "ServerList.h"

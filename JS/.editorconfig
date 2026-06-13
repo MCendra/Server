@@ -1,0 +1,37 @@
+root = true
+
+[*]
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 120
+indent_style = tab
+indent_size = 4
+
+[*.{cpp,c,h,hpp,cc,cxx}]
+# Estilo para código C/C++
+indent_style = tab
+indent_size = 4
+continuation_indent_size = 4
+charset = utf-8
+end_of_line = crlf
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 120
+
+[*.rc]
+indent_style = tab
+end_of_line = crlf
+charset = utf-8
+
+[*.{sln,vcxproj,props,filters}]
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = false
+
+[*.{md,txt,ini}]
+trim_trailing_whitespace = false
+insert_final_newline = true
+end_of_line = crlf
+charset = utf-8
