@@ -17,7 +17,9 @@ CServerDisplayer::CServerDisplayer()
     m_font(nullptr),                            // Inicializa el puntero a la fuente a nullptr.
     m_count(0),                                 // Inicializa el contador de logs a 0.
     m_servercode(0),                            // Inicializa el codigo del servidor a 0.
-    m_rect{ 0, 0, 0, 0 }                        // Inicializa RECT con valores predeterminados (0, 0, 0, 0).
+    m_rect{ 0, 0, 0, 0 },                       // Inicializa RECT con valores predeterminados (0, 0, 0, 0).
+	m_logRect{ 0, 100, 0, 0 }					// Inicializa LOGRECT con valores predeterminados (0, 100, 0, 0).
+
 {
     // Inicializa la fuente con parametros predeterminados para el texto.
     m_font = CreateFont(50, 0, 0, 0, FW_THIN, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times"));
@@ -72,6 +74,10 @@ void CServerDisplayer::Init(HWND hWnd)
     // Inicializa RECT con el tamaño de la ventana
     GetClientRect(this->m_hwnd, &m_rect);
 
+	// CORRECCION: area del log: todo el ancho, desde y=100 hasta el final de la ventana.
+	m_logRect = m_rect;
+	m_logRect.top = 100;
+
     // Inicializa titulo de la ventana
     UpdateWindowTitle(0);
 
@@ -86,12 +92,13 @@ void CServerDisplayer::UpdateWindowTitle(int queueSize) const
 }
 
 // Pintar el nombre del cliente en la ventana
-void CServerDisplayer::PaintName() const
+void CServerDisplayer::PaintName(HDC hdc) const
 {
     RECT rect = m_rect;
     rect.bottom = 50;
 
-    HDC hdc = GetDC(this->m_hwnd);
+	// CORRECCION
+    //HDC hdc = GetDC(this->m_hwnd);
 
     int OldBkMode = SetBkMode(hdc, TRANSPARENT);
     HFONT OldFont = (HFONT)SelectObject(hdc, this->m_font);
@@ -106,16 +113,19 @@ void CServerDisplayer::PaintName() const
     // Restaura los objetos GDI previos
     SelectObject(hdc, OldFont);
     SetBkMode(hdc, OldBkMode);
-    ReleaseDC(this->m_hwnd, hdc);
+
+	// CORRECCION
+    // ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::PaintServerState() const
+void CServerDisplayer::PaintServerState(HDC hdc) const
 {
     RECT rect = m_rect;
     rect.top = 50;
     rect.bottom = 100;
 
-    HDC hdc = GetDC(this->m_hwnd);
+	// CORRECCION
+	// HDC hdc = GetDC(this->m_hwnd);
 
     int OldBkMode = SetBkMode(hdc, TRANSPARENT);
     HFONT OldFont = (HFONT)SelectObject(hdc, this->m_font);
@@ -137,7 +147,9 @@ void CServerDisplayer::PaintServerState() const
     // Restaura los objetos GDI previos
     SelectObject(hdc, OldFont);
     SetBkMode(hdc, OldBkMode);
-    ReleaseDC(this->m_hwnd, hdc);
+
+	// CORRECCION
+	// ReleaseDC(this->m_hwnd, hdc);
 }
 
 // Clase para mostrar informacion del servidor en una ventana
@@ -145,25 +157,44 @@ void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
     // Limitar el tamaño del texto para evitar desbordamientos
     std::string trimmedText = text.substr(0, MAX_LOG_TEXT_SIZE - 1);
 
-    // Copiar el texto recortado al campo m_log
-    this->m_log[this->m_count].text = trimmedText;
+	{
+		CCriticalSection::CLock lock(this->m_logLock);
 
-    // Establecer el color del texto
-    this->m_log[this->m_count].color = color;
+		// Copiar el texto recortado al campo m_log
+		this->m_log[this->m_count].text = trimmedText;
 
-    // Actualizar el indice de m_count, asegurando que no se exceda MAX_LOG_TEXT_LINE
-    this->m_count = ((++this->m_count) >= MAX_LOG_TEXT_LINE) ? 0 : this->m_count;
+		// Establecer el color del texto
+		this->m_log[this->m_count].color = color;
 
-    PaintLogText();
+		// Actualizar el indice de m_count, asegurando que no se exceda MAX_LOG_TEXT_LINE
+		this->m_count = ((++this->m_count) >= MAX_LOG_TEXT_LINE) ? 0 : this->m_count;
+
+	}
+		// CORRECCION: No dibuja nada aca: solo pide repintado al hilo de UI.
+		// PaintLogText();
+		InvalidateRect(this->m_hwnd, &m_logRect, FALSE);
+    
 }
 
 // Pintar los textos del log en la ventana
-void CServerDisplayer::PaintLogText()
+void CServerDisplayer::PaintLogText(HDC hdc)
 {
-    RECT rect = m_rect;
-    rect.top = 100;
+	// FIX: limpiar todo el área de log antes de redibujar.
+	// Sin esto, líneas nuevas más cortas que las anteriores dejan
+	// residuos visuales del texto previo -> se ven "superpuestas".
+	FillRect(hdc, &m_logRect, this->m_brush[4]);
 
-    HDC hdc = GetDC(this->m_hwnd);
+    // RECT rect = m_rect;
+    // rect.top = 100;
+
+	// CORRECCION
+	// HDC hdc = GetDC(this->m_hwnd);
+
+	int OldBkMode = SetBkMode(hdc, TRANSPARENT);
+
+	// Lock: PaintLogText ahora se llama desde WM_PAINT (hilo de UI),
+	// mientras LogAddText escribe en m_log/m_count desde hilos de red.
+	CCriticalSection::CLock lock(this->m_logLock);
 
     int line = MAX_LOG_TEXT_LINE;
     int count = m_count - 1 >= 0 ? m_count - 1 : MAX_LOG_TEXT_LINE - 1;
@@ -179,10 +210,10 @@ void CServerDisplayer::PaintLogText()
             SetTextColor(hdc, RGB(239, 0, 0));
             break;
         case LOG_GREEN:
-            SetTextColor(hdc, RGB(0, 255, 0));
+            SetTextColor(hdc, RGB(31, 87, 31));
             break;
         case LOG_BLUE:
-            SetTextColor(hdc, RGB(0, 152, 239));
+            SetTextColor(hdc, RGB(29, 29, 143));
             break;
         }
 
@@ -196,6 +227,10 @@ void CServerDisplayer::PaintLogText()
 
         count = --count >= 0 ? count : MAX_LOG_TEXT_LINE - 1;
     }
+	SetBkMode(hdc, OldBkMode);
+
+	// CORRECCION
+	// ReleaseDC(this->m_hwnd, hdc);
 }
 
 void CServerDisplayer::UpdateServerState(int serverCode)

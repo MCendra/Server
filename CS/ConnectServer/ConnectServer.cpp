@@ -93,9 +93,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     gServerDisplayer.UpdateServerState(0);
-    
-    gServerDisplayer.PaintName();
 
+	// CORRECCION:
+	// gServerDisplayer.PaintName();
+	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
+	InvalidateRect(g_hWnd, nullptr, TRUE);
+    
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CONNECTSERVER));
 
     MSG msg;
@@ -217,18 +220,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
 			PAINTSTRUCT ps;
 			HDC hdc = BeginPaint(hWnd, &ps);
-			(void)hdc; // Silence unused-variable warning: valid BeginPaint/EndPaint pair kept
 
-			// Aqui llamamos a las funciones de dibujo
-			gServerDisplayer.PaintName();
-			gServerDisplayer.PaintServerState();
-			gServerDisplayer.PaintLogText();
+			gServerDisplayer.PaintName(hdc);
+			gServerDisplayer.PaintServerState(hdc);
+			gServerDisplayer.PaintLogText(hdc);
 
 			EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:
-       
         PostQuitMessage(0);
         break;
     case WM_CLOSE: // Manejar el cierre de la ventana con el boton X

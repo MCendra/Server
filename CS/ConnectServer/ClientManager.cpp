@@ -74,7 +74,9 @@ void CClientManager::AddClient(int index, char* ip, SOCKET socket)
 	this->m_socket = socket;
 
 	{
-		CCriticalSection::CLock lock(gClientArrayLock);
+		// FIX C4456: renombrado de "lock" a "arrayLock" para evitar
+		// shadowing del lock externo (this->m_lock) en este scope anidado.
+		CCriticalSection::CLock arrayLock(gClientArrayLock);
 
 		if (FirstAllocation)
 		{

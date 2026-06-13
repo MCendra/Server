@@ -39,37 +39,46 @@ CSocketManager gSocketManager;
 constexpr char INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG[] = "[CS] CSocketManager::Init() - Error al crear evento de shutdown: %d";
 constexpr char INIT_SUCCESS_MSG[] = "[CS] CSocketManager::Init() - Servidor iniciado en el puerto [%d]";
 
-constexpr char CREATELISTENSOCKET_ERROR_WSA_SOCKET[] = "[SocketManager] WSASocket() fallo con el error: %d";
-constexpr char CREATELISTENSOCKET_ERROR_SETSOCKOPT[] = "[SocketManager] setsockopt(SO_REUSEADDR) fallo con el error: %d";
-constexpr char CREATELISTENSOCKET_ERROR_BIND[] = "[SocketManager] bind() fallo en el puerto %d con el error: %d";
-constexpr char CREATELISTENSOCKET_ERROR_LISTEN[] = "[SocketManager] listen() fallo con el error: %d";
-constexpr char CREATELISTENSOCKET_SUCCESS_MSG[] = "[SocketManager] Socket de escucha creado exitosamente en el puerto: %d";
+constexpr char CREATELISTENSOCKET_ERROR_WSA_SOCKET[] = "[SocketManager] CreateListenSocket() - WSASocket() fallo con el error: %d";
+constexpr char CREATELISTENSOCKET_ERROR_SETSOCKOPT[] = "[SocketManager] CreateListenSocket() - setsockopt(SO_REUSEADDR) fallo con el error: %d";
+constexpr char CREATELISTENSOCKET_ERROR_BIND[] = "[SocketManager] CreateListenSocket() - bind() fallo en el puerto %d con el error: %d";
+constexpr char CREATELISTENSOCKET_ERROR_LISTEN[] = "[SocketManager] CreateListenSocket() - listen() fallo con el error: %d";
+constexpr char CREATELISTENSOCKET_SUCCESS_MSG[] = "[SocketManager] CreateListenSocket() - Socket de escucha creado exitosamente en el puerto: %d";
 
-constexpr char CREATECOMPLETIONPORT_ERROR_MSG[] = "[SocketManager] Error al crear el puerto de finalizacion de E/S.";
-constexpr char CREATECOMPLETIONPORT_SUCCESS_MSG[] = "[SocketManager] Puerto de finalizacion de E/S creado exitosamente.";
+constexpr char CREATECOMPLETIONPORT_ERROR_MSG[] = "[SocketManager] CreateCompletionPort() - Error al crear el puerto de finalizacion de E/S.";
+constexpr char CREATECOMPLETIONPORT_SUCCESS_MSG[] = "[SocketManager] CreateCompletionPort() - Puerto de finalizacion de E/S creado exitosamente.";
 
-constexpr char CREATEACCEPTTHREAD_ERROR_CREATETHREAD[] = "[SocketManager] Error al crear el hilo de aceptacion de conexiones.";
-constexpr char CREATEACCEPTTHREAD_ERROR_SETTHREADPRIORITY[] = "[SocketManager] Error al establecer la prioridad del hilo de aceptacion de conexiones.";
-constexpr char CREATEACCEPTTHREAD_SUCCESS_MSG[] = "[SocketManager] Hilo de aceptacion de conexiones creado y configurado exitosamente.";
+constexpr char CREATEACCEPTTHREAD_ERROR_CREATETHREAD[] = "[SocketManager] CreateAcceptThread() - Error al crear el hilo de aceptacion de conexiones.";
+constexpr char CREATEACCEPTTHREAD_ERROR_SETTHREADPRIORITY[] = "[SocketManager] CreateAcceptThread() - Error al establecer la prioridad del hilo de aceptacion de conexiones.";
+constexpr char CREATEACCEPTTHREAD_SUCCESS_MSG[] = "[SocketManager] CreateAcceptThread() - Hilo de aceptacion de conexiones creado y configurado exitosamente.";
 
-constexpr char CREATEWORKERTHREAD_ERROR_CREATETHREAD[] = "[SocketManager] Error al crear el hilo de trabajo %u. Codigo: %lu";
-constexpr char CREATEWORKERTHREAD_ERROR_SETTHREADPRIORITY[] = "[SocketManager] Error al establecer la prioridad del hilo de trabajo %u. Codigo: %lu";
-constexpr char CREATEWORKERTHREAD_SUCCESS_MSG[] = "[SocketManager] %d hilos de trabajo creados exitosamente.";
+constexpr char CREATEWORKERTHREAD_ERROR_CREATETHREAD[] = "[SocketManager] CreateWorkerThread() - Error al crear el hilo de trabajo %u. Codigo: %lu";
+constexpr char CREATEWORKERTHREAD_ERROR_SETTHREADPRIORITY[] = "[SocketManager] CreateWorkerThread() - Error al establecer la prioridad del hilo de trabajo %u. Codigo: %lu";
+constexpr char CREATEWORKERTHREAD_SUCCESS_MSG[] = "[SocketManager] CreateWorkerThread() - %d hilos de trabajo creados exitosamente.";
 
-constexpr char CREATESERVERQUEUE_ERROR_CREATESEMAPHORE[] = "[SocketManager] Error al crear el semaforo de la cola del servidor. Codigo: %lu";
-constexpr char CREATESERVERQUEUE_ERROR_CREATETHREAD[] = "[SocketManager] Error al crear el hilo de la cola del servidor. Codigo: %lu";
-constexpr char CREATESERVERQUEUE_ERROR_SETTHREADPRIORITY[] = "[SocketManager] Error al establecer la prioridad del hilo de la cola del servidor. Codigo: %lu";
-constexpr char CREATESERVERQUEUE_SUCCESS_MSG[] = "[SocketManager] Semaforo y hilo de cola del servidor creados exitosamente.";
+constexpr char CREATESERVERQUEUE_ERROR_CREATESEMAPHORE[] = "[SocketManager] CreateServerQueue() - Error al crear el semaforo de la cola del servidor. Codigo: %lu";
+constexpr char CREATESERVERQUEUE_ERROR_CREATETHREAD[] = "[SocketManager] CreateServerQueue() - Error al crear el hilo de la cola del servidor. Codigo: %lu";
+constexpr char CREATESERVERQUEUE_ERROR_SETTHREADPRIORITY[] = "[SocketManager] CreateServerQueue() - Error al establecer la prioridad del hilo de la cola del servidor. Codigo: %lu";
+constexpr char CREATESERVERQUEUE_SUCCESS_MSG[] = "[SocketManager] CreateServerQueue() - Semaforo y hilo de cola del servidor creados exitosamente.";
 
-constexpr char CLEAN_TIMEOUT_SERVER_QUEUE_THREAD[] = "[SocketManager] Timeout esperando ServerQueueThread al detenerse.";
-constexpr char CLEAN_TIMEOUT_SERVER_WORKER_THREAD[] = "[SocketManager] Timeout esperando ServerWorkerThread %u al detenerse.";
-constexpr char CLEAN_TIMEOUT_SERVER_ACCEPT_THREAD[] = "[SocketManager] Timeout esperando ServerAcceptThread al detenerse.";
+constexpr char CLEAN_TIMEOUT_SERVER_QUEUE_THREAD[] = "[SocketManager] Clean() - Timeout esperando ServerQueueThread al detenerse.";
+constexpr char CLEAN_TIMEOUT_SERVER_WORKER_THREAD[] = "[SocketManager] Clean() - Timeout esperando ServerWorkerThread %u al detenerse.";
+constexpr char CLEAN_TIMEOUT_SERVER_ACCEPT_THREAD[] = "[SocketManager] Clean() - Timeout esperando ServerAcceptThread al detenerse.";
 
 constexpr char CLOSESOCKET_ERROR_MSG[] = "[SocketManager] closesocket() fallo con el error: %d";
 
-constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManager] Error de cabecera del protocolo (Index: %d, Header: %02X)";
-constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManager] Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)";
-constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager] Server queue full(Index:% d, Head : % 02X)";
+constexpr char ONRECV_ERROR_WSARECV[] = "[SocketManager] OnRecv() - WSARecv() fallo con el error : % d";
+
+constexpr char ONSEND_ERROR_WSASEND[] = "[SocketManager] OnSend() - WSASend() fallo con el error : % d";
+
+constexpr char SERVERACCEPTTHREAD_ERROR_WSAACCEPT[] = "[SocketManager - ServerAcceptThread] WSAAccept() fallo con error: %d";
+constexpr char SERVERACCEPTTHREAD_ERROR_INET_NTOP[] = "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d";
+constexpr char SERVERACCEPTTHREAD_ERROR_CREATE_IOCP[] = "[SocketManager - ServerAcceptThread] CreateIoCompletionPort() fallo con error: %d";
+constexpr char SERVERACCEPTTHREAD_ERROR_WSARECV[] = "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d";
+
+constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManager] DataRecv() - Error de cabecera del protocolo (Index: %d, Header: %02X)";
+constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManager] DataRecv() - Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)";
+constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager] DataRecv() - Server queue full(Index:% d, Head : % 02X)";
 
 
 // =====================================================================
@@ -757,12 +766,18 @@ void CSocketManager::Disconnect(int index)
 //     remanente que dejo DataRecv en el buffer.
 void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContext)
 {
-	CCriticalSection::CLock lock(this->m_critical);
 
 	if (CLIENT_RANGE(index) == 0)
 	{
 		return;
 	}
+
+	CClientManager* lpClientManager = &gClientManager[index];
+
+	// Lock por cliente: protege m_socket, m_state y el contenido de
+	// lpIoContext (IoMainBuffer, wsabuf) contra DataSend/DelClient
+	// ejecutándose en paralelo para este mismo cliente.
+	CCriticalSection::CLock lock(lpClientManager->m_lock);
 
 	if (IoSize == 0)
 	{
@@ -770,9 +785,7 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 		this->Disconnect(index);
 		return;
 	}
-
-	CClientManager* lpClientManager = &gClientManager[index];
-
+	
 	lpIoContext->IoMainBuffer.size += IoSize;
 
 	if (this->DataRecv(index, &lpIoContext->IoMainBuffer) == 0)
@@ -795,7 +808,7 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED, "[SocketManager] WSARecv() fallo con el error: %d", WSAGetLastError());
+			Log.ToDisp(LOG_RED, ONRECV_ERROR_WSARECV, WSAGetLastError());
 			this->Disconnect(index);
 			return;
 		}
@@ -820,21 +833,24 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 //     WSASend con el resto pendiente.
 void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContext)
 {
-	CCriticalSection::CLock lock(this->m_critical);
-
+	
 	if (CLIENT_RANGE(index) == 0)
 	{
 		return;
 	}
+
+	CClientManager* lpClientManager = &gClientManager[index];
+
+	// Lock por cliente: protege m_socket y lpIoContext (IoMainBuffer,
+	// IoSideBuffer, wsabuf, IoSize) frente a DataSend del mismo cliente.
+	CCriticalSection::CLock lock(lpClientManager->m_lock);
 
 	if (IoSize == 0)
 	{
 		this->Disconnect(index);
 		return;
 	}
-
-	CClientManager* lpClientManager = &gClientManager[index];
-
+		
 	lpIoContext->IoMainBuffer.size += IoSize;
 
 	if (lpIoContext->IoMainBuffer.size >= lpIoContext->IoSize)
@@ -892,7 +908,7 @@ void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContex
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED, "[SocketManager] WSASend() fallo con error: %d", WSAGetLastError());
+			Log.ToDisp(LOG_RED, ONSEND_ERROR_WSASEND, WSAGetLastError());
 			this->Disconnect(index);
 			return;
 		}
@@ -975,11 +991,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		// FIX: se castea el puntero a DWORD_PTR (no DWORD) para que sea
 		// valido tanto en x86 como en x64.
-		SOCKET socket = WSAAccept(lpSocketManager->m_listen,
-			(sockaddr*)&SocketAddr,
-			&SocketAddrSize,
-			(LPCONDITIONPROC)&lpSocketManager->ServerAcceptCondition,
-			(DWORD_PTR)lpSocketManager);
+		SOCKET socket = WSAAccept(lpSocketManager->m_listen, (sockaddr*)&SocketAddr, &SocketAddrSize, (LPCONDITIONPROC)&lpSocketManager->ServerAcceptCondition, (DWORD_PTR)lpSocketManager);
 
 		if (socket == INVALID_SOCKET)
 		{
@@ -994,7 +1006,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 			if (Error != WSAEWOULDBLOCK)
 			{
-				Log.ToDisp(LOG_RED, "[SocketManager] WSAAccept() fallo con error: %d", Error);
+				Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_WSAACCEPT, Error);
 			}
 			continue;
 		}
@@ -1003,61 +1015,54 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		if (InetNtopA(AF_INET, &SocketAddr.sin_addr, ipAddress, INET_ADDRSTRLEN) == nullptr)
 		{
-			Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d", GetLastError());
+			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_INET_NTOP, GetLastError());
 			closesocket(socket);
 			continue;
 		}
 
-		int index = -1;
-		CClientManager* lpClientManager = nullptr;
+		// ANTES tenía:
+		// { CCriticalSection::CLock lock(lpSocketManager->m_critical); ... }
+		// AHORA: sin lock extra. GetFreeClientIndex y AddClient ya se
+		// sincronizan internamente vía gClientArrayLock / m_lock.
 
+		// Busca un indice (slot) libre para el nuevo cliente.
+		// GetFreeClientIndex se sincroniza internamente con gClientArrayLock.
+		int index = gClientManager[0].GetFreeClientIndex();
+		
+		if (index == -1)
 		{
-			CCriticalSection::CLock lock(lpSocketManager->m_critical);
-
-			// Busca un indice (slot) libre para el nuevo cliente.
-			index = gClientManager[0].GetFreeClientIndex();
-
-			if (index == -1)
-			{
-				closesocket(socket);
-				continue;
-			}
-
-			// Asocia el socket recien aceptado al IOCP. La "completion key"
-			// (tercer parametro) sera el indice del cliente, y se recibira
-			// en GetQueuedCompletionStatus para identificar a que cliente
-			// corresponde cada evento de E/S.
-			if (CreateIoCompletionPort((HANDLE)socket, lpSocketManager->m_CompletionPort, index, 0) == nullptr)
-			{
-				Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] CreateIoCompletionPort() fallo con error: %d", GetLastError());
-				closesocket(socket);
-				continue;
-			}
-
-			lpClientManager = &gClientManager[index];
-
-			lpClientManager->AddClient(
-				index,
-				ipAddress,
-				socket);
+			closesocket(socket);
+			continue;
 		}
+
+		// Asocia el socket recien aceptado al IOCP. La "completion key"
+		// (tercer parametro) sera el indice del cliente, y se recibira
+		// en GetQueuedCompletionStatus para identificar a que cliente
+		// corresponde cada evento de E/S.
+		if (CreateIoCompletionPort((HANDLE)socket, lpSocketManager->m_CompletionPort, index, 0) == nullptr)
+		{
+			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_CREATE_IOCP, GetLastError());
+			closesocket(socket);
+			continue;
+		}
+
+		CClientManager* lpClientManager = &gClientManager[index];
+
+		// AddClient toma internamente m_lock (del cliente) y
+		// gClientArrayLock (para gClientCount); deja los IO contexts
+		// inicializados y listos para WSARecv.
+		lpClientManager->AddClient(index, ipAddress, socket);
 
 		DWORD RecvSize = 0, Flags = 0;
 
 		// Dispara la primera recepcion asincrona para este cliente.
-		if (WSARecv(socket,
-			&lpClientManager->m_IoRecvContext->wsabuf,
-			1,
-			&RecvSize,
-			&Flags,
-			&lpClientManager->m_IoRecvContext->overlapped,
-			0) == SOCKET_ERROR)
+		if (WSARecv(socket,	&lpClientManager->m_IoRecvContext->wsabuf, 1, &RecvSize, &Flags, &lpClientManager->m_IoRecvContext->overlapped, 0) == SOCKET_ERROR)
 		{
 			int Error = WSAGetLastError();
 
 			if (Error != WSA_IO_PENDING)
 			{
-				Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d", Error);
+				Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_WSARECV, Error);
 				lpSocketManager->Disconnect(index);
 				continue;
 			}
