@@ -129,10 +129,20 @@ void CSocketManagerUdp::Clean()
 	}
 
 	// Cerrar socket para provocar retorno de recvfrom en el hilo
-	if (this->m_socket != INVALID_SOCKET)
+	// Protegemos el cierre del socket y el acceso al buffer de envio
+	// mediante m_lock para evitar races con DataSend() o el recv thread.
 	{
-		closesocket(this->m_socket);
-		this->m_socket = INVALID_SOCKET;
+		CCriticalSection::CLock lock(this->m_lock);
+
+		if (this->m_socket != INVALID_SOCKET)
+		{
+			closesocket(this->m_socket);
+			this->m_socket = INVALID_SOCKET;
+		}
+
+		// Limpiar buffer de envio
+		memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
+		this->m_SendSize = 0;
 	}
 
 	// Esperar que termine el hilo correctamente (no forzar)
@@ -226,6 +236,10 @@ bool CSocketManagerUdp::DataRecv() // OK
 
 bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size) // OK
 {
+	// Protegemos todo el flujo con el mutex para evitar que Clean() cierre
+	// el socket o que otro DataSend modifique los buffers simultaneamente.
+	CCriticalSection::CLock lock(this->m_lock);
+
 	if (this->m_socket == INVALID_SOCKET)
 	{
 		return 0;

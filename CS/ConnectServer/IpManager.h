@@ -1,6 +1,8 @@
 // IpManager.h
 #pragma once
 #include <map>
+#include <string>
+#include "CriticalSection.h"
 
 class CIpManager
 {
@@ -14,6 +16,7 @@ public:
 private:
     bool IsValidIpAddress(const std::string& IpAddress);
     std::map<std::string, int> m_ipaddressinfo;  // Cambiado a int para el contador
+    CCriticalSection m_lock; // Protege acceso a m_ipaddressinfo
 };
 
 extern CIpManager gIpManager;

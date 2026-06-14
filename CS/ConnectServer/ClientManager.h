@@ -60,4 +60,5 @@ public:
 
 // Objeto global para gestionar multiples clientes
 extern CClientManager gClientManager[MAX_CLIENT];
-extern int gClientCount;
+// Cursor circular para iniciar la busqueda de slots libres. NO es un contador
+extern int gClientSearchStart;

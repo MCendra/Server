@@ -21,6 +21,8 @@ bool CIpManager::CheckIpAddress(const std::string& IpAddress)
         return false;
     }
 
+    CCriticalSection::CLock lock(this->m_lock);
+
     // Buscar la direccion IP en el mapa de m_IpAddressInfo
     auto it = this->m_ipaddressinfo.find(IpAddress);
 
@@ -42,6 +44,8 @@ void CIpManager::InsertIpAddress(const std::string& IpAddress)
         return;
     }
 
+    CCriticalSection::CLock lock(this->m_lock);
+
     auto it = this->m_ipaddressinfo.find(IpAddress);
 
     if (it == this->m_ipaddressinfo.end())
@@ -62,6 +66,8 @@ void CIpManager::RemoveIpAddress(const std::string& IpAddress)
     if (IpAddress.empty() || !IsValidIpAddress(IpAddress)) {
         return;
     }
+
+    CCriticalSection::CLock lock(this->m_lock);
 
     auto it = this->m_ipaddressinfo.find(IpAddress);
 

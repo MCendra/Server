@@ -5,7 +5,7 @@
 // Instancia global
 CServerLog gServerLog;
 
-constexpr char LOG_DIRECTORY_NAME[] = "\\LOG";
+constexpr char LOG_DIRECTORY_NAME[] = "LOG";
 
 // Constructor
 CServerLog::CServerLog() noexcept

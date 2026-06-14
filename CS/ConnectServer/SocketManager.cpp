@@ -1,7 +1,7 @@
 // SocketManager.cpp
 //
 // Gestor de sockets basado en I/O Completion Ports (IOCP) para Mu Online
-// Season 6 Episodio 5 (ConnectServer / JoinServer).
+// Season 6 Episodio 15 (ConnectServer / JoinServer).
 //
 // Responsabilidades principales:
 //   - Crear y configurar el socket de escucha (listen socket).
@@ -16,15 +16,6 @@
 //   - Enviar datos a los clientes usando WSASend con buffer secundario
 //     (side buffer) para no perder datos si hay un envio en curso.
 //   - Apagado cooperativo y ordenado de todos los hilos (Clean()).
-//
-// CORRECCIONES APLICADAS EN ESTA REVISIÓN (ver comentarios "// FIX:"):
-//   1) DataRecv: ya no desconecta al cliente cuando llega un fragmento TCP
-//      mas pequeño que la cabecera del protocolo (bug critico de estabilidad).
-//   2) ServerAcceptCondition / WSAAccept: se evita el truncamiento del
-//      puntero "this" en compilaciones de 64 bits (DWORD -> DWORD_PTR).
-//   3) CreateListenSocket: se agrega SO_REUSEADDR para permitir reinicios
-//      rapidos del servidor durante el desarrollo/pruebas.
-
 #include "SocketManager.h"
 #include "ClientManager.h"
 #include "IpManager.h"
@@ -67,9 +58,9 @@ constexpr char CLEAN_TIMEOUT_SERVER_ACCEPT_THREAD[] = "[SocketManager] Clean() -
 
 constexpr char CLOSESOCKET_ERROR_MSG[] = "[SocketManager] closesocket() fallo con el error: %d";
 
-constexpr char ONRECV_ERROR_WSARECV[] = "[SocketManager] OnRecv() - WSARecv() fallo con el error : % d";
+constexpr char ONRECV_ERROR_WSARECV[] = "[SocketManager] OnRecv() - WSARecv() fallo con el error : %d";
 
-constexpr char ONSEND_ERROR_WSASEND[] = "[SocketManager] OnSend() - WSASend() fallo con el error : % d";
+constexpr char ONSEND_ERROR_WSASEND[] = "[SocketManager] OnSend() - WSASend() fallo con el error : %d";
 
 constexpr char SERVERACCEPTTHREAD_ERROR_WSAACCEPT[] = "[SocketManager - ServerAcceptThread] WSAAccept() fallo con error: %d";
 constexpr char SERVERACCEPTTHREAD_ERROR_INET_NTOP[] = "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d";
@@ -78,7 +69,7 @@ constexpr char SERVERACCEPTTHREAD_ERROR_WSARECV[] = "[SocketManager - ServerAcce
 
 constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManager] DataRecv() - Error de cabecera del protocolo (Index: %d, Header: %02X)";
 constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManager] DataRecv() - Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)";
-constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager] DataRecv() - Server queue full(Index:% d, Head : % 02X)";
+constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager] DataRecv() - Server queue full(Index:% d, Head : %02X)";
 
 
 // =====================================================================
@@ -139,7 +130,7 @@ bool CSocketManager::Init(WORD port)
 	// señalado para todos los hilos que lo consulten (no se auto-resetea).
 	if ((this->m_shutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
 	{
-		Log.ToDisp(LOG_RED, INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG);
+		Log.ToDisp(LOG_RED, INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG, GetLastError());
 		this->Clean();
 		return false;
 	}
@@ -660,6 +651,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 	}
 
 	CClientManager* lpClientManager = &gClientManager[index];
+
 	CCriticalSection::CLock lock(lpClientManager->m_lock);
 
 	if (lpClientManager->CheckState() == 0)
@@ -718,10 +710,23 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 // =====================================================================
 // Desconexion
 // =====================================================================
-
-// Cierra el socket del cliente y libera su slot en gClientManager.
-// Usa un lock automatico (RAII) sobre la seccion critica para garantizar
-// que se libere incluso si hay returns tempranos.
+//
+// Disconnect() SOLO cierra el socket. No toca los IO contexts.
+//
+// Razonamiento IOCP:
+//   closesocket() cancela de forma ASÍNCRONA todas las operaciones
+//   WSARecv/WSASend pendientes. El kernel entregará cada una de esas
+//   cancelaciones al IOCP con IoSize = 0 y un error de conexión
+//   (ERROR_NETNAME_DELETED, etc.). Es en ese momento —dentro de
+//   OnRecv/OnSend con IoSize == 0— donde es seguro llamar a DelClient()
+//   y liberar los IO contexts, porque el kernel ya no los usará más.
+//
+//   Si liberásemos los IO contexts aquí (como hacía antes), el kernel
+//   podría escribir en memoria ya liberada → heap corruption / crash.
+//
+// Esta función es idempotente: si el socket ya es INVALID_SOCKET
+// (porque ya se llamó Disconnect antes), CheckState() retorna false
+// y salimos sin hacer nada.
 void CSocketManager::Disconnect(int index)
 {
 
@@ -732,21 +737,23 @@ void CSocketManager::Disconnect(int index)
 
 	CClientManager* lpClientManager = &gClientManager[index];
 
-	if (lpClientManager->CheckState() == 0)
-	{
-		return;
-	}
+	// En x86, SOCKET = UINT_PTR = 32 bits = mismo tamaño que LONG.
+	// InterlockedExchange garantiza que solo un hilo obtiene el socket
+	// válido y ejecuta closesocket(), sin necesidad de tomar m_lock.
+	SOCKET s = (SOCKET)InterlockedExchange(
+		reinterpret_cast<volatile LONG*>(&lpClientManager->m_socket),
+		(LONG)INVALID_SOCKET
+	);
 
-	// WSAENOTSOCK puede ocurrir si el socket ya fue cerrado por otro
-	// camino (p. ej. durante el shutdown del servidor); no se trata
-	// como un error real en ese caso.
-	if (closesocket(lpClientManager->m_socket) == SOCKET_ERROR && WSAGetLastError() != WSAENOTSOCK)
+	if (s != INVALID_SOCKET)
 	{
-		Log.ToDisp(LOG_RED, CLOSESOCKET_ERROR_MSG, WSAGetLastError());
-		return;
+		if (closesocket(s) == SOCKET_ERROR && WSAGetLastError() != WSAENOTSOCK)
+		{
+			Log.ToDisp(LOG_RED, CLOSESOCKET_ERROR_MSG, WSAGetLastError());
+		}
+		// El IOCP entregará las cancelaciones con IoSize=0.
+		// OnRecv/OnSend llamarán a DelClient() cuando las reciban.
 	}
-
-	lpClientManager->DelClient();
 }
 
 // =====================================================================
@@ -781,10 +788,18 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 
 	if (IoSize == 0)
 	{
-		// El cliente cerro la conexion (recv devolvio 0 bytes).
-		this->Disconnect(index);
+		// Conexión cerrada por el peer, o cancelación de closesocket().
+		// AHORA es seguro liberar: el IOCP ya no emitirá más eventos
+		// para este overlapped. Llamamos DelClient SIN pasar por
+		// Disconnect (el socket ya fue cerrado antes de llegar aquí).
+		lpClientManager->DelClient();
 		return;
 	}
+
+	// Verificación adicional: si el estado ya es OFFLINE Disconnect()
+	// fue llamado entre el WSARecv y esta completo, ignoramos.
+	if (lpClientManager->m_state == CLIENT_OFFLINE)
+		return;
 	
 	lpIoContext->IoMainBuffer.size += IoSize;
 
@@ -847,9 +862,15 @@ void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContex
 
 	if (IoSize == 0)
 	{
-		this->Disconnect(index);
+		// Ídem OnRecv: cancelación confirmada por IOCP → seguro liberar.
+		// ATENCIÓN: solo llamamos DelClient si OnRecv no lo hizo ya.
+		// DelClient es idempotente (chequea m_state antes de hacer nada).
+		lpClientManager->DelClient();
 		return;
 	}
+
+	if (lpClientManager->m_state == CLIENT_OFFLINE)
+		return;
 		
 	lpIoContext->IoMainBuffer.size += IoSize;
 
