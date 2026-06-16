@@ -57,5 +57,6 @@ void CMiniDump::Clean()
     if (PreviousExceptionFilter != nullptr)
     {
         SetUnhandledExceptionFilter(PreviousExceptionFilter);
+		PreviousExceptionFilter = nullptr;
     }
 }

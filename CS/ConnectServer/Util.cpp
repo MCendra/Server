@@ -54,23 +54,31 @@ void CUtil::GetExecutablePath()
 	}
 }
 
-void CUtil::ErrorMessageBox(const char* message, ...) {
-    char buff[256];
+// IMPORTANTE: "message" debe ser SIEMPRE un string literal o constante interna.
+// NUNCA pasar aquí texto proveniente de un cliente, archivo de configuración,
+// o cualquier fuente externa: es un formato de printf y un %s/%n malicioso
+// podría leer/escribir memoria fuera de buff.
+void CUtil::ErrorMessageBox(const char* message, ...)
+{
 
-    // Inicializa y formatea el mensaje en el buffer
-    va_list arg;
-    va_start(arg, message);
+	if (message == nullptr)
+	{
+		MessageBoxA(nullptr, "Unknown error", ERROR_TITLE, MB_OK | MB_ICONERROR);
+		ExitProcess(0);
+	}
 
-    // Formatea el mensaje usando los argumentos variables
-    vsprintf_s(buff, sizeof(buff), message, arg);
+	char buff[512] = {};
 
-    // Termina el manejo de argumentos variables
-    va_end(arg);
+	va_list arg;
+	va_start(arg, message);
 
-    // Muestra el mensaje en un MessageBox
-    MessageBoxA(0, buff, ERROR_TITLE, MB_OK | MB_ICONERROR);
+	vsnprintf_s(buff, sizeof(buff), _TRUNCATE, message, arg);
 
-    // Termina el proceso
-    ExitProcess(0);
+	va_end(arg);
+
+	MessageBoxA(nullptr, buff, ERROR_TITLE, MB_OK | MB_ICONERROR);
+
+	ExitProcess(0);
+
 }
 

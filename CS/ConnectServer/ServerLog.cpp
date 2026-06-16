@@ -42,7 +42,8 @@ void CServerLog::Init(bool active)
 
     char directory[MAX_PATH];
     snprintf(directory, MAX_PATH, "%s\\%s", WorkingPath, LOG_DIRECTORY_NAME);
-    strncpy_s(logInfo.directory, directory, MAX_PATH);
+	// FIX: especificar explícitamente tamaño del DESTINO
+	strncpy_s(logInfo.directory, sizeof(logInfo.directory), directory, _TRUNCATE);
 
     if (active)
     {
@@ -76,8 +77,11 @@ void CServerLog::Output(LogType type, const std::string& text)
         currentTime.wMonth != logInfo.lastWrite.wMonth ||
         currentTime.wYear != logInfo.lastWrite.wYear)
     {
-        CloseHandle(logInfo.file);
-        OpenLogFile(logInfo);
+		if (logInfo.file != INVALID_HANDLE_VALUE)
+		{
+			CloseHandle(logInfo.file);
+		}
+		OpenLogFile(logInfo);
     }
 
     // Usar stringstream para construir la linea final del log
@@ -89,8 +93,15 @@ void CServerLog::Output(LogType type, const std::string& text)
 
     std::string finalMessage = oss.str();
 
-    DWORD bytesWritten;
-    WriteFile(logInfo.file, finalMessage.c_str(), static_cast<DWORD>(finalMessage.size()), &bytesWritten, NULL);
+	DWORD bytesWritten = 0;
+	if (!WriteFile(logInfo.file, finalMessage.c_str(),
+		static_cast<DWORD>(finalMessage.size()), &bytesWritten, nullptr))
+	{
+		// El handle puede haberse invalidado externamente (ej. archivo borrado/movido).
+		// Reintentamos una vez reabriendo el archivo; si falla de nuevo, desactivamos.
+		CloseHandle(logInfo.file);
+		OpenLogFile(logInfo);
+	}
 }
 
 

@@ -20,9 +20,9 @@ constexpr UINT TIMER_MAINTENANCE = 1;
 constexpr UINT MAINTENANCE_INTERVAL = 1000;
 constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar ConnectServer?"; // \xBF = ¿ en ASCII
 constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
-constexpr char ERROR_WSA_STARTUP[] = "[CS] WSAStartup() fallo con el error: %d";
-constexpr char ERROR_WSA_TCP_STARTUP[] = "[CS] WSAStartup() TCP fallo con el error: %d";
-constexpr char ERROR_WSA_UDP_STARTUP[] = "[CS] WSAStartup() UDP fallo con el error: %d";
+constexpr char ERROR_WSA_STARTUP[] = "[CS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
+constexpr char ERROR_WSA_TCP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
+constexpr char ERROR_WSA_UDP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket UDP en el puerto %d.";
 constexpr char ERROR_CREATE_WINDOW[] = "[CS] CreateWindowA fallo. Codigo error: %d";
 
 
@@ -65,31 +65,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     gServerConfig.Init();
         
     WSADATA wsa;
-    bool wsaStarted = false;
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) == 0)
-    {
-        wsaStarted = true;
-        // Inicia los administradores de sockets TCP y UDP
-        if (gSocketManager.Init(ConnectServerPortTCP))
-        {
-            if (gSocketManagerUdp.Init(ConnectServerPortUDP))
-            {
-                gServerList.Init(ServerListFilePath); // Carga la lista de servidores
-            }
-            else
-            {
-				Log.ToFile(ERROR_WSA_UDP_STARTUP, WSAGetLastError());
-			}
-        }
-        else
-        {
-			Log.ToFile(ERROR_WSA_TCP_STARTUP, WSAGetLastError());
-        }
-    }
-    else
-    {
-        Log.ToFile(ERROR_WSA_STARTUP, WSAGetLastError());
-    }
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
+		Log.ToFile(ERROR_WSA_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_WSA_STARTUP, WSAGetLastError());
+		CMiniDump::Clean();
+		return false;  // gUtil.ErrorMessageBox ya llama ExitProcess, pero por claridad dejamos el return
+	}
+
+	bool wsaStarted = true;
+
+	if (!gSocketManager.Init(ConnectServerPortTCP))
+	{
+		Log.ToFile(ERROR_WSA_TCP_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_WSA_TCP_STARTUP, ConnectServerPortTCP);
+		return false;
+	}
+
+	if (!gSocketManagerUdp.Init(ConnectServerPortUDP))
+	{
+		Log.ToFile(ERROR_WSA_UDP_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_WSA_UDP_STARTUP, ConnectServerPortUDP);
+		return false;
+	}
+
+	gServerList.Init(ServerListFilePath);
 
 	// FIX:
 	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
