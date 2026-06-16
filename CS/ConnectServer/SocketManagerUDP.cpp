@@ -11,6 +11,8 @@ constexpr char SERVERRECVTHREAD_STOP_TIMEOUT[] = "[SocketManagerUdp] Timeout esp
 
 CSocketManagerUdp gSocketManagerUdp;
 
+// Constructor / Destructor
+
 CSocketManagerUdp::CSocketManagerUdp()
 	: m_socket(INVALID_SOCKET),
 	m_ServerRecvThread(nullptr),
@@ -209,7 +211,7 @@ bool CSocketManagerUdp::DataRecv() // OK
 
 		if (size <= this->m_RecvSize)
 		{
-			gServerList.ServerProtocolCore(head, &lpMsg[count], size);
+			gServerList.ProcessServerStatusPacket(head, &lpMsg[count], size);
 
 			count += size;
 

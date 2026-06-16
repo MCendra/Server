@@ -16,6 +16,8 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 constexpr int WINDOW_WIDTH = 700;                   // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
+constexpr UINT TIMER_MAINTENANCE = 1;
+constexpr UINT MAINTENANCE_INTERVAL = 1000;
 constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar ConnectServer?"; // \xBF = ¿ en ASCII
 constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
 constexpr char ERROR_WSA_STARTUP[] = "[CS] WSAStartup() fallo con el error: %d";
@@ -73,9 +75,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             if (gSocketManagerUdp.Init(ConnectServerPortUDP))
             {
                 gServerList.Init(ServerListFilePath); // Carga la lista de servidores
-
-                // Configura los temporizadores
-
             }
             else
             {
@@ -92,10 +91,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Log.ToFile(ERROR_WSA_STARTUP, WSAGetLastError());
     }
 
-    gServerDisplayer.UpdateServerState(0);
-
-	// CORRECCION:
-	// gServerDisplayer.PaintName();
+	// FIX:
 	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
 	InvalidateRect(g_hWnd, nullptr, TRUE);
     
@@ -116,7 +112,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Limpieza Winsock si se inicializo
     if (wsaStarted)
     {
-        WSACleanup();
+		// Detener primero todos los sockets e hilos
+		gSocketManagerUdp.Clean();
+		gSocketManager.Clean();
+
+		WSACleanup();
     }
 
     // Limpia el minidump al finalizar
@@ -177,6 +177,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	ShowWindow(g_hWnd, nCmdShow);
+
+	// Configura temporizador
+	SetTimer(g_hWnd, TIMER_MAINTENANCE, MAINTENANCE_INTERVAL, nullptr);
+
 	UpdateWindow(g_hWnd);
 
 	return true;
@@ -216,6 +220,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+	case WM_TIMER:
+	{
+		if (wParam == TIMER_MAINTENANCE)
+		{
+			gServerList.CheckServerTimeouts();
+
+			gServerDisplayer.UpdateWindowTitle(
+				gSocketManager.GetQueueSize()
+			);
+			//	Invalida la ventana para forzar un repaint y actualizar la informacion visual
+			InvalidateRect(hWnd, nullptr, FALSE);
+		}
+
+		break;
+	}
     case WM_PAINT:
         {
 			PAINTSTRUCT ps;
@@ -223,12 +242,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			gServerDisplayer.PaintName(hdc);
 			gServerDisplayer.PaintServerState(hdc);
+			gServerDisplayer.PaintGameServers(hdc);
 			gServerDisplayer.PaintLogText(hdc);
 
 			EndPaint(hWnd, &ps);
         }
         break;
     case WM_DESTROY:
+		KillTimer(hWnd, TIMER_MAINTENANCE);
         PostQuitMessage(0);
         break;
     case WM_CLOSE: // Manejar el cierre de la ventana con el boton X

@@ -71,14 +71,8 @@ constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManager] DataRecv() - 
 constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManager] DataRecv() - Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)";
 constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager] DataRecv() - Server queue full(Index:% d, Head : %02X)";
 
-
-// =====================================================================
 // Construccion / Destruccion
-// =====================================================================
 
-// Constructor: inicializa todos los miembros a valores "vacios" / invalidos
-// para que CSocketManager::Clean() pueda ejecutarse de forma segura en
-// cualquier momento (incluso si Init() falla a mitad de camino).
 CSocketManager::CSocketManager()
 	: m_listen(INVALID_SOCKET),         // Socket de escucha invalido hasta CreateListenSocket().
 	m_CompletionPort(nullptr),          // Puerto de finalizacion aun no creado.
@@ -98,8 +92,6 @@ CSocketManager::CSocketManager()
 	}
 }
 
-// Destructor: garantiza que, sin importar como se destruya el objeto,
-// todos los recursos del sistema (sockets, hilos, handles, IOCP) se liberen.
 CSocketManager::~CSocketManager()
 {
 	this->Clean();
@@ -299,7 +291,7 @@ bool CSocketManager::CreateWorkerThread()
 			Log.ToDisp(LOG_RED, CREATEWORKERTHREAD_ERROR_CREATETHREAD, n, GetLastError());
 			return false;
 		}
-		// CORRECCION: THREAD_PRIORITY_HIGHEST por THREAD_PRIORITY_NORMAL
+		// FIX: THREAD_PRIORITY_HIGHEST por THREAD_PRIORITY_NORMAL
 		if (SetThreadPriority(this->m_ServerWorkerThread[n], THREAD_PRIORITY_NORMAL) == 0)
 		{
 			Log.ToDisp(LOG_RED, CREATEWORKERTHREAD_ERROR_SETTHREADPRIORITY, n, GetLastError());
@@ -418,7 +410,7 @@ void CSocketManager::Clean()
 		this->m_ServerQueueThread = nullptr;
 	}
 
-	for (DWORD n = 0; n < MAX_SERVER_WORKER_THREAD; n++)
+	for (DWORD n = 0; n < this->m_ServerWorkerThreadCount; ++n)
 	{
 		if (this->m_ServerWorkerThread[n] != nullptr)
 		{

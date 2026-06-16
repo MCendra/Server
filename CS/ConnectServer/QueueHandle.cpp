@@ -2,6 +2,7 @@
 #include "QueueHandle.h"
 
 // Construction/Destruction
+
 CQueue::CQueue()
 {
     // No es necesario inicializar aqui m_critical; se inicializa automaticamente en su constructor
@@ -19,7 +20,7 @@ void CQueue::ClearQueue()
     this->m_QueueInfo = std::queue<QUEUE_INFO>();  // Asignacion directa de una cola vacia
 }
 
-DWORD CQueue::GetQueueSize()
+size_t CQueue::GetQueueSize()
 {
     CCriticalSection::CLock lock(this->m_critical);
 
@@ -28,9 +29,20 @@ DWORD CQueue::GetQueueSize()
 
 bool CQueue::AddToQueue(QUEUE_INFO* lpInfo)
 {
-    CCriticalSection::CLock lock(this->m_critical);
 
-    if (this->m_QueueInfo.size() < MAX_QUEUE_SIZE)
+	if (lpInfo == nullptr)
+	{
+		return false;
+	}
+
+	if (lpInfo->size > MAX_BUFFER_QUEUE_SIZE)
+	{
+		return false;
+	}
+
+	CCriticalSection::CLock lock(this->m_critical);
+
+    if (this->m_QueueInfo.size() < MAX_BUFFER_QUEUE_SIZE)
     {
         this->m_QueueInfo.push(*lpInfo);
         return true;
@@ -41,6 +53,12 @@ bool CQueue::AddToQueue(QUEUE_INFO* lpInfo)
 
 bool CQueue::GetFromQueue(QUEUE_INFO* lpInfo)
 {
+
+	if (lpInfo == nullptr)
+	{
+		return false;
+	}
+
     CCriticalSection::CLock lock(this->m_critical);
 
     if (!this->m_QueueInfo.empty())

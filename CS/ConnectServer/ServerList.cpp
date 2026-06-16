@@ -13,11 +13,8 @@ CServerList gServerList;
 CServerList::CServerList()
 {
 	this->m_JoinServerState = 0;
-
 	this->m_JoinServerStateTime = 0;
-
 	this->m_JoinServerQueueSize = 0;
-
 	this->m_ServerListInfo.clear();
 }
 
@@ -26,6 +23,7 @@ CServerList::~CServerList()
 
 }
 
+// Obtiene el conteo de servidores en linea
 void CServerList::Init(const char* path)
 {
 	CServerConfigLoader* lpServerConfigLoader = new CServerConfigLoader;
@@ -49,19 +47,21 @@ void CServerList::Init(const char* path)
 	{
 		while (true)
 		{
-			if (lpServerConfigLoader->GetToken() == TOKEN_END)
+			eTokenResult token = lpServerConfigLoader->GetToken();
+
+			if (token == TOKEN_END)
 			{
 				break;
 			}
 
-			if (strcmp("end", lpServerConfigLoader->GetString()) == 0)
+			if (token != TOKEN_NUMBER)
 			{
-				break;
+				continue;
 			}
 
 			SERVER_LIST_INFO info = {};
 
-			info.ServerCode = static_cast<WORD>(lpServerConfigLoader->GetNumber());
+			info.ServerCode = (WORD)lpServerConfigLoader->GetNumber();
 
 			strncpy_s(info.ServerName, lpServerConfigLoader->GetAsString(), sizeof(info.ServerName) - 1);
 
@@ -87,18 +87,19 @@ void CServerList::Init(const char* path)
 		gUtil.ErrorMessageBox(lpServerConfigLoader->GetLastError());
 	}
 
-	Log.ToDisp(LOG_BLUE, "[HAI DAI SU] Lista de servidores cargada correctamente");
+	Log.ToDisp(LOG_BLUE, "Lista de servidores cargada correctamente");
 
 	delete lpServerConfigLoader;
 }
 
-void CServerList::MainProc()
+// Maneja el mensaje de estado de un servidor de juego
+void CServerList::CheckServerTimeouts()
 {
 	if (this->m_JoinServerState != 0 && (GetTickCount64() - this->m_JoinServerStateTime) > 10000)
 	{
 		this->m_JoinServerState = 0;
 		this->m_JoinServerStateTime = 0;
-		Log.ToDisp(LOG_RED, "[HAI DAI SU] JoinServer fuera de linea");
+		Log.ToDisp(LOG_RED, "JoinServer fuera de linea");
 	}
 
 	for (std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.begin();it != this->m_ServerListInfo.end();it++)
@@ -107,12 +108,13 @@ void CServerList::MainProc()
 		{
 			it->second.ServerState = 0;
 			it->second.ServerStateTime = 0;
-			Log.ToDisp(LOG_BLACK, "[HAI DAI SU] GameServer fuera de linea (%s) (%d)", it->second.ServerName, it->second.ServerCode);
+			Log.ToDisp(LOG_BLACK, "GameServer fuera de linea (%s) (%d)", it->second.ServerName, it->second.ServerCode);
 		}
 	}
 }
 
-bool CServerList::CheckJoinServerState() const
+// Verifica si JoinServer esta en linea
+bool CServerList::IsJoinServerOnline() const
 {
 	if (this->m_JoinServerState == 0)
 	{
@@ -127,13 +129,14 @@ bool CServerList::CheckJoinServerState() const
 	return true;
 }
 
+// Maneja el mensaje de estado de la cola de servidores para unirse
 long CServerList::GenerateServerList(BYTE* lpMsg, int* size)
 {
 	int count = 0;
 
 	PMSG_SERVER_LIST info{};
 
-	if (this->CheckJoinServerState() != 0)
+	if (this->IsJoinServerOnline())
 	{
 		for (std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.begin();it != this->m_ServerListInfo.end();it++)
 		{
@@ -156,9 +159,10 @@ long CServerList::GenerateServerList(BYTE* lpMsg, int* size)
 	return count;
 }
 
-SERVER_LIST_INFO* CServerList::GetServerListInfo(int ServerCode)
+// Agrega un nuevo servidor a la lista de servidores
+SERVER_LIST_INFO* CServerList::GetGameServerInfo(int serverCode)
 {
-	std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.find(ServerCode);
+	std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.find(serverCode);
 
 	if (it == this->m_ServerListInfo.end())
 	{
@@ -170,24 +174,26 @@ SERVER_LIST_INFO* CServerList::GetServerListInfo(int ServerCode)
 	}
 }
 
-void CServerList::ServerProtocolCore(BYTE head, BYTE* lpMsg, int size)
+// Funciones para el estado del JoinServer
+void CServerList::ProcessServerStatusPacket(BYTE head, BYTE* lpMsg, int size)
 {
 	UNREFERENCED_PARAMETER(size);
 
 	switch (head)
 	{
 	case 0x01:
-		this->GCGameServerLiveRecv((SDHP_GAME_SERVER_LIVE_RECV*)lpMsg);
+		this->ProcessGameServerHeartbeat((SDHP_GAME_SERVER_LIVE_RECV*)lpMsg);
 		break;
 	case 0x02:
-		this->JCJoinServerLiveRecv((SDHP_JOIN_SERVER_LIVE_RECV*)lpMsg);
+		this->ProcessJoinServerHeartbeat((SDHP_JOIN_SERVER_LIVE_RECV*)lpMsg);
 		break;
 	}
 }
 
-void CServerList::GCGameServerLiveRecv(SDHP_GAME_SERVER_LIVE_RECV* lpMsg)
+// Verifica si algún GameServer dejó de enviar heartbeats
+void CServerList::ProcessGameServerHeartbeat(SDHP_GAME_SERVER_LIVE_RECV* lpMsg)
 {
-	SERVER_LIST_INFO* lpServerListInfo = this->GetServerListInfo(lpMsg->ServerCode);
+	SERVER_LIST_INFO* lpServerListInfo = this->GetGameServerInfo(lpMsg->ServerCode);
 
 	if (lpServerListInfo == 0)
 	{
@@ -196,7 +202,9 @@ void CServerList::GCGameServerLiveRecv(SDHP_GAME_SERVER_LIVE_RECV* lpMsg)
 
 	if (lpServerListInfo->ServerState == 0)
 	{
-		Log.ToDisp(LOG_BLACK, "[HAI DAI SU] GameServer en linea (%s) (%d)", lpServerListInfo->ServerName, lpServerListInfo->ServerCode);
+		Log.ToDisp(LOG_BLACK, "GameServer en linea (%s) (%d)", lpServerListInfo->ServerName, lpServerListInfo->ServerCode);
+		// Actualiza la lista de servidores en la pantalla
+		gServerDisplayer.Refresh();
 	}
 
 	lpServerListInfo->ServerState = 1;
@@ -214,24 +222,37 @@ void CServerList::GCGameServerLiveRecv(SDHP_GAME_SERVER_LIVE_RECV* lpMsg)
 	lpServerListInfo->MaxUserCount = lpMsg->MaxUserCount;
 }
 
-void CServerList::JCJoinServerLiveRecv(SDHP_JOIN_SERVER_LIVE_RECV* lpMsg)
+// Verifica si JoinServer dejó de enviar heartbeats
+void CServerList::ProcessJoinServerHeartbeat(SDHP_JOIN_SERVER_LIVE_RECV* lpMsg)
 {
 	if (this->m_JoinServerState == 0)
 	{
-		Log.ToDisp(LOG_GREEN, "[HAI DAI SU] JoinServer en linea");
+		Log.ToDisp(LOG_GREEN, "JoinServer en linea");
 	}
 
 	this->m_JoinServerState = 1;
-
 	this->m_JoinServerStateTime = GetTickCount64();
-
 	this->m_JoinServerQueueSize = lpMsg->QueueSize;
+
 }
 
-
-void CServerList::NotifyServerStateChange(int serverCode)
+int CServerList::GetOnlineGameServerCount() const
 {
-    // Aqui deberiamos comunicar el cambio de estado a `ServerDisplayer`.
-    // Esto puede ser mediante una llamada a una funcion publica en `ServerDisplayer` o mediante una señal.
-    gServerDisplayer.UpdateServerState(serverCode);
+	int count = 0;
+
+	for (const auto& it : this->m_ServerListInfo)
+	{
+		if (it.second.ServerState != 0)
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
+
+// CServerList implementacion de clase
+const std::map<int, SERVER_LIST_INFO>& CServerList::GetGameServerList() const
+{
+	return this->m_ServerListInfo;
 }

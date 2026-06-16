@@ -54,28 +54,32 @@ public:
 	// Carga la informacion de los servidores desde un archivo
 	void Init(const char* path);
 
-	// Procesa la logica principal del servidor
-	void MainProc();
+	// Maneja el mensaje de estado de un servidor de juego
+	void CheckServerTimeouts();
 
 	// Verifica el estado de la cola de servidores para unirse
-	bool CheckJoinServerState() const;
+	bool IsJoinServerOnline() const;
 
 	// Genera la lista de servidores y la almacena en lpMsg
 	long GenerateServerList(BYTE* lpMsg, int* size);
 
 	// Obtiene la informacion del servidor basado en el codigo del servidor
-	SERVER_LIST_INFO* GetServerListInfo(int ServerCode);
+	SERVER_LIST_INFO* GetGameServerInfo(int serverCode);
 
 	// Maneja la logica del protocolo del servidor basado en el encabezado del mensaje
-	void ServerProtocolCore(BYTE head, BYTE* lpMsg, int size);
+	void ProcessServerStatusPacket(BYTE head, BYTE* lpMsg, int size);
 
 	// Maneja el mensaje de estado del servidor de juego
-	void GCGameServerLiveRecv(SDHP_GAME_SERVER_LIVE_RECV* lpMsg);
+	void ProcessGameServerHeartbeat(SDHP_GAME_SERVER_LIVE_RECV* lpMsg);
 
 	// Maneja el mensaje de estado de la cola de servidores para unirse
-	void JCJoinServerLiveRecv(SDHP_JOIN_SERVER_LIVE_RECV* lpMsg);
+	void ProcessJoinServerHeartbeat(SDHP_JOIN_SERVER_LIVE_RECV* lpMsg);
 
-	void NotifyServerStateChange(int serverCode);
+	// Obtiene el conteo de servidores en linea
+	int GetOnlineGameServerCount() const;
+
+	// Obtiene el conteo total de usuarios en todos los servidores
+	const std::map<int, SERVER_LIST_INFO>& GetGameServerList() const;
 
 private:
 	// Estado del servidor de union (0 = fuera de linea, 1 = en linea)
@@ -89,6 +93,7 @@ private:
 
 	// Mapa que almacena la informacion de la lista de servidores
 	std::map<int, SERVER_LIST_INFO> m_ServerListInfo;
+		
 };
 
 // Instancia global de CServerList

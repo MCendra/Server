@@ -1,14 +1,12 @@
 // ServerProtocol.cpp
 #include "ServerProtocol.h"
 #include "ClientManager.h"
-//#include "Protect.h"
 #include "ServerList.h"
 #include "SocketManager.h"
 #include "Log.h"
 
 void ConnectServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size)
 {
-	//PROTECT_START
 
 	UNREFERENCED_PARAMETER(size);
 
@@ -28,18 +26,17 @@ void ConnectServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size)
 		}
 		break;
 	}
-	//PROTECT_FINAL
 
 }
 
 void CCServerInfoRecv(PMSG_SERVER_INFO_RECV* lpMsg, int index)
 {
-	if (gServerList.CheckJoinServerState() == 0)
+	if (gServerList.IsJoinServerOnline() == 0)
 	{
 		return;
 	}
 
-	SERVER_LIST_INFO* lpServerListInfo = gServerList.GetServerListInfo(lpMsg->ServerCode);
+	SERVER_LIST_INFO* lpServerListInfo = gServerList.GetGameServerInfo(lpMsg->ServerCode);
 
 	if (lpServerListInfo == nullptr)
 	{

@@ -40,6 +40,8 @@ public:
     // Pintar el estado del servidor en la ventana (const)
     void PaintServerState(HDC hdc) const;
 
+	void PaintGameServers(HDC hdc) const;
+
     // Funcion para pintar los logs de texto
     void PaintLogText(HDC hdc);
 
@@ -47,7 +49,8 @@ public:
     void LogAddText(LogColor color, const std::string& text);
 
     // Actualiza el estado del servidor y repinta la ventana
-    void UpdateServerState(int serverCode);
+	void Refresh();
+
 
     // Elimina la posibilidad de copiar o mover la instancia
     CServerDisplayer(const CServerDisplayer&) = delete;
@@ -61,10 +64,10 @@ private:
     HBRUSH m_brush[5];
     LogDisplayInfo m_log[MAX_LOG_TEXT_LINE];
     int m_count;
-    int m_servercode;                           // Almacena el estado del servidor
+    //int m_servercode;                           // Almacena el estado del servidor
     char m_displayertext[2][32];
     RECT m_rect;								// Almacena las coordenadas del rectangulo de visualizacion
-	RECT m_logRect;								// CORRECCION: area del log (subrect de m_rect, top = 100)
+	RECT m_logRect;								// FIX: area del log (subrect de m_rect, top = 100)
 
 	// Protege m_log / m_count contra accesos concurrentes desde
 	// distintos hilos del servidor (ServerWorkerThread, AcceptThread, etc.)

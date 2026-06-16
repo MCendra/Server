@@ -11,12 +11,12 @@ constexpr char TEXT_WINDOWS_TITLE[] = "[CS] ConnectServer %s - Cliente %s (Queue
 constexpr char JOINSERVER_WAIT[] = "ESPERANDO";
 constexpr char JOINSERVER_ACTIVE[] = "ACTIVO";
 
-// Constructor de CServerDisplayer
+// Construction/Destruction
 CServerDisplayer::CServerDisplayer()
     : m_hwnd(nullptr),                          // Inicializa el puntero al manejador de la ventana a nullptr.
     m_font(nullptr),                            // Inicializa el puntero a la fuente a nullptr.
     m_count(0),                                 // Inicializa el contador de logs a 0.
-    m_servercode(0),                            // Inicializa el codigo del servidor a 0.
+    //m_servercode(0),                            // Inicializa el codigo del servidor a 0.
     m_rect{ 0, 0, 0, 0 },                       // Inicializa RECT con valores predeterminados (0, 0, 0, 0).
 	m_logRect{ 0, 100, 0, 0 }					// Inicializa LOGRECT con valores predeterminados (0, 100, 0, 0).
 
@@ -51,7 +51,6 @@ CServerDisplayer::CServerDisplayer()
     }
 }
 
-// Destructor de CServerDisplayer
 CServerDisplayer::~CServerDisplayer()
 {
     // Liberar recursos de fuentes y pinceles
@@ -74,9 +73,9 @@ void CServerDisplayer::Init(HWND hWnd)
     // Inicializa RECT con el tamaño de la ventana
     GetClientRect(this->m_hwnd, &m_rect);
 
-	// CORRECCION: area del log: todo el ancho, desde y=100 hasta el final de la ventana.
+	// FIX: area del log: todo el ancho, desde y=100 hasta el final de la ventana.
 	m_logRect = m_rect;
-	m_logRect.top = 100;
+	m_logRect.top = 220;
 
     // Inicializa titulo de la ventana
     UpdateWindowTitle(0);
@@ -97,9 +96,6 @@ void CServerDisplayer::PaintName(HDC hdc) const
     RECT rect = m_rect;
     rect.bottom = 50;
 
-	// CORRECCION
-    //HDC hdc = GetDC(this->m_hwnd);
-
     int OldBkMode = SetBkMode(hdc, TRANSPARENT);
     HFONT OldFont = (HFONT)SelectObject(hdc, this->m_font);
 
@@ -114,8 +110,6 @@ void CServerDisplayer::PaintName(HDC hdc) const
     SelectObject(hdc, OldFont);
     SetBkMode(hdc, OldBkMode);
 
-	// CORRECCION
-    // ReleaseDC(this->m_hwnd, hdc);
 }
 
 void CServerDisplayer::PaintServerState(HDC hdc) const
@@ -124,14 +118,11 @@ void CServerDisplayer::PaintServerState(HDC hdc) const
     rect.top = 50;
     rect.bottom = 100;
 
-	// CORRECCION
-	// HDC hdc = GetDC(this->m_hwnd);
-
     int OldBkMode = SetBkMode(hdc, TRANSPARENT);
     HFONT OldFont = (HFONT)SelectObject(hdc, this->m_font);
 
     // Actualiza el texto y el fondo basado en el estado del servidor
-    if (this->m_servercode == 0)
+	if (gServerList.IsJoinServerOnline() == false)
     {
         SetTextColor(hdc, RGB(200, 200, 200));
         FillRect(hdc, &rect, this->m_brush[1]);
@@ -148,8 +139,6 @@ void CServerDisplayer::PaintServerState(HDC hdc) const
     SelectObject(hdc, OldFont);
     SetBkMode(hdc, OldBkMode);
 
-	// CORRECCION
-	// ReleaseDC(this->m_hwnd, hdc);
 }
 
 // Clase para mostrar informacion del servidor en una ventana
@@ -170,8 +159,7 @@ void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
 		this->m_count = ((++this->m_count) >= MAX_LOG_TEXT_LINE) ? 0 : this->m_count;
 
 	}
-		// CORRECCION: No dibuja nada aca: solo pide repintado al hilo de UI.
-		// PaintLogText();
+		// FIX: No dibuja nada aca: solo pide repintado al hilo de UI.
 		InvalidateRect(this->m_hwnd, &m_logRect, FALSE);
     
 }
@@ -183,12 +171,6 @@ void CServerDisplayer::PaintLogText(HDC hdc)
 	// Sin esto, líneas nuevas más cortas que las anteriores dejan
 	// residuos visuales del texto previo -> se ven "superpuestas".
 	FillRect(hdc, &m_logRect, this->m_brush[4]);
-
-    // RECT rect = m_rect;
-    // rect.top = 100;
-
-	// CORRECCION
-	// HDC hdc = GetDC(this->m_hwnd);
 
 	int OldBkMode = SetBkMode(hdc, TRANSPARENT);
 
@@ -229,15 +211,72 @@ void CServerDisplayer::PaintLogText(HDC hdc)
     }
 	SetBkMode(hdc, OldBkMode);
 
-	// CORRECCION
-	// ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::UpdateServerState(int serverCode)
+void CServerDisplayer::Refresh()
 {
-    // Actualiza el estado del servidor
-    this->m_servercode = serverCode;
+	// Invalida la ventana para forzar un repintado
+	InvalidateRect(this->m_hwnd, NULL, true);
+}
 
-    // Invalida la ventana para forzar un repintado
-    InvalidateRect(this->m_hwnd, NULL, true);
+void CServerDisplayer::PaintGameServers(HDC hdc) const
+{
+	RECT back;
+
+	back.left = 0;
+	back.top = 100;
+	back.right = m_rect.right;
+	back.bottom = 220;
+
+	// Limpiar área de servidores
+	FillRect(hdc, &back, this->m_brush[4]);
+
+	RECT rect;
+
+	rect.left = 10;
+	rect.right = m_rect.right - 10;
+	rect.top = 105;
+
+	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
+
+	for (const auto& it : gServerList.GetGameServerList())
+	{
+		const SERVER_LIST_INFO& info = it.second;
+
+		char text[128] = { 0 };
+
+		if (info.ServerState)
+		{
+			SetTextColor(hdc, RGB(0, 180, 0));
+
+			sprintf_s(
+				text,
+				"[%d] %s - ONLINE (%d/%d)",
+				info.ServerCode,
+				info.ServerName,
+				info.UserCount,
+				info.MaxUserCount);
+		}
+		else
+		{
+			SetTextColor(hdc, RGB(180, 0, 0));
+
+			sprintf_s(
+				text,
+				"[%d] %s - OFFLINE",
+				info.ServerCode,
+				info.ServerName);
+		}
+
+		TextOutA(
+			hdc,
+			rect.left,
+			rect.top,
+			text,
+			(int)strlen(text));
+
+		rect.top += 20;
+	}
+
+	SetBkMode(hdc, oldBkMode);
 }

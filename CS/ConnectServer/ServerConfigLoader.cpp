@@ -223,7 +223,7 @@ eTokenResult CServerConfigLoader::GetTokenCommon(char ch)
 
     this->m_string[count++] = ch;
 
-    while ((ch = this->GetChar()) != -1 && (ch == '.' || ch == '_' || isalnum(ch) != 0))
+	while ((ch = this->GetChar()) != -1 && (ch == '.' || ch == '_' || ch == '-' || isalnum(ch) != 0))
     {
         this->m_string[count++] = ch;
     }
