@@ -63,7 +63,9 @@ void CIpManager::InsertIpAddress(const std::string& IpAddress)
 void CIpManager::RemoveIpAddress(const std::string& IpAddress)
 {
     // Verificar que el formato de la IP sea valido
-    if (IpAddress.empty() || !IsValidIpAddress(IpAddress)) {
+	// FIX:
+	// IpAddress.empty() innesecario, ya que IsValidIpAddress ya chequea internamente con inet_pton que maneja strings vacíos
+    if (!IsValidIpAddress(IpAddress)) {
         return;
     }
 

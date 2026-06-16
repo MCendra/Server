@@ -1125,7 +1125,7 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 					Error != ERROR_OPERATION_ABORTED &&
 					Error != ERROR_SEM_TIMEOUT))
 			{
-				Log.ToDisp(LOG_RED, "[SocketManager] GetQueuedCompletionStatus() failed with error: %d", GetLastError());
+				Log.ToDisp(LOG_RED, "[SocketManager] GetQueuedCompletionStatus() failed with error: %d", Error);
 				return 1;
 			}
 			// Error esperado de desconexion: se sigue procesando con

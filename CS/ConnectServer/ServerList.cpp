@@ -26,18 +26,13 @@ CServerList::~CServerList()
 // Obtiene el conteo de servidores en linea
 void CServerList::Init(const char* path)
 {
-	CServerConfigLoader* lpServerConfigLoader = new CServerConfigLoader;
+	// Objeto en stack: sin heap, sin delete, sin nullptr check.
+	// CServerConfigLoader es pequeño y de vida acotada a esta función.
+	CServerConfigLoader serverConfigLoader;
 
-	if (lpServerConfigLoader == nullptr)
+	if (serverConfigLoader.SetBuffer(path) == 0)
 	{
-		gUtil.ErrorMessageBox(SERVER_CONFIG_ALLOC_ERROR, path);
-		return;
-	}
-
-	if (lpServerConfigLoader->SetBuffer(path) == 0)
-	{
-		gUtil.ErrorMessageBox(lpServerConfigLoader->GetLastError());
-		delete lpServerConfigLoader;
+		gUtil.ErrorMessageBox(serverConfigLoader.GetLastError());
 		return;
 	}
 
@@ -47,7 +42,7 @@ void CServerList::Init(const char* path)
 	{
 		while (true)
 		{
-			eTokenResult token = lpServerConfigLoader->GetToken();
+			eTokenResult token = serverConfigLoader.GetToken();
 
 			if (token == TOKEN_END)
 			{
@@ -61,16 +56,13 @@ void CServerList::Init(const char* path)
 
 			SERVER_LIST_INFO info = {};
 
-			info.ServerCode = (WORD)lpServerConfigLoader->GetNumber();
+			info.ServerCode = (WORD)serverConfigLoader.GetNumber();
 
-			strncpy_s(info.ServerName, lpServerConfigLoader->GetAsString(), sizeof(info.ServerName) - 1);
+			strncpy_s(info.ServerName, serverConfigLoader.GetAsString(), sizeof(info.ServerName) - 1);
+			strncpy_s(info.ServerAddress, serverConfigLoader.GetAsString(), sizeof(info.ServerAddress) - 1);
 
-			strncpy_s(info.ServerAddress, lpServerConfigLoader->GetAsString(), sizeof(info.ServerAddress) - 1);
-
-			info.ServerPort = static_cast<WORD>(lpServerConfigLoader->GetAsNumber());
-
-			info.ServerShow = (strcmp(lpServerConfigLoader->GetAsString(), "SHOW") == 0) ? true : false;
-
+			info.ServerPort = static_cast<WORD>(serverConfigLoader.GetAsNumber());
+			info.ServerShow = (strcmp(serverConfigLoader.GetAsString(), "SHOW") == 0);
 			info.ServerState = 0;
 			info.ServerStateTime = 0;
 			info.UserTotal = 0;
@@ -84,12 +76,11 @@ void CServerList::Init(const char* path)
 	}
 	catch (...)
 	{
-		gUtil.ErrorMessageBox(lpServerConfigLoader->GetLastError());
+		gUtil.ErrorMessageBox(serverConfigLoader.GetLastError());
 	}
 
 	Log.ToDisp(LOG_BLUE, "Lista de servidores cargada correctamente");
 
-	delete lpServerConfigLoader;
 }
 
 // Maneja el mensaje de estado de un servidor de juego

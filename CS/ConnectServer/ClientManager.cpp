@@ -131,7 +131,8 @@ void CClientManager::DelClient()
 	gIpManager.RemoveIpAddress(this->m_IpAddr);
 
 	this->m_index = -1;
-	this->m_state = CLIENT_OFFLINE;
+	// FIX: cerrar socket si es válido
+	//this->m_state = CLIENT_OFFLINE;
 	memset(this->m_IpAddr, 0, sizeof(this->m_IpAddr));
 	this->m_socket = INVALID_SOCKET; // ya fue cerrado en Disconnect()
 	this->m_OnlineTime = GetTickCount64();

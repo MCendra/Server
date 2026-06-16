@@ -9,8 +9,8 @@
 struct QUEUE_INFO
 {
 	WORD index;
-	BYTE head;
 	DWORD size;
+	BYTE head;
 	BYTE buff[MAX_BUFFER_QUEUE_SIZE];
 };
 

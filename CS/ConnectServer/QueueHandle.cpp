@@ -42,7 +42,7 @@ bool CQueue::AddToQueue(QUEUE_INFO* lpInfo)
 
 	CCriticalSection::CLock lock(this->m_critical);
 
-    if (this->m_QueueInfo.size() < MAX_BUFFER_QUEUE_SIZE)
+    if (this->m_QueueInfo.size() < MAX_QUEUE_SIZE)
     {
         this->m_QueueInfo.push(*lpInfo);
         return true;
