@@ -93,7 +93,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// FIX:
 	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
-	InvalidateRect(g_hWnd, nullptr, TRUE);
+	InvalidateRect(g_hWnd, nullptr, true);
     
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CONNECTSERVER));
 
@@ -230,7 +230,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				gSocketManager.GetQueueSize()
 			);
 			//	Invalida la ventana para forzar un repaint y actualizar la informacion visual
-			InvalidateRect(hWnd, nullptr, FALSE);
+			InvalidateRect(hWnd, nullptr, false);
 		}
 
 		break;

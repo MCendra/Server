@@ -160,7 +160,7 @@ void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
 
 	}
 		// FIX: No dibuja nada aca: solo pide repintado al hilo de UI.
-		InvalidateRect(this->m_hwnd, &m_logRect, FALSE);
+		InvalidateRect(this->m_hwnd, &m_logRect, false);
     
 }
 

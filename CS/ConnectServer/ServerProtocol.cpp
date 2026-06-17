@@ -8,7 +8,15 @@
 void ConnectServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size)
 {
 
-	UNREFERENCED_PARAMETER(size);
+	if (lpMsg == nullptr)
+	{
+		return;
+	}
+
+	if (size < sizeof(PSBMSG_HEAD))
+	{
+		return;
+	}
 
 	gClientManager[index].m_PacketTime = GetTickCount64(); // Modificado para GetTickCount64()
 
@@ -18,9 +26,19 @@ void ConnectServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size)
 		switch (lpMsg[3])
 		{
 		case MSG_HEADER_SERVER_INFO_RECV:
+			// PROTECCION: Verificar el tamaño del mensaje antes de acceder a sus campos
+			if (size < sizeof(PMSG_SERVER_INFO_RECV))
+			{
+				return;
+			}
 			CCServerInfoRecv((PMSG_SERVER_INFO_RECV*)lpMsg, index);
 			break;
 		case MSG_HEADER_SERVER_LIST_RECV:
+			// PROTECCION: Verificar el tamaño del mensaje antes de acceder a sus campos
+			if (size < sizeof(PMSG_SERVER_LIST_RECV))
+			{
+				return;
+			}
 			CCServerListRecv((PMSG_SERVER_LIST_RECV*)lpMsg, index);
 			break;
 		}
