@@ -167,6 +167,8 @@
     <ClInclude Include="JoinServer.h" />
     <ClInclude Include="JoinServerProtocol.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MD5.h" />
+    <ClInclude Include="MD5_KEYVAL.H" />
     <ClInclude Include="MemScript.h" />
     <ClInclude Include="MiniDump.h" />
     <ClInclude Include="Protect.h" />
@@ -194,6 +196,7 @@
     <ClCompile Include="JoinServer.cpp" />
     <ClCompile Include="JoinServerProtocol.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="MD5.cpp" />
     <ClCompile Include="MemScript.cpp" />
     <ClCompile Include="MiniDump.cpp" />
     <ClCompile Include="Protect.cpp" />

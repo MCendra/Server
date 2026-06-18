@@ -1,0 +1,86 @@
+Base Fix 1.0.0.1
+- Path de directorio de log incorrecto
+// ServerLog.cpp — ACTUAL (bug)
+snprintf(directory, MAX_PATH, "%s\\%s", WorkingPath, LOG_DIRECTORY_NAME);
+// LOG_DIRECTORY_NAME = "\\LOG"  → resultado: "C:\Server\\\\LOG"  (doble barra)
+Fix:
+// ServerLog.cpp — CORREGIDO
+constexpr char LOG_DIRECTORY_NAME[] = "LOG";  // sin barra inicial
+
+- CClientManager::DelClient() — Race condition al cerrar socket
+DelClient libera los contextos IO (IO_RECV_CONTEXT, IO_SEND_CONTEXT) con delete, pero si hay operaciones IOCP pendientes en el kernel, Windows puede escribir en memoria ya liberada → heap corruption / crash.
+El socket ya fue cerrado en Disconnect() antes de llamar a DelClient() — eso es correcto. Pero hay que asegurarse que siempre se llame así y nunca DelClient solo.
+Fix:
+Refactorizacion CSocketManager::Disconnect, CSocketManager::OnRecv, CSocketManager::OnSend, CClientManager::DelClient()
+
+- QUEUE_INFO — Buffer de 2048 bytes embebido en la queue (copia masiva)
+Fix:
+
+- IpManager — Sin CCriticalSection (acceso concurrent desde Accept + Del)
+Fix:
+Añadida protección con CCriticalSection en IpManager.h y IpManager.cpp
+Añadida CCriticalSection m_lock en CIpManager y se toman locks en CheckIpAddress, InsertIpAddress y RemoveIpAddress. Esto elimina la carrera sobre el map.
+
+- CClientManager::AddClient() — gClientCount se incrementa incorrectamente
+Fix:
+Resumen de cambios:
+•	Renombrado y cambio semántico:
+•	ClientManager.h: reemplazado extern int gClientCount por extern int gClientSearchStart (comentado como cursor circular).
+•	ClientManager.cpp: añadido int gClientSearchStart = 0; y usado como cursor.
+•	AddClient():
+•	En lugar de manipular gClientCount, ahora dentro de la sección protegida por gClientArrayLock se actualiza: gClientSearchStart = (this->m_index + 1) % MAX_CLIENT;
+•	GetFreeClientIndex(): Ahora adquiere gClientArrayLock y:
+1.	intenta SearchFreeClientIndex(...)
+2.	si no hay, realiza búsqueda circular empezando en gClientSearchStart y retorna el primer slot CLIENT_OFFLINE.
+
+Fix 1.0.0.2
+- ServerList::MainProc() — Nunca se llama (timer faltante) que detecta GameServers/JoinServer offline nunca se ejecuta. Los servidores nunca van a marcarse como offline aunque se desconecten.
+Fix:
+Agregado codigo faltante
+
+-ServerList — NotifyServerStateChange() llama UpdateServerState() desde hilo de red. InvalidateRect es thread-safe en Win32, así que esto técnicamente funciona, pero NotifyServerStateChange nunca se llama
+desde GCGameServerLiveRecv o JCJoinServerLiveRecv. Hay código muerto.
+Fix:
+Eliminamos CServerDisplayer->m_servercode, CServerDisplayer::UpdateServerState(int serverCode), CServerList::NotifyServerStateChange()
+Agregamos CServerDisplayer::Refresh(), el paint de la UI actualiza estado.
+
+-Error leyendo ServerList.dat
+Fix:
+Se corrige parseo en ServerConfigLoader.cpp
+
+Fix menores:
+- Aplicada seguridad en tamaño de paquetes en QueueHandle.cpp
+- Se agrega visualizacion de GameServes conectados desde ServerList.dat
+- Heartbeat separado para JoinServer y GameServer
+- Timeout independiente para cada servidor
+- Limpieza cooperativa de hilos
+- Eliminación de TerminateThread
+- Uso consistente de GetTickCount64()
+- Cola protegida con RAII (CLock)
+- Nombres de funciones descriptivos (ProcessGameServerHeartbeat, ProcessJoinServerHeartbeat, etc.)
+- Cierre limpio sin errores Winsock
+
+Fix 1.0.0.3
+- QueueHandle.cpp — AddToQueue comparaba contra el tamaño del buffer en vez de la capacidad de la cola
+- QueueHandle.h — QUEUE_INFO tenia padding no controlado y size era DWORD innecesario
+- ClientManager.cpp — DelClient() asignaba m_state = CLIENT_OFFLINE dos veces
+- CriticalSection.h — Sin spin count (subóptimo para locks cortos)se cambia por InitializeCriticalSectionAndSpinCount(&m_critical, 2000);
+- ServerWorkerThread — Log llamaba GetLastError() dos veces, el segundo podia ser 0
+- ServerList.cpp — Init() usaba new sin std::nothrow, se elimina uso de new, delete y nullptr, Init() con objeto en stack
+- IpManager.cpp — En RemoveIpAddress, IsValidIpAddress() ya chequea internamente con inet_pton que maneja strings vacíos, IpAddress.empty() es redundante. se elimina
+
+Fix 1.0.0.4
+- QueueHandle.h QUEUE_INFO sin padding, size correcto
+- ServerLog.cpp::OpenLogFile() — strncpy_s con MAX_PATH provoca posible overflow en lectura
+- ServerLog.cpp::Output() — CloseHandle(logInfo.file) sin chequear INVALID_HANDLE_VALUE
+- ServerLog.cpp::Output() — WriteFile puede fallar silenciosamente, sin reintentos ni manejo de error
+- ConnectServer.cpp::wWinMain() — Si WSAStartup falla, el bucle de mensajes sigue corriendo igual
+- ServerDisplayer.cpp::PaintLogText() — No limpia el texto residual cuando hay menos líneas que el máximo
+
+Fix 1.0.0.5
+- MiniDump.cpp::Clean() pequeño agregado de limpieza
+- CUtil::ErrorMessageBox vsprintf_s con formato controlado por el caller es riesgo de format string, se aplica modificaciones
+
+Fix 1.0.0.6
+- ServerProtocol.cpp::ConnectServerProtocolCore() — lpMsg[3] asume siempre cabecera larga (C2), pero el switch no distingue
+- CSocketManager::DataRecv() - verificacion indice del cliente, limite de 65535
