@@ -8,6 +8,7 @@
 #include "SocketManager.h"
 #include "SocketManagerUDP.h"
 #include "QueryManager.h"
+#include "AllowableIpList.h"
 //#include "ServerDisplayer.h"
 //#include "SocketManagerUDP.h"
 //#include "ThemidaSDK.h"

@@ -1,6 +1,5 @@
 // AccountManager.h
 #pragma once
-
 #include "CriticalSection.h"
 
 #define MAX_ACCOUNT 400000

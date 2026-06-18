@@ -73,9 +73,7 @@ void CServerLog::Output(LogType type, const std::string& text)
     SYSTEMTIME currentTime;
     GetLocalTime(&currentTime);
 
-    if (currentTime.wDay != logInfo.lastWrite.wDay ||
-        currentTime.wMonth != logInfo.lastWrite.wMonth ||
-        currentTime.wYear != logInfo.lastWrite.wYear)
+    if (currentTime.wDay != logInfo.lastWrite.wDay || currentTime.wMonth != logInfo.lastWrite.wMonth || currentTime.wYear != logInfo.lastWrite.wYear)
     {
 		if (logInfo.file != INVALID_HANDLE_VALUE)
 		{

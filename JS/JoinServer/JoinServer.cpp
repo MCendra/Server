@@ -14,19 +14,18 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-constexpr int WINDOW_WIDTH = 700;                   // Ancho de la ventana
+constexpr int WINDOW_WIDTH = 700;                  // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
-constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar JoinServer?"; // \xBF = ¿ en ASCII
+constexpr UINT TIMER_MAINTENANCE_INTERVAL = 1000;   // Intervalo de TIMER_1000, en ms
+constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar JoinServer?"; // \xBF = ¿ en ANSI
 constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
-constexpr char ERROR_WSA_STARTUP[] = "[JS] WSAStartup() falló con el error: %d";
-constexpr char ERROR_CREATE_WINDOW[] = "[JS] CreateWindowA falló. Código error: %d";
+constexpr char ERROR_WSA_STARTUP[] = "[JS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
+constexpr char ERROR_DB_CONNECT[] = "[JS] Fallo critico: no se pudo conectar a la base de datos. Codigo de error: %d";
+constexpr char ERROR_TCP_STARTUP[] = "[JS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
+constexpr char ERROR_UDP_CONNECT[] = "[JS] Fallo critico: no se pudo conectar via UDP a ConnectServer (%s:%d).";
+constexpr char ERROR_CREATE_WINDOW[] = "[JS] CreateWindowA fallo. Codigo error: %d";
 
-constexpr char ERROR_DB_CONNECT[] = "[JS] No se pudo conectar a la base de datos. Código de error: %d";
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR    lpCmdLine,
-	_In_ int       nCmdShow)
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
 	// Inicia la captura de minidumps en caso de fallos
 	CMiniDump::Start();
@@ -41,7 +40,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Registrar el tipo de ventana
 	MyRegisterClass(hInstance);
 
-	// Realizar la inicialización de la aplicación:
+	// Realizar la inicializacion de la aplicacion:
 	if (!InitInstance(hInstance, nCmdShow))
 	{
 		// Asegurar limpieza del minidump antes de salir
@@ -52,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Obtener el path del ejecutable
 	gUtil.GetExecutablePath();
 
-	// Inicializa la visualización del servidor
+	// Inicializa controlador de visualizacion de mensajes
 	gServerDisplayer.Init(g_hWnd);
 
 	// Inicializa el log al disco
@@ -61,47 +60,56 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Inicializa el archivo ini de configuración del servidor
 	gServerConfig.Init();
 
+	// ------------------------------------------------------------------
+	// Secuencia de arranque de red y base de datos.
+	//
+	// A diferencia de ConnectServer (que solo abre sockets), JoinServer
+	// depende de tres recursos externos en cadena: Winsock, la base de
+	// datos (ODBC) y el socket UDP de notificacion hacia ConnectServer.
+	// Si cualquiera falla, abortamos con mensaje claro en vez de dejar
+	// el proceso "vivo" pero inoperante (mismo criterio aplicado en CS).
+	// ------------------------------------------------------------------
+
 	WSADATA wsa;
-	bool wsaStarted = false;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) == 0)
-	{
-		if (gQueryManager.Connect(JoinServerODBC, JoinServerUSER, JoinServerPASS) == 0)
-		{
-			Log.ToFile(LogType::GENERAL, ERROR_DB_CONNECT, GetLastError());
-		}
-		else
-		{
-			if (gSocketManager.Init(JoinServerPort) == 0)
-			{
-				gQueryManager.Disconnect();
-			}
-			else
-			{
-				if (gSocketManagerUDP.Connect(ConnectServerAddress, ConnectServerPortUDP) == 0)
-				{
-					gSocketManager.Clean();
-
-					gQueryManager.Disconnect();
-				}
-				else
-				{
-					gAllowableIpList.Load("AllowableIpList.txt");
-
-					SetTimer(g_hWnd, TIMER_1000, 1000, 0);
-				}
-			}
-		}
-	}
-	else
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
 		Log.ToFile(LogType::GENERAL, ERROR_WSA_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_WSA_STARTUP, WSAGetLastError());
+		CMiniDump::Clean();
+		return false;  // gUtil.ErrorMessageBox ya llama ExitProcess, pero por claridad dejamos el return
 	}
 
+	bool wsaStarted = true;
+
+	if (!gQueryManager.Connect(JoinServerODBC, JoinServerUSER, JoinServerPASS))
+	{
+		Log.ToFile(LogType::GENERAL, ERROR_DB_CONNECT, GetLastError());
+		gUtil.ErrorMessageBox(ERROR_DB_CONNECT, GetLastError());
+		return false;
+	}
+
+	if (!gSocketManager.Init(JoinServerPort))
+	{
+		Log.ToFile(LogType::GENERAL, ERROR_TCP_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_TCP_STARTUP, JoinServerPort);
+		gQueryManager.Disconnect();
+		return false;
+	}
+
+	if (!gSocketManagerUDP.Connect(ConnectServerAddress, ConnectServerPortUDP))
+	{
+		Log.ToFile(LogType::GENERAL, ERROR_UDP_CONNECT, ConnectServerAddress, ConnectServerPortUDP);
+		gUtil.ErrorMessageBox(ERROR_UDP_CONNECT, ConnectServerAddress, ConnectServerPortUDP);
+		gSocketManager.Clean();
+		gQueryManager.Disconnect();
+		return false;
+	}
+
+	gAllowableIpList.Load(AllowableIpListFilePath);
+	
+
 	gServerDisplayer.UpdateServerState(0);
-
 	gServerDisplayer.PaintName();
-
-	//	SetTimer(g_hWnd, TIMER_2000, 2000, 0);
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_JOINSERVER));
 
@@ -117,9 +125,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	// Limpieza Winsock si se inicializó
+	// Limpieza Winsock si se inicializo
 	if (wsaStarted)
 	{
+		// Detener primero todos los sockets e hilos, igual que en CS:
+		// cerrar la red antes de WSACleanup evita que callbacks de
+		// IOCP pendientes intenten usar Winsock ya finalizado.
+		gSocketManagerUDP.Clean();
+		gSocketManager.Clean();
+		gQueryManager.Disconnect();
+
 		WSACleanup();
 	}
 
@@ -140,7 +155,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	WNDCLASSEXA wcex = {};
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
-
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
@@ -181,6 +195,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	ShowWindow(g_hWnd, nCmdShow);
+
+	// Configura el temporizador de mantenimiento (JoinServerLiveProc,
+	// desconexion de cuentas inactivas, etc). TIMER_2000 se deja sin
+	// activar: queda reservado igual que en el codigo original, donde
+	// estaba comentado.
+	SetTimer(g_hWnd, TIMER_1000, TIMER_MAINTENANCE_INTERVAL, nullptr);
+
 	UpdateWindow(g_hWnd);
 
 	return true;
@@ -201,25 +222,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_COMMAND:
+	{
+		int wmId = LOWORD(wParam);
+		// Analizar las selecciones de menu:
+		switch (wmId)
 		{
-			int wmId = LOWORD(wParam);
-			// Analizar las selecciones de menú:
-			switch (wmId)
+		case IDM_ABOUT:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+			break;
+		case IDM_EXIT:
+			if (MessageBoxA(nullptr, CONFIRM_EXIT_MESSAGE, CONFIRM_EXIT_TITLE, MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
-			case IDM_ABOUT:
-				DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-				break;
-			case IDM_EXIT:
-				if (MessageBoxA(nullptr, CONFIRM_EXIT_MESSAGE, CONFIRM_EXIT_TITLE, MB_YESNO | MB_ICONQUESTION) == IDYES)
-				{
-					DestroyWindow(hWnd);
-				}
-				break;
-			default:
-				return DefWindowProc(hWnd, message, wParam, lParam);
+				DestroyWindow(hWnd);
 			}
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
-		break;
+	}
+	break;
 	case WM_TIMER:
 		switch (wParam)
 		{
@@ -238,9 +259,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
-		(void)hdc; // Silence unused-variable warning: valid BeginPaint/EndPaint pair kept
+		(void)hdc; // CServerDisplayer de JS pinta con su propio HDC interno (m_hwnd), no recibe hdc por parametro.
 
-		// Aquí llamamos a las funciones de dibujo
 		gServerDisplayer.PaintName();
 		gServerDisplayer.PaintServerState();
 		gServerDisplayer.PaintLogText();
@@ -249,9 +269,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_DESTROY:
+		KillTimer(hWnd, TIMER_1000);
 		PostQuitMessage(0);
 		break;
-	case WM_CLOSE: // Manejar el cierre de la ventana con el botón X
+	case WM_CLOSE: // Manejar el cierre de la ventana con el boton X
 		if (MessageBoxA(hWnd, CONFIRM_EXIT_MESSAGE, CONFIRM_EXIT_TITLE, MB_YESNO | MB_ICONQUESTION) == IDYES)
 		{
 			DestroyWindow(hWnd);
@@ -263,20 +284,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+// Controlador de mensajes del cuadro Acerca de.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		return (INT_PTR)TRUE;
+		return (INT_PTR)true;
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
-			return (INT_PTR)TRUE;
+			return (INT_PTR)true;
 		}
 		break;
 	}
-	return (INT_PTR)FALSE;
+	return (INT_PTR)false;
 }

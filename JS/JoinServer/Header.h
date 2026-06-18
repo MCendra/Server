@@ -13,15 +13,17 @@ constexpr size_t MAX_LOADSTRING = 100;
 constexpr auto JOINSERVER_VERSION = "1.0.0";
 
 // Define el tipo de servidor de juegos
-#define GAMESERVER_TYPE2 1
+#define GAMESERVER_TYPE2 3
 
 // Define el nombre del cliente basado en el tipo de servidor de juegos
-#if(GAMESERVER_TYPE2 == 0)
-	#define JOINSERVER_CLIENT "VIERJA&HIGHLEVEL"
-#elif(GAMESERVER_TYPE2 == 1)
-	#define JOINSERVER_CLIENT "HAI DAI SU"
-#else
+#if (GAMESERVER_TYPE2 == 0)
+#define JOINSERVER_CLIENT "VIERJA&HIGHLEVEL"
+#elif (GAMESERVER_TYPE2 == 1)
+#define JOINSERVER_CLIENT "HAI DAI SU"
+#elif (GAMESERVER_TYPE2 == 2)
 #define JOINSERVER_CLIENT "REAL GAMING"
+#else
+#define JOINSERVER_CLIENT "ARKANIA"
 #endif
 
 // Define la versión de actualización del servidor de conexión si no se ha definido previamente

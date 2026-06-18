@@ -1,9 +1,11 @@
 // Util.h
 #pragma once
-
-#include "JoinServerProtocol.h"
-#include "ServerDisplayer.h"
-#include "ServerManager.h"
+//#include "JoinServerProtocol.h"
+//#include "ServerDisplayer.h"
+//#include "ServerManager.h"
+//#include "QueryManager.h"
+//#include "SocketManager.h"
+//#include "SocketManagerUDP.h"
 
 struct SDHP_JOIN_SERVER_LIVE_SEND
 {
@@ -19,14 +21,14 @@ public:
 	void GetExecutablePath();
 	// Mensaje de error para terminar el proceso
 	void ErrorMessageBox(const char* message, ...);
-	void LogAdd(eLogColor color, const char* text, ...);
+	/*void LogAdd(eLogColor color, const char* text, ...);
 	void JoinServerLiveProc();
 	bool CheckTextSyntax(char* text, int size);
 	LONG CheckAccountCaseSensitive(int value);
 	int GetFreeServerIndex();
 	int SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime);
 	CServerManager* FindServerByCode(WORD ServerCode);
-	DWORD MakeAccountKey(char* account);
+	DWORD MakeAccountKey(char* account);*/
 };
 
 extern CUtil gUtil;

@@ -20,7 +20,6 @@
 #include "Log.h"
 
 // Mensajes de log
-constexpr char INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG[] = "[SocketManagerUDP - Init] Error al crear evento de shutdown: %d";
 constexpr char INIT_ERROR_WSA_SOCKET[] = "[SocketManagerUDP - Init] WSASocket() fallo con el error: %d";
 constexpr char INIT_ERROR_BIND[] = "[SocketManagerUDP - Init] bind() fallo en el puerto %d con el error: %d";
 constexpr char INIT_ERROR_CREATETHREAD[] = "[SocketManagerUDP - Init] Error al crear el hilo de recepción.";
@@ -46,18 +45,13 @@ CSocketManagerUdp gSocketManagerUdp;
 
 CSocketManagerUdp::CSocketManagerUdp()
 	: m_socket(INVALID_SOCKET),
-	m_ServerRecvThread(nullptr),
-	m_RecvSize(0),
-	m_SendSize(0),
-	m_shutdownEvent(nullptr)
+	m_ServerRecvThread(nullptr)
 {
 	memset(&this->m_SocketAddr, 0, sizeof(this->m_SocketAddr));
 	this->m_SocketAddr.sin_family = AF_INET;
 	this->m_SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	this->m_SocketAddr.sin_port = 0;
 
-	memset(this->m_RecvBuff, 0, sizeof(this->m_RecvBuff));
-	memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
 }
 
 CSocketManagerUdp::~CSocketManagerUdp()
@@ -84,15 +78,6 @@ CSocketManagerUdp::~CSocketManagerUdp()
 bool CSocketManagerUdp::Init(WORD port)
 {
 
-	// Evento de parada manual-reset: una vez señalado (SetEvent), permanece
-	// señalado para todos los hilos que lo consulten (no se auto-resetea).
-	if ((this->m_shutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
-	{
-		Log.ToDisp(LOG_RED, INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG, GetLastError());
-		this->Clean();
-		return false;
-	}
-
 	if ((this->m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
 		Log.ToDisp(LOG_RED, INIT_ERROR_WSA_SOCKET, WSAGetLastError());
@@ -110,12 +95,6 @@ bool CSocketManagerUdp::Init(WORD port)
 		this->Clean();
 		return false;
 	}
-
-	memset(this->m_RecvBuff, 0, sizeof(this->m_RecvBuff));
-	memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
-
-	this->m_RecvSize = 0;
-	this->m_SendSize = 0;
 
 	if ((this->m_ServerRecvThread = CreateThread(nullptr, 0, CSocketManagerUdp::ServerRecvThread, this, 0, nullptr)) == nullptr)
 	{
@@ -177,25 +156,15 @@ bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 
 	this->m_SocketAddr.sin_port = htons(port);
 
-	memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
-
-	this->m_SendSize = 0;
-
 	return true;
 }
 
 // CORRECIÓN: Agregar funcion Clean() para liberar recursos correctamente
 void CSocketManagerUdp::Clean()
 {
-	// Señalizar parada cooperativa
-	if (this->m_shutdownEvent != nullptr)
-	{
-		SetEvent(this->m_shutdownEvent);
-	}
-
-	// Cerrar socket para provocar retorno de recvfrom en el hilo
-	// Protegemos el cierre del socket y el acceso al buffer de envio
-	// mediante m_lock para evitar races con DataSend() o el recv thread.
+	// Cerrar el socket es la única señal de parada necesaria:
+	// desbloquea recvfrom() en ServerRecvThread inmediatamente
+	// con WSAENOTSOCK, lo que hace que el hilo salga del loop.
 	{
 		CCriticalSection::CLock lock(this->m_lock);
 
@@ -204,115 +173,81 @@ void CSocketManagerUdp::Clean()
 			closesocket(this->m_socket);
 			this->m_socket = INVALID_SOCKET;
 		}
-
-		// Limpiar buffer de envio
-		memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
-		this->m_SendSize = 0;
 	}
 
-	// Esperar que termine el hilo correctamente (no forzar)
 	if (this->m_ServerRecvThread != nullptr)
 	{
 		if (WaitForSingleObject(this->m_ServerRecvThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
 			Log.ToDisp(LOG_RED, CLEAN_WAITFORSINGLEOBJECT_TIMEOUT);
-			// No usar TerminateThread; solo cerramos handle para liberar recursos
 		}
 		CloseHandle(this->m_ServerRecvThread);
 		this->m_ServerRecvThread = nullptr;
 	}
-
-	// Cerrar evento de parada
-	if (this->m_shutdownEvent != nullptr)
-	{
-		CloseHandle(this->m_shutdownEvent);
-		this->m_shutdownEvent = nullptr;
-	}
 }
 
-bool CSocketManagerUdp::DataRecv()
+bool CSocketManagerUdp::DataRecv(int recvSize)
 {
+
+	if (recvSize < 3)
+	{
+		// Datagrama demasiado corto para contener siquiera la cabecera
+		// mínima (C1: type+size+head). Se descarta silenciosamente:
+		// en UDP no hay "conexión" que cerrar, así que no es necesario
+		// loggear cada paquete malformado como error grave (podría ser
+		// ruido de red, un probe, o un paquete corrupto en tránsito).
+		return false;
+	}
 
 	BYTE* lpMsg = this->m_RecvBuff;
 
-	int count = 0;
+	int size = 0;
+	BYTE header = lpMsg[0];
+	BYTE head = 0;
 
-	while (true)
+	if (header == PACKET_HEADER_C1)
 	{
-		int available = this->m_RecvSize - count;
-
-		if (available <= 0)
+		size = lpMsg[1];
+		head = lpMsg[2];
+	}
+	else if (header == PACKET_HEADER_C2)
+	{
+		if (recvSize < 4)
 		{
-			break;
-		}
-
-		int size = 0;
-		BYTE header = 0;
-		BYTE head = 0;
-
-		if (lpMsg[count] == PACKET_HEADER_C1)
-		{
-			if (available < 3)
-			{
-				break;
-			}
-
-			header = lpMsg[count];
-			size = lpMsg[count + 1];
-			head = lpMsg[count + 2];
-		}
-		else if (lpMsg[count] == PACKET_HEADER_C2)
-		{
-			if (available < 4)
-			{
-				break;
-			}
-
-			header = lpMsg[count];
-			size = MAKEWORD(lpMsg[count + 2], lpMsg[count + 1]);
-			head = lpMsg[count + 3];
-		}
-		else
-		{
-			Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_HEADER_ERROR, lpMsg[count]);
-			memset(this->m_RecvBuff, 0, sizeof(this->m_RecvBuff));
-			this->m_RecvSize = 0;
 			return false;
 		}
-
-		int minSize = (header == PACKET_HEADER_C1) ? 3 : 4;
-
-		if (size < minSize || size > MAX_UDP_PACKET_SIZE)
-		{
-			Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_SIZE_ERROR, header, size, head);
-			memset(this->m_RecvBuff, 0, sizeof(this->m_RecvBuff));
-			this->m_RecvSize = 0;
-			return false;
-		}
-
-		// Aún no llegó el paquete completo
-		if (size > available)
-		{
-			break;
-		}
-
-		gServerList.ProcessServerStatusPacket(head, &lpMsg[count], size);
-
-		count += size;
+		size = MAKEWORD(lpMsg[2], lpMsg[1]);
+		head = lpMsg[3];
 	}
-
-	// Mover remanente incompleto al inicio del buffer
-	if (count > 0)
+	else
 	{
-		int remaining = this->m_RecvSize - count;
-
-		if (remaining > 0)
-		{
-			memmove(lpMsg, &lpMsg[count], remaining);
-		}
-
-		this->m_RecvSize = remaining;
+		Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_HEADER_ERROR, header);
+		return false;
 	}
+
+	int minSize = (header == PACKET_HEADER_C1) ? 3 : 4;
+
+	// En UDP, "size" SIEMPRE debe coincidir exactamente con lo que llegó
+	// en este datagrama. Si no coincide, no es un caso de "esperar más
+	// datos" (como en TCP) — es un paquete corrupto o malformado, porque
+	// un datagrama UDP nunca llega partido a la mitad.
+	if (size < minSize || size > MAX_UDP_PACKET_SIZE)
+	{
+		Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_SIZE_ERROR, header, size, head);
+		return false;
+	}
+
+	if (size != recvSize)
+	{
+		// FIX: detecta el caso real de error en UDP: el campo "size" del
+		// protocolo no coincide con los bytes efectivamente recibidos.
+		// Esto reemplaza la lógica de "paquete incompleto, esperar más"
+		// que tenía sentido en TCP pero es imposible en UDP.
+		Log.ToDisp(LOG_RED, "[SocketManagerUdp] Tamaño declarado (%d) no coincide con datagrama recibido (%d)", size, recvSize);
+		return false;
+	}
+
+	gServerList.ProcessServerStatusPacket(head, lpMsg, size);
 
 	return true;
 }
@@ -325,22 +260,20 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size)
 
 	if (this->m_socket == INVALID_SOCKET)
 	{
-		return 0;
+		return false;
 	}
 
-	if ((this->m_SendSize + size) > MAX_UDP_PACKET_SIZE)
+	if (size > MAX_UDP_PACKET_SIZE)
 	{
 		Log.ToDisp(LOG_RED, DATASEND_MSGSIZE_ERROR, size);
-		memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
-		this->m_SendSize = 0;
-		return 0;
+		return false;
 	}
 
-	memcpy(&this->m_SendBuff[this->m_SendSize], lpMsg, size);
-
-	this->m_SendSize += size;
-
-	int result = sendto(this->m_socket, (char*)this->m_SendBuff, this->m_SendSize, 0, (sockaddr*)&this->m_SocketAddr, sizeof(this->m_SocketAddr));
+	// UDP: sendto() es atómico para datagramas. O se envía el mensaje
+	// completo en una sola llamada al kernel, o falla. No existe el
+	// concepto de "envío parcial" como en TCP, así que no hace falta
+	// side buffer ni lógica de reintento por bytes pendientes.
+	int result = sendto(this->m_socket, (char*)lpMsg, size, 0, (sockaddr*)&this->m_SocketAddr, sizeof(this->m_SocketAddr));
 
 	if (result == SOCKET_ERROR)
 	{
@@ -348,18 +281,15 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size)
 		if (Error != WSAEWOULDBLOCK)
 		{
 			Log.ToDisp(LOG_RED, DATASEND_SENDTO_ERROR, Error);
-			memset(this->m_SendBuff, 0, sizeof(this->m_SendBuff));
-			this->m_SendSize = 0;
-			return 0;
+			return false;
 		}
-
-		return 1;
+		// WSAEWOULDBLOCK en un socket UDP no bloqueante: el datagrama
+		// se descarta. No hay reintento automático porque UDP no
+		// garantiza entrega; el llamador puede reintentar si es crítico.
+		return false;
 	}
 
-	this->m_SendSize -= result;
-
-	memmove(this->m_SendBuff, &this->m_SendBuff[result], this->m_SendSize);
-	return 1;
+	return true;
 }
 
 DWORD WINAPI CSocketManagerUdp::ServerRecvThread(LPVOID lpParam)
@@ -368,41 +298,49 @@ DWORD WINAPI CSocketManagerUdp::ServerRecvThread(LPVOID lpParam)
 
 	while (true)
 	{
-		// Si se ha solicitado parada cooperativa, salimos
-		if (lpSocketManagerUdp->m_shutdownEvent && WaitForSingleObject(lpSocketManagerUdp->m_shutdownEvent, 0) == WAIT_OBJECT_0)
-		{
-			break;
-		}
-
 		SOCKADDR_IN SocketAddr;
 		int SocketAddrSize = sizeof(SocketAddr);
 
-		int result = recvfrom(lpSocketManagerUdp->m_socket, (char*)&lpSocketManagerUdp->m_RecvBuff[lpSocketManagerUdp->m_RecvSize], (MAX_UDP_PACKET_SIZE - lpSocketManagerUdp->m_RecvSize), 0, (sockaddr*)&SocketAddr, &SocketAddrSize);
+		// UDP: cada recvfrom() entrega EXACTAMENTE un datagrama completo
+		// o falla. Siempre se escribe desde offset 0: no existe el
+		// concepto de "continuación" entre llamadas como en TCP, así
+		// que jamás se debe acumular sobre un offset previo.
+		int result = recvfrom(
+			lpSocketManagerUdp->m_socket,
+			(char*)lpSocketManagerUdp->m_RecvBuff,
+			MAX_UDP_PACKET_SIZE,
+			0,
+			(sockaddr*)&SocketAddr,
+			&SocketAddrSize
+		);
 
 		if (result == SOCKET_ERROR)
 		{
 			int wsaErr = WSAGetLastError();
 
-			// Si se ha solicitado parada cooperativa, salimos silenciosamente
-			if (lpSocketManagerUdp->m_shutdownEvent && WaitForSingleObject(lpSocketManagerUdp->m_shutdownEvent, 0) == WAIT_OBJECT_0)
+			// WSAENOTSOCK / WSAEINTR / WSANOTINITIALISED indican que el
+			// socket fue cerrado desde Clean() (parada del servidor) o
+			// que la pila Winsock ya se está apagando. Esta es la señal
+			// real y única de "hay que terminar el hilo": no hace falta
+			// un evento de shutdown separado, porque closesocket() desde
+			// otro hilo ya desbloquea este recvfrom() de forma inmediata.
+			if (wsaErr == WSAENOTSOCK || wsaErr == WSAEINTR || wsaErr == WSANOTINITIALISED)
 			{
 				break;
 			}
 
-			// Solo logear si no es una interrupcion esperada por cierre de socket
-			if (wsaErr != WSAENOTSOCK && wsaErr != WSAEINTR && wsaErr != WSANOTINITIALISED)
-			{
-				Log.ToDisp(LOG_RED, SERVERRECVTHREAD_RECVFROM_ERROR, wsaErr);
-			}
-
-			memset(lpSocketManagerUdp->m_RecvBuff, 0, sizeof(lpSocketManagerUdp->m_RecvBuff));
-			lpSocketManagerUdp->m_RecvSize = 0;
+			// Cualquier otro error (ej. WSAECONNRESET por un ICMP
+			// "puerto inalcanzable" de un envío previo) es transitorio:
+			// se loguea y se sigue escuchando, sin tocar el buffer
+			// (no hace falta limpiarlo: el próximo recvfrom exitoso
+			// sobreescribe desde el offset 0 igual).
+			Log.ToDisp(LOG_RED, SERVERRECVTHREAD_RECVFROM_ERROR, wsaErr);
 			continue;
 		}
 
-		lpSocketManagerUdp->m_RecvSize += result;
-
-		lpSocketManagerUdp->DataRecv();
+		// result == 0 es válido en UDP (datagrama vacío). DataRecv ya
+		// descarta cualquier tamaño menor al mínimo de protocolo.
+		lpSocketManagerUdp->DataRecv(result);
 	}
 
 	return 0;

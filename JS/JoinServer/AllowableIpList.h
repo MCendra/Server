@@ -1,7 +1,4 @@
-// AllowableIpList.h: interface for the CAllowableIpList class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// AllowableIpList.h:
 #pragma once
 
 struct ALLOWABLE_IP_INFO

@@ -5,8 +5,8 @@
 // Instancia global
 CServerLog gServerLog;
 
-constexpr char LOG_DIRECTORY_NAME[] = "\\LOG";
-constexpr char LOG_ACCOUNT_DIRECTORY_NAME[] = "\\LOG_ACCOUNT";
+constexpr char LOG_DIRECTORY_NAME[] = "LOG";
+constexpr char LOG_ACCOUNT_DIRECTORY_NAME[] = "LOG_ACCOUNT";
 
 // Constructor
 CServerLog::CServerLog() noexcept
@@ -38,16 +38,30 @@ void CServerLog::Init(bool active)
 {
 	CCriticalSection::CLock lock(m_criticalSection); // Bloquea automáticamente
 
-	auto& logInfo = m_logInfo[static_cast<size_t>(LogType::GENERAL)];
-	logInfo.active.store(active, std::memory_order_relaxed);
+	// --- Log general ---
+	auto& generalLog = m_logInfo[static_cast<size_t>(LogType::GENERAL)];
+	generalLog.active.store(active, std::memory_order_relaxed);
 
-	char directory[MAX_PATH];
-	snprintf(directory, MAX_PATH, "%s\\%s", WorkingPath, LOG_DIRECTORY_NAME);
-	strncpy_s(logInfo.directory, directory, MAX_PATH);
+	char generalDirectory[MAX_PATH];
+	snprintf(generalDirectory, MAX_PATH, "%s\\%s", WorkingPath, LOG_DIRECTORY_NAME);
+	strncpy_s(generalLog.directory, sizeof(generalLog.directory), generalDirectory, _TRUNCATE);
 
 	if (active)
 	{
-		OpenLogFile(logInfo);
+		OpenLogFile(generalLog);
+	}
+
+	// --- Log de cuentas ---
+	auto& accountLog = m_logInfo[static_cast<size_t>(LogType::ACCOUNT)];
+	accountLog.active.store(active, std::memory_order_relaxed);
+
+	char accountDirectory[MAX_PATH];
+	snprintf(accountDirectory, MAX_PATH, "%s\\%s", WorkingPath, LOG_ACCOUNT_DIRECTORY_NAME);
+	strncpy_s(accountLog.directory, sizeof(accountLog.directory), accountDirectory, _TRUNCATE);
+
+	if (active)
+	{
+		OpenLogFile(accountLog);
 	}
 
 	// Al salir del scope, el destructor de CLock libera la sección crítica
@@ -73,11 +87,12 @@ void CServerLog::Output(LogType type, const std::string& text)
 	SYSTEMTIME currentTime;
 	GetLocalTime(&currentTime);
 
-	if (currentTime.wDay != logInfo.lastWrite.wDay ||
-		currentTime.wMonth != logInfo.lastWrite.wMonth ||
-		currentTime.wYear != logInfo.lastWrite.wYear)
+	if (currentTime.wDay != logInfo.lastWrite.wDay || currentTime.wMonth != logInfo.lastWrite.wMonth ||	currentTime.wYear != logInfo.lastWrite.wYear)
 	{
-		CloseHandle(logInfo.file);
+		if (logInfo.file != INVALID_HANDLE_VALUE)
+		{
+			CloseHandle(logInfo.file);
+		}
 		OpenLogFile(logInfo);
 	}
 
@@ -90,12 +105,23 @@ void CServerLog::Output(LogType type, const std::string& text)
 
 	std::string finalMessage = oss.str();
 
-	DWORD bytesWritten;
-	WriteFile(logInfo.file, finalMessage.c_str(), static_cast<DWORD>(finalMessage.size()), &bytesWritten, NULL);
+	DWORD bytesWritten = 0;
+	if (!WriteFile(logInfo.file, finalMessage.c_str(),
+		static_cast<DWORD>(finalMessage.size()), &bytesWritten, nullptr))
+	{
+		// El handle puede haberse invalidado externamente (ej. archivo
+		// borrado/movido mientras el proceso seguia corriendo).
+		// Reintentamos una vez reabriendo el archivo; si vuelve a
+		// fallar, OpenLogFile desactiva el log automaticamente.
+		CloseHandle(logInfo.file);
+		OpenLogFile(logInfo);
+	}
 }
 
-
-// Método para abrir el archivo de log
+// Crea el directorio si no existe y abre (o crea) el archivo del dia
+// actual para el LogInfo dado. Funciona igual para GENERAL y ACCOUNT:
+// la unica diferencia entre ambos es el "directory" ya resuelto por
+// Init(), esta funcion es agnostica al tipo de log.
 void CServerLog::OpenLogFile(LogInfo& logInfo)
 {
 	CreateDirectoryA(logInfo.directory, NULL);
@@ -119,7 +145,7 @@ void CServerLog::OpenLogFile(LogInfo& logInfo)
 	}
 }
 
-// Método para obtener la marca de tiempo actual
+// Metodo para obtener la marca de tiempo actual
 void CServerLog::GetCurrentTimestamp(char* buffer, size_t bufferSize)
 {
 	SYSTEMTIME currentTime;

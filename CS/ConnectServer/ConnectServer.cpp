@@ -25,11 +25,7 @@ constexpr char ERROR_WSA_TCP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar
 constexpr char ERROR_WSA_UDP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket UDP en el puerto %d.";
 constexpr char ERROR_CREATE_WINDOW[] = "[CS] CreateWindowA fallo. Codigo error: %d";
 
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR    lpCmdLine,
-	_In_ int       nCmdShow)
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     // Inicia la captura de minidumps en caso de fallos
     CMiniDump::Start();
@@ -55,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Obtener el path del ejecutable
     gUtil.GetExecutablePath();
 
-    // Inicializa la visualizacion del servidor
+	// Inicializa controlador de visualizacion de mensajes 
     gServerDisplayer.Init(g_hWnd);
 
     // Inicializa el log al disco
