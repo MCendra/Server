@@ -1,9 +1,8 @@
 #pragma once
 
-// ÀüÃ¼ Å°°ªÀÇ °³¼ö´Â 256 x 4 = 1024
+// Ã€Ã¼ÃƒÂ¼ Ã…Â°Â°ÂªÃ€Ã‡ Â°Â³Â¼Ã¶Â´Ã‚ 256 x 4 = 1024
 
-#define	MAX_KEY_INDEX	256		// Å°°ªÀÇ ÇÑ°èÄ¡
-
+#define	MAX_KEY_INDEX	256		// LÃ­mite de valor de clave
 
 const unsigned int MD5_KEYVAL [] = {
 	0xb53e0951,	// 0000-000

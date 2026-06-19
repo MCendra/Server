@@ -1,6 +1,7 @@
 // AllowableIpList.cpp
 #include "Header.h"
 #include "AllowableIpList.h"
+#include "Log.h"
 #include "MemScript.h"
 #include "Util.h"
 
@@ -8,29 +9,29 @@ CAllowableIpList gAllowableIpList;
 
 // Construction/Destruction
 
-CAllowableIpList::CAllowableIpList() // OK
+CAllowableIpList::CAllowableIpList()
 {
 	this->m_AllowableIpInfo.clear();
 }
 
-CAllowableIpList::~CAllowableIpList() // OK
+CAllowableIpList::~CAllowableIpList()
 {
 
 }
 
-void CAllowableIpList::Load(char* path) // OK
+void CAllowableIpList::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
 	if(lpMemScript == 0)
 	{
-		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR,path);
+		Log.ToFile(LogType::GENERAL,MEM_SCRIPT_ALLOC_ERROR,path);
 		return;
 	}
 
 	if(lpMemScript->SetBuffer(path) == 0)
 	{
-		ErrorMessageBox(lpMemScript->GetLastError());
+		Log.ToFile(LogType::GENERAL,lpMemScript->GetLastError());
 		delete lpMemScript;
 		return;
 	}
@@ -72,7 +73,7 @@ void CAllowableIpList::Load(char* path) // OK
 	}
 	catch(...)
 	{
-		ErrorMessageBox(lpMemScript->GetLastError());
+		Log.ToFile(LogType::GENERAL,lpMemScript->GetLastError());
 	}
 
 	delete lpMemScript;

@@ -1,40 +1,33 @@
-// ServerManager.cpp: implementation of the CServerManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// ServerManager.cpp:
 #include "Header.h"
 #include "ServerManager.h"
+#include "Log.h"
 #include "AccountManager.h"
 #include "Util.h"
 
 CServerManager gServerManager[MAX_SERVER];
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CServerManager::CServerManager() // OK
+CServerManager::CServerManager()
 {
+
 	this->m_index = -1;
-
 	this->m_state = SERVER_OFFLINE;
-
 	this->m_socket = INVALID_SOCKET;
-
 	this->m_IoRecvContext = 0;
-
 	this->m_IoSendContext = 0;
-
 	this->m_OnlineTime = 0;
-
 	this->m_PacketTime = 0;
+
 }
 
-CServerManager::~CServerManager() // OK
+CServerManager::~CServerManager()
 {
 
 }
 
-bool CServerManager::CheckState() // OK
+bool CServerManager::CheckState()
 {
 	if(SERVER_RANGE(this->m_index) == 0 || this->m_state == SERVER_OFFLINE || this->m_socket == INVALID_SOCKET)
 	{
@@ -46,7 +39,7 @@ bool CServerManager::CheckState() // OK
 	}
 }
 
-bool CServerManager::CheckAlloc() // OK
+bool CServerManager::CheckAlloc()
 {
 	if(this->m_IoRecvContext == 0 || this->m_IoSendContext == 0)
 	{
@@ -58,7 +51,7 @@ bool CServerManager::CheckAlloc() // OK
 	}
 }
 
-void CServerManager::AddServer(int index,char* ip,SOCKET socket) // OK
+void CServerManager::AddServer(int index,char* ip,SOCKET socket)
 {
 	this->m_index = index;
 
@@ -105,12 +98,12 @@ void CServerManager::AddServer(int index,char* ip,SOCKET socket) // OK
 
 	this->m_MaxUserCount = 0;
 
-	LogAdd(LOG_BLACK,"[ServerManager][%d] AddServer (%s)",this->m_index,this->m_IpAddr);
+	Log.ToDisp(LOG_BLACK,"[ServerManager][%d] AddServer (%s)",this->m_index,this->m_IpAddr);
 }
 
-void CServerManager::DelServer() // OK
+void CServerManager::DelServer()
 {
-	LogAdd(LOG_BLACK,"[ServerManager][%d] DelServer (%s)",this->m_index,this->m_IpAddr);
+	Log.ToDisp(LOG_BLACK,"[ServerManager][%d] DelServer (%s)",this->m_index,this->m_IpAddr);
 
 	WORD ServerCode = this->m_ServerCode;
 
@@ -139,7 +132,7 @@ void CServerManager::DelServer() // OK
 	gAccountManager.ClearServerAccountInfo(ServerCode);
 }
 
-void CServerManager::SetServerInfo(char* name,WORD port,WORD code) // OK
+void CServerManager::SetServerInfo(char* name,WORD port,WORD code)
 {
 	strcpy_s(this->m_ServerName,name);
 
@@ -147,5 +140,5 @@ void CServerManager::SetServerInfo(char* name,WORD port,WORD code) // OK
 
 	this->m_ServerCode = code;
 
-	LogAdd(LOG_BLACK,"[ServerManager][%d] ServerInfo (%s) (%d) (%d)",this->m_index,this->m_ServerName,this->m_ServerPort,this->m_ServerCode);
+	Log.ToDisp(LOG_BLACK,"[ServerManager][%d] ServerInfo (%s) (%d) (%d)",this->m_index,this->m_ServerName,this->m_ServerPort,this->m_ServerCode);
 }

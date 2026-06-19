@@ -10,17 +10,17 @@ CAccountManager gAccountManager;
 
 // Construction/Destruction
 
-CAccountManager::CAccountManager() // OK
+CAccountManager::CAccountManager()
 {
 
 }
 
-CAccountManager::~CAccountManager() // OK
+CAccountManager::~CAccountManager()
 {
 
 }
 
-void CAccountManager::DisconnectProc() // OK
+void CAccountManager::DisconnectProc()
 {
 	this->m_critical.lock();
 
@@ -32,7 +32,7 @@ void CAccountManager::DisconnectProc() // OK
 			continue;
 		}
 
-		gLog.Output(LOG_ACCOUNT,"[AccountInfo] Account disconnected by proc (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
+		Log.ToFile(LogType::ACCOUNT,"[AccountInfo] Account disconnected by proc (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
 
 		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'",it->second.Account);
 
@@ -46,7 +46,7 @@ void CAccountManager::DisconnectProc() // OK
 	this->m_critical.unlock();
 }
 
-void CAccountManager::ClearServerAccountInfo(WORD ServerCode) // OK
+void CAccountManager::ClearServerAccountInfo(WORD ServerCode)
 {
 	this->m_critical.lock();
 
@@ -58,7 +58,7 @@ void CAccountManager::ClearServerAccountInfo(WORD ServerCode) // OK
 			continue;
 		}
 
-		gLog.Output(LOG_ACCOUNT,"[AccountInfo] Account disconnected by clear (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
+		Log.ToFile(LogType::ACCOUNT,"[AccountInfo] Account disconnected by clear (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
 
 		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'",it->second.Account);
 
@@ -70,7 +70,7 @@ void CAccountManager::ClearServerAccountInfo(WORD ServerCode) // OK
 	this->m_critical.unlock();
 }
 
-bool CAccountManager::GetAccountInfo(ACCOUNT_INFO* lpAccountInfo,char* account) // OK
+bool CAccountManager::GetAccountInfo(ACCOUNT_INFO* lpAccountInfo,char* account)
 {
 	this->m_critical.lock();
 
@@ -91,7 +91,7 @@ bool CAccountManager::GetAccountInfo(ACCOUNT_INFO* lpAccountInfo,char* account) 
 	return 0;
 }
 
-void CAccountManager::InsertAccountInfo(ACCOUNT_INFO AccountInfo) // OK
+void CAccountManager::InsertAccountInfo(ACCOUNT_INFO AccountInfo)
 {
 	this->m_critical.lock();
 
@@ -113,7 +113,7 @@ void CAccountManager::InsertAccountInfo(ACCOUNT_INFO AccountInfo) // OK
 	this->m_critical.unlock();
 }
 
-void CAccountManager::RemoveAccountInfo(ACCOUNT_INFO AccountInfo) // OK
+void CAccountManager::RemoveAccountInfo(ACCOUNT_INFO AccountInfo)
 {
 	this->m_critical.lock();
 
@@ -133,7 +133,7 @@ void CAccountManager::RemoveAccountInfo(ACCOUNT_INFO AccountInfo) // OK
 	this->m_critical.unlock();
 }
 
-long CAccountManager::GetAccountCount() // OK
+long CAccountManager::GetAccountCount()
 {
 	long AccountCount = 0;
 

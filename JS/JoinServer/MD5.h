@@ -4,30 +4,29 @@ class MD5 {
 
 public:
 
+// M챕todos MD5 a챰adidos
+bool MD5_EncodeKeyVal	(					// Genera un valor de clave MD5 de 128 bits (16 bytes) utilizando la cadena de entrada y el 챠ndice de clave (0~255).
+	  char * lpszInputStr,					// Entrada de cadena
+	  char * lpszOutputKeyVal,				// Salida de clave
+	  int iKeyIndex							// 횒ndice de clave (0~255)
+	  );
+
+bool MD5_EncodeString	(					// Genera un valor de clave de cadena MD5 de 128 x 2 bits (32 bytes) utilizando la cadena de entrada y el 챠ndice de clave (0~255).
+	  char * lpszInputStr,					// Entrada de cadena
+	  char * lpszOutputStr,					// Salida de cadena
+	  int iKeyIndex							// 횒ndice de clave (0~255)
+	  );
+
+bool MD5_CheckValue	(						// Recibe como entrada una cadena, un valor de clave MD5 y un 챠ndice de clave (0~255) para autenticar el valor de la clave (verdadero: correcto / falso: incorrecto).
+											// P.S.> El valor de clave es un MD5 de 128 bits (16 bytes) generado a partir de la cadena de entrada.
+	  char * lpszInputStr,					// Entrada de cadena
+	  char * szKeyVal,						// Entrada del valor de clave MD5
+	  int iKeyIndex							// 횒ndice de clave (0~255)
+	  );
+
+
 //---------------------------------------------
-//	MD5 추가된 메서드들
-bool MD5_EncodeKeyVal	(					// 입력된 문자열과 키인덱스 (0~255)를 사용하여 128 bits (16 bytes) 의 MD5 키값 생성
-	  char * lpszInputStr,					// 입력 문자열
-	  char * lpszOutputKeyVal,				// 출력 버퍼
-	  int iKeyIndex							// 키인덱스 (0~255)
-	  );
-
-bool MD5_EncodeString	(					// 입력된 문자열과 키인덱스 (0~255)를 사용하여 128 x 2 bits (32 bytes) 의 MD5 문자열 키값 생성
-	  char * lpszInputStr,					// 입력 문자열
-	  char * lpszOutputStr,					// 출력 버퍼
-	  int iKeyIndex							// 키인덱스 (0~255)
-	  );
-
-bool MD5_CheckValue	(						// 문자열과 MD5 키값과 키인덱스 (0~255) 를 입력받아 키값을 인증함 (true : 맞음 / false : 틀림)
-											// P.S.> 키값은 문자열(256 bits)이 아닌 128 bits MD5 키여야 한다.
-	  char * lpszInputStr,					// 입력 문자열
-	  char * szKeyVal,						// 입력 MD5 키값
-	  int iKeyIndex							// 키인덱스 (0~255)
-	  );
-
-
-//---------------------------------------------
-//	MD5 기존 메서드들
+// M챕todos MD5 existentes
 
 // methods for controlled operation:
   MD5              ();  // simple initializer
@@ -54,19 +53,19 @@ bool MD5_CheckValue	(						// 문자열과 MD5 키값과 키인덱스 (0~255) 를 입력받아 �
 private:
 
 //---------------------------------------------
-//	MD5 추가된 메서드들
+// M챕todos MD5 a챰adidos
   void setmagicnum (int keyindex);
 
 
 //---------------------------------------------
-//	MD5 추가된 멤버 변수들
+// MD5 agreg처 variables miembro
 	unsigned char	m_cRaw_digest[16];  
 	char			m_cHex_digest[33];  
 
 
 
 //---------------------------------------------
-//	MD5 기존 멤버 변수들
+// Variables miembro existentes de MD5
 
 // first, some types:
   typedef unsigned       int uint4; // assumes integer is 4 words long

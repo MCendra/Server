@@ -1,11 +1,10 @@
-#include "stdafx.h"
+#include "Header.h"
 #include "MD5.h"
 #include "MD5_KEYVAL.h"
 
-//---------------------------------------------
-//	MD5 추가된 메서드들
+// M챕todos MD5 a챰adidos
 
-// 입력된 문자열과 키인덱스 (0~65535)를 사용하여 128 bits (16 bytes) 의 MD5 키값 생성
+// Genera un valor de clave MD5 de 128 bits (16 bytes) utilizando la cadena de entrada y el 챠ndice de clave (0~65535).
 bool MD5::MD5_EncodeKeyVal	(					
 	char * lpszInputStr,			
 	char * lpszOutputKeyVal,			
@@ -28,7 +27,7 @@ bool MD5::MD5_EncodeKeyVal	(
 }
 
 
-// 입력된 문자열과 키인덱스 (0~255)를 사용하여 128 x 2 bits (32 bytes) 의 MD5 문자열 키값 생성
+// Genera un valor de clave de cadena MD5 de 128 x 2 bits (32 bytes) utilizando la cadena de entrada y el 챠ndice de clave (0~255).
 bool MD5::MD5_EncodeString	(	
 	char * lpszInputStr,			
 	char * lpszOutputStr,			
@@ -50,7 +49,7 @@ bool MD5::MD5_EncodeString	(
 }
 
 
-// 문자열과 MD5 키값과 키인덱스 (0~255) 를 입력받아 키값을 인증함 (true : 맞음 / false : 틀림)
+// Recibe como entrada una cadena, un valor de clave MD5 y un 챠ndice de clave (0~255) para autenticar el valor de la clave (verdadero: correcto / falso: incorrecto).
 bool MD5::MD5_CheckValue	(	
 	char * lpszInputStr,		
 	char * szKeyVal,			
@@ -83,7 +82,7 @@ void MD5::setmagicnum (int keyindex)
 
 
 //---------------------------------------------
-//	MD5 기존 메서드들
+//	MD5 짹창횁쨍 쨍횧쩌짯쨉책쨉챕
 
 // MD5 simple initialization method
 

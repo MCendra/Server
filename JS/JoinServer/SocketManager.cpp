@@ -29,7 +29,6 @@
 #include "ServerManager.h"
 #include "AllowableIpList.h"
 #include "Log.h"
-//#include "Protect.h"
 #include "Util.h"
 
 CSocketManager gSocketManager;

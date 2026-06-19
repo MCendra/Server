@@ -3,7 +3,6 @@
 #include "MD5.h"
 #include "AccountManager.h"
 #include "Log.h"
-#include "Protect.h"
 #include "QueryManager.h"
 #include "ServerManager.h"
 #include "SocketManager.h"
@@ -11,7 +10,6 @@
 
 void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 {
-	PROTECT_START
 
 	gServerManager[index].m_PacketTime = GetTickCount();
 
@@ -58,7 +56,6 @@ void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 			break;
 	}
 
-	PROTECT_FINAL
 }
 
 void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index) // OK
@@ -135,7 +132,7 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
 
 		if(strcmp(lpMsg->password,GlobalPassword) == 0)
 		{
-			LogAdd(LOG_RED,"Account %s logged with global password!",lpMsg->account);
+			Log.ToDisp(LOG_RED,"Account %s logged with global password!",lpMsg->account);
 		}
 	}
 	else
@@ -166,7 +163,7 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
 
 		if(strcmp(lpMsg->password,GlobalPassword) == 0)
 		{
-			LogAdd(LOG_RED,"Account %s logged with global password!",lpMsg->account);
+			Log.ToDisp(LOG_RED,"Account %s logged with global password!",lpMsg->account);
 		}
 	}
 
@@ -253,7 +250,7 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
 
 	gAccountManager.InsertAccountInfo(AccountInfo);
 
-	gLog.Output(LOG_ACCOUNT,"[AccountInfo] Account connected (Account: %s, IpAddress: %s, GameServerCode: %d)",AccountInfo.Account,AccountInfo.IpAddress,AccountInfo.GameServerCode);
+	Log.ToFile(LogType::ACCOUNT, "[AccountInfo] Account connected (Account: %s, IpAddress: %s, GameServerCode: %d)",AccountInfo.Account,AccountInfo.IpAddress,AccountInfo.GameServerCode);
 }
 
 void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
@@ -272,7 +269,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 	{
 		pMsg.result = CREATE_ACCOUNT_FAIL_RESIDENT;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-		LogAdd(LOG_RED,"Account %s Register fail Syntax!");
+		Log.ToDisp(LOG_RED,"Account %s Register fail Syntax!");
 		return;
 	}
 
@@ -287,7 +284,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 	{
 		pMsg.result = CREATE_ACCOUNT_FAIL_RESIDENT;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-		LogAdd(LOG_RED,"Account %s Register fail, CONNECTION!!!");
+		Log.ToDisp(LOG_RED,"Account %s Register fail, CONNECTION!!!");
 		return;
 	}
 	if(MD5Encryption == 0)
@@ -304,7 +301,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 			{
 				gQueryManager.Close();
 				pMsg.result = CREATE_ACCOUNT_SUCCESS;
-				gLog.Output(LOG_ACCOUNT, "[AccountInfo] Account created (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
+				Log.ToFile(LogType::ACCOUNT, "[AccountInfo] Account created (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
 			}
 		}
 		else
@@ -327,7 +324,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 			{
 				gQueryManager.Close();
 				pMsg.result = CREATE_ACCOUNT_SUCCESS;
-				gLog.Output(LOG_ACCOUNT, "[AccountInfo] Account created (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
+				Log.ToFile(LogType::ACCOUNT, "[AccountInfo] Account created (Account: %s, Password: %s )", lpMsg->account, lpMsg->password);
 			}
 		}
 		else
@@ -390,7 +387,7 @@ void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index) // O
 
 	gAccountManager.RemoveAccountInfo(AccountInfo);
 
-	gLog.Output(LOG_ACCOUNT,"[AccountInfo] Account disconnected (Account: %s, IpAddress: %s, GameServerCode: %d)",AccountInfo.Account,AccountInfo.IpAddress,AccountInfo.GameServerCode);
+	Log.ToFile(LogType::ACCOUNT,"[AccountInfo] Account disconnected (Account: %s, IpAddress: %s, GameServerCode: %d)",AccountInfo.Account,AccountInfo.IpAddress,AccountInfo.GameServerCode);
 }
 
 void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index) // OK
@@ -591,7 +588,7 @@ void GJMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg,int index) //
 	gAccountManager.InsertAccountInfo(AccountInfo);
 }
 
-void GJAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index) // OK
+void GJAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 {
 	ACCOUNT_INFO AccountInfo;
 
@@ -627,7 +624,7 @@ void GJAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index) // OK
 }
 
 
-void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index) // OK
+void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 {
 
 	SDHP_ACCOUNT_LEVEL_SEND pMsg;
@@ -658,7 +655,7 @@ void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index) // OK
 	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index) // OK
+void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index)
 {
 	ACCOUNT_INFO AccountInfo;
 
@@ -682,28 +679,28 @@ void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index
 	gAccountManager.InsertAccountInfo(AccountInfo);
 }
 
-void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index) // OK
+void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index)
 {
 	gQueryManager.ExecQuery("EXEC WZ_SetAccountLevel '%s','%d','%d'",lpMsg->account,lpMsg->AccountLevel,lpMsg->AccountExpireTime);
 	gQueryManager.Fetch();
 	gQueryManager.Close();
 }
 
-void GJAccountLockSaveRecv(SDHP_LOCK_SAVE_RECV* lpMsg,int index) // OK
+void GJAccountLockSaveRecv(SDHP_LOCK_SAVE_RECV* lpMsg,int index)
 {
 	gQueryManager.ExecQuery("UPDATE memb_info SET Lock = %d WHERE memb___id = '%s'",lpMsg->Lock,lpMsg->account);
 	gQueryManager.Fetch();
 	gQueryManager.Close();
 }
 
-void GJServerUserInfoRecv(SDHP_SERVER_USER_INFO_RECV* lpMsg,int index) // OK
+void GJServerUserInfoRecv(SDHP_SERVER_USER_INFO_RECV* lpMsg,int index)
 {
 	gServerManager[index].m_CurUserCount = lpMsg->CurUserCount;
 
 	gServerManager[index].m_MaxUserCount = lpMsg->MaxUserCount;
 }
 
-void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
+void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMsg,int index)
 {
 	ACCOUNT_INFO AccountInfo;
 
@@ -715,7 +712,7 @@ void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMs
 	JGExternalDisconnectAccountSend(AccountInfo.GameServerCode,AccountInfo.UserIndex,AccountInfo.Account);
 }
 
-void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* account) // OK
+void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* account)
 {
 	CServerManager* lpServerManager = FindServerByCode(GameServerCode);
 
@@ -737,7 +734,7 @@ void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* acco
 	gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void JGAccountAlreadyConnectedSend(int GameServerCode,int UserIndex,char* account) // OK
+void JGAccountAlreadyConnectedSend(int GameServerCode,int UserIndex,char* account)
 {
 	CServerManager* lpServerManager = FindServerByCode(GameServerCode);
 
