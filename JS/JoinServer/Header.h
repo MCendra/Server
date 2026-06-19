@@ -90,7 +90,7 @@ extern char* WorkingPath;
 
 // Definicion de archivos de configuracion
 extern char ConfigFilePath[MAX_PATH];
-extern char AllowableIpListFilePath[MAX_PATH];
+extern char AlloweableIpListFilePath[MAX_PATH];
 
 // Declaraciones de variables de configuracion
 extern char CustomerName[32];
@@ -103,4 +103,4 @@ extern char JoinServerUSER[32];
 extern char JoinServerPASS[32];
 extern char GlobalPassword[32];
 extern BOOL CaseSensitive;
-extern BOOL MD5Encryptions;
+extern BOOL MD5Encryption;

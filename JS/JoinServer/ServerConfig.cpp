@@ -23,7 +23,7 @@ constexpr char KEY_JOIN_SERVER_USER[] = "JoinServerUSER";
 constexpr char KEY_JOIN_SERVER_PASS[] = "JoinServerPASS";
 constexpr char KEY_GLOBAL_PASSWORD[] = "GlobalPassword";
 constexpr char KEY_CASE_SENSITIVE[] = "CaseSensitive";
-constexpr char KEY_MD5_ENCRYPTIONS[] = "MD5Encryptions";
+constexpr char KEY_MD5_ENCRYPTIONS[] = "MD5Encryption";
 
 constexpr char DEFAULT_CONNECT_SERVER_ADDRESS[] = "127.0.0.1";
 constexpr int DEFAULT_CONNECT_SERVER_PORT_UDP = 55557;
@@ -38,15 +38,15 @@ constexpr int DEFAULT_MD5_ENCRYPTIONS = 1;
 constexpr char DEFAULT_CONFIG[] = "[JoinServerInfo]\n"
 "CustomerName=\n"
 "CustomerHardwareId=\n"
-"ConnectServerAddress=%ld\n"
+"ConnectServerAddress=%s\n"
 "ConnectServerPort=%d\n"
 "JoinServerPort=%d\n"
-"JoinServerODBC=%ld\n"
-"JoinServerUSER=%ld\n"
-"JoinServerPASS=%ld\n"
-"GlobalPassword=%ld\n"
+"JoinServerODBC=%s\n"
+"JoinServerUSER=%s\n"
+"JoinServerPASS=%s\n"
+"GlobalPassword=%s\n"
 "CaseSensitive=%d\n"
-"MD5Encryptions=%d\n";
+"MD5Encryption=%d\n";
 
 constexpr char DEFAULT_ALLOWABLE_IP_LIST[] = "0\n"
 "\"127.0.0.1\"\n"
@@ -54,7 +54,7 @@ constexpr char DEFAULT_ALLOWABLE_IP_LIST[] = "0\n"
 
 // Definición de las variables externas
 char ConfigFilePath[MAX_PATH];
-char AlloweableIpListFilePath[MAX_PATH];
+char AllowableIpListFilePath[MAX_PATH];
 char CustomerName[32];
 char CustomerHardwareId[36];
 char ConnectServerAddress[16];
@@ -65,7 +65,7 @@ char JoinServerUSER[32];
 char JoinServerPASS[32];
 char GlobalPassword[32];
 BYTE CaseSensitive;
-BYTE MD5Encryptions;
+BYTE MD5Encryption;
 
 // Construction/Destruction
 
@@ -73,7 +73,7 @@ bool CServerConfig::Init() {
 
 	// Establece paths a los archivos
 	sprintf_s(ConfigFilePath, "%s%s", WorkingPath, CONFIG_FILE_NAME);
-	sprintf_s(AlloweableIpListFilePath, "%s%s", WorkingPath, ALLOWABLE_IP_LIST_FILE_NAME);
+	sprintf_s(AllowableIpListFilePath, "%s%s", WorkingPath, ALLOWABLE_IP_LIST_FILE_NAME);
 
 	// Asegura que los archivos existan
 	bool configResult = EnsureConfigFileExists();
@@ -171,11 +171,11 @@ bool CServerConfig::LoadConfig() {
 		allValuesLoaded = false;
 	}
 
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, DEFAULT_JOIN_SERVER_USER, "", JoinServerUSER, sizeof(JoinServerUSER), ConfigFilePath) > 0) {
+	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_JOIN_SERVER_USER, "", JoinServerUSER, sizeof(JoinServerUSER), ConfigFilePath) > 0) {
 		Log.ToDisp(LOG_BLACK, "[InitConfig] Usuario para la base datos: %s", JoinServerUSER);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerODBC desde %s.", CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerUSER desde %s.", CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
@@ -204,12 +204,12 @@ bool CServerConfig::LoadConfig() {
 		allValuesLoaded = false;
 	}
 
-	MD5Encryptions = static_cast<BYTE>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_MD5_ENCRYPTIONS, 0, ConfigFilePath));
-	if (MD5Encryptions == 0 || MD5Encryptions == 1) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Encriptacion MD5: %s", (MD5Encryptions == 1) ? "SI" : "NO");
+	MD5Encryption = static_cast<BYTE>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_MD5_ENCRYPTIONS, 0, ConfigFilePath));
+	if (MD5Encryption == 0 || MD5Encryption == 1) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Encriptacion MD5: %s", (MD5Encryption == 1) ? "SI" : "NO");
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar MD5Encryptions desde %s.", CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar MD5Encryption desde %s.", CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
@@ -222,10 +222,10 @@ bool CServerConfig::LoadConfig() {
 
 bool CServerConfig::EnsureServerListFileExists() {
 	// Verificar si el archivo existe utilizando GetFileAttributes
-	DWORD fileAttributes = GetFileAttributesA(AlloweableIpListFilePath);
+	DWORD fileAttributes = GetFileAttributesA(AllowableIpListFilePath);
 	if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
 		// El archivo no existe, lo creamos con valores por defecto
-		FileHandle file(AlloweableIpListFilePath, GENERIC_WRITE, CREATE_ALWAYS);
+		FileHandle file(AllowableIpListFilePath, GENERIC_WRITE, CREATE_ALWAYS);
 		if (file.getHandle() != INVALID_HANDLE_VALUE) {
 			DWORD bytesWritten;
 			// Usar el método `write` de `FileHandle` para escribir datos
@@ -255,5 +255,5 @@ const char* CServerConfig::getIniPath() {
 }
 
 const char* CServerConfig::getServerListPath() {
-	return AlloweableIpListFilePath;
+	return AllowableIpListFilePath;
 }

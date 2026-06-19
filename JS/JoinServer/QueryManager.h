@@ -1,7 +1,4 @@
-// QueryManager.h: interface for the CQueryManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// QueryManager.h
 #pragma once
 
 #define MAX_COLUMNS 100

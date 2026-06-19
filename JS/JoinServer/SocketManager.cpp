@@ -777,7 +777,7 @@ void CSocketManager::OnRecv(int index,DWORD IoSize,IO_RECV_CONTEXT* lpIoContext)
 	{
 		if(WSAGetLastError() != WSA_IO_PENDING)
 		{
-			LogAdd(LOG_RED,"[SocketManager] WSARecv() failed with error: %d",WSAGetLastError());
+			Log.ToDisp(LOG_RED,"[SocketManager] WSARecv() failed with error: %d",WSAGetLastError());
 			this->Disconnect(index);
 			this->m_critical.unlock();
 			return;
@@ -867,7 +867,7 @@ void CSocketManager::OnSend(int index,DWORD IoSize,IO_SEND_CONTEXT* lpIoContext)
 	{
 		if(WSAGetLastError() != WSA_IO_PENDING)
 		{
-			LogAdd(LOG_RED,"[SocketManager] WSASend() failed with error: %d",WSAGetLastError());
+			Log.ToDisp(LOG_RED,"[SocketManager] WSASend() failed with error: %d",WSAGetLastError());
 			this->Disconnect(index);
 			this->m_critical.unlock();
 			return;
@@ -903,7 +903,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 		if(socket == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK)
 		{
 			lpSocketManager->m_critical.lock();
-			LogAdd(LOG_RED,"[SocketManager] WSAAccept() failed with error: %d",WSAGetLastError());
+			Log.ToDisp(LOG_RED,"[SocketManager] WSAAccept() failed with error: %d",WSAGetLastError());
 			lpSocketManager->m_critical.unlock();
 			continue;
 		}
@@ -921,19 +921,17 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		if(CreateIoCompletionPort((HANDLE)socket,lpSocketManager->m_CompletionPort,index,0) == 0)
 		{
-			LogAdd(LOG_RED,"[SocketManager] CreateIoCompletionPort() failed with error: %d",GetLastError());
+			Log.ToDisp(LOG_RED,"[SocketManager] CreateIoCompletionPort() failed with error: %d",GetLastError());
 			closesocket(socket);
 			lpSocketManager->m_critical.unlock();
 			continue;
 		}
 
-		PROTECT_START
 
 		CServerManager* lpServerManager = &gServerManager[index];
 
 		lpServerManager->AddServer(index,inet_ntoa(SocketAddr.sin_addr),socket);
 
-		PROTECT_FINAL
 
 		DWORD RecvSize=0,Flags=0;
 
@@ -941,7 +939,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 		{
 			if(WSAGetLastError() != WSA_IO_PENDING)
 			{
-				LogAdd(LOG_RED,"[SocketManager] WSARecv() failed with error: %d",WSAGetLastError());
+				Log.ToDisp(LOG_RED,"[SocketManager] WSARecv() failed with error: %d",WSAGetLastError());
 				lpSocketManager->Disconnect(index);
 				lpSocketManager->m_critical.unlock();
 				continue;
@@ -967,7 +965,7 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 			if(lpOverlapped == 0 || (GetLastError() != ERROR_NETNAME_DELETED && GetLastError() != ERROR_CONNECTION_ABORTED && GetLastError() != ERROR_OPERATION_ABORTED && GetLastError() != ERROR_SEM_TIMEOUT))
 			{
 				lpSocketManager->m_critical.lock();
-				LogAdd(LOG_RED,"[SocketManager] GetQueuedCompletionStatus() failed with error: %d",GetLastError());
+				Log.ToDisp(LOG_RED,"[SocketManager] GetQueuedCompletionStatus() failed with error: %d",GetLastError());
 				lpSocketManager->m_critical.unlock();
 				return 0;
 			}
@@ -1005,7 +1003,7 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager) 
 	{
 		if(WaitForSingleObject(lpSocketManager->m_ServerQueueSemaphore,INFINITE) == WAIT_FAILED)
 		{
-			LogAdd(LOG_RED,"[SocketManager] WaitForSingleObject() failed with error: %d",GetLastError());
+			Log.ToDisp(LOG_RED,"[SocketManager] WaitForSingleObject() failed with error: %d",GetLastError());
 			break;
 		}
 

@@ -145,3 +145,23 @@ long CAccountManager::GetAccountCount()
 
 	return AccountCount;
 }
+
+LONG CheckAccountCaseSensitive(int value)
+{
+	// Si CaseSensitive == 0 (no distingue mayúsculas), normaliza a minúscula.
+	// Si CaseSensitive == 1, deja el valor tal cual.
+	return (CaseSensitive == 0) ? tolower(value) : value;
+}
+
+DWORD MakeAccountKey(const char* account)
+{
+	int  size = strlen(account);
+	DWORD key = 0;
+
+	for (int n = 0; n < size; n++)
+	{
+		key += account[n] + 17;
+	}
+
+	return ((key + ((10 - size) * 17)) % 256);
+}

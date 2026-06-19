@@ -1,7 +1,19 @@
 // Log.h
 #pragma once
-#include "ServerLog.h"
-#include "ServerDisplayer.h"
+#include "ServerLog.h"      // Define LogType (GENERAL, ACCOUNT) y gServerLog
+#include "ServerDisplayer.h" // Define LogColor y gServerDisplayer
+
+// CLog es la fachada unificada de logging para JoinServer.
+//
+// Cualquier archivo que incluya Log.h puede:
+//   Log.ToFile(LogType::GENERAL,  "mensaje %d", valor);   → solo a disco, carpeta LOG
+//   Log.ToFile(LogType::ACCOUNT,  "login %s",   usuario); → solo a disco, carpeta LOG_ACCOUNT
+//   Log.ToDisp(LOG_GREEN, "mensaje %d", valor);            → pantalla + disco (GENERAL)
+//
+// La diferencia con ConnectServer es que ToFile recibe LogType como
+// primer parametro, permitiendo dirigir el mensaje al archivo correcto.
+// ToDisp siempre va a GENERAL (los eventos de cuenta son demasiado
+// verbosos para mostrarlos en pantalla en tiempo real).
 
 class CLog
 {
@@ -9,17 +21,16 @@ public:
 	CLog();
 	virtual ~CLog();
 
-	// Registra un mensaje en el archivo de log (GENERAL o ACCOUNT segun "type").
+	// Escribe a disco en el archivo correspondiente al tipo indicado.
+	// No muestra nada en pantalla.
 	void ToFile(LogType type, const char* text, ...);
 
-	// Registra y muestra un mensaje en la ventana del programa.
-	// Siempre se escribe tambien al log GENERAL en disco.
+	// Muestra en pantalla Y escribe en el log GENERAL a disco.
+	// Para eventos de operacion que el operador necesita ver en tiempo real.
 	void ToDisp(LogColor color, const char* text, ...);
 
 private:
-	// Funcion auxiliar para formatear el mensaje.
 	std::string FormatMessage(const char* text, va_list args) const;
 };
 
-// Declaracion global de la instancia de Log
 extern CLog Log;

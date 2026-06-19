@@ -1,14 +1,14 @@
 // QueryManager.cpp
-#include "stdafx.h"
+#include "Header.h"
 #include "QueryManager.h"
+#include "Log.h"
 #include "Util.h"
 
 CQueryManager gQueryManager;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CQueryManager::CQueryManager() // OK
+// Construction/Destruction
+
+CQueryManager::CQueryManager()
 {
 	this->m_SQLEnvironment = SQL_NULL_HANDLE;
 	this->m_SQLConnection = SQL_NULL_HANDLE;
@@ -23,12 +23,12 @@ CQueryManager::CQueryManager() // OK
 	SQLSetEnvAttr(this->m_SQLEnvironment,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC3,SQL_IS_INTEGER);
 }
 
-CQueryManager::~CQueryManager() // OK
+CQueryManager::~CQueryManager()
 {
 	this->Disconnect();
 }
 
-bool CQueryManager::Connect(char* odbc,char* user,char* pass) // OK
+bool CQueryManager::Connect(char* odbc,char* user,char* pass)
 {
 	strcpy_s(this->m_odbc,odbc);
 
@@ -56,7 +56,7 @@ bool CQueryManager::Connect(char* odbc,char* user,char* pass) // OK
 	}
 }
 
-void CQueryManager::Disconnect() // OK
+void CQueryManager::Disconnect()
 {
 	if(this->m_STMT != SQL_NULL_HANDLE)
 	{
@@ -77,9 +77,9 @@ void CQueryManager::Disconnect() // OK
 	}
 }
 
-void CQueryManager::Diagnostic(char* query) // OK
+void CQueryManager::Diagnostic(char* query)
 {
-	LogAdd(LOG_BLACK,"%s",query);
+	Log.ToDisp(LOG_BLACK,"%s",query);
 
 	SQLINTEGER NativeError;
 	SQLSMALLINT RecNumber=1,BufferLength;
@@ -87,7 +87,7 @@ void CQueryManager::Diagnostic(char* query) // OK
 
 	while(SQLGetDiagRec(SQL_HANDLE_STMT,this->m_STMT,(RecNumber++),SqlState,&NativeError,MessageText,sizeof(MessageText),&BufferLength) != SQL_NO_DATA)
 	{
-		LogAdd(LOG_RED,"[QueryManager] State (%s), Diagnostic: %s",SqlState,MessageText);
+		Log.ToDisp(LOG_RED,"[QueryManager] State (%s), Diagnostic: %s",SqlState,MessageText);
 	}
 
 	if(strcmp((char*)SqlState,"08S01") == 0)
@@ -136,18 +136,18 @@ bool CQueryManager::ExecQuery(char* query,...) // OK
 	return 1;
 }
 
-void CQueryManager::Close() // OK
+void CQueryManager::Close()
 {
 	SQLCloseCursor(this->m_STMT);
 	SQLFreeStmt(this->m_STMT,SQL_UNBIND);
 }
 
-SQLRETURN CQueryManager::Fetch() // OK
+SQLRETURN CQueryManager::Fetch()
 {
 	return SQLFetch(this->m_STMT);
 }
 
-int CQueryManager::FindIndex(char* ColName) // OK
+int CQueryManager::FindIndex(char* ColName)
 {
 	for(int n=0;n < this->m_ColCount;n++)
 	{
@@ -160,12 +160,12 @@ int CQueryManager::FindIndex(char* ColName) // OK
 	return -1;
 }
 
-int CQueryManager::GetResult(int index) // OK
+int CQueryManager::GetResult(int index)
 {
 	return atoi(this->m_SQLData[index]);
 }
 
-int CQueryManager::GetAsInteger(char* ColName) // OK
+int CQueryManager::GetAsInteger(char* ColName)
 {
 	int index = this->FindIndex(ColName);
 
@@ -179,7 +179,7 @@ int CQueryManager::GetAsInteger(char* ColName) // OK
 	}
 }
 
-float CQueryManager::GetAsFloat(char* ColName) // OK
+float CQueryManager::GetAsFloat(char* ColName)
 {
 	int index = this->FindIndex(ColName);
 
@@ -193,7 +193,7 @@ float CQueryManager::GetAsFloat(char* ColName) // OK
 	}
 }
 
-__int64 CQueryManager::GetAsInteger64(char* ColName) // OK
+__int64 CQueryManager::GetAsInteger64(char* ColName)
 {
 	int index = this->FindIndex(ColName);
 
@@ -207,7 +207,7 @@ __int64 CQueryManager::GetAsInteger64(char* ColName) // OK
 	}
 }
 
-void CQueryManager::GetAsString(char* ColName,char* OutBuffer,int OutBufferSize) // OK
+void CQueryManager::GetAsString(char* ColName,char* OutBuffer,int OutBufferSize)
 {
 	int index = this->FindIndex(ColName);
 
@@ -221,7 +221,7 @@ void CQueryManager::GetAsString(char* ColName,char* OutBuffer,int OutBufferSize)
 	}
 }
 
-void CQueryManager::GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize) // OK
+void CQueryManager::GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize)
 {
 	int index = this->FindIndex(ColName);
 
@@ -235,21 +235,21 @@ void CQueryManager::GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize)
 	}
 }
 
-void CQueryManager::BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize) // OK
+void CQueryManager::BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize)
 {
 	this->m_SQLBindValue[(ParamNumber-1)] = SQL_NTS;
 
 	SQLBindParameter(this->m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_CHAR,SQL_VARCHAR,ColumnSize,0,InBuffer,0,&this->m_SQLBindValue[(ParamNumber-1)]);
 }
 
-void CQueryManager::BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize) // OK
+void CQueryManager::BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize)
 {
 	this->m_SQLBindValue[(ParamNumber-1)] = ColumnSize;
 
 	SQLBindParameter(this->m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_BINARY,SQL_VARBINARY,ColumnSize,0,InBuffer,0,&this->m_SQLBindValue[(ParamNumber-1)]);
 }
 
-void CQueryManager::ConvertStringToBinary(char* InBuff,int InSize,BYTE* OutBuff,int OutSize) // OK
+void CQueryManager::ConvertStringToBinary(char* InBuff,int InSize,BYTE* OutBuff,int OutSize)
 {
 	int size = 0;
 
@@ -275,7 +275,7 @@ void CQueryManager::ConvertStringToBinary(char* InBuff,int InSize,BYTE* OutBuff,
 	}
 }
 
-void CQueryManager::ConvertBinaryToString(BYTE* InBuff,int InSize,char* OutBuff,int OutSize) // OK
+void CQueryManager::ConvertBinaryToString(BYTE* InBuff,int InSize,char* OutBuff,int OutSize)
 {
 	int size = 0;
 

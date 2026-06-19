@@ -42,3 +42,14 @@ private:
 extern CAccountManager gAccountManager;
 
 static const int gJoinServerMaxAccount[4][6] = {{0,0,0,0,0,0},{0,100,150,200,200,200},{0,250,350,450,450,450},{0,500,1000,MAX_ACCOUNT,MAX_ACCOUNT,MAX_ACCOUNT}};
+
+// Aplica sensibilidad de mayúsculas/minúsculas según la config CaseSensitive.
+// Se usa como predicado en std::transform sobre strings de cuentas.
+// Vive en AccountManager porque es parte del proceso de autenticación
+// y depende de la variable de config CaseSensitive.
+LONG CheckAccountCaseSensitive(int value);
+
+// Genera un hash numérico simple del nombre de cuenta para usarlo
+// como índice de clave en MD5_CheckValue. Es parte del mecanismo
+// de verificación de contraseñas con MD5, por eso vive en AccountManager.
+DWORD MakeAccountKey(const char* account);

@@ -21,16 +21,11 @@ public:
 	void GetExecutablePath();
 	// Mensaje de error para terminar el proceso
 	void ErrorMessageBox(const char* message, ...);
-	/*void LogAdd(eLogColor color, const char* text, ...);
-	void JoinServerLiveProc();
-	bool CheckTextSyntax(char* text, int size);
-	LONG CheckAccountCaseSensitive(int value);
-	int GetFreeServerIndex();
-	int SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime);
-	CServerManager* FindServerByCode(WORD ServerCode);
-	DWORD MakeAccountKey(char* account);*/
+	//void JoinServerLiveProc();
 };
 
 extern CUtil gUtil;
 
 extern int gServerCount;
+
+bool CheckTextSyntax(char* text, int size);
