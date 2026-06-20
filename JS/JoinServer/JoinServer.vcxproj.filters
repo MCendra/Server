@@ -96,12 +96,6 @@
     <ClInclude Include="MiniDump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Util\MD5.h">
-      <Filter>Util Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Util\MD5_KEYVAL.H">
-      <Filter>Util Files</Filter>
-    </ClInclude>
     <ClInclude Include="ServerConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -169,9 +163,6 @@
     </ClCompile>
     <ClCompile Include="MiniDump.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Util\MD5.cpp">
-      <Filter>Util Files</Filter>
     </ClCompile>
     <ClCompile Include="Header.cpp">
       <Filter>Source Files</Filter>

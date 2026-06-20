@@ -11,7 +11,7 @@ struct ACCOUNT_INFO
 	WORD UserIndex;
 	WORD GameServerCode;
 	bool MapServerMove;
-	DWORD MapServerMoveTime;
+	ULONGLONG MapServerMoveTime;
 	WORD LastServerCode;
 	WORD NextServerCode;
 	WORD Map;

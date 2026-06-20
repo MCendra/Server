@@ -65,7 +65,7 @@ constexpr auto JOINSERVER_VERSION = "1.0.0";
 #include <time.h>
 #include <math.h>
 #include <map>
-//#include <vector>
+#include <vector>
 #include <queue>
 #include <algorithm>
 #include <assert.h>
@@ -90,7 +90,7 @@ extern char* WorkingPath;
 
 // Definicion de archivos de configuracion
 extern char ConfigFilePath[MAX_PATH];
-extern char AlloweableIpListFilePath[MAX_PATH];
+extern char AllowableIpListFilePath[MAX_PATH];
 
 // Declaraciones de variables de configuracion
 extern char CustomerName[32];

@@ -25,20 +25,6 @@ public:
 	void AddServer(int index,char* ip,SOCKET socket);
 	void DelServer();
 	void SetServerInfo(char* name,WORD port,WORD code);
-	// Busca entre MinIndex y MaxIndex el slot que lleve más tiempo offline
-	// (al menos MinTime ms). Devuelve el índice encontrado o -1 si no hay ninguno.
-	// Es el equivalente de SearchFreeClientIndex en ClientManager de ConnectServer.
-	int SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime);
-
-	// Retorna el índice de un slot libre en gServerManager[]:
-	// primero intenta reutilizar un slot offline con IO contexts ya asignados
-	// (evita new/delete); si no encuentra ninguno, hace búsqueda circular
-	// desde gServerCount.
-	int GetFreeServerIndex();
-
-	// Recorre gServerManager[] y retorna el primero cuyo ServerCode coincida.
-	// Retorna nullptr si ningún servidor activo tiene ese código.
-	CServerManager* FindServerByCode(WORD ServerCode);
 public:
 	int m_index;
 	eServerState m_state;
@@ -57,3 +43,18 @@ public:
 
 extern CServerManager gServerManager[MAX_SERVER];
 extern int            gServerCount;   // cursor circular de búsqueda de slots libres
+
+// Busca entre MinIndex y MaxIndex el slot que lleve más tiempo offline
+// (al menos MinTime ms). Devuelve el índice encontrado o -1 si no hay ninguno.
+// Es el equivalente de SearchFreeClientIndex en ClientManager de ConnectServer.
+int SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime);
+
+// Retorna el índice de un slot libre en gServerManager[]:
+// primero intenta reutilizar un slot offline con IO contexts ya asignados
+// (evita new/delete); si no encuentra ninguno, hace búsqueda circular
+// desde gServerCount.
+int GetFreeServerIndex();
+
+// Recorre gServerManager[] y retorna el primero cuyo ServerCode coincida.
+// Retorna nullptr si ningún servidor activo tiene ese código.
+CServerManager* FindServerByCode(WORD ServerCode);

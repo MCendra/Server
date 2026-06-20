@@ -1,116 +1,121 @@
+// MD5.h
 #pragma once
+#include <windows.h>   // para wsprintf (en ANSI es wsprintfA, opera sobre char*)
+#include <iostream>
+#include <fstream>
+#include <cassert>
 
 class MD5 {
 
 public:
 
-//---------------------------------------------
-//	MD5 추가된 메서드들
-bool MD5_EncodeKeyVal	(					// 입력된 문자열과 키인덱스 (0~255)를 사용하여 128 bits (16 bytes) 의 MD5 키값 생성
-	  char * lpszInputStr,					// 입력 문자열
-	  char * lpszOutputKeyVal,				// 출력 버퍼
-	  int iKeyIndex							// 키인덱스 (0~255)
-	  );
+	//---------------------------------------------
+	//	M챕todos agregados a MD5
+	bool MD5_EncodeKeyVal(					// Genera una clave MD5 de 128 bits (16 bytes)
+		// utilizando la cadena de entrada y un 챠ndice de clave (0~255)
+		char* lpszInputStr,					// Cadena de entrada
+		char* lpszOutputKeyVal,				// Buffer de salida
+		int iKeyIndex							// 횒ndice de clave (0~255)
+	);
 
-bool MD5_EncodeString	(					// 입력된 문자열과 키인덱스 (0~255)를 사용하여 128 x 2 bits (32 bytes) 의 MD5 문자열 키값 생성
-	  char * lpszInputStr,					// 입력 문자열
-	  char * lpszOutputStr,					// 출력 버퍼
-	  int iKeyIndex							// 키인덱스 (0~255)
-	  );
+	bool MD5_EncodeString(					// Genera una cadena MD5 de 128 x 2 bits (32 bytes)
+		// utilizando la cadena de entrada y un 챠ndice de clave (0~255)
+		char* lpszInputStr,					// Cadena de entrada
+		char* lpszOutputStr,					// Buffer de salida
+		int iKeyIndex							// 횒ndice de clave (0~255)
+	);
 
-bool MD5_CheckValue	(						// 문자열과 MD5 키값과 키인덱스 (0~255) 를 입력받아 키값을 인증함 (true : 맞음 / false : 틀림)
-											// P.S.> 키값은 문자열(256 bits)이 아닌 128 bits MD5 키여야 한다.
-	  char * lpszInputStr,					// 입력 문자열
-	  char * szKeyVal,						// 입력 MD5 키값
-	  int iKeyIndex							// 키인덱스 (0~255)
-	  );
+	bool MD5_CheckValue(						// Verifica una clave MD5 utilizando una cadena,
+		// un valor MD5 y un 챠ndice de clave (0~255)
+		// (true: v찼lido / false: inv찼lido)
+		// P.S.> El valor debe ser una clave MD5 de 128 bits,
+		// no una cadena MD5 de 256 bits.
+		char* lpszInputStr,					// Cadena de entrada
+		char* szKeyVal,						// Valor MD5 de entrada
+		int iKeyIndex							// 횒ndice de clave (0~255)
+	);
 
 
-//---------------------------------------------
-//	MD5 기존 메서드들
+	//---------------------------------------------
+	//	M챕todos originales de MD5
 
-// methods for controlled operation:
-  MD5              ();  // simple initializer
-  void  update     (unsigned char *input, unsigned int input_length);
-  void  update     (std::istream& stream);
-  void  update     (FILE *file);
-  void  update     (std::ifstream& stream);
-  void  finalize   ();
+	// M챕todos para operaci처n controlada:
+	MD5();  // Inicializador simple
+	void  update(unsigned char* input, unsigned int input_length);
+	void  update(std::istream& stream);
+	void  update(FILE* file);
+	void  update(std::ifstream& stream);
+	void  finalize();
 
-// constructors for special circumstances.  All these constructors finalize
-// the MD5 context.
-  MD5              (unsigned char *string); // digest string, finalize
-  MD5              (std::istream& stream);       // digest stream, finalize
-  MD5              (FILE *file);            // digest file, close, finalize
-  MD5              (std::ifstream& stream);      // digest stream, close, finalize
+	// Constructores para casos especiales.
+	// Todos estos constructores finalizan el contexto MD5.
+	MD5(unsigned char* string); // Calcula digest de una cadena y finaliza
+	MD5(std::istream& stream);  // Calcula digest de un stream y finaliza
+	MD5(FILE* file);            // Calcula digest de un archivo, lo cierra y finaliza
+	MD5(std::ifstream& stream); // Calcula digest de un stream, lo cierra y finaliza
 
-// methods to acquire finalized result
-  unsigned char    *raw_digest ();  // digest as a 16-byte binary array
-  char *            hex_digest ();  // digest as a 33-byte ascii-hex string
-  friend std::ostream&   operator<< (std::ostream&, MD5 context);
+	// M챕todos para obtener el resultado finalizado
+	unsigned char* raw_digest();  // Digest como arreglo binario de 16 bytes
+	char* hex_digest();  // Digest como cadena ASCII hexadecimal de 33 bytes
+	friend std::ostream& operator<< (std::ostream&, MD5 context);
 
 
 
 private:
 
-//---------------------------------------------
-//	MD5 추가된 메서드들
-  void setmagicnum (int keyindex);
+	//---------------------------------------------
+	//	M챕todos agregados a MD5
+	void setmagicnum(int keyindex);
 
 
-//---------------------------------------------
-//	MD5 추가된 멤버 변수들
-	unsigned char	m_cRaw_digest[16];  
-	char			m_cHex_digest[33];  
+	//---------------------------------------------
+	//	Variables miembro agregadas a MD5
+	unsigned char	m_cRaw_digest[16];
+	char			m_cHex_digest[33];
 
 
 
-//---------------------------------------------
-//	MD5 기존 멤버 변수들
+	//---------------------------------------------
+	//	Variables miembro originales de MD5
 
-// first, some types:
-  typedef unsigned       int uint4; // assumes integer is 4 words long
-  typedef unsigned short int uint2; // assumes short integer is 2 words long
-  typedef unsigned      char uint1; // assumes char is 1 word long
+	// Primero, algunos tipos:
+	typedef unsigned       int uint4; // Se asume que int tiene 4 bytes
+	typedef unsigned short int uint2; // Se asume que short tiene 2 bytes
+	typedef unsigned      char uint1; // Se asume que char tiene 1 byte
 
-// next, the private data:
-  uint4 state[4];
-  uint4 count[2];     // number of *bits*, mod 2^64
-  uint1 buffer[64];   // input buffer
-  uint1 digest[16];
-  uint1 finalized;
+	// Datos privados:
+	uint4 state[4];
+	uint4 count[2];     // Cantidad de bits, m처dulo 2^64
+	uint1 buffer[64];   // Buffer de entrada
+	uint1 digest[16];
+	uint1 finalized;
 
-// last, the private methods, mostly static:
-  void init             ();               // called by all constructors
-  void transform        (uint1 *buffer);  // does the real update work.  Note 
-                                          // that length is implied to be 64.
+	// M챕todos privados (la mayor챠a est찼ticos):
+	void init();               // Llamado por todos los constructores
+	void transform(uint1* buffer);  // Realiza el trabajo principal de actualizaci처n.
+	// La longitud se asume impl챠citamente en 64 bytes.
 
-  static void encode    (uint1 *dest, uint4 *src, uint4 length);
-  static void decode    (uint4 *dest, uint1 *src, uint4 length);
-  static void memcpy    (uint1 *dest, uint1 *src, uint4 length);
-  static void memset    (uint1 *start, uint1 val, uint4 length);
+	static void encode(uint1* dest, uint4* src, uint4 length);
+	static void decode(uint4* dest, uint1* src, uint4 length);
+	static void memcpy(uint1* dest, uint1* src, uint4 length);
+	static void memset(uint1* start, uint1 val, uint4 length);
 
-  static inline uint4  rotate_left (uint4 x, uint4 n);
-  static inline uint4  F           (uint4 x, uint4 y, uint4 z);
-  static inline uint4  G           (uint4 x, uint4 y, uint4 z);
-  static inline uint4  H           (uint4 x, uint4 y, uint4 z);
-  static inline uint4  I           (uint4 x, uint4 y, uint4 z);
-  static inline void   FF  (uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
-			    uint4 s, uint4 ac);
-  static inline void   GG  (uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
-			    uint4 s, uint4 ac);
-  static inline void   HH  (uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
-			    uint4 s, uint4 ac);
-  static inline void   II  (uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, 
-			    uint4 s, uint4 ac);
+	static inline uint4  rotate_left(uint4 x, uint4 n);
+	static inline uint4  F(uint4 x, uint4 y, uint4 z);
+	static inline uint4  G(uint4 x, uint4 y, uint4 z);
+	static inline uint4  H(uint4 x, uint4 y, uint4 z);
+	static inline uint4  I(uint4 x, uint4 y, uint4 z);
+	static inline void   FF(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline void   GG(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline void   HH(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline void   II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
 
 };
 
 
-// Constants for MD5Transform routine.
-// Although we could use C++ style constants, defines are actually better,
-// since they let us easily evade scope clashes.
-
+// Constantes para la rutina MD5Transform.
+// Aunque podr챠an usarse constantes estilo C++,
+// los defines son preferibles porque evitan f찼cilmente conflictos de 찼mbito.
 #define S11 7
 #define S12 12
 #define S13 17

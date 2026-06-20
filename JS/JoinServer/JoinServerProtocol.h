@@ -1,6 +1,5 @@
 // JoinServerProtocol.h
 #pragma once
-#include "Header.h"
 
 #define CREATE_ACCOUNT_FAIL_ID				0
 #define CREATE_ACCOUNT_SUCCESS				1

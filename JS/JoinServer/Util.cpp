@@ -1,5 +1,7 @@
 // Util.cpp
 #include "Header.h"
+#include "SocketManager.h"
+#include "SocketManagerUDP.h"
 #include "Util.h"
 
 // Instancia global
@@ -97,19 +99,18 @@ bool CheckTextSyntax(char* text,int size)
 	return 1;
 }
 
+void JoinServerLiveProc()
+{
 
-//void JoinServerLiveProc() // OK
-//{
-//
-//	SDHP_JOIN_SERVER_LIVE_SEND pMsg;
-//
-//	pMsg.header.set(0x02,sizeof(pMsg));
-//
-//	pMsg.QueueSize = gSocketManager.GetQueueSize();
-//
-//	gSocketManagerUDP.DataSend((BYTE*)&pMsg,pMsg.header.size);
-//
-//}
+	SDHP_JOIN_SERVER_LIVE_SEND pMsg;
+
+	pMsg.header.set(0x02,sizeof(pMsg));
+
+	pMsg.QueueSize = gSocketManager.GetQueueSize();
+
+	gSocketManagerUDP.DataSend((BYTE*)&pMsg,pMsg.header.size);
+
+}
 
 
 

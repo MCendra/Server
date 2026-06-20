@@ -4,8 +4,6 @@
 //#include "ServerDisplayer.h"
 //#include "ServerManager.h"
 //#include "QueryManager.h"
-//#include "SocketManager.h"
-//#include "SocketManagerUDP.h"
 
 struct SDHP_JOIN_SERVER_LIVE_SEND
 {
@@ -21,7 +19,6 @@ public:
 	void GetExecutablePath();
 	// Mensaje de error para terminar el proceso
 	void ErrorMessageBox(const char* message, ...);
-	//void JoinServerLiveProc();
 };
 
 extern CUtil gUtil;
@@ -29,3 +26,4 @@ extern CUtil gUtil;
 extern int gServerCount;
 
 bool CheckTextSyntax(char* text, int size);
+void JoinServerLiveProc();

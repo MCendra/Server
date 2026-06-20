@@ -105,9 +105,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		return false;
 	}
 
-	gAllowableIpList.Load(AlloweableIpListFilePath);
+	gAllowableIpList.Load(AllowableIpListFilePath);
 	
-
 	gServerDisplayer.UpdateServerState(0);
 	gServerDisplayer.PaintName();
 
@@ -245,8 +244,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case TIMER_1000:
-			//JoinServerLiveProc();
-			//gAccountManager.DisconnectProc();
+			JoinServerLiveProc();
+			gAccountManager.DisconnectProc();
 			break;
 		case TIMER_2000:
 			//gServerDisplayer.Run();

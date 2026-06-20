@@ -26,7 +26,7 @@ void CAccountManager::DisconnectProc()
 
 	for(std::map<std::string,ACCOUNT_INFO>::iterator it=this->m_AccountInfo.begin();it != this->m_AccountInfo.end();)
 	{
-		if(it->second.MapServerMove == 0 || (GetTickCount()-it->second.MapServerMoveTime) < 30000)
+		if(it->second.MapServerMove == 0 || (GetTickCount64()-it->second.MapServerMoveTime) < 30000)
 		{
 			it++;
 			continue;

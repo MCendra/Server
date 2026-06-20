@@ -1,11 +1,9 @@
 #pragma once
 
-// 전체 키값의 개수는 256 x 4 = 1024
+// Valores de clave MD5: 256 x 4 = 1024
+#define	MAX_KEY_INDEX	256		// 횒ndice m찼ximo de clave
 
-#define	MAX_KEY_INDEX	256		// 키값의 한계치
-
-
-const unsigned int MD5_KEYVAL [] = {
+const unsigned int MD5_KEYVAL[] = {
 	0xb53e0951,	// 0000-000
 	0x17115c7a,	// 0000-001
 	0xf065da08,	// 0000-002

@@ -158,8 +158,6 @@
     <None Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Util\MD5.h" />
-    <ClInclude Include="..\..\Util\MD5_KEYVAL.H" />
     <ClInclude Include="AccountManager.h" />
     <ClInclude Include="AllowableIpList.h" />
     <ClInclude Include="CriticalSection.h" />
@@ -187,7 +185,6 @@
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Util\MD5.cpp" />
     <ClCompile Include="AccountManager.cpp" />
     <ClCompile Include="AllowableIpList.cpp" />
     <ClCompile Include="CriticalSection.cpp" />

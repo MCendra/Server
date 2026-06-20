@@ -1,17 +1,16 @@
 #include "Header.h"
 #include "JoinServerProtocol.h"
+#include "Log.h"
 #include "MD5.h"
 #include "AccountManager.h"
-#include "Log.h"
 #include "QueryManager.h"
 #include "ServerManager.h"
-#include "SocketManager.h"
 #include "Util.h"
 
-void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
+void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 {
 
-	gServerManager[index].m_PacketTime = GetTickCount();
+	gServerManager[index].m_PacketTime = GetTickCount64();
 
 	switch(head)
 	{
@@ -58,7 +57,7 @@ void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 
 }
 
-void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index) // OK
+void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index)
 {
 	SDHP_SERVER_INFO_SEND pMsg;
 
@@ -73,7 +72,7 @@ void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index) // OK
 	gServerManager[index].SetServerInfo(lpMsg->ServerName,lpMsg->ServerPort,lpMsg->ServerCode);
 }
 
-void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
+void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index)
 {
 	SDHP_CONNECT_ACCOUNT_SEND pMsg;
 
@@ -92,17 +91,10 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
 		return;
 	}
 
-    if(gAccountManager.GetAccountCount() >= 
-#if    PROTECT_STATE
-        gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType]
-#else
-        MAX_ACCOUNT
-#endif
-        )
-	//if(gAccountManager.GetAccountCount() >= gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType])
+	if (gAccountManager.GetAccountCount() >= MAX_ACCOUNT)
 	{
 		pMsg.result = 4;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+		gSocketManager.DataSend(index, (BYTE*)&pMsg, pMsg.header.size);
 		return;
 	}
 
@@ -273,18 +265,11 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 		return;
 	}
 
-    if(gAccountManager.GetAccountCount() >= 
-#if    PROTECT_STATE
-        gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType]
-#else
-        MAX_ACCOUNT
-#endif
-        )
-	if(gAccountManager.GetAccountCount() >= gJoinServerMaxAccount[gProtect.m_AuthInfo.PackageType][gProtect.m_AuthInfo.PlanType])
+	if (gAccountManager.GetAccountCount() >= MAX_ACCOUNT)
 	{
 		pMsg.result = CREATE_ACCOUNT_FAIL_RESIDENT;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-		Log.ToDisp(LOG_RED,"Account %s Register fail, CONNECTION!!!");
+		gSocketManager.DataSend(index, (BYTE*)&pMsg, pMsg.header.size);
+		Log.ToDisp(LOG_RED, "Account %s Register fail, CONNECTION!!!");
 		return;
 	}
 	if(MD5Encryption == 0)
@@ -337,7 +322,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index) // OK
+void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index)
 {
 	SDHP_DISCONNECT_ACCOUNT_SEND pMsg;
 
@@ -372,7 +357,7 @@ void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index) // O
 		return;
 	}
 
-	if(AccountInfo.MapServerMove != 0 && (GetTickCount()-AccountInfo.MapServerMoveTime) < 30000)
+	if(AccountInfo.MapServerMove != 0 && (GetTickCount64()-AccountInfo.MapServerMoveTime) < 30000)
 	{
 		pMsg.result = 0;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
@@ -390,7 +375,7 @@ void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index) // O
 	Log.ToFile(LogType::ACCOUNT,"[AccountInfo] Account disconnected (Account: %s, IpAddress: %s, GameServerCode: %d)",AccountInfo.Account,AccountInfo.IpAddress,AccountInfo.GameServerCode);
 }
 
-void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index) // OK
+void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index)
 {
 	SDHP_MAP_SERVER_MOVE_SEND pMsg;
 
@@ -451,27 +436,19 @@ void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index) // OK
 	}
 
 	pMsg.GameServerCode = lpMsg->GameServerCode;
-
 	pMsg.NextServerCode = lpMsg->NextServerCode;
-
 	pMsg.map = lpMsg->map;
-
 	pMsg.x = lpMsg->x;
-
 	pMsg.y = lpMsg->y;
-
-	pMsg.AuthCode1 = GetTickCount();
-
-	pMsg.AuthCode2 = GetTickCount()%10000;
-
-	pMsg.AuthCode3 = GetTickCount()%777;
-
-	pMsg.AuthCode4 = GetTickCount()%8911;
+	pMsg.AuthCode1 = GetTickCount64();
+	pMsg.AuthCode2 = GetTickCount64() % 10000;
+	pMsg.AuthCode3 = GetTickCount64() % 777;
+	pMsg.AuthCode4 = GetTickCount64() % 8911;
 
 	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
 
 	AccountInfo.MapServerMove = 1;
-	AccountInfo.MapServerMoveTime = GetTickCount();
+	AccountInfo.MapServerMoveTime = GetTickCount64();
 	AccountInfo.LastServerCode = pMsg.GameServerCode;
 	AccountInfo.NextServerCode = pMsg.NextServerCode;
 	AccountInfo.Map = pMsg.map;
@@ -485,7 +462,7 @@ void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index) // OK
 	gAccountManager.InsertAccountInfo(AccountInfo);
 }
 
-void GJMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg,int index) // OK
+void GJMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg,int index)
 {
 	SDHP_MAP_SERVER_MOVE_AUTH_SEND pMsg;
 
