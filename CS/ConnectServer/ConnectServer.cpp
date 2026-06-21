@@ -222,10 +222,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			gServerList.CheckServerTimeouts();
 
-			gServerDisplayer.UpdateWindowTitle(
-				gSocketManager.GetQueueSize()
-			);
-			//	Invalida la ventana para forzar un repaint y actualizar la informacion visual
+			gServerDisplayer.UpdateWindowTitle(gSocketManager.GetQueueSize());
+			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
 			InvalidateRect(hWnd, nullptr, false);
 		}
 

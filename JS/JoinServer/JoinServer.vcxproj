@@ -89,11 +89,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -185,26 +186,49 @@
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AccountManager.cpp" />
-    <ClCompile Include="AllowableIpList.cpp" />
-    <ClCompile Include="CriticalSection.cpp" />
-    <ClCompile Include="FileHandle.cpp" />
+    <ClCompile Include="AccountManager.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Header.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="AllowableIpList.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Header.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="CriticalSection.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Header.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="FileHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Header.cpp" />
     <ClCompile Include="JoinServer.cpp" />
-    <ClCompile Include="JoinServerProtocol.cpp" />
+    <ClCompile Include="JoinServerProtocol.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="MD5.cpp" />
+    <ClCompile Include="MD5.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MemScript.cpp" />
-    <ClCompile Include="MiniDump.cpp" />
+    <ClCompile Include="MiniDump.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Protect.cpp" />
-    <ClCompile Include="QueryManager.cpp" />
-    <ClCompile Include="QueueHandle.cpp" />
+    <ClCompile Include="QueryManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="QueueHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ServerConfig.cpp" />
     <ClCompile Include="ServerDisplayer.cpp" />
     <ClCompile Include="ServerLog.cpp" />
     <ClCompile Include="ServerManager.cpp" />
-    <ClCompile Include="SocketManager.cpp" />
-    <ClCompile Include="SocketManagerUDP.cpp" />
+    <ClCompile Include="SocketManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SocketManagerUDP.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>

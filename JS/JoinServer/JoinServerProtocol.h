@@ -1,5 +1,22 @@
 // JoinServerProtocol.h
 #pragma once
+#include "Header.h"
+
+#define MAX_MAIN_PACKET_SIZE 2048
+#define MAX_UDP_PACKET_SIZE 8192
+
+// Encabezados de paquetes
+#define PACKET_HEADER_C1 0xC1
+#define PACKET_HEADER_C2 0xC2
+#define PACKET_HEADER_C3 0xC3
+#define PACKET_HEADER_C4 0xC4
+
+// Tamaños maximos permitidos de paquetes
+#define PACKET_TYPE_C1_MAX_SIZE 255
+#define PACKET_TYPE_C2_MAX_SIZE MAX_MAIN_PACKET_SIZE
+
+#define DEFAULT_TIME_WAIT 5000
+#define DEFAULT_BACKLOG 5
 
 #define CREATE_ACCOUNT_FAIL_ID				0
 #define CREATE_ACCOUNT_SUCCESS				1
@@ -16,20 +33,18 @@
 #define MAKE_NUMBERDW(x,y) ((DWORD)(((WORD)((y)&0xFFFF))|((WORD)((x)&0xFFFF)<<16)))
 #define MAKE_NUMBERQW(x,y) ((QWORD)(((DWORD)((y)&0xFFFFFFFF))|((DWORD)((x)&0xFFFFFFFF)<<32)))
 
-//**********************************************//
-//************ Packet Base *********************//
-//**********************************************//
+// Packet Base
 
 struct PBMSG_HEAD
 {
-	void set(BYTE head,BYTE size) // OK
+	void set(BYTE head,BYTE size)
 	{
 		this->type = 0xC1;
 		this->size = size;
 		this->head = head;
 	}
 
-	void setE(BYTE head,BYTE size) // OK
+	void setE(BYTE head,BYTE size)
 	{
 		this->type = 0xC3;
 		this->size = size;
@@ -43,7 +58,7 @@ struct PBMSG_HEAD
 
 struct PSBMSG_HEAD
 {
-	void set(BYTE head,BYTE subh,BYTE size) // OK
+	void set(BYTE head,BYTE subh,BYTE size)
 	{
 		this->type = 0xC1;
 		this->size = size;
@@ -51,7 +66,7 @@ struct PSBMSG_HEAD
 		this->subh = subh;
 	}
 
-	void setE(BYTE head,BYTE subh,BYTE size) // OK
+	void setE(BYTE head,BYTE subh,BYTE size)
 	{
 		this->type = 0xC3;
 		this->size = size;
@@ -67,7 +82,7 @@ struct PSBMSG_HEAD
 
 struct PWMSG_HEAD
 {
-	void set(BYTE head,WORD size) // OK
+	void set(BYTE head,WORD size)
 	{
 		this->type = 0xC2;
 		this->size[0] = SET_NUMBERHB(size);
@@ -75,7 +90,7 @@ struct PWMSG_HEAD
 		this->head = head;
 	}
 
-	void setE(BYTE head,WORD size) // OK
+	void setE(BYTE head,WORD size)
 	{
 		this->type = 0xC4;
 		this->size[0] = SET_NUMBERHB(size);
@@ -90,7 +105,7 @@ struct PWMSG_HEAD
 
 struct PSWMSG_HEAD
 {
-	void set(BYTE head,BYTE subh,WORD size) // OK
+	void set(BYTE head,BYTE subh,WORD size)
 	{
 		this->type = 0xC2;
 		this->size[0] = SET_NUMBERHB(size);
@@ -99,7 +114,7 @@ struct PSWMSG_HEAD
 		this->subh = subh;
 	}
 
-	void setE(BYTE head,BYTE subh,WORD size) // OK
+	void setE(BYTE head,BYTE subh,WORD size)
 	{
 		this->type = 0xC4;
 		this->size[0] = SET_NUMBERHB(size);
@@ -114,9 +129,7 @@ struct PSWMSG_HEAD
 	BYTE subh;
 };
 
-//**********************************************//
-//********** GameServer -> JoinServer **********//
-//**********************************************//
+// GameServer -> JoinServer
 
 struct SDHP_SERVER_INFO_RECV
 {
@@ -222,9 +235,7 @@ struct SDHP_LOCK_SAVE_RECV
 	DWORD Lock;
 };
 
-//**********************************************//
-//********** JoinServer -> GameServer **********//
-//**********************************************//
+// JoinServer -> GameServer
 
 struct SDHP_SERVER_INFO_SEND
 {
@@ -306,9 +317,6 @@ struct SDHP_ACCOUNT_ALREADY_CONNECTED_SEND
 	char account[11];
 };
 
-//**********************************************//
-//**********************************************//
-//**********************************************//
 void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index);
 void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size);
 void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index);

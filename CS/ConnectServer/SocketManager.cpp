@@ -58,8 +58,8 @@ constexpr char ONRECV_ERROR_WSARECV[] = "[SocketManager - OnRecv] WSARecv() fall
 constexpr char ONSEND_ERROR_WSASEND[] = "[SocketManager - OnSend] WSASend() fallo con el error : %d";
 
 constexpr char SERVERACCEPTTHREAD_ERROR_WSAACCEPT[] = "[SocketManager - ServerAcceptThread] WSAAccept() fallo con error: %d";
-constexpr char SERVERACCEPTTHREAD_ERROR_INET_NTOP[] = "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d";
-constexpr char SERVERACCEPTTHREAD_ERROR_CREATE_IOCP[] = "[SocketManager - ServerAcceptThread] CreateIoCompletionPort() fallo con error: %d";
+constexpr char SERVERACCEPTTHREAD_ERROR_INETNTOPA[] = "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d";
+constexpr char SERVERACCEPTTHREAD_ERROR_CREATEIOCP[] = "[SocketManager - ServerAcceptThread] CreateIoCompletionPort() fallo con error: %d";
 constexpr char SERVERACCEPTTHREAD_ERROR_WSARECV[] = "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d";
 
 constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManager - DataRecv] Error de cabecera del protocolo (Index: %d, Header: %02X)";
@@ -282,14 +282,7 @@ bool CSocketManager::CreateWorkerThread()
 
 	for (DWORD n = 0; n < this->m_ServerWorkerThreadCount; n++)
 	{
-		this->m_ServerWorkerThread[n] = CreateThread(
-			nullptr,
-			0,
-			(LPTHREAD_START_ROUTINE)CSocketManager::ServerWorkerThread,
-			this,
-			0,
-			nullptr
-		);
+		this->m_ServerWorkerThread[n] = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerWorkerThread, this, 0, nullptr);
 
 		if (this->m_ServerWorkerThread[n] == nullptr)
 		{
@@ -315,25 +308,13 @@ bool CSocketManager::CreateServerQueue()
 {
 	// El semaforo arranca en 0 (sin paquetes pendientes) y permite hasta
 	// MAX_QUEUE_SIZE incrementos simultaneos (uno por cada AddToQueue).
-	if ((this->m_ServerQueueSemaphore = CreateSemaphore(
-		nullptr,
-		0,
-		MAX_QUEUE_SIZE,
-		nullptr
-	)) == nullptr)
+	if ((this->m_ServerQueueSemaphore = CreateSemaphore(nullptr, 0, MAX_QUEUE_SIZE, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_CREATESEMAPHORE, GetLastError());
 		return false;
 	}
 
-	if ((this->m_ServerQueueThread = CreateThread(
-		nullptr,
-		0,
-		(LPTHREAD_START_ROUTINE)CSocketManager::ServerQueueThread,
-		this,
-		0,
-		nullptr
-	)) == nullptr)
+	if ((this->m_ServerQueueThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerQueueThread, this, 0, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_CREATETHREAD, GetLastError());
 		return false;
@@ -451,7 +432,7 @@ void CSocketManager::Clean()
 	{
 		for (int n = 0; n < MAX_CLIENT; n++)
 		{
-			if (gClientManager[n].CheckState() != 0)
+			if (gClientManager[n].IsOnline() != false)
 			{
 				this->Disconnect(n);
 			}
@@ -656,7 +637,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 
 	CCriticalSection::CLock lock(lpClientManager->m_lock);
 
-	if (lpClientManager->CheckState() == 0)
+	if (lpClientManager->IsOnline() == false)
 	{
 		return false;
 	}
@@ -727,7 +708,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 //   podría escribir en memoria ya liberada → heap corruption / crash.
 //
 // Esta función es idempotente: si el socket ya es INVALID_SOCKET
-// (porque ya se llamó Disconnect antes), CheckState() retorna false
+// (porque ya se llamó Disconnect antes), IsOnline() retorna false
 // y salimos sin hacer nada.
 void CSocketManager::Disconnect(int index)
 {
@@ -1040,7 +1021,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		if (InetNtopA(AF_INET, &SocketAddr.sin_addr, ipAddress, INET_ADDRSTRLEN) == nullptr)
 		{
-			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_INET_NTOP, GetLastError());
+			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_INETNTOPA, GetLastError());
 			closesocket(socket);
 			continue;
 		}
@@ -1066,7 +1047,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 		// corresponde cada evento de E/S.
 		if (CreateIoCompletionPort((HANDLE)socket, lpSocketManager->m_CompletionPort, index, 0) == nullptr)
 		{
-			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_CREATE_IOCP, GetLastError());
+			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_CREATEIOCP, GetLastError());
 			closesocket(socket);
 			continue;
 		}
@@ -1074,7 +1055,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 		CClientManager* lpClientManager = &gClientManager[index];
 
 		// AddClient toma internamente m_lock (del cliente) y
-		// gClientArrayLock (para gClientCount); deja los IO contexts
+		// gClientArrayLock (para gClientSearchStart); deja los IO contexts
 		// inicializados y listos para WSARecv.
 		lpClientManager->AddClient(index, ipAddress, socket);
 
@@ -1095,7 +1076,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 	}
 
-	return false;
+	return 0;
 }
 
 
@@ -1202,7 +1183,7 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 
 		if (lpSocketManager->m_ServerQueue.GetFromQueue(&QueueInfo) != 0)
 		{
-			if (CLIENT_RANGE(QueueInfo.index) != 0 && gClientManager[QueueInfo.index].CheckState() != 0)
+			if (CLIENT_RANGE(QueueInfo.index) != 0 && gClientManager[QueueInfo.index].IsOnline() != false)
 			{
 				ConnectServerProtocolCore(QueueInfo.index, QueueInfo.head, QueueInfo.buff, QueueInfo.size);
 			}

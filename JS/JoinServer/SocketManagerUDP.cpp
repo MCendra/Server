@@ -38,7 +38,7 @@ constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManagerUDP - DataRecv] E
 
 constexpr char SERVERRECVTHREAD_RECVFROM_ERROR[] = "[SocketManagerUDP - ServerRecvThread] recvfrom() fallo con el error: %d";
 
-CSocketManagerUdp gSocketManagerUdp;
+CSocketManagerUdp gSocketManagerUDP;
 
 // Constructor / Destructor
 

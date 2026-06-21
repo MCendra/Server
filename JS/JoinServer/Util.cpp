@@ -1,7 +1,5 @@
 // Util.cpp
 #include "Header.h"
-#include "SocketManager.h"
-#include "SocketManagerUDP.h"
 #include "Util.h"
 
 // Instancia global
@@ -102,7 +100,7 @@ bool CheckTextSyntax(char* text,int size)
 void JoinServerLiveProc()
 {
 
-	SDHP_JOIN_SERVER_LIVE_SEND pMsg;
+	SDHP_JOIN_SERVER_LIVE_SEND pMsg = {};
 
 	pMsg.header.set(0x02,sizeof(pMsg));
 

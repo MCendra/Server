@@ -1,8 +1,6 @@
 // ServerConfig.cpp
 #include "Header.h"
 #include "ServerConfig.h"
-#include "FileHandle.h"
-#include "Log.h"
 
 // Instancia global del visualizador de servidor
 CServerConfig gServerConfig;
@@ -64,8 +62,8 @@ char JoinServerODBC[32];
 char JoinServerUSER[32];
 char JoinServerPASS[32];
 char GlobalPassword[32];
-BYTE CaseSensitive;
-BYTE MD5Encryption;
+BOOL CaseSensitive;
+BOOL MD5Encryption;
 
 // Construction/Destruction
 

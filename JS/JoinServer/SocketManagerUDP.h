@@ -26,4 +26,4 @@ private:
 	CCriticalSection m_lock;
 };
 
-extern CSocketManagerUdp gSocketManagerUdp;
+extern CSocketManagerUdp gSocketManagerUDP;

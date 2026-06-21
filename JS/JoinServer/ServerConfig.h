@@ -1,16 +1,18 @@
 // ServerConfig.h
 #pragma once
+#include "FileHandle.h"
+#include "Log.h"
 
 class CServerConfig {
 public:
     bool Init(); // Obtiene el path del ejecutable y devuelve true o false
 
-    const char* getIniPath();  // Cambiado a estático
-    const char* getServerListPath();  // Cambiado a estático
+    const char* getIniPath();  // Cambiado a estÃ¡tico
+    const char* getServerListPath();  // Cambiado a estÃ¡tico
 
 private:
-    bool EnsureConfigFileExists(); // Devuelve true o false según el éxito de la operación
-    bool EnsureServerListFileExists(); // Devuelve true o false según el éxito de la operación
+    bool EnsureConfigFileExists(); // Devuelve true o false segÃºn el Ã©xito de la operaciÃ³n
+    bool EnsureServerListFileExists(); // Devuelve true o false segÃºn el Ã©xito de la operaciÃ³n
     bool LoadConfig();
 };
 

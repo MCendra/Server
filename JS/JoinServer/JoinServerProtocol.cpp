@@ -1,16 +1,16 @@
-#include "Header.h"
+// JoinServerProtocol.cpp
 #include "JoinServerProtocol.h"
-#include "Log.h"
+#include "ServerManager.h"
 #include "MD5.h"
 #include "AccountManager.h"
 #include "QueryManager.h"
-#include "ServerManager.h"
+#include "Log.h"
 #include "Util.h"
 
 void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 {
 
-	gServerManager[index].m_PacketTime = GetTickCount64();
+	gServerManager[index].m_LastPacketTime = GetTickCount64();
 
 	switch(head)
 	{
@@ -59,7 +59,7 @@ void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 
 void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index)
 {
-	SDHP_SERVER_INFO_SEND pMsg;
+	SDHP_SERVER_INFO_SEND pMsg = {};
 
 	pMsg.header.set(0x00,sizeof(pMsg));
 
@@ -74,7 +74,7 @@ void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index)
 
 void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index)
 {
-	SDHP_CONNECT_ACCOUNT_SEND pMsg;
+	SDHP_CONNECT_ACCOUNT_SEND pMsg = {};
 
 	pMsg.header.set(0x01,sizeof(pMsg));
 
@@ -247,7 +247,7 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index)
 
 void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 {
-	SDHP_CONNECT_ACCOUNT_SEND pMsg;
+	SDHP_CONNECT_ACCOUNT_SEND pMsg = {};
 
 	pMsg.header.set(0x40,sizeof(pMsg));
 
@@ -282,7 +282,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 				lpMsg->password,
 				"JoinServer",
 				lpMsg->personalcode,
-				lpMsg->Email) == TRUE)
+				lpMsg->Email) == true)
 			{
 				gQueryManager.Close();
 				pMsg.result = CREATE_ACCOUNT_SUCCESS;
@@ -305,7 +305,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 				lpMsg->password,
 				"JoinServer",
 				lpMsg->personalcode,
-				lpMsg->Email) == TRUE)
+				lpMsg->Email) == true)
 			{
 				gQueryManager.Close();
 				pMsg.result = CREATE_ACCOUNT_SUCCESS;
@@ -324,7 +324,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 
 void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index)
 {
-	SDHP_DISCONNECT_ACCOUNT_SEND pMsg;
+	SDHP_DISCONNECT_ACCOUNT_SEND pMsg = {};
 
 	pMsg.header.set(0x02,sizeof(pMsg));
 
@@ -357,7 +357,7 @@ void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index)
 		return;
 	}
 
-	if(AccountInfo.MapServerMove != 0 && (GetTickCount64()-AccountInfo.MapServerMoveTime) < 30000)
+	if(AccountInfo.MapServerMove != 0 && (GetTickCount64() - AccountInfo.MapServerMoveTime) < 30000)
 	{
 		pMsg.result = 0;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
@@ -377,7 +377,7 @@ void GJDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg,int index)
 
 void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index)
 {
-	SDHP_MAP_SERVER_MOVE_SEND pMsg;
+	SDHP_MAP_SERVER_MOVE_SEND pMsg = {};
 
 	pMsg.header.set(0x03,sizeof(pMsg));
 
@@ -464,7 +464,7 @@ void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index)
 
 void GJMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg,int index)
 {
-	SDHP_MAP_SERVER_MOVE_AUTH_SEND pMsg;
+	SDHP_MAP_SERVER_MOVE_AUTH_SEND pMsg = {};
 
 	pMsg.header.set(0x04,sizeof(pMsg));
 
@@ -574,7 +574,7 @@ void GJAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 		return;
 	}
 
-	SDHP_ACCOUNT_LEVEL_SEND pMsg;
+	SDHP_ACCOUNT_LEVEL_SEND pMsg = {};
 
 	pMsg.header.set(0x05,sizeof(pMsg));
 
@@ -604,7 +604,7 @@ void GJAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 {
 
-	SDHP_ACCOUNT_LEVEL_SEND pMsg;
+	SDHP_ACCOUNT_LEVEL_SEND pMsg = {};
 
 	pMsg.header.set(0x06,sizeof(pMsg));
 
@@ -698,7 +698,7 @@ void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* acco
 		return;
 	}
 
-	SDHP_DISCONNECT_ACCOUNT_SEND pMsg;
+	SDHP_DISCONNECT_ACCOUNT_SEND pMsg = {};
 
 	pMsg.header.set(0x02,sizeof(pMsg));
 
@@ -720,7 +720,7 @@ void JGAccountAlreadyConnectedSend(int GameServerCode,int UserIndex,char* accoun
 		return;
 	}
 
-	SDHP_ACCOUNT_ALREADY_CONNECTED_SEND pMsg;
+	SDHP_ACCOUNT_ALREADY_CONNECTED_SEND pMsg = {};
 
 	pMsg.header.set(0x30,sizeof(pMsg));
 

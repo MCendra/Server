@@ -1,8 +1,0 @@
-\\ServerCode	ServerName	ServerAddress	ServerPort	Visibility
-
-0	ServerA	127.0.0.1	55900	SHOW
-1	ServerB	127.0.0.1	55901	SHOW
-2	ServerC	127.0.0.1	55902	SHOW
-19	Server-CS	127.1.0.1	55919	SHOW
-
-end

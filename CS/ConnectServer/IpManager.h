@@ -15,8 +15,10 @@ public:
 
 private:
     bool IsValidIpAddress(const std::string& IpAddress);
-    std::map<std::string, int> m_ipaddressinfo;  // Cambiado a int para el contador
-    CCriticalSection m_lock; // Protege acceso a m_ipaddressinfo
+	// Cambiado a int para el contador
+    std::map<std::string, int> m_ipaddressinfo;
+	// Protege acceso a m_ipaddressinfo
+    CCriticalSection m_lock;
 };
 
 extern CIpManager gIpManager;

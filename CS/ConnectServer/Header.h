@@ -31,13 +31,13 @@ constexpr auto CONNECTSERVER_VERSION = "1.0.0";
 #define CONNECTSERVER_UPDATE 803
 #endif
 
-// Archivos de encabezado de Windows
-#include <windows.h>    // Archivo de encabezado de la API de Windows
-
 // Necesario por el uso de WSASocketA 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WinSock2.h>
 #include <WS2tcpip.h>		// Necesario para inet_ntop
+
+// Archivos de encabezado de Windows
+#include <windows.h>    // Archivo de encabezado de la API de Windows
 
 #include <Rpc.h>
 #include <Psapi.h>

@@ -1,7 +1,4 @@
-// MemScript.h: interface for the CMemScript class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// MemScript.h
 #pragma once
 
 #define MEM_SCRIPT_ALLOC_ERROR "[%s] Could not alloc memory for MemScript"

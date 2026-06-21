@@ -1,11 +1,9 @@
 // SocketManager.h
 #pragma once
-//#include "ServerProtocol.h"
 #include "JoinServerProtocol.h"
 #include "CriticalSection.h"
 #include "QueueHandle.h"
 
-#define MAX_MAIN_PACKET_SIZE 8192
 #define MAX_SIDE_PACKET_SIZE 65536
 #define MAX_SERVER_WORKER_THREAD 8
 #define MAX_IO_OPERATION 2
@@ -71,7 +69,15 @@ public:
 	// FIX: el ultimo parametro pasa de "CSocketManager*" a "DWORD_PTR" para
 	// coincidir con el tipo real de dwCallbackData en WSAAccept y evitar
 	// truncamiento de puntero en compilaciones x64 (ver SocketManager.cpp).
-	static int CALLBACK ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LPWSABUF lpCallerData, IN OUT LPQOS lpSQOS, IN OUT LPQOS lpGQOS, IN LPWSABUF lpCalleeId, OUT LPWSABUF lpCalleeData, OUT GROUP FAR* g, DWORD_PTR dwCallbackData);
+	static int CALLBACK ServerAcceptCondition(
+		IN LPWSABUF lpCallerId,
+		IN LPWSABUF lpCallerData,
+		IN OUT LPQOS lpSQOS,
+		IN OUT LPQOS lpGQOS,
+		IN LPWSABUF lpCalleeId,
+		OUT LPWSABUF lpCalleeData,
+		OUT GROUP FAR* g,
+		DWORD_PTR dwCallbackData);
 	static DWORD WINAPI ServerAcceptThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerWorkerThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerQueueThread(CSocketManager* lpSocketManager);

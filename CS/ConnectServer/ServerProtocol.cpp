@@ -18,7 +18,7 @@ void ConnectServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size)
 		return;
 	}
 
-	gClientManager[index].m_PacketTime = GetTickCount64(); // Modificado para GetTickCount64()
+	gClientManager[index].m_LastPacketTime = GetTickCount64();
 
 	switch (head)
 	{
@@ -99,13 +99,13 @@ void CCServerListRecv(PMSG_SERVER_LIST_RECV* lpMsg, int index)
 	gSocketManager.DataSend(index, send, size);
 }
 
-void CCServerInitSend(int index, int result) {
+void CCServerInitSend(int index, int result)
+{
+	// Inicializar todos los miembros de pMsg a cero
+	PMSG_SERVER_INIT_SEND pMsg = {};
 
-	PMSG_SERVER_INIT_SEND pMsg = {}; // Inicializar todos los miembros de pMsg a cero
-
-	pMsg.header.set(MSG_HEADER_SERVER_INIT_SEND, static_cast<BYTE>(sizeof(pMsg))); // Usa la constante MSG_HEADER_SERVER_INIT_SEND
-
+	// Usa la constante MSG_HEADER_SERVER_INIT_SEND
+	pMsg.header.set(MSG_HEADER_SERVER_INIT_SEND, static_cast<BYTE>(sizeof(pMsg)));
 	pMsg.result = static_cast<BYTE>(result);
-
 	gSocketManager.DataSend(index, (BYTE*)&pMsg, pMsg.header.size);
 }
