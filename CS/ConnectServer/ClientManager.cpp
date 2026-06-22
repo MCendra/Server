@@ -175,3 +175,19 @@ int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG 
 
 	return index;
 }
+
+// Clase para gestionar la informacion de cada cliente
+void CClientManager::CheckClientTimeouts()
+{
+	for (int n = 0; n < MAX_CLIENT; n++)
+	{
+		if (gClientManager[n].IsOnline())
+		{
+			// Si el cliente superó el tiempo máximo en el ConnectServer sin loguearse/enrutar
+			if (gClientManager[n].CheckOnlineTime() == false)
+			{
+				gSocketManager.Disconnect(n);
+			}
+		}
+	}
+}

@@ -10,6 +10,3 @@
 #include "QueryManager.h"
 #include "AllowableIpList.h"
 #include "Util.h"
-
-#define TIMER_1000 100
-#define TIMER_2000 101

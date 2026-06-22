@@ -16,7 +16,14 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 constexpr int WINDOW_WIDTH = 700;                  // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
+
 constexpr UINT TIMER_MAINTENANCE_INTERVAL = 1000;   // Intervalo de TIMER_1000, en ms
+
+constexpr UINT TIMER_MAINTENANCE = 1;
+constexpr UINT MAINTENANCE_INTERVAL = 1000;
+constexpr UINT TIMER_CHECKSERVER = 2;
+constexpr UINT SERVER_CHECK_TIMEOUTS = 5000;
+
 constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar JoinServer?"; // \xBF = ¿ en ANSI
 constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
 constexpr char ERROR_WSA_STARTUP[] = "[JS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
@@ -107,8 +114,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	gAllowableIpList.Load(AllowableIpListFilePath);
 	
-	gServerDisplayer.UpdateServerState(0);
-	gServerDisplayer.PaintName();
+	// FIX:
+	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
+	InvalidateRect(g_hWnd, nullptr, true);
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_JOINSERVER));
 
@@ -195,11 +203,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	ShowWindow(g_hWnd, nCmdShow);
 
-	// Configura el temporizador de mantenimiento (JoinServerLiveProc,
-	// desconexion de cuentas inactivas, etc). TIMER_2000 se deja sin
-	// activar: queda reservado igual que en el codigo original, donde
-	// estaba comentado.
-	SetTimer(g_hWnd, TIMER_1000, TIMER_MAINTENANCE_INTERVAL, nullptr);
+	// Timer 1: refresco de UI cada 1 segundo
+	SetTimer(g_hWnd, TIMER_MAINTENANCE, MAINTENANCE_INTERVAL, nullptr);
+
+	// Timer 2: chequeo de estado de servidores cada 5 segundos
+	SetTimer(g_hWnd, TIMER_CHECKSERVER, SERVER_CHECK_TIMEOUTS, nullptr);
 
 	UpdateWindow(g_hWnd);
 
@@ -243,14 +251,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_TIMER:
 		switch (wParam)
 		{
-		case TIMER_1000:
+		case TIMER_MAINTENANCE:
 			JoinServerLiveProc();
+			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
+			InvalidateRect(hWnd, nullptr, false);
+			break;
+		case TIMER_CHECKSERVER:
 			gAccountManager.DisconnectProc();
-			break;
-		case TIMER_2000:
-			//gServerDisplayer.Run();
-			break;
-		default:
 			break;
 		}
 		break;
@@ -258,17 +265,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
-		(void)hdc; // CServerDisplayer de JS pinta con su propio HDC interno (m_hwnd), no recibe hdc por parametro.
 
-		gServerDisplayer.PaintName();
-		gServerDisplayer.PaintServerState();
-		gServerDisplayer.PaintLogText();
+		gServerDisplayer.PaintName(hdc);
+		gServerDisplayer.PaintServerState(hdc);
+		//gServerDisplayer.PaintGameServers(hdc);
+		gServerDisplayer.PaintLogText(hdc);
 
 		EndPaint(hWnd, &ps);
 	}
 	break;
 	case WM_DESTROY:
-		KillTimer(hWnd, TIMER_1000);
+		KillTimer(hWnd, TIMER_MAINTENANCE);
+		KillTimer(hWnd, TIMER_CHECKSERVER);
 		PostQuitMessage(0);
 		break;
 	case WM_CLOSE: // Manejar el cierre de la ventana con el boton X

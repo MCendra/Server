@@ -40,6 +40,8 @@ public:
 	int GetFreeClientIndex();
 	// Busca un indice de cliente libre dentro de un rango especifico, considerando el tiempo offline para reutilizacion
 	int SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG MinTime);
+	// Actualiza el estado del cliente y registra el tiempo del cambio de estado
+	static void CheckClientTimeouts();
 
 public:
 	CCriticalSection m_lock;			// CORRECCIÓN: Se agregó un mutex para proteger el acceso a los datos del cliente

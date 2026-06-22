@@ -136,7 +136,7 @@ bool CServerConfig::LoadConfig() {
 	}
 
 	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_CONNECT_SERVER_ADDRESS, "", ConnectServerAddress, sizeof(ConnectServerAddress), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Dirección del servidor de conexiones: %s", ConnectServerAddress);
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Direccion IP de ConnectServer: %s", ConnectServerAddress);
 	}
 	else {
 		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ConnectServerAddress desde %s.", CONFIG_FILE_NAME);
@@ -178,7 +178,7 @@ bool CServerConfig::LoadConfig() {
 	}
 
 	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_JOIN_SERVER_PASS, "", JoinServerPASS, sizeof(JoinServerPASS), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Contraseña para la base datos leida correctamente.");
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Password para la base datos leida correctamente.");
 	}
 	else {
 		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerPASS desde %s.", CONFIG_FILE_NAME);
@@ -186,7 +186,7 @@ bool CServerConfig::LoadConfig() {
 	}
 
 	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_GLOBAL_PASSWORD, "", GlobalPassword, sizeof(GlobalPassword), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Contraseña global para la base datos leida correctamente.");
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Password global para la base datos leida correctamente.");
 	}
 	else {
 		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar GlobalPassword desde %s.", CONFIG_FILE_NAME);
@@ -195,7 +195,7 @@ bool CServerConfig::LoadConfig() {
 
 	CaseSensitive = static_cast<BYTE>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_CASE_SENSITIVE, 0, ConfigFilePath));
 	if (CaseSensitive == 0 || CaseSensitive == 1) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Sensible a mayúsculas y minúsculas: %s", (CaseSensitive == 1) ? "SI" : "NO");
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Sensible a mayusculas y minusculas: %s", (CaseSensitive == 1) ? "SI" : "NO");
 	}
 	else {
 		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar CaseSensitive desde %s.", CONFIG_FILE_NAME);

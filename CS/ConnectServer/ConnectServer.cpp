@@ -16,8 +16,12 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 constexpr int WINDOW_WIDTH = 700;                   // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
+
 constexpr UINT TIMER_MAINTENANCE = 1;
 constexpr UINT MAINTENANCE_INTERVAL = 1000;
+constexpr UINT TIMER_CHECKCLIENT = 2;
+constexpr UINT CLIENT_CHECK_TIMEOUTS = 5000;
+
 constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar ConnectServer?"; // \xBF = ¿ en ASCII
 constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
 constexpr char ERROR_WSA_STARTUP[] = "[CS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
@@ -174,8 +178,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	ShowWindow(g_hWnd, nCmdShow);
 
-	// Configura temporizador
+	// Timer 1: refresco de UI cada 1 segundo
 	SetTimer(g_hWnd, TIMER_MAINTENANCE, MAINTENANCE_INTERVAL, nullptr);
+
+	// Timer 2: chequeo de estado de clientes cada 5 segundos
+	SetTimer(g_hWnd, TIMER_CHECKCLIENT, CLIENT_CHECK_TIMEOUTS, nullptr);
 
 	UpdateWindow(g_hWnd);
 
@@ -218,15 +225,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 	case WM_TIMER:
 	{
-		if (wParam == TIMER_MAINTENANCE)
+		switch (wParam)
 		{
+		case TIMER_MAINTENANCE:
 			gServerList.CheckServerTimeouts();
 
 			gServerDisplayer.UpdateWindowTitle(gSocketManager.GetQueueSize());
 			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
 			InvalidateRect(hWnd, nullptr, false);
-		}
+			break;
 
+		case TIMER_CHECKCLIENT:
+			CClientManager::CheckClientTimeouts();
+			break;
+		}
 		break;
 	}
     case WM_PAINT:
@@ -244,6 +256,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_DESTROY:
 		KillTimer(hWnd, TIMER_MAINTENANCE);
+		KillTimer(hWnd, TIMER_CHECKCLIENT);
         PostQuitMessage(0);
         break;
     case WM_CLOSE: // Manejar el cierre de la ventana con el boton X

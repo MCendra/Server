@@ -8,3 +8,4 @@
 #include "SocketManager.h"
 #include "SocketManagerUDP.h"
 #include "ServerList.h"
+#include "ClientManager.h"
