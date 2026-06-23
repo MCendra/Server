@@ -1,8 +1,8 @@
 // ServerDisplayer.cpp
 #include "Header.h"
 #include "ServerDisplayer.h"
+#include "AccountManager.h"
 
-//#include "AccountManager.h"
 //#include "JoinServerProtocol.h"
 //#include "Log.h"
 //#include "Protect.h"
@@ -22,6 +22,7 @@ CServerDisplayer::CServerDisplayer()
 	: m_hwnd(nullptr),                          // Inicializa el puntero al manejador de la ventana a nullptr.
 	m_font(nullptr),                            // Inicializa el puntero a la fuente a nullptr.
 	m_count(0),                                 // Inicializa el contador de logs a 0.
+	m_isActive(false),                          // Inicializa el estado activo a false.
 	//m_servercode(0),                            // Inicializa el código del servidor a 0.
 	m_rect{ 0, 0, 0, 0 },                       // Inicializa RECT con valores predeterminados (0, 0, 0, 0)
 	m_logRect{ 0, 100, 0, 0 }					// Inicializa LOGRECT con valores predeterminados (0, 100, 0, 0).
@@ -80,15 +81,15 @@ void CServerDisplayer::Init(HWND hWnd)
 	GetClientRect(this->m_hwnd, &m_rect);
 
 	// Inicializa titulo de la ventana
-	UpdateWindowTitle(0);
+	UpdateWindowTitle(0, 0);
 
 }
 
 // Actualiza el título de la ventana
-void CServerDisplayer::UpdateWindowTitle(int queueSize) const
+void CServerDisplayer::UpdateWindowTitle(int accountCount, int queueSize) const
 {
 	char buff[MAX_LOADSTRING];
-	StringCchPrintfA(buff, ARRAYSIZE(buff), TEXT_WINDOWS_TITLE, JOINSERVER_VERSION, JOINSERVER_CLIENT, queueSize);
+	StringCchPrintfA(buff, ARRAYSIZE(buff), TEXT_WINDOWS_TITLE, JOINSERVER_VERSION, accountCount, MAX_ACCOUNT, queueSize);
 	SetWindowText(this->m_hwnd, buff);
 }
 
@@ -113,7 +114,7 @@ void CServerDisplayer::PaintName(HDC hdc) const
 	SetBkMode(hdc, OldBkMode);
 }
 
-void CServerDisplayer::PaintServerState(HDC hdc) const
+void CServerDisplayer::PaintJoinServerState(HDC hdc) const
 {
 	RECT rect = m_rect;
 	rect.top = 50;
@@ -123,18 +124,18 @@ void CServerDisplayer::PaintServerState(HDC hdc) const
 	HFONT OldFont = (HFONT)SelectObject(hdc, this->m_font);
 
 	// Actualiza el texto y el fondo basado en el estado del servidor
-	//if (gServerList.IsJoinServerOnline() == false)
-	//{
-	//	SetTextColor(hdc, RGB(200, 200, 200));
-	//	FillRect(hdc, &rect, this->m_brush[1]);
-	//	DrawText(hdc, this->m_displayertext[0], -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-	//}
-	//else
-	//{
-	//	SetTextColor(hdc, RGB(250, 250, 250));
-	//	FillRect(hdc, &rect, this->m_brush[0]);
-	//	DrawText(hdc, this->m_displayertext[1], -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-	//}
+	if (m_isActive == false)
+	{
+		SetTextColor(hdc, RGB(200, 200, 200));
+		FillRect(hdc, &rect, this->m_brush[1]);
+		DrawText(hdc, this->m_displayertext[0], -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	}
+	else
+	{
+		SetTextColor(hdc, RGB(250, 250, 250));
+		FillRect(hdc, &rect, this->m_brush[0]);
+		DrawText(hdc, this->m_displayertext[1], -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	}
 
 	// Restaura los objetos GDI previos
 	SelectObject(hdc, OldFont);
@@ -204,7 +205,7 @@ void CServerDisplayer::PaintLogText(HDC hdc)
 
 		if (size > 1)
 		{
-			TextOutA(hdc, 0, 85 + (line * 15), m_log[count].text.c_str(), size);
+			TextOutA(hdc, 0, m_logRect.top + (line * 15), m_log[count].text.c_str(), size);
 			line--;
 		}
 

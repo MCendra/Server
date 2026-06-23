@@ -228,14 +228,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 		case TIMER_MAINTENANCE:
-			gServerList.CheckServerTimeouts();
-
 			gServerDisplayer.UpdateWindowTitle(gSocketManager.GetQueueSize());
 			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
 			InvalidateRect(hWnd, nullptr, false);
 			break;
 
 		case TIMER_CHECKCLIENT:
+			gServerList.CheckServerTimeouts();
 			CClientManager::CheckClientTimeouts();
 			break;
 		}

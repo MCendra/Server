@@ -113,6 +113,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	}
 
 	gAllowableIpList.Load(AllowableIpListFilePath);
+
+	gServerDisplayer.SetActiveState(true);
 	
 	// FIX:
 	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
@@ -253,6 +255,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case TIMER_MAINTENANCE:
 			JoinServerLiveProc();
+
+			gServerDisplayer.UpdateWindowTitle(gAccountManager.GetAccountCount(), gSocketManager.GetQueueSize());
 			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
 			InvalidateRect(hWnd, nullptr, false);
 			break;
@@ -267,7 +271,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		HDC hdc = BeginPaint(hWnd, &ps);
 
 		gServerDisplayer.PaintName(hdc);
-		gServerDisplayer.PaintServerState(hdc);
+		gServerDisplayer.PaintJoinServerState(hdc);
 		//gServerDisplayer.PaintGameServers(hdc);
 		gServerDisplayer.PaintLogText(hdc);
 

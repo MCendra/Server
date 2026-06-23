@@ -29,6 +29,9 @@ bool CIpManager::CheckIpAddress(const std::string& IpAddress)
     // Si la direccion IP no esta registrada en el mapa, permitimos la conexion o no
     if (it == this->m_ipaddressinfo.end())
     {
+		// Contrato: MaxIpConnection > 0 = permitir hasta N conexiones por IP.
+		//           MaxIpConnection = 0 = rechazar todas las IPs no conocidas.
+		//           MaxIpConnection < 0 = sin límite (aceptar cualquier IP).
         return MaxIpConnection == 0 ? false : true;
     }
     else

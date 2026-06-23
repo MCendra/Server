@@ -7,9 +7,9 @@
 #define MAX_CLIENT 10000
 // Macro para verificar si el indice del cliente esta dentro del rango valido
 #define CLIENT_RANGE(x) (((x)<0)?0:((x)>=MAX_CLIENT)?0:1)
-// Tiempo minimo (ms) que un slot debe llevar offline para ser
+// Tiempo maximo (ms) que un slot debe llevar offline para ser
 // considerado "reutilizable" por SearchFreeClientIndex.
-#define MIN_CLIENT_OFFLINE_TIME_FOR_REUSE 10000
+#define MAX_CLIENT_OFFLINE_TIME_FOR_REUSE 10000
 
 // Enum para representar el estado del cliente
 enum eClientState
@@ -30,8 +30,8 @@ public:
 	bool IsOnline();
 	// Verifica si los contextos de IO estan correctamente asignados
 	bool CheckAlloc();
-	// Verifica si el tiempo en linea del cliente esta dentro del limite permitido
-	bool CheckOnlineTime() const;
+	// Verifica si el tiempo inactivo en linea del cliente esta dentro del limite permitido
+	bool IsTimedOut() const;
 	// Agrega un nuevo cliente con un indice, IP y socket especificos
 	void AddClient(int index, char* ip, SOCKET socket);
 	// Elimina un cliente y libera los recursos asociados

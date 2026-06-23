@@ -23,7 +23,7 @@ CServerList::~CServerList()
 
 }
 
-// Obtiene el conteo de servidores en linea
+// Carga lista de GameServers desde el archivo de configuracion
 void CServerList::Init(const char* path)
 {
 	// Objeto en stack: sin heap, sin delete, sin nullptr check.
@@ -83,28 +83,29 @@ void CServerList::Init(const char* path)
 
 }
 
-// Maneja el mensaje de estado de un servidor de juego
+// Verifica timeouts de JoinServer y los GameServers
 void CServerList::CheckServerTimeouts()
 {
-	if (this->m_JoinServerState != 0 && (GetTickCount64() - this->m_JoinServerStateTime) > 10000)
+	if (this->m_JoinServerState != 0 && (GetTickCount64() - this->m_JoinServerStateTime) > MAX_JOINSERVER_OFFLINE_TIME)
 	{
 		this->m_JoinServerState = 0;
 		this->m_JoinServerStateTime = 0;
 		Log.ToDisp(LOG_RED, "JoinServer fuera de linea");
 	}
 
-	for (std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.begin();it != this->m_ServerListInfo.end();it++)
+	for (auto& it : this->m_ServerListInfo)
 	{
-		if (it->second.ServerState != 0 && (GetTickCount64() - it->second.ServerStateTime) > 10000)
+		if (it.second.ServerState != 0 && (GetTickCount64() - it.second.ServerStateTime) > MAX_GAMESERVER_OFFLINE_TIME)
 		{
-			it->second.ServerState = 0;
-			it->second.ServerStateTime = 0;
-			Log.ToDisp(LOG_BLACK, "GameServer fuera de linea (%s) (%d)", it->second.ServerName, it->second.ServerCode);
+			it.second.ServerState = 0;
+			it.second.ServerStateTime = 0;
+
+			Log.ToDisp(LOG_BLACK, "GameServer fuera de linea (%s) (%d)", it.second.ServerName, it.second.ServerCode);
 		}
 	}
 }
 
-// Verifica si JoinServer esta en linea
+// Verifica si JoinServer esta en linea o saturado
 bool CServerList::IsJoinServerOnline() const
 {
 	if (this->m_JoinServerState == 0)
@@ -120,7 +121,7 @@ bool CServerList::IsJoinServerOnline() const
 	return true;
 }
 
-// Maneja el mensaje de estado de la cola de servidores para unirse
+// Genera la lista de servidores para mostrar a los cleintes, ocultando los que no estan disponibles o no se deben mostrar
 long CServerList::GenerateServerList(BYTE* lpMsg, int* size)
 {
 	int count = 0;
@@ -129,14 +130,12 @@ long CServerList::GenerateServerList(BYTE* lpMsg, int* size)
 
 	if (this->IsJoinServerOnline())
 	{
-		for (std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.begin();it != this->m_ServerListInfo.end();it++)
+		for (const auto& it : this->m_ServerListInfo)
 		{
-			if (it->second.ServerShow != 0 && it->second.ServerState != 0)
+			if (it.second.ServerShow != 0 && it.second.ServerState != 0)
 			{
-				info.ServerCode = it->second.ServerCode;
-
-				info.UserTotal = it->second.UserTotal;
-
+				info.ServerCode = it.second.ServerCode;
+				info.UserTotal = it.second.UserTotal;
 				info.type = 0xCC;
 
 				memcpy(&lpMsg[(*size)], &info, sizeof(info));
@@ -150,22 +149,20 @@ long CServerList::GenerateServerList(BYTE* lpMsg, int* size)
 	return count;
 }
 
-// Agrega un nuevo servidor a la lista de servidores
+// Busca servidor por codigo
 SERVER_LIST_INFO* CServerList::GetGameServerInfo(int serverCode)
 {
-	std::map<int, SERVER_LIST_INFO>::iterator it = this->m_ServerListInfo.find(serverCode);
+	auto it = this->m_ServerListInfo.find(serverCode);
 
 	if (it == this->m_ServerListInfo.end())
 	{
-		return 0;
+		return nullptr;
 	}
-	else
-	{
-		return &it->second;
-	}
+
+	return &it->second;
 }
 
-// Funciones para el estado del JoinServer
+// Determina si los paquetes pertenecen a JoinServer o GameServer y los manda procesar
 void CServerList::ProcessServerStatusPacket(BYTE head, BYTE* lpMsg, int size)
 {
 	UNREFERENCED_PARAMETER(size);
@@ -181,12 +178,12 @@ void CServerList::ProcessServerStatusPacket(BYTE head, BYTE* lpMsg, int size)
 	}
 }
 
-// Verifica si algún GameServer dejó de enviar heartbeats
+// Procesa heartbeat de GameServer, actualizando su estado y tamaño de cola
 void CServerList::ProcessGameServerHeartbeat(SDHP_GAME_SERVER_LIVE_RECV* lpMsg)
 {
 	SERVER_LIST_INFO* lpServerListInfo = this->GetGameServerInfo(lpMsg->ServerCode);
 
-	if (lpServerListInfo == 0)
+	if (lpServerListInfo == nullptr)
 	{
 		return;
 	}
@@ -213,7 +210,7 @@ void CServerList::ProcessGameServerHeartbeat(SDHP_GAME_SERVER_LIVE_RECV* lpMsg)
 	lpServerListInfo->MaxUserCount = lpMsg->MaxUserCount;
 }
 
-// Verifica si JoinServer dejó de enviar heartbeats
+// Procesa heartbeat de JoinServer, actualizando su estado y tamaño de cola
 void CServerList::ProcessJoinServerHeartbeat(SDHP_JOIN_SERVER_LIVE_RECV* lpMsg)
 {
 	if (this->m_JoinServerState == 0)

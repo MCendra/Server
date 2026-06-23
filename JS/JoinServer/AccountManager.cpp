@@ -46,13 +46,13 @@ void CAccountManager::DisconnectProc()
 	this->m_critical.unlock();
 }
 
-void CAccountManager::ClearServerAccountInfo(WORD ServerCode)
+void CAccountManager::ClearServerAccountInfo(int serverCode)
 {
 	this->m_critical.lock();
 
 	for(std::map<std::string,ACCOUNT_INFO>::iterator it=this->m_AccountInfo.begin();it != this->m_AccountInfo.end();)
 	{
-		if(it->second.GameServerCode != ServerCode)
+		if(it->second.GameServerCode != serverCode)
 		{
 			it++;
 			continue;

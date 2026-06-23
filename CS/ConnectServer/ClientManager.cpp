@@ -37,9 +37,9 @@ __forceinline bool CClientManager::CheckAlloc()
 	return this->m_IoRecvContext && this->m_IoSendContext;
 }
 
-bool CClientManager::CheckOnlineTime() const
+bool CClientManager::IsTimedOut() const
 {
-	return (GetTickCount64() - this->m_LastStateChangeTime) <= MIN_CLIENT_OFFLINE_TIME_FOR_REUSE;
+	return (GetTickCount64() - this->m_LastStateChangeTime) > MAX_CLIENT_OFFLINE_TIME_FOR_REUSE;
 }
 
 // Agrega un cliente a la lista de clientes activos
@@ -116,12 +116,12 @@ void CClientManager::DelClient()
 	this->m_state = CLIENT_OFFLINE;
 
 	this->m_index = -1;
-	memset(this->m_IpAddr, 0, sizeof(this->m_IpAddr));
 	this->m_socket = INVALID_SOCKET; // ya fue cerrado en Disconnect()
 	this->m_LastStateChangeTime = GetTickCount64();
 	this->m_LastPacketTime = 0;
 	// Eliminar IP del manager
 	gIpManager.RemoveIpAddress(this->m_IpAddr);
+	memset(this->m_IpAddr, 0, sizeof(this->m_IpAddr));
 }
 
 // Retorna un índice libre en gClientManager[].
@@ -134,7 +134,7 @@ int CClientManager::GetFreeClientIndex()
 	CCriticalSection::CLock lock(gClientArrayLock);
 
 	// Primero busca slot reutilizable (con IO contexts ya asignados)
-	int index = SearchFreeClientIndex(0, MAX_CLIENT, MIN_CLIENT_OFFLINE_TIME_FOR_REUSE);
+	int index = SearchFreeClientIndex(0, MAX_CLIENT, MAX_CLIENT_OFFLINE_TIME_FOR_REUSE);
 	if (index != -1) return index;
 
 	// Búsqueda circular iniciando desde el cursor
@@ -154,7 +154,7 @@ int CClientManager::GetFreeClientIndex()
 // Busca slot libre previamente asignado que lleva mas tiempo sin reutilizarse.
 // IMPORTANTE:
 // Esta funcion debe ejecutarse con gClientArrayLock ya adquirido.
-int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG MinTime)
+int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG MaxTime)
 {
 	int index = -1;
 	ULONGLONG maxOfflineTime = 0;
@@ -165,7 +165,7 @@ int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG 
 		{
 			// CORRECCIÓN: Uso de CurOnlineTime - renombrado a curOfflineTime para reflejar mejor su proposito
 			ULONGLONG curOfflineTime = GetTickCount64() - gClientManager[n].m_LastStateChangeTime;
-			if (curOfflineTime > MinTime && curOfflineTime > maxOfflineTime)
+			if (curOfflineTime < MaxTime && curOfflineTime > maxOfflineTime)
 			{
 				index = n;
 				maxOfflineTime = curOfflineTime;
@@ -181,13 +181,9 @@ void CClientManager::CheckClientTimeouts()
 {
 	for (int n = 0; n < MAX_CLIENT; n++)
 	{
-		if (gClientManager[n].IsOnline())
+		if (gClientManager[n].IsOnline() && gClientManager[n].IsTimedOut())
 		{
-			// Si el cliente superó el tiempo máximo en el ConnectServer sin loguearse/enrutar
-			if (gClientManager[n].CheckOnlineTime() == false)
-			{
-				gSocketManager.Disconnect(n);
-			}
+			gSocketManager.Disconnect(n);
 		}
 	}
 }

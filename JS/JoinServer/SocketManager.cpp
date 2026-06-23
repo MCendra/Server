@@ -77,6 +77,10 @@ constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManager] Error de tamañ
 constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager] Server queue full(Index:% d, Head : % 02X)";
 constexpr char DATARECV_INVALID_SERVER[] = "[SocketManager - DataRecv] Servidor invalido (Index: %d)";
 
+constexpr char SERVERWORKERTHREAD_GETQUEUEDCOMPLETIONSTATUS_ERROR[] = "[SocketManager - ServerWorkerThread] GetQueuedCompletionStatus() fallo con error: %d";
+
+constexpr char SERVERQUEUETHREAD_WAITFORMULTIPLEOBJECTS_ERROR[] = "[SocketManager - ServerQueueThread] WaitForMultipleObjects() fallo con error: %d";
+
 // =====================================================================
 // Construccion / Destruccion
 // =====================================================================
@@ -438,7 +442,7 @@ void CSocketManager::Clean()
 	{
 		for (int n = 0; n < MAX_SERVER; n++)
 		{
-			if (gServerManager[n].IsOnline() != false)
+			if (gServerManager[n].IsOnline())
 			{
 				this->Disconnect(n);
 			}
@@ -874,6 +878,11 @@ void CSocketManager::OnSend(int index,DWORD IoSize,IO_SEND_CONTEXT* lpIoContext)
 
 int CALLBACK CSocketManager::ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LPWSABUF lpCallerData, IN OUT LPQOS lpSQOS, IN OUT LPQOS lpGQOS, IN LPWSABUF lpCalleeId, OUT LPWSABUF lpCalleeData, OUT GROUP FAR* g, DWORD_PTR dwCallbackData)
 {
+	UNREFERENCED_PARAMETER(lpCallerData);
+	UNREFERENCED_PARAMETER(lpSQOS);
+	UNREFERENCED_PARAMETER(lpGQOS);
+	UNREFERENCED_PARAMETER(dwCallbackData);
+
 	SOCKADDR_IN* SocketAddr = (SOCKADDR_IN*)lpCallerId->buf;
 
 	if (gAllowableIpList.CheckAllowableIp(inet_ntoa(SocketAddr->sin_addr)) == 0)
@@ -994,7 +1003,27 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 	return 0;
 }
 
-DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager) // OK
+// =====================================================================
+// Hilos de trabajo (IOCP) y de cola de paquetes
+// =====================================================================
+
+// Hilo de trabajo del IOCP. Cada uno de estos hilos (uno por CPU, hasta
+// MAX_SERVER_WORKER_THREAD) espera eventos de E/S completados con
+// GetQueuedCompletionStatus y los despacha a OnRecv/OnSend segun
+// corresponda.
+//
+// Casos de salida del hilo:
+//   - GQCS retorna 0 (fallo) con lpOverlapped == nullptr, o con un error
+//     no relacionado a una desconexion esperada: error real, se loggea
+//     y el hilo termina.
+//   - GQCS retorna 0 con lpOverlapped != nullptr y el error es uno de
+//     los esperables al desconectarse un cliente (ERROR_NETNAME_DELETED,
+//     ERROR_CONNECTION_ABORTED, ERROR_OPERATION_ABORTED,
+//     ERROR_SEM_TIMEOUT): se continua el procesamiento normal; el
+//     IoSize quedara en 0 y OnRecv/OnSend desconectaran al cliente.
+//   - "Paquete vacio" de apagado (IoSize==0, index==0, lpOverlapped==
+//     nullptr) publicado por Clean(): el hilo termina limpiamente.
+DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 {
 	DWORD IoSize;
 	DWORD index;
@@ -1002,38 +1031,41 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 
 	while(true)
 	{
-		if(GetQueuedCompletionStatus(lpSocketManager->m_CompletionPort,&IoSize,&index,&lpOverlapped,INFINITE) == 0)
+		if (GetQueuedCompletionStatus(lpSocketManager->m_CompletionPort, &IoSize, &index, &lpOverlapped, INFINITE) == 0)
 		{
-			if(lpOverlapped == 0 || (GetLastError() != ERROR_NETNAME_DELETED && GetLastError() != ERROR_CONNECTION_ABORTED && GetLastError() != ERROR_OPERATION_ABORTED && GetLastError() != ERROR_SEM_TIMEOUT))
+			DWORD Error = GetLastError();
+
+			if (lpOverlapped == nullptr ||
+				(Error != ERROR_NETNAME_DELETED &&
+					Error != ERROR_CONNECTION_ABORTED &&
+					Error != ERROR_OPERATION_ABORTED &&
+					Error != ERROR_SEM_TIMEOUT))
 			{
-				lpSocketManager->m_critical.lock();
-				Log.ToDisp(LOG_RED,"[SocketManager] GetQueuedCompletionStatus() failed with error: %d",GetLastError());
-				lpSocketManager->m_critical.unlock();
-				return 0;
+				Log.ToDisp(LOG_RED, SERVERWORKERTHREAD_GETQUEUEDCOMPLETIONSTATUS_ERROR, Error);
+				return 1;
 			}
+			// Error esperado de desconexion: se sigue procesando con
+			// IoSize == 0 para que OnRecv/OnSend desconecten al cliente.
 		}
 
-		lpSocketManager->m_critical.lock();
-
-		if(IoSize == 0 && index == 0 && lpOverlapped == 0)
+		// Señal de apagado publicada por Clean(): IoSize=0, index=0,
+		// lpOverlapped=nullptr (GQCS retorna exito para este post).
+		if (IoSize == 0 && index == 0)
 		{
-			lpSocketManager->m_critical.unlock();
-			return 0;
+			if (lpOverlapped == nullptr) return 0;
 		}
 
 		IO_CONTEXT* lpIoContext = (IO_CONTEXT*)lpOverlapped;
 
-		switch(lpIoContext->IoType)
+		switch (lpIoContext->IoType)
 		{
-			case IO_RECV:
-				lpSocketManager->OnRecv(index,IoSize,(IO_RECV_CONTEXT*)lpIoContext);
-				break;
-			case IO_SEND:
-				lpSocketManager->OnSend(index,IoSize,(IO_SEND_CONTEXT*)lpIoContext);
-				break;
+		case IO_RECV:
+			lpSocketManager->OnRecv(index, IoSize, (IO_RECV_CONTEXT*)lpIoContext);
+			break;
+		case IO_SEND:
+			lpSocketManager->OnSend(index, IoSize, (IO_SEND_CONTEXT*)lpIoContext);
+			break;
 		}
-
-		lpSocketManager->m_critical.unlock();
 	}
 
 	return 0;

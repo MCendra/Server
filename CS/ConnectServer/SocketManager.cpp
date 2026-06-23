@@ -432,7 +432,7 @@ void CSocketManager::Clean()
 	{
 		for (int n = 0; n < MAX_CLIENT; n++)
 		{
-			if (gClientManager[n].IsOnline() != false)
+			if (gClientManager[n].IsOnline())
 			{
 				this->Disconnect(n);
 			}
@@ -1127,9 +1127,9 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 
 		// Señal de apagado publicada por Clean(): IoSize=0, index=0,
 		// lpOverlapped=nullptr (GQCS retorna exito para este post).
-		if (IoSize == 0 && index == 0 && lpOverlapped == nullptr)
+		if (IoSize == 0 && index == 0)
 		{
-			return 0;
+			if (lpOverlapped == nullptr) return 0;
 		}
 
 		IO_CONTEXT* lpIoContext = (IO_CONTEXT*)lpOverlapped;

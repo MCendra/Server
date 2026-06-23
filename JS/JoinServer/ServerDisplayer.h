@@ -32,13 +32,13 @@ public:
 	void Init(HWND hWnd);
 
 	// Actualiza el título de la ventana
-	void UpdateWindowTitle(int queueSize) const;
+	void UpdateWindowTitle(int accountCount,int queueSize) const;
 
 	// Pintar el nombre del cliente en la ventana (const)
 	void PaintName(HDC hdc) const;
 
 	// Pintar el estado del servidor en la ventana (const)
-	void PaintServerState(HDC hdc) const;
+	void PaintJoinServerState(HDC hdc) const;
 
 	// Funcion para pintar los logs de texto
 	void PaintLogText(HDC hdc);
@@ -48,6 +48,8 @@ public:
 
 	// Actualiza el estado del servidor y repinta la ventana
 	void Refresh();
+
+	void SetActiveState(bool active) { m_isActive = active; }
 
 	// Elimina la posibilidad de copiar o mover la instancia
 	CServerDisplayer(const CServerDisplayer&) = delete;
@@ -60,6 +62,7 @@ private:
 	HFONT m_font;
 	HBRUSH m_brush[5];
 	LogDisplayInfo m_log[MAX_LOG_TEXT_LINE];
+	bool m_isActive;
 	int m_count;
 	//int m_servercode;                           // Almacena el estado del servidor
 	char m_displayertext[2][32];

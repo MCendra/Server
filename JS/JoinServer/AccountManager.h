@@ -9,18 +9,18 @@ struct ACCOUNT_INFO
 	char Account[11];
 	char IpAddress[16];
 	WORD UserIndex;
-	WORD GameServerCode;
+	int GameServerCode;
 	bool MapServerMove;
 	ULONGLONG MapServerMoveTime;
-	WORD LastServerCode;
-	WORD NextServerCode;
+	int LastServerCode;
+	int NextServerCode;
 	WORD Map;
 	BYTE X;
 	BYTE Y;
-	DWORD AuthCode1;
-	DWORD AuthCode2;
-	DWORD AuthCode3;
-	DWORD AuthCode4;
+	ULONGLONG AuthCode1;
+	ULONGLONG AuthCode2;
+	ULONGLONG AuthCode3;
+	ULONGLONG AuthCode4;
 };
 
 class CAccountManager
@@ -29,7 +29,7 @@ public:
 	CAccountManager();
 	virtual ~CAccountManager();
 	void DisconnectProc();
-	void ClearServerAccountInfo(WORD ServerCode);
+	void ClearServerAccountInfo(int serverCode);
 	bool GetAccountInfo(ACCOUNT_INFO* lpAccountInfo,char* account);
 	void InsertAccountInfo(ACCOUNT_INFO AccountInfo);
 	void RemoveAccountInfo(ACCOUNT_INFO AccountInfo);

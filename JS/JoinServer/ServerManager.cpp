@@ -151,7 +151,7 @@ int CServerManager::GetFreeServerIndex()
 	CCriticalSection::CLock lock(gServerArrayLock);
 
 	// Intento 1: slot offline con IO contexts y suficiente tiempo offline
-	int index = SearchFreeServerIndex(0, MAX_SERVER, MIN_SERVER_OFFLINE_TIME_FOR_REUSE);
+	int index = SearchFreeServerIndex(0, MAX_SERVER, MAX_SERVER_OFFLINE_TIME_FOR_REUSE);
 	if (index != -1) return index;
 
 	// Intento 2: búsqueda circular desde el cursor
@@ -171,7 +171,7 @@ int CServerManager::GetFreeServerIndex()
 // Busca slot libre previamente asignado que lleva mas tiempo sin reutilizarse.
 // IMPORTANTE:
 // Esta funcion debe ejecutarse con gServerArrayLock ya adquirido.
-int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime)
+int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MaxTime)
 {
 	int index = -1;
 	ULONGLONG maxOfflineTime = 0;
@@ -182,7 +182,7 @@ int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinT
 		{
 			// CORRECCIÓN: Uso de CurOnlineTime - renombrado a curOfflineTime para reflejar mejor su proposito
 			ULONGLONG CurOfflineTime = GetTickCount64() - gServerManager[n].m_LastStateChangeTime;
-			if (CurOfflineTime > MinTime && CurOfflineTime > maxOfflineTime)
+			if (CurOfflineTime < MaxTime && CurOfflineTime > maxOfflineTime)
 			{
 				index = n;
 				maxOfflineTime = CurOfflineTime;
@@ -195,7 +195,7 @@ int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinT
 
 
 // Recorre el array buscando el servidor activo con el código indicado.
-CServerManager* FindServerByCode(WORD ServerCode)
+CServerManager* FindServerByCode(int ServerCode)
 {
 	for (int n = 0; n < MAX_SERVER; n++)
 	{

@@ -6,6 +6,9 @@
 // Definicion del tamaño maximo de la cola de servidores para unirse
 #define MAX_JOIN_SERVER_QUEUE_SIZE 100
 
+#define MAX_JOINSERVER_OFFLINE_TIME 5000
+#define MAX_GAMESERVER_OFFLINE_TIME 5000
+
 // Estructura para recibir informacion sobre el estado de un servidor de juego
 struct SDHP_GAME_SERVER_LIVE_RECV
 {

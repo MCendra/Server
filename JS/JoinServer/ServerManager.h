@@ -7,9 +7,9 @@
 #define MAX_SERVER 20
 // Macro para verificar si el indice del cliente esta dentro del rango valido
 #define SERVER_RANGE(x) (((x)<0)?0:((x)>=MAX_SERVER)?0:1)
-// Tiempo minimo (ms) que un slot debe llevar offline para ser
+// Tiempo maximo (ms) que un slot debe llevar offline para ser
 // considerado "reutilizable" por SearchFreeServerIndex.
-#define MIN_SERVER_OFFLINE_TIME_FOR_REUSE 10000
+#define MAX_SERVER_OFFLINE_TIME_FOR_REUSE 10000
 
 // Enum para representar el estado del servidor
 enum eServerState
@@ -50,7 +50,7 @@ public:
 	IO_SEND_CONTEXT* m_IoSendContext;	// Contexto de envio de IO
 	char m_ServerName[32];				// Nombre del servidor
 	WORD m_ServerPort;					// Puerto del servidor
-	WORD m_ServerCode;					// Codigo del servidor
+	int m_ServerCode;					// Codigo del servidor
 	ULONGLONG m_LastStateChangeTime;	// Tiempo del ultimo cambio de estado
 	ULONGLONG m_LastPacketTime;				// Tiempo del ultimo paquete recibido/enviado
 	int m_CurUserCount;					// Contador de usuarios actuales conectados al servidor
@@ -64,4 +64,4 @@ extern int gServerSearchStart;
 
 // Recorre gServerManager[] y retorna el primero cuyo ServerCode coincida.
 // Retorna nullptr si ningún servidor activo tiene ese código.
-CServerManager* FindServerByCode(WORD ServerCode);
+CServerManager* FindServerByCode(int ServerCode);

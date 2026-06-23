@@ -203,7 +203,7 @@ void CServerDisplayer::PaintLogText(HDC hdc)
 
         if (size > 1)
         {
-            TextOutA(hdc, 0, 85 + (line * 15), m_log[count].text.c_str(), size);
+            TextOutA(hdc, 0, m_logRect.top + (line * 15), m_log[count].text.c_str(), size);
             line--;
         }
 

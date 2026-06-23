@@ -28,7 +28,7 @@ void CLog::ToFile(const char* text, ...) {
     std::string formattedmessage = FormatMessage(text, args);
     va_end(args);
 
-    gServerLog.Output(LogType::GENERAL, formattedmessage.c_str());
+    gServerLog.Output(LogType::GENERAL, formattedmessage);
 }
 
 void CLog::ToDisp(LogColor color, const char* text, ...) {
@@ -41,5 +41,5 @@ void CLog::ToDisp(LogColor color, const char* text, ...) {
     // Llamar a LogAddText para agregar el log al array m_log
     gServerDisplayer.LogAddText(color, formattedmessage);
     
-    gServerLog.Output(LogType::GENERAL, formattedmessage.c_str());
+    gServerLog.Output(LogType::GENERAL, formattedmessage);
 }

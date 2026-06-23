@@ -37,18 +37,18 @@
 
 struct PBMSG_HEAD
 {
-	void set(BYTE head,BYTE size)
+	void set(BYTE packetHead,BYTE packetSize)
 	{
 		this->type = 0xC1;
-		this->size = size;
-		this->head = head;
+		this->size = packetHead;
+		this->head = packetSize;
 	}
 
-	void setE(BYTE head,BYTE size)
+	void setE(BYTE packetHead,BYTE packetSize)
 	{
 		this->type = 0xC3;
-		this->size = size;
-		this->head = head;
+		this->size = packetHead;
+		this->head = packetSize;
 	}
 
 	BYTE type;
@@ -58,20 +58,20 @@ struct PBMSG_HEAD
 
 struct PSBMSG_HEAD
 {
-	void set(BYTE head,BYTE subh,BYTE size)
+	void set(BYTE packetHead,BYTE packetSubHead,BYTE packetSize)
 	{
 		this->type = 0xC1;
-		this->size = size;
-		this->head = head;
-		this->subh = subh;
+		this->size = packetHead;
+		this->head = packetSize;
+		this->subh = packetSubHead;
 	}
 
-	void setE(BYTE head,BYTE subh,BYTE size)
+	void setE(BYTE packetHead,BYTE packetSubHead,BYTE packetSize)
 	{
 		this->type = 0xC3;
-		this->size = size;
-		this->head = head;
-		this->subh = subh;
+		this->size = packetHead;
+		this->head = packetSize;
+		this->subh = packetSubHead;
 	}
 
 	BYTE type;
@@ -82,20 +82,20 @@ struct PSBMSG_HEAD
 
 struct PWMSG_HEAD
 {
-	void set(BYTE head,WORD size)
+	void set(BYTE packetHead,WORD packetSize)
 	{
 		this->type = 0xC2;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
 	}
 
-	void setE(BYTE head,WORD size)
+	void setE(BYTE packetHead,WORD packetSize)
 	{
 		this->type = 0xC4;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
 	}
 
 	BYTE type;
@@ -105,22 +105,22 @@ struct PWMSG_HEAD
 
 struct PSWMSG_HEAD
 {
-	void set(BYTE head,BYTE subh,WORD size)
+	void set(BYTE packetHead,BYTE packetSubHead,WORD packetSize)
 	{
 		this->type = 0xC2;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-		this->subh = subh;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
-	void setE(BYTE head,BYTE subh,WORD size)
+	void setE(BYTE packetHead,BYTE packetSubHead,WORD packetSize)
 	{
 		this->type = 0xC4;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-		this->subh = subh;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
 	BYTE type;
@@ -252,7 +252,7 @@ struct SDHP_CONNECT_ACCOUNT_SEND
 	char PersonalCode[14];
 	BYTE result;
 	BYTE BlockCode;
-	WORD AccountLevel;
+	int AccountLevel;
 	char AccountExpireDate[20];
 	DWORD Lock;
 };
@@ -272,15 +272,15 @@ struct SDHP_MAP_SERVER_MOVE_SEND
 	char account[11];
 	char name[11];
 	BYTE result;
-	WORD GameServerCode;
-	WORD NextServerCode;
+	int GameServerCode;
+	int NextServerCode;
 	WORD map;
 	BYTE x;
 	BYTE y;
-	DWORD AuthCode1;
-	DWORD AuthCode2;
-	DWORD AuthCode3;
-	DWORD AuthCode4;
+	ULONGLONG AuthCode1;
+	ULONGLONG AuthCode2;
+	ULONGLONG AuthCode3;
+	ULONGLONG AuthCode4;
 };
 
 struct SDHP_MAP_SERVER_MOVE_AUTH_SEND
@@ -292,11 +292,11 @@ struct SDHP_MAP_SERVER_MOVE_AUTH_SEND
 	char PersonalCode[14];
 	BYTE result;
 	BYTE BlockCode;
-	WORD LastServerCode;
+	int LastServerCode;
 	WORD map;
 	BYTE x;
 	BYTE y;
-	WORD AccountLevel;
+	int AccountLevel;
 	char AccountExpireDate[20];
 	DWORD Lock;
 };
@@ -306,7 +306,7 @@ struct SDHP_ACCOUNT_LEVEL_SEND
 	PBMSG_HEAD header; // C1:05
 	WORD index;
 	char account[11];
-	WORD AccountLevel;
+	int AccountLevel;
 	char AccountExpireDate[20];
 };
 
@@ -329,7 +329,7 @@ void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index
 void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index);
 void GJServerUserInfoRecv(SDHP_SERVER_USER_INFO_RECV* lpMsg,int index);
 void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMsg,int index);
-void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* account);
-void JGAccountAlreadyConnectedSend(int GameServerCode,int UserIndex,char* account);
+void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex,char* account);
+void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex,char* account);
 void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index);
 void GJAccountLockSaveRecv(SDHP_LOCK_SAVE_RECV* lpMsg,int index);

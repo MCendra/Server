@@ -9,6 +9,7 @@
 
 void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 {
+	UNREFERENCED_PARAMETER(size);
 
 	gServerManager[index].m_LastPacketTime = GetTickCount64();
 
@@ -618,7 +619,7 @@ void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 
 		pMsg.AccountLevel = 0;
 
-		memcpy(pMsg.account,"null",sizeof(pMsg.account));
+		strcpy_s(pMsg.account, sizeof(pMsg.account), "null");
 	}
 	else
 	{
@@ -634,6 +635,8 @@ void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index)
 
 void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index)
 {
+	UNREFERENCED_PARAMETER(index);
+
 	ACCOUNT_INFO AccountInfo;
 
 	if(gAccountManager.GetAccountInfo(&AccountInfo,lpMsg->account) == 0)
@@ -658,6 +661,8 @@ void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index
 
 void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index)
 {
+	UNREFERENCED_PARAMETER(index);
+
 	gQueryManager.ExecQuery("EXEC WZ_SetAccountLevel '%s','%d','%d'",lpMsg->account,lpMsg->AccountLevel,lpMsg->AccountExpireTime);
 	gQueryManager.Fetch();
 	gQueryManager.Close();
@@ -665,6 +670,8 @@ void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index)
 
 void GJAccountLockSaveRecv(SDHP_LOCK_SAVE_RECV* lpMsg,int index)
 {
+	UNREFERENCED_PARAMETER(index);
+
 	gQueryManager.ExecQuery("UPDATE memb_info SET Lock = %d WHERE memb___id = '%s'",lpMsg->Lock,lpMsg->account);
 	gQueryManager.Fetch();
 	gQueryManager.Close();
@@ -679,6 +686,8 @@ void GJServerUserInfoRecv(SDHP_SERVER_USER_INFO_RECV* lpMsg,int index)
 
 void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMsg,int index)
 {
+	UNREFERENCED_PARAMETER(index);
+
 	ACCOUNT_INFO AccountInfo;
 
 	if(gAccountManager.GetAccountInfo(&AccountInfo,lpMsg->account) == 0)
@@ -689,7 +698,7 @@ void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMs
 	JGExternalDisconnectAccountSend(AccountInfo.GameServerCode,AccountInfo.UserIndex,AccountInfo.Account);
 }
 
-void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* account)
+void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex,char* account)
 {
 	CServerManager* lpServerManager = FindServerByCode(GameServerCode);
 
@@ -711,7 +720,7 @@ void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* acco
 	gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void JGAccountAlreadyConnectedSend(int GameServerCode,int UserIndex,char* account)
+void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex,char* account)
 {
 	CServerManager* lpServerManager = FindServerByCode(GameServerCode);
 

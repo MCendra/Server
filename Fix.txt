@@ -84,3 +84,14 @@ Fix 1.0.0.5
 Fix 1.0.0.6
 - ServerProtocol.cpp::ConnectServerProtocolCore() — lpMsg[3] asume siempre cabecera larga (C2), pero el switch no distingue
 - CSocketManager::DataRecv() - verificacion indice del cliente, limite de 65535
+- SocketManagerUDP.cpp actualizaciones varias
+
+Fix 1.0.0.7
+- Inicio revision Joinserver
+- Patron JoinServer.cpp similar a ConnectServer.cpp
+- Patron LogServer.cpp adecuado a JoinServer
+
+Fix 1.0.0.8
+- ServerList.cpp agregado MAX_JOINSERVER_OFFLINE_TIME y MAX_GAMESERVER_OFFLINE_TIME en CheckServerTimeouts
+- ServerList.cpp modernizacion de iteraciones
+- ServerManager.cpp cambios menores de logica 
