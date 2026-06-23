@@ -99,7 +99,7 @@ CSocketManager::CSocketManager()
 
 CSocketManager::~CSocketManager()
 {
-	this->Clean();
+	Clean();
 }
 
 
@@ -121,54 +121,54 @@ CSocketManager::~CSocketManager()
 // se haya alcanzado a crear y se retorna false.
 bool CSocketManager::Init(WORD port)
 {
-	this->m_port = port;
+	m_port = port;
 
 	// Evento de parada manual-reset: una vez señalado (SetEvent), permanece
 	// señalado para todos los hilos que lo consulten (no se auto-resetea).
-	if ((this->m_shutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
+	if ((m_shutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG, GetLastError());
-		this->Clean();
+		Clean();
 		return false;
 	}
 
 	// Socket de escucha (bind + listen).
-	if (this->CreateListenSocket() == 0)
+	if (CreateListenSocket() == 0)
 	{
-		this->Clean();
+		Clean();
 		return false;
 	}
 
 	// Puerto de finalizacion de E/S (IOCP).
-	if (this->CreateCompletionPort() == 0)
+	if (CreateCompletionPort() == 0)
 	{
-		this->Clean();
+		Clean();
 		return false;
 	}
 
 	// Hilo que acepta nuevas conexiones entrantes.
-	if (this->CreateAcceptThread() == 0)
+	if (CreateAcceptThread() == 0)
 	{
-		this->Clean();
+		Clean();
 		return false;
 	}
 
 	// Hilos de trabajo que procesan los eventos del IOCP (recv/send).
-	if (this->CreateWorkerThread() == 0)
+	if (CreateWorkerThread() == 0)
 	{
-		this->Clean();
+		Clean();
 		return false;
 	}
 
 	// Cola interna de paquetes ya parseados + hilo que los despacha
 	// hacia ConnectServerProtocolCore.
-	if (this->CreateServerQueue() == 0)
+	if (CreateServerQueue() == 0)
 	{
-		this->Clean();
+		Clean();
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, INIT_SUCCESS_MSG, this->m_port);
+	Log.ToDisp(LOG_BLACK, INIT_SUCCESS_MSG, m_port);
 	return true;
 }
 
@@ -184,7 +184,7 @@ bool CSocketManager::Init(WORD port)
 //   - listen() con el backlog por defecto.
 bool CSocketManager::CreateListenSocket()
 {
-	if ((this->m_listen = WSASocket(AF_INET, SOCK_STREAM, 0, nullptr, 0, WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
+	if ((m_listen = WSASocket(AF_INET, SOCK_STREAM, 0, nullptr, 0, WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
 	{
 		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_WSA_SOCKET, WSAGetLastError());
 		return false;
@@ -194,7 +194,7 @@ bool CSocketManager::CreateListenSocket()
 	// inmediatamente despues de cerrar el servidor (muy util al recompilar
 	// y relanzar el servidor seguido durante el desarrollo en VS2026).
 	BOOL reuseAddr = true;
-	if (setsockopt(this->m_listen, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseAddr, sizeof(reuseAddr)) == SOCKET_ERROR)
+	if (setsockopt(m_listen, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseAddr, sizeof(reuseAddr)) == SOCKET_ERROR)
 	{
 		// No es fatal: solo se informa y se continua.
 		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_SETSOCKOPT, WSAGetLastError());
@@ -203,21 +203,21 @@ bool CSocketManager::CreateListenSocket()
 	SOCKADDR_IN SocketAddr;
 	SocketAddr.sin_family = AF_INET;
 	SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	SocketAddr.sin_port = htons(this->m_port);
+	SocketAddr.sin_port = htons(m_port);
 
-	if (bind(this->m_listen, (sockaddr*)&SocketAddr, sizeof(SocketAddr)) == SOCKET_ERROR)
+	if (bind(m_listen, (sockaddr*)&SocketAddr, sizeof(SocketAddr)) == SOCKET_ERROR)
 	{
-		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_BIND, this->m_port, WSAGetLastError());
+		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_BIND, m_port, WSAGetLastError());
 		return false;
 	}
 
-	if (listen(this->m_listen, DEFAULT_BACKLOG) == SOCKET_ERROR)
+	if (listen(m_listen, DEFAULT_BACKLOG) == SOCKET_ERROR)
 	{
 		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_LISTEN, WSAGetLastError());
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATELISTENSOCKET_SUCCESS_MSG, this->m_port);
+	Log.ToDisp(LOG_BLACK, CREATELISTENSOCKET_SUCCESS_MSG, m_port);
 
 	return true;
 }
@@ -231,8 +231,8 @@ bool CSocketManager::CreateListenSocket()
 // CreateIoCompletionPort((HANDLE)socket, m_CompletionPort, index, 0).
 bool CSocketManager::CreateCompletionPort()
 {
-	this->m_CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, 0);
-	if (this->m_CompletionPort == nullptr)
+	m_CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, 0);
+	if (m_CompletionPort == nullptr)
 	{
 		Log.ToDisp(LOG_RED, CREATECOMPLETIONPORT_ERROR_MSG, GetLastError());
 		return false;
@@ -247,14 +247,14 @@ bool CSocketManager::CreateCompletionPort()
 // para minimizar la latencia al aceptar nuevos clientes.
 bool CSocketManager::CreateAcceptThread()
 {
-	this->m_ServerAcceptThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)this->ServerAcceptThread, this, 0, nullptr);
-	if (this->m_ServerAcceptThread == nullptr)
+	m_ServerAcceptThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)ServerAcceptThread, this, 0, nullptr);
+	if (m_ServerAcceptThread == nullptr)
 	{
 		Log.ToDisp(LOG_RED, CREATEACCEPTTHREAD_ERROR_CREATETHREAD, GetLastError());
 		return false;
 	}
 
-	if (SetThreadPriority(this->m_ServerAcceptThread, THREAD_PRIORITY_HIGHEST) == 0)
+	if (SetThreadPriority(m_ServerAcceptThread, THREAD_PRIORITY_HIGHEST) == 0)
 	{
 		Log.ToDisp(LOG_RED, CREATEACCEPTTHREAD_ERROR_SETTHREADPRIORITY, GetLastError());
 		return false;
@@ -276,28 +276,28 @@ bool CSocketManager::CreateWorkerThread()
 	SYSTEM_INFO SystemInfo;
 	GetSystemInfo(&SystemInfo);
 
-	this->m_ServerWorkerThreadCount = (SystemInfo.dwNumberOfProcessors > MAX_SERVER_WORKER_THREAD)
+	m_ServerWorkerThreadCount = (SystemInfo.dwNumberOfProcessors > MAX_SERVER_WORKER_THREAD)
 		? MAX_SERVER_WORKER_THREAD
 		: SystemInfo.dwNumberOfProcessors;
 
-	for (DWORD n = 0; n < this->m_ServerWorkerThreadCount; n++)
+	for (DWORD n = 0; n < m_ServerWorkerThreadCount; n++)
 	{
-		this->m_ServerWorkerThread[n] = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerWorkerThread, this, 0, nullptr);
+		m_ServerWorkerThread[n] = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerWorkerThread, this, 0, nullptr);
 
-		if (this->m_ServerWorkerThread[n] == nullptr)
+		if (m_ServerWorkerThread[n] == nullptr)
 		{
 			Log.ToDisp(LOG_RED, CREATEWORKERTHREAD_ERROR_CREATETHREAD, n, GetLastError());
 			return false;
 		}
 		// FIX: THREAD_PRIORITY_HIGHEST por THREAD_PRIORITY_NORMAL
-		if (SetThreadPriority(this->m_ServerWorkerThread[n], THREAD_PRIORITY_NORMAL) == 0)
+		if (SetThreadPriority(m_ServerWorkerThread[n], THREAD_PRIORITY_NORMAL) == 0)
 		{
 			Log.ToDisp(LOG_RED, CREATEWORKERTHREAD_ERROR_SETTHREADPRIORITY, n, GetLastError());
 			return false;
 		}
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATEWORKERTHREAD_SUCCESS_MSG, this->m_ServerWorkerThreadCount);
+	Log.ToDisp(LOG_BLACK, CREATEWORKERTHREAD_SUCCESS_MSG, m_ServerWorkerThreadCount);
 	return true;
 }
 
@@ -308,19 +308,19 @@ bool CSocketManager::CreateServerQueue()
 {
 	// El semaforo arranca en 0 (sin paquetes pendientes) y permite hasta
 	// MAX_QUEUE_SIZE incrementos simultaneos (uno por cada AddToQueue).
-	if ((this->m_ServerQueueSemaphore = CreateSemaphore(nullptr, 0, MAX_QUEUE_SIZE, nullptr)) == nullptr)
+	if ((m_ServerQueueSemaphore = CreateSemaphore(nullptr, 0, MAX_QUEUE_SIZE, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_CREATESEMAPHORE, GetLastError());
 		return false;
 	}
 
-	if ((this->m_ServerQueueThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerQueueThread, this, 0, nullptr)) == nullptr)
+	if ((m_ServerQueueThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerQueueThread, this, 0, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_CREATETHREAD, GetLastError());
 		return false;
 	}
 
-	if (SetThreadPriority(this->m_ServerQueueThread, THREAD_PRIORITY_HIGHEST) == 0)
+	if (SetThreadPriority(m_ServerQueueThread, THREAD_PRIORITY_HIGHEST) == 0)
 	{
 		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_SETTHREADPRIORITY, GetLastError());
 		return false;
@@ -354,97 +354,97 @@ bool CSocketManager::CreateServerQueue()
 void CSocketManager::Clean()
 {
 	// 1) Señalizar parada cooperativa.
-	if (this->m_shutdownEvent != nullptr)
+	if (m_shutdownEvent != nullptr)
 	{
-		SetEvent(this->m_shutdownEvent);
+		SetEvent(m_shutdownEvent);
 	}
 
 	// 2) Cerrar socket de escucha para hacer fallar WSAAccept y permitir
 	//    la salida del hilo de aceptacion.
-	if (this->m_listen != INVALID_SOCKET)
+	if (m_listen != INVALID_SOCKET)
 	{
-		closesocket(this->m_listen);
-		this->m_listen = INVALID_SOCKET;
+		closesocket(m_listen);
+		m_listen = INVALID_SOCKET;
 	}
 
 	// 3) Despertar hilos worker publicando paquetes vacios en el completion port.
-	if (this->m_CompletionPort != nullptr)
+	if (m_CompletionPort != nullptr)
 	{
-		for (DWORD n = 0; n < this->m_ServerWorkerThreadCount; ++n)
+		for (DWORD n = 0; n < m_ServerWorkerThreadCount; ++n)
 		{
-			PostQueuedCompletionStatus(this->m_CompletionPort, 0, 0, nullptr);
+			PostQueuedCompletionStatus(m_CompletionPort, 0, 0, nullptr);
 		}
 	}
 
 	// 4) Señalizar hilo de cola (el evento de parada tambien hara que
 	//    WaitForMultipleObjects termine, pero liberamos el semaforo por
 	//    si el hilo esta justo evaluando la cola).
-	if (this->m_ServerQueueSemaphore != nullptr)
+	if (m_ServerQueueSemaphore != nullptr)
 	{
-		ReleaseSemaphore(this->m_ServerQueueSemaphore, 1, nullptr);
+		ReleaseSemaphore(m_ServerQueueSemaphore, 1, nullptr);
 	}
 
 	// 5) Esperar a que los hilos terminen correctamente, en orden:
 	//    cola -> workers -> accept.
-	if (this->m_ServerQueueThread != nullptr)
+	if (m_ServerQueueThread != nullptr)
 	{
-		if (WaitForSingleObject(this->m_ServerQueueThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+		if (WaitForSingleObject(m_ServerQueueThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
 			Log.ToDisp(LOG_RED, CLEAN_TIMEOUT_SERVER_QUEUE_THREAD);
 		}
-		CloseHandle(this->m_ServerQueueThread);
-		this->m_ServerQueueThread = nullptr;
+		CloseHandle(m_ServerQueueThread);
+		m_ServerQueueThread = nullptr;
 	}
 
-	for (DWORD n = 0; n < this->m_ServerWorkerThreadCount; ++n)
+	for (DWORD n = 0; n < m_ServerWorkerThreadCount; ++n)
 	{
-		if (this->m_ServerWorkerThread[n] != nullptr)
+		if (m_ServerWorkerThread[n] != nullptr)
 		{
-			if (WaitForSingleObject(this->m_ServerWorkerThread[n], DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+			if (WaitForSingleObject(m_ServerWorkerThread[n], DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 			{
 				Log.ToDisp(LOG_RED, CLEAN_TIMEOUT_SERVER_WORKER_THREAD, n);
 			}
-			CloseHandle(this->m_ServerWorkerThread[n]);
-			this->m_ServerWorkerThread[n] = nullptr;
+			CloseHandle(m_ServerWorkerThread[n]);
+			m_ServerWorkerThread[n] = nullptr;
 		}
 	}
 
-	if (this->m_ServerAcceptThread != nullptr)
+	if (m_ServerAcceptThread != nullptr)
 	{
-		if (WaitForSingleObject(this->m_ServerAcceptThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+		if (WaitForSingleObject(m_ServerAcceptThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
 			Log.ToDisp(LOG_RED, CLEAN_TIMEOUT_SERVER_ACCEPT_THREAD);
 		}
-		CloseHandle(this->m_ServerAcceptThread);
-		this->m_ServerAcceptThread = nullptr;
+		CloseHandle(m_ServerAcceptThread);
+		m_ServerAcceptThread = nullptr;
 	}
 
 	// 6) Liberar el resto de los recursos.
-	if (this->m_ServerQueueSemaphore != nullptr)
+	if (m_ServerQueueSemaphore != nullptr)
 	{
-		CloseHandle(this->m_ServerQueueSemaphore);
-		this->m_ServerQueueSemaphore = nullptr;
+		CloseHandle(m_ServerQueueSemaphore);
+		m_ServerQueueSemaphore = nullptr;
 	}
 
-	this->m_ServerQueue.ClearQueue();
+	m_ServerQueue.ClearQueue();
 
-	if (this->m_CompletionPort != nullptr)
+	if (m_CompletionPort != nullptr)
 	{
 		for (int n = 0; n < MAX_CLIENT; n++)
 		{
 			if (gClientManager[n].IsOnline())
 			{
-				this->Disconnect(n);
+				Disconnect(n);
 			}
 		}
-		CloseHandle(this->m_CompletionPort);
-		this->m_CompletionPort = nullptr;
+		CloseHandle(m_CompletionPort);
+		m_CompletionPort = nullptr;
 	}
 
-	if (this->m_shutdownEvent != nullptr)
+	if (m_shutdownEvent != nullptr)
 	{
-		CloseHandle(this->m_shutdownEvent);
-		this->m_shutdownEvent = nullptr;
+		CloseHandle(m_shutdownEvent);
+		m_shutdownEvent = nullptr;
 	}
 }
 
@@ -559,9 +559,9 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 			QueueInfo.size = static_cast<WORD>(size);
 
 			// Encola el paquete para que ServerQueueThread lo procese.
-			if (this->m_ServerQueue.AddToQueue(&QueueInfo) != 0)
+			if (m_ServerQueue.AddToQueue(&QueueInfo) != 0)
 			{
-				ReleaseSemaphore(this->m_ServerQueueSemaphore, 1, nullptr);
+				ReleaseSemaphore(m_ServerQueueSemaphore, 1, nullptr);
 			}
 			else
 			{
@@ -656,7 +656,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 		if ((lpIoContext->IoSideBuffer.size + size) > MAX_SIDE_PACKET_SIZE)
 		{
 			Log.ToDisp(LOG_RED, DATASEND_MAXSIDEPACKETSIZE_ERROR, index, (lpIoContext->IoSideBuffer.size + size));
-			this->Disconnect(index);
+			Disconnect(index);
 			return false;
 		}
 
@@ -681,7 +681,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
 			Log.ToDisp(LOG_RED, DATASEND_WSASEND_ERROR, WSAGetLastError());
-			this->Disconnect(index);
+			Disconnect(index);
 			return false;
 		}
 	}
@@ -786,11 +786,11 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 	
 	lpIoContext->IoMainBuffer.size += IoSize;
 
-	if (this->DataRecv(index, &lpIoContext->IoMainBuffer) == 0)
+	if (DataRecv(index, &lpIoContext->IoMainBuffer) == 0)
 	{
 		// Error real de protocolo (cabecera invalida, tamaño fuera de
 		// rango o cola llena): se desconecta al cliente.
-		this->Disconnect(index);
+		Disconnect(index);
 		return;
 	}
 
@@ -807,7 +807,7 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
 			Log.ToDisp(LOG_RED, ONRECV_ERROR_WSARECV, WSAGetLastError());
-			this->Disconnect(index);
+			Disconnect(index);
 			return;
 		}
 	}
@@ -915,7 +915,7 @@ void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContex
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
 			Log.ToDisp(LOG_RED, ONSEND_ERROR_WSASEND, WSAGetLastError());
-			this->Disconnect(index);
+			Disconnect(index);
 			return;
 		}
 	}
@@ -1201,5 +1201,5 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 // Devuelve la cantidad actual de paquetes pendientes en la cola interna.
 DWORD CSocketManager::GetQueueSize()
 {
-	return this->m_ServerQueue.GetQueueSize();
+	return m_ServerQueue.GetQueueSize();
 }

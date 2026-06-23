@@ -10,7 +10,7 @@ public:
 	virtual ~CQueryManager();
 	bool Connect(char* odbc,char* user,char* pass);
 	void Disconnect();
-	void Diagnostic(char* query);
+	void Diagnostic(const char* query);
 	bool ExecQuery(char* query,...);
 	void Close();
 	SQLRETURN Fetch();
@@ -23,7 +23,7 @@ public:
 	void GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize);
 	void BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize);
 	void BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize);
-	void ConvertStringToBinary(char* InBuff,int InSize,BYTE* OutBuff,int OutSize);
+	void ConvertStringToBinary(const char* InBuff,int InSize,BYTE* OutBuff,int OutSize);
 	void ConvertBinaryToString(BYTE* InBuff,int InSize,char* OutBuff,int OutSize);
 private:
 	SQLHANDLE m_SQLEnvironment;

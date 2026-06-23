@@ -47,16 +47,16 @@ CSocketManagerUdp::CSocketManagerUdp()
 	: m_socket(INVALID_SOCKET),
 	m_ServerRecvThread(nullptr)
 {
-	memset(&this->m_SocketAddr, 0, sizeof(this->m_SocketAddr));
-	this->m_SocketAddr.sin_family = AF_INET;
-	this->m_SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	this->m_SocketAddr.sin_port = 0;
+	// Inicialización a cero de la estructura de dirección de red
+	memset(&m_SocketAddr, 0, sizeof(m_SocketAddr));
 
+	// CORRECCIÓN: Limpieza del buffer de recepción para asegurar que no contenga basura de la RAM
+	memset(m_RecvBuff, 0, sizeof(m_RecvBuff));
 }
 
 CSocketManagerUdp::~CSocketManagerUdp()
 {
-	this->Clean();
+	Clean();
 }
 
 // =====================================================================
@@ -78,28 +78,28 @@ CSocketManagerUdp::~CSocketManagerUdp()
 bool CSocketManagerUdp::Init(WORD port)
 {
 
-	if ((this->m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
+	if ((m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
 		Log.ToDisp(LOG_RED, INIT_ERROR_WSA_SOCKET, WSAGetLastError());
-		this->Clean();
+		Clean();
 		return false;
 	}
 
-	this->m_SocketAddr.sin_family = AF_INET;
-	this->m_SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	this->m_SocketAddr.sin_port = htons(port);
+	m_SocketAddr.sin_family = AF_INET;
+	m_SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	m_SocketAddr.sin_port = htons(port);
 
-	if (bind(this->m_socket, reinterpret_cast<sockaddr*>(&this->m_SocketAddr), sizeof(this->m_SocketAddr)) == SOCKET_ERROR)
+	if (bind(m_socket, reinterpret_cast<sockaddr*>(&m_SocketAddr), sizeof(m_SocketAddr)) == SOCKET_ERROR)
 	{
 		Log.ToDisp(LOG_RED, INIT_ERROR_BIND, port, WSAGetLastError());
-		this->Clean();
+		Clean();
 		return false;
 	}
 
-	if ((this->m_ServerRecvThread = CreateThread(nullptr, 0, CSocketManagerUdp::ServerRecvThread, this, 0, nullptr)) == nullptr)
+	if ((m_ServerRecvThread = CreateThread(nullptr, 0, CSocketManagerUdp::ServerRecvThread, this, 0, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, INIT_ERROR_CREATETHREAD, GetLastError());
-		this->Clean();
+		Clean();
 		return false;
 	}
 
@@ -110,22 +110,22 @@ bool CSocketManagerUdp::Init(WORD port)
 bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 {
 
-	if (this->m_socket != INVALID_SOCKET)
+	if (m_socket != INVALID_SOCKET)
 	{
-		closesocket(this->m_socket);
-		this->m_socket = INVALID_SOCKET;
+		closesocket(m_socket);
+		m_socket = INVALID_SOCKET;
 	}
 
-	if ((this->m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
+	if ((m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
 		Log.ToDisp(LOG_RED, CONNECT_ERROR_WSA_SOCKET, WSAGetLastError());
-		this->Clean();
+		Clean();
 		return false;
 	}
 
-	this->m_SocketAddr.sin_family = AF_INET;
+	m_SocketAddr.sin_family = AF_INET;
 
-	if (InetPtonA(AF_INET, IpAddress, &this->m_SocketAddr.sin_addr) <= 0)
+	if (InetPtonA(AF_INET, IpAddress, &m_SocketAddr.sin_addr) <= 0)
 	{
 		struct addrinfo hints = { 0 };
 		struct addrinfo* result = nullptr;
@@ -137,24 +137,24 @@ bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 		if (getaddrinfo(IpAddress, nullptr, &hints, &result) != 0)
 		{
 			Log.ToDisp(LOG_RED, CONNECT_ERROR_GETADDRESSINFO, WSAGetLastError());
-			this->Clean();
+			Clean();
 			return false;
 		}
 
 		if (result != nullptr)
 		{
-			this->m_SocketAddr.sin_addr = ((sockaddr_in*)result->ai_addr)->sin_addr;
+			m_SocketAddr.sin_addr = ((sockaddr_in*)result->ai_addr)->sin_addr;
 			freeaddrinfo(result);
 		}
 		else
 		{
 			Log.ToDisp(LOG_RED, CONNECT_ERROR_GETADDRESSINFO_RESULT);
-			this->Clean();
+			Clean();
 			return false;
 		}
 	}
 
-	this->m_SocketAddr.sin_port = htons(port);
+	m_SocketAddr.sin_port = htons(port);
 
 	return true;
 }
@@ -166,23 +166,23 @@ void CSocketManagerUdp::Clean()
 	// desbloquea recvfrom() en ServerRecvThread inmediatamente
 	// con WSAENOTSOCK, lo que hace que el hilo salga del loop.
 	{
-		CCriticalSection::CLock lock(this->m_lock);
+		CCriticalSection::CLock lock(m_lock);
 
-		if (this->m_socket != INVALID_SOCKET)
+		if (m_socket != INVALID_SOCKET)
 		{
-			closesocket(this->m_socket);
-			this->m_socket = INVALID_SOCKET;
+			closesocket(m_socket);
+			m_socket = INVALID_SOCKET;
 		}
 	}
 
-	if (this->m_ServerRecvThread != nullptr)
+	if (m_ServerRecvThread != nullptr)
 	{
-		if (WaitForSingleObject(this->m_ServerRecvThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+		if (WaitForSingleObject(m_ServerRecvThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
 			Log.ToDisp(LOG_RED, CLEAN_WAITFORSINGLEOBJECT_TIMEOUT);
 		}
-		CloseHandle(this->m_ServerRecvThread);
-		this->m_ServerRecvThread = nullptr;
+		CloseHandle(m_ServerRecvThread);
+		m_ServerRecvThread = nullptr;
 	}
 }
 
@@ -199,7 +199,7 @@ bool CSocketManagerUdp::DataRecv(int recvSize)
 		return false;
 	}
 
-	BYTE* lpMsg = this->m_RecvBuff;
+	BYTE* lpMsg = m_RecvBuff;
 
 	int size = 0;
 	BYTE header = lpMsg[0];
@@ -256,9 +256,9 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size)
 {
 	// Protegemos todo el flujo con el mutex para evitar que Clean() cierre
 	// el socket o que otro DataSend modifique los buffers simultaneamente.
-	CCriticalSection::CLock lock(this->m_lock);
+	CCriticalSection::CLock lock(m_lock);
 
-	if (this->m_socket == INVALID_SOCKET)
+	if (m_socket == INVALID_SOCKET)
 	{
 		return false;
 	}
@@ -273,7 +273,7 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size)
 	// completo en una sola llamada al kernel, o falla. No existe el
 	// concepto de "envío parcial" como en TCP, así que no hace falta
 	// side buffer ni lógica de reintento por bytes pendientes.
-	int result = sendto(this->m_socket, (char*)lpMsg, size, 0, (sockaddr*)&this->m_SocketAddr, sizeof(this->m_SocketAddr));
+	int result = sendto(m_socket, (char*)lpMsg, size, 0, (sockaddr*)&m_SocketAddr, sizeof(m_SocketAddr));
 
 	if (result == SOCKET_ERROR)
 	{

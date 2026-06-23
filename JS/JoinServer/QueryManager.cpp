@@ -9,90 +9,157 @@ CQueryManager gQueryManager;
 // Construction/Destruction
 
 CQueryManager::CQueryManager()
+	: m_SQLEnvironment(SQL_NULL_HANDLE),
+	m_SQLConnection(SQL_NULL_HANDLE),
+	m_STMT(SQL_NULL_HANDLE),
+	m_RowCount(-1),
+	m_ColCount(-1)
 {
-	this->m_SQLEnvironment = SQL_NULL_HANDLE;
-	this->m_SQLConnection = SQL_NULL_HANDLE;
-	this->m_STMT = SQL_NULL_HANDLE;
-	this->m_RowCount = -1;
-	this->m_ColCount = -1;
+	// Inicialización a cero de todos los buffers de texto y credenciales
+	memset(m_odbc, 0, sizeof(m_odbc));
+	memset(m_user, 0, sizeof(m_user));
+	memset(m_pass, 0, sizeof(m_pass));
 
-	memset(this->m_SQLColName,0,sizeof(this->m_SQLColName));
-	memset(this->m_SQLData,0,sizeof(this->m_SQLData));
+	// Inicialización de las estructuras de datos de las columnas de SQL
+	memset(m_SQLColName, 0, sizeof(m_SQLColName));
+	memset(m_SQLData, 0, sizeof(m_SQLData));
+	memset(m_SQLDataLen, 0, sizeof(m_SQLDataLen));
+	memset(m_SQLBindValue, 0, sizeof(m_SQLBindValue));
 
-	SQLAllocHandle(SQL_HANDLE_ENV,SQL_NULL_HANDLE,&this->m_SQLEnvironment);
-	SQLSetEnvAttr(this->m_SQLEnvironment,SQL_ATTR_ODBC_VERSION,(SQLPOINTER)SQL_OV_ODBC3,SQL_IS_INTEGER);
+	// Asignación del entorno básico de ODBC e indicación de versión nativa (ODBC 3)
+	// NOTA: Se remueven los "" para un código limpio
+	SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &m_SQLEnvironment);
+	SQLSetEnvAttr(m_SQLEnvironment, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, SQL_IS_INTEGER);
 }
 
 CQueryManager::~CQueryManager()
 {
-	this->Disconnect();
+	Disconnect();
 }
 
-bool CQueryManager::Connect(char* odbc,char* user,char* pass)
+
+bool CQueryManager::Connect(char* odbc, char* user, char* pass)
 {
-	strcpy_s(this->m_odbc,odbc);
+	strcpy_s(m_odbc, odbc);
+	strcpy_s(m_user, user);
+	strcpy_s(m_pass, pass);
 
-	strcpy_s(this->m_user,user);
-
-	strcpy_s(this->m_pass,pass);
-
-	if(SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_DBC,this->m_SQLEnvironment,&this->m_SQLConnection)) == 0)
+	if (SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_DBC, m_SQLEnvironment, &m_SQLConnection)) == 0)
 	{
+		m_SQLConnection = SQL_NULL_HANDLE;
 		return 0;
 	}
 
-	if(SQL_SUCCEEDED(SQLConnect(this->m_SQLConnection,(SQLCHAR*)this->m_odbc,SQL_NTS,(SQLCHAR*)this->m_user,SQL_NTS,(SQLCHAR*)this->m_pass,SQL_NTS)) == 0)
+	if (SQL_SUCCEEDED(SQLConnect(m_SQLConnection,
+		(SQLCHAR*)m_odbc,
+		SQL_NTS,
+		(SQLCHAR*)m_user,
+		SQL_NTS,
+		(SQLCHAR*)m_pass,
+		SQL_NTS)) == 0)
 	{
+		SQLFreeHandle(SQL_HANDLE_DBC, m_SQLConnection);
+		m_SQLConnection = SQL_NULL_HANDLE;
 		return 0;
 	}
 
-	if(SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT,this->m_SQLConnection,&this->m_STMT)) == 0)
+	if (SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT, m_SQLConnection, &m_STMT)) == 0)
 	{
+		SQLDisconnect(m_SQLConnection);
+		SQLFreeHandle(SQL_HANDLE_DBC, m_SQLConnection);
+
+		m_SQLConnection = SQL_NULL_HANDLE;
+		m_STMT = SQL_NULL_HANDLE;
+
 		return 0;
 	}
-	else
-	{
-		return 1;
-	}
+
+	return 1;
 }
 
 void CQueryManager::Disconnect()
 {
-	if(this->m_STMT != SQL_NULL_HANDLE)
+	// 1. Liberar el Statement (Esto ya cierra cursores y libera bindings internamente)
+	if (m_STMT != SQL_NULL_HANDLE)
 	{
-		SQLFreeHandle(SQL_HANDLE_STMT,this->m_STMT);
-		this->m_STMT = SQL_NULL_HANDLE;
+		SQLFreeHandle(SQL_HANDLE_STMT, m_STMT);
+		m_STMT = SQL_NULL_HANDLE;
 	}
 
-	if(this->m_SQLConnection != SQL_NULL_HANDLE)
+	// 2. Desconectar y liberar la Conexión
+	if (m_SQLConnection != SQL_NULL_HANDLE)
 	{
-		SQLFreeHandle(SQL_HANDLE_DBC,this->m_SQLConnection);
-		this->m_SQLConnection = SQL_NULL_HANDLE;
+		SQLDisconnect(m_SQLConnection);
+		SQLFreeHandle(SQL_HANDLE_DBC, m_SQLConnection);
+		m_SQLConnection = SQL_NULL_HANDLE;
 	}
 
-	if(this->m_SQLEnvironment != SQL_NULL_HANDLE)
+	// 3. Liberar el Environment
+	if (m_SQLEnvironment != SQL_NULL_HANDLE)
 	{
-		SQLFreeHandle(SQL_HANDLE_ENV,this->m_SQLEnvironment);
-		this->m_SQLEnvironment = SQL_NULL_HANDLE;
+		SQLFreeHandle(SQL_HANDLE_ENV, m_SQLEnvironment);
+		m_SQLEnvironment = SQL_NULL_HANDLE;
 	}
 }
 
-void CQueryManager::Diagnostic(char* query)
+// Ejecuta una consulta SQL de diagnóstico y muestra el resultado en la consola
+void CQueryManager::Diagnostic(const char* query)
 {
-	Log.ToDisp(LOG_BLACK,"%s",query);
+	Log.ToDisp(LOG_BLACK, "%s", query);
 
-	SQLINTEGER NativeError;
-	SQLSMALLINT RecNumber=1,BufferLength;
-	SQLCHAR SqlState[6],MessageText[SQL_MAX_MESSAGE_LENGTH];
+	SQLINTEGER NativeError = 0;
+	SQLSMALLINT BufferLength = 0;
+	SQLCHAR SqlState[6] = { 0 };
+	SQLCHAR MessageText[SQL_MAX_MESSAGE_LENGTH] = { 0 };
 
-	while(SQLGetDiagRec(SQL_HANDLE_STMT,this->m_STMT,(RecNumber++),SqlState,&NativeError,MessageText,sizeof(MessageText),&BufferLength) != SQL_NO_DATA)
+	bool reconnect = false;
+
+	for (SQLSMALLINT RecNumber = 1;; RecNumber++)
 	{
-		Log.ToDisp(LOG_RED,"[QueryManager] State (%s), Diagnostic: %s",SqlState,MessageText);
+		SQLRETURN result = SQLGetDiagRec(
+			SQL_HANDLE_STMT,
+			m_STMT,
+			RecNumber,
+			SqlState,
+			&NativeError,
+			MessageText,
+			sizeof(MessageText),
+			&BufferLength);
+
+		if (result == SQL_NO_DATA)
+		{
+			break;
+		}
+
+		Log.ToDisp(LOG_RED, "[QueryManager - Diagnostic] Estado (%s), Diagnostico: %s", SqlState, MessageText);
+
+		if (strcmp((char*)SqlState, "08S01") == 0)
+		{
+			reconnect = true;
+		}
 	}
 
-	if(strcmp((char*)SqlState,"08S01") == 0)
+	if (reconnect)
 	{
-		this->Connect(this->m_odbc,this->m_user,this->m_pass);
+		Log.ToDisp(
+			LOG_RED,"[QueryManager - Diagnostic] Falla en la conexion detectada. Reconectando...");
+
+		if (m_STMT != SQL_NULL_HANDLE)
+		{
+			SQLFreeHandle(SQL_HANDLE_STMT, m_STMT);
+			m_STMT = SQL_NULL_HANDLE;
+		}
+
+		if (m_SQLConnection != SQL_NULL_HANDLE)
+		{
+			SQLFreeHandle(SQL_HANDLE_DBC, m_SQLConnection);
+			m_SQLConnection = SQL_NULL_HANDLE;
+		}
+
+		if (Connect(m_odbc, m_user, m_pass) == 0)
+		{
+			Log.ToDisp(LOG_RED, "[QueryManager - Diagnostic] Fallo al reconectarse al servidor SQL.");
+		}
 	}
 }
 
@@ -107,30 +174,30 @@ bool CQueryManager::ExecQuery(char* query,...) // OK
 
 	SQLRETURN result;
 
-	if(SQL_SUCCEEDED((result=SQLExecDirect(this->m_STMT,(SQLCHAR*)buff,SQL_NTS))) == 0 && result != SQL_NO_DATA)
+	if(SQL_SUCCEEDED((result=SQLExecDirect(m_STMT,(SQLCHAR*)buff,SQL_NTS))) == 0 && result != SQL_NO_DATA)
 	{
-		this->Diagnostic(buff);
+		Diagnostic(buff);
 		return 0;
 	}
 
-	SQLRowCount(this->m_STMT,&this->m_RowCount);
+	SQLRowCount(m_STMT,&m_RowCount);
 
-	if(this->m_RowCount == 0){return 1;}
+	if(m_RowCount == 0){return 1;}
 
-	SQLNumResultCols(this->m_STMT,&this->m_ColCount);
+	SQLNumResultCols(m_STMT,&m_ColCount);
 
-	if(this->m_ColCount == 0){return 1;}
+	if(m_ColCount == 0){return 1;}
 
-	if(this->m_ColCount > MAX_COLUMNS){return 0;}
+	if(m_ColCount > MAX_COLUMNS){return 0;}
 
-	memset(this->m_SQLColName,0,sizeof(this->m_SQLColName));
+	memset(m_SQLColName,0,sizeof(m_SQLColName));
 
-	memset(this->m_SQLData,0,sizeof(this->m_SQLData));
+	memset(m_SQLData,0,sizeof(m_SQLData));
 
-	for(int n=0;n < this->m_ColCount;n++)
+	for(int n=0;n < m_ColCount;n++)
 	{
-		SQLDescribeCol(this->m_STMT,(n+1),this->m_SQLColName[n],sizeof(this->m_SQLColName[n]),0,0,0,0,0);
-		SQLBindCol(this->m_STMT,(n+1),SQL_C_CHAR,this->m_SQLData[n],sizeof(this->m_SQLData[n]),&this->m_SQLDataLen[n]);
+		SQLDescribeCol(m_STMT,(n+1),m_SQLColName[n],sizeof(m_SQLColName[n]),0,0,0,0,0);
+		SQLBindCol(m_STMT,(n+1),SQL_C_CHAR,m_SQLData[n],sizeof(m_SQLData[n]),&m_SQLDataLen[n]);
 	}
 
 	return 1;
@@ -138,20 +205,20 @@ bool CQueryManager::ExecQuery(char* query,...) // OK
 
 void CQueryManager::Close()
 {
-	SQLCloseCursor(this->m_STMT);
-	SQLFreeStmt(this->m_STMT,SQL_UNBIND);
+	SQLCloseCursor(m_STMT);
+	SQLFreeStmt(m_STMT,SQL_UNBIND);
 }
 
 SQLRETURN CQueryManager::Fetch()
 {
-	return SQLFetch(this->m_STMT);
+	return SQLFetch(m_STMT);
 }
 
 int CQueryManager::FindIndex(char* ColName)
 {
-	for(int n=0;n < this->m_ColCount;n++)
+	for(int n=0;n < m_ColCount;n++)
 	{
-		if(_stricmp(ColName,(char*)this->m_SQLColName[n]) == 0)
+		if(_stricmp(ColName,(char*)m_SQLColName[n]) == 0)
 		{
 			return n;
 		}
@@ -162,12 +229,12 @@ int CQueryManager::FindIndex(char* ColName)
 
 int CQueryManager::GetResult(int index)
 {
-	return atoi(this->m_SQLData[index]);
+	return atoi(m_SQLData[index]);
 }
 
 int CQueryManager::GetAsInteger(char* ColName)
 {
-	int index = this->FindIndex(ColName);
+	int index = FindIndex(ColName);
 
 	if(index == -1)
 	{
@@ -175,13 +242,13 @@ int CQueryManager::GetAsInteger(char* ColName)
 	}
 	else
 	{
-		return atoi(this->m_SQLData[index]);
+		return atoi(m_SQLData[index]);
 	}
 }
 
 float CQueryManager::GetAsFloat(char* ColName)
 {
-	int index = this->FindIndex(ColName);
+	int index = FindIndex(ColName);
 
 	if(index == -1)
 	{
@@ -189,13 +256,13 @@ float CQueryManager::GetAsFloat(char* ColName)
 	}
 	else
 	{
-		return (float)atof(this->m_SQLData[index]);
+		return (float)atof(m_SQLData[index]);
 	}
 }
 
 __int64 CQueryManager::GetAsInteger64(char* ColName)
 {
-	int index = this->FindIndex(ColName);
+	int index = FindIndex(ColName);
 
 	if(index == -1)
 	{
@@ -203,13 +270,13 @@ __int64 CQueryManager::GetAsInteger64(char* ColName)
 	}
 	else
 	{
-		return _atoi64(this->m_SQLData[index]);
+		return _atoi64(m_SQLData[index]);
 	}
 }
 
 void CQueryManager::GetAsString(char* ColName,char* OutBuffer,int OutBufferSize)
 {
-	int index = this->FindIndex(ColName);
+	int index = FindIndex(ColName);
 
 	if(index == -1)
 	{
@@ -217,13 +284,13 @@ void CQueryManager::GetAsString(char* ColName,char* OutBuffer,int OutBufferSize)
 	}
 	else
 	{
-		strncpy_s(OutBuffer,OutBufferSize,this->m_SQLData[index],(OutBufferSize-1));
+		strncpy_s(OutBuffer,OutBufferSize,m_SQLData[index],(OutBufferSize-1));
 	}
 }
 
 void CQueryManager::GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize)
 {
-	int index = this->FindIndex(ColName);
+	int index = FindIndex(ColName);
 
 	if(index == -1)
 	{
@@ -231,67 +298,108 @@ void CQueryManager::GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize)
 	}
 	else
 	{
-		this->ConvertStringToBinary(this->m_SQLData[index],sizeof(this->m_SQLData[index]),OutBuffer,OutBufferSize);
+		ConvertStringToBinary(m_SQLData[index], (int)strlen(m_SQLData[index]), OutBuffer, OutBufferSize);
 	}
 }
 
 void CQueryManager::BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize)
 {
-	this->m_SQLBindValue[(ParamNumber-1)] = SQL_NTS;
+	m_SQLBindValue[(ParamNumber-1)] = SQL_NTS;
 
-	SQLBindParameter(this->m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_CHAR,SQL_VARCHAR,ColumnSize,0,InBuffer,0,&this->m_SQLBindValue[(ParamNumber-1)]);
+	SQLBindParameter(m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_CHAR,SQL_VARCHAR,ColumnSize,0,InBuffer,0,&m_SQLBindValue[(ParamNumber-1)]);
 }
 
 void CQueryManager::BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize)
 {
-	this->m_SQLBindValue[(ParamNumber-1)] = ColumnSize;
+	m_SQLBindValue[(ParamNumber-1)] = ColumnSize;
 
-	SQLBindParameter(this->m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_BINARY,SQL_VARBINARY,ColumnSize,0,InBuffer,0,&this->m_SQLBindValue[(ParamNumber-1)]);
+	SQLBindParameter(m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_BINARY,SQL_VARBINARY,ColumnSize,0,InBuffer,0,&m_SQLBindValue[(ParamNumber-1)]);
 }
 
-void CQueryManager::ConvertStringToBinary(char* InBuff,int InSize,BYTE* OutBuff,int OutSize)
+// CORRECCIÓN CRÍTICA DE ALGORITMO: El original fallaba con letras minúsculas (ej: 'a'-'f')
+// y tenía instrucciones nulas (size = size + 0). Reescrito usando operaciones bit a bit.
+void CQueryManager::ConvertStringToBinary(const char* InBuff, int InSize, BYTE* OutBuff, int OutSize)
 {
-	int size = 0;
-
-	memset(OutBuff,0,OutSize);
-
-	for(int n=0;n < InSize,size < OutSize;n++)
+	// 1. Validaciones básicas de seguridad indispensables
+	if (InBuff == nullptr || InSize <= 0 || OutSize <= 0)
 	{
-		if(InBuff[n] == 0)
+		return;
+	}
+
+	// 2. Limpieza inicial obligatoria del buffer de salida
+	memset(OutBuff, 0, OutSize);
+
+
+	// 3. El MD5 tiene 32 caracteres. Si InSize es impar, la cadena está corrupta.
+	if ((InSize % 2) != 0)
+	{
+		return;
+	}
+
+	// 4. Determinar el límite real basado en el espacio físico del destino
+	int bytesToProcess = InSize / 2;
+	if (bytesToProcess > OutSize)
+	{
+		bytesToProcess = OutSize;
+	}
+
+	// 5. Tabla de búsqueda (LUT) compacta de 256 bytes para máxima seguridad.
+	// Garantiza que cualquier caracter inválido (incluido el ASCII alto) aborte el login.
+	static const BYTE HexTable[256] = {
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, // '0'-'9'
+		0xFF,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, // 'A'-'F'
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, // 'a'-'f'
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, // Bloque ASCII Alto (128-255)
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,
+		0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF
+	};
+
+	// 6. Bucle de conversión lineal seguro
+	for (int outIdx = 0; outIdx < bytesToProcess; ++outIdx)
+	{
+		int n = outIdx << 1;
+
+		BYTE val1 = HexTable[static_cast<unsigned char>(InBuff[n])];
+		BYTE val2 = HexTable[static_cast<unsigned char>(InBuff[n + 1])];
+
+		// Si la base de datos devuelve un hash corrupto o caracteres extraños,
+		// limpiamos el buffer de salida y abortamos de inmediato. El login fallará de forma segura.
+		if ((val1 | val2) == 0xFF)
 		{
-			break;
+			memset(OutBuff, 0, OutSize);
+			return;
 		}
 
-		if((n%2) == 0)
-		{
-			OutBuff[size] = ((InBuff[n]>='A')?((InBuff[n]-'A')+10):(InBuff[n]-'0'))*16;
-			size = size+0;
-		}
-		else
-		{
-			OutBuff[size] = OutBuff[size] | ((InBuff[n]>='A')?((InBuff[n]-'A')+10):(InBuff[n]-'0'));
-			size = size+1;
-		}
+		OutBuff[outIdx] = static_cast<BYTE>((val1 << 4) | val2);
 	}
 }
 
-void CQueryManager::ConvertBinaryToString(BYTE* InBuff,int InSize,char* OutBuff,int OutSize)
+
+// OPTIMIZACIÓN: Reemplazadas las divisiones (/ 16 y % 16) por corrimientos de bits (>> 4 y & 0x0F)
+// Es mucho más rápido en procesadores x86 de 32 bits.
+void CQueryManager::ConvertBinaryToString(BYTE* InBuff, int InSize, char* OutBuff, int OutSize)
 {
-	int size = 0;
+	static const char Hex[] = "0123456789ABCDEF";
 
-	memset(OutBuff,0,OutSize);
+	memset(OutBuff, 0, OutSize);
 
-	for(int n=0;n < OutSize,size < InSize;n++)
+	int out = 0;
+
+	for (int n = 0; n < InSize && (out + 1) < OutSize; n++)
 	{
-		if((n%2) == 0)
-		{
-			OutBuff[n] = (((InBuff[size]/16)>=10)?('A'+((InBuff[size]/16)-10)):('0'+(InBuff[size]/16)));
-			size = size+0;
-		}
-		else
-		{
-			OutBuff[n] = (((InBuff[size]%16)>=10)?('A'+((InBuff[size]%16)-10)):('0'+(InBuff[size]%16)));
-			size = size+1;
-		}
+		BYTE b = InBuff[n];
+
+		OutBuff[out++] = Hex[(b >> 4) & 0x0F];
+		OutBuff[out++] = Hex[b & 0x0F];
 	}
 }

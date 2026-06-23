@@ -21,13 +21,13 @@ bool CIpManager::CheckIpAddress(const std::string& IpAddress)
         return false;
     }
 
-    CCriticalSection::CLock lock(this->m_lock);
+    CCriticalSection::CLock lock(m_lock);
 
     // Buscar la direccion IP en el mapa de m_IpAddressInfo
-    auto it = this->m_ipaddressinfo.find(IpAddress);
+    auto it = m_ipaddressinfo.find(IpAddress);
 
     // Si la direccion IP no esta registrada en el mapa, permitimos la conexion o no
-    if (it == this->m_ipaddressinfo.end())
+    if (it == m_ipaddressinfo.end())
     {
 		// Contrato: MaxIpConnection > 0 = permitir hasta N conexiones por IP.
 		//           MaxIpConnection = 0 = rechazar todas las IPs no conocidas.
@@ -47,14 +47,14 @@ void CIpManager::InsertIpAddress(const std::string& IpAddress)
         return;
     }
 
-    CCriticalSection::CLock lock(this->m_lock);
+    CCriticalSection::CLock lock(m_lock);
 
-    auto it = this->m_ipaddressinfo.find(IpAddress);
+    auto it = m_ipaddressinfo.find(IpAddress);
 
-    if (it == this->m_ipaddressinfo.end())
+    if (it == m_ipaddressinfo.end())
     {
         // Insertar nueva IP con un contador inicial de 1
-        this->m_ipaddressinfo[IpAddress] = 1;
+        m_ipaddressinfo[IpAddress] = 1;
     }
     else
     {
@@ -72,15 +72,15 @@ void CIpManager::RemoveIpAddress(const std::string& IpAddress)
         return;
     }
 
-    CCriticalSection::CLock lock(this->m_lock);
+    CCriticalSection::CLock lock(m_lock);
 
-    auto it = this->m_ipaddressinfo.find(IpAddress);
+    auto it = m_ipaddressinfo.find(IpAddress);
 
-    if (it != this->m_ipaddressinfo.end())
+    if (it != m_ipaddressinfo.end())
     {
         if ((--it->second) == 0)
         {
-            this->m_ipaddressinfo.erase(it);
+            m_ipaddressinfo.erase(it);
         }
     }
 }
