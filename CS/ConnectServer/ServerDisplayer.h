@@ -37,7 +37,8 @@ public:
     // Actualiza el estado del servidor y repinta la ventana
 	void Refresh();
     // Elimina la posibilidad de copiar o mover la instancia
-	void CServerDisplayer::RepositionRichEdit();
+	void RepositionRichEdit();
+	void InvalidateServerList();
 
     CServerDisplayer(const CServerDisplayer&) = delete;
     CServerDisplayer& operator=(const CServerDisplayer&) = delete;

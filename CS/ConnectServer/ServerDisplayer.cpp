@@ -92,12 +92,8 @@ void CServerDisplayer::Init(HWND hWnd)
 	SendMessage(m_hrichedit, WM_SETFONT, (WPARAM)m_smallfont, FALSE);
 	SendMessage(m_hrichedit, EM_SETLIMITTEXT, 200 * MAX_LOG_TEXT_SIZE, 0);
 
-	// Fondo del control igual al color del area de log
-#if (GAMESERVER_TYPE2 == 0)
-	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, RGB(0, 0, 0));
-#else
-	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, RGB(210, 210, 210));
-#endif
+	COLORREF bkColor = GetSysColor(COLOR_WINDOW);
+	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, bkColor);
 
     // Inicializa titulo de la ventana
     UpdateWindowTitle(0);
@@ -184,7 +180,7 @@ void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
 	case LOG_RED:   cf.crTextColor = RGB(220, 50, 50);  break;
 	case LOG_GREEN: cf.crTextColor = RGB(50, 200, 50);  break;
 	case LOG_BLUE:  cf.crTextColor = RGB(100, 180, 255); break;
-	default:        cf.crTextColor = RGB(220, 220, 220); break;
+	default:        cf.crTextColor = RGB(0, 0, 0); break;
 	}
 
 	// Estas tres llamadas son seguras desde hilos worker: SendMessage
@@ -203,8 +199,8 @@ void CServerDisplayer::Refresh()
 
 void CServerDisplayer::PaintGameServers(HDC hdc)
 {
-	RECT back = { 0, 100, m_rect.right, m_rect.bottom };
-	FillRect(hdc, &back, m_brush[4]);
+	// Calculamos primero cuántas líneas hay para saber el alto real del área
+	int count = (int)gServerList.GetGameServerList().size();
 
 	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
 	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
@@ -213,8 +209,16 @@ void CServerDisplayer::PaintGameServers(HDC hdc)
 	GetTextMetrics(hdc, &tm);
 	const int lineHeight = tm.tmHeight + 4;
 
-	int y = 105;
+	int newBottom = 105 + count * lineHeight + 5;
 
+	// Pintar fondo SOLO del área de la lista de servidores.
+	// Usamos el color de fondo del sistema (gris claro por defecto)
+	// para que el texto negro sea legible. El RichEdit debajo
+	// tiene su propio fondo y Win32 lo repinta de forma independiente.
+	RECT serverArea = { 0, 100, m_rect.right, newBottom };
+	FillRect(hdc, &serverArea, (HBRUSH)(COLOR_BTNFACE + 1));
+
+	int y = 105;
 	for (const auto& it : gServerList.GetGameServerList())
 	{
 		const SERVER_LIST_INFO& info = it.second;
@@ -222,7 +226,7 @@ void CServerDisplayer::PaintGameServers(HDC hdc)
 
 		if (info.ServerState)
 		{
-			SetTextColor(hdc, RGB(0, 180, 0));
+			SetTextColor(hdc, RGB(0, 150, 0));
 			sprintf_s(text, "[%d] %s - ONLINE (%d/%d)",
 				info.ServerCode, info.ServerName,
 				info.UserCount, info.MaxUserCount);
@@ -238,21 +242,19 @@ void CServerDisplayer::PaintGameServers(HDC hdc)
 		y += lineHeight;
 	}
 
-	m_serverlistbottom = y + 5;
-	int newBottom = y + 5;
-
-	// Solo llamar MoveWindow si la posición realmente cambió,
-	// y nunca durante WM_PAINT — postear un mensaje al hilo de UI
-	// para que lo procese fuera del ciclo de pintado.
+	// Reposicionar el RichEdit solo si el borde cambió.
+	// PostMessage en vez de MoveWindow directo: no llamar MoveWindow
+	// desde dentro de WM_PAINT para evitar repintados anidados.
 	if (newBottom != m_serverlistbottom)
 	{
 		m_serverlistbottom = newBottom;
-		PostMessage(m_hwnd, WM_USER + 1, 0, 0);  // señal para reposicionar el RichEdit
+		PostMessage(m_hwnd, WM_REPOSITION_RICHEDIT, 0, 0);
 	}
 
 	SelectObject(hdc, oldFont);
 	SetBkMode(hdc, oldBkMode);
 }
+
 void CServerDisplayer::RepositionRichEdit()
 {
 	if (m_hrichedit)
@@ -265,4 +267,9 @@ void CServerDisplayer::RepositionRichEdit()
 			TRUE
 		);
 	}
+}
+void CServerDisplayer::InvalidateServerList()
+{
+	RECT serverArea = { 0, 100, m_rect.right, m_serverlistbottom };
+	InvalidateRect(m_hwnd, &serverArea, false);
 }

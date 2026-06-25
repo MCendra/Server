@@ -16,7 +16,6 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 constexpr int WINDOW_WIDTH = 800;                   // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
-constexpr UINT WM_REPOSITION_RICHEDIT = WM_USER + 1;
 
 constexpr UINT TIMER_MAINTENANCE = 1;
 constexpr UINT MAINTENANCE_INTERVAL = 1000;
@@ -230,7 +229,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case TIMER_MAINTENANCE:
 			gServerDisplayer.UpdateWindowTitle(gSocketManager.GetQueueSize());
 			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
-			InvalidateRect(hWnd, nullptr, false);
+			gServerDisplayer.InvalidateServerList();
 			break;
 
 		case TIMER_CHECKCLIENT:
@@ -252,9 +251,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			EndPaint(hWnd, &ps);
         }
         break;
-	case WM_REPOSITION_RICHEDIT:
-		gServerDisplayer.RepositionRichEdit();
-		break;
     case WM_DESTROY:
 		KillTimer(hWnd, TIMER_MAINTENANCE);
 		KillTimer(hWnd, TIMER_CHECKCLIENT);
