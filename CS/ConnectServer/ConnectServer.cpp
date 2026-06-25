@@ -16,6 +16,7 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 constexpr int WINDOW_WIDTH = 800;                   // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
+constexpr UINT WM_REPOSITION_RICHEDIT = WM_USER + 1;
 
 constexpr UINT TIMER_MAINTENANCE = 1;
 constexpr UINT MAINTENANCE_INTERVAL = 1000;
@@ -247,11 +248,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			gServerDisplayer.PaintName(hdc);
 			gServerDisplayer.PaintServerState(hdc);
 			gServerDisplayer.PaintGameServers(hdc);
-			gServerDisplayer.PaintLogText(hdc);
 
 			EndPaint(hWnd, &ps);
         }
         break;
+	case WM_REPOSITION_RICHEDIT:
+		gServerDisplayer.RepositionRichEdit();
+		break;
     case WM_DESTROY:
 		KillTimer(hWnd, TIMER_MAINTENANCE);
 		KillTimer(hWnd, TIMER_CHECKCLIENT);

@@ -14,13 +14,11 @@ constexpr char JOINSERVER_ACTIVE[] = "ACTIVO";
 // Construction/Destruction
 CServerDisplayer::CServerDisplayer()
     : m_hwnd(nullptr),                          // Inicializa el puntero al manejador de la ventana a nullptr.
+	m_hrichedit(nullptr),
     m_font(nullptr),                            // Inicializa el puntero a la fuente a nullptr.
 	m_smallfont(nullptr),                       // Inicializa el puntero a la fuente pequeña a nullptr.
 	m_serverlistbottom(100),
-	m_count(0),                                 // Inicializa el contador de logs a 0.
-    //m_servercode(0),                            // Inicializa el codigo del servidor a 0.
-    m_rect{ 0, 0, 0, 0 },                       // Inicializa RECT con valores predeterminados (0, 0, 0, 0).
-	m_logRect{ 0, 100, 0, 0 }					// Inicializa LOGRECT con valores predeterminados (0, 100, 0, 0).
+    m_rect{ 0, 0, 0, 0 }	                    // Inicializa RECT con valores predeterminados (0, 0, 0, 0).
 
 {
     // Inicializa la fuente con parametros predeterminados para el texto.
@@ -46,32 +44,19 @@ CServerDisplayer::CServerDisplayer()
     strncpy_s(m_displayertext[0], sizeof(m_displayertext[0]), JOINSERVER_WAIT, _TRUNCATE);
     strncpy_s(m_displayertext[1], sizeof(m_displayertext[1]), JOINSERVER_ACTIVE, _TRUNCATE);
 
-    // Inicializa el log con cadenas vacias y el color predeterminado.
-    for (auto& log : m_log)
-    {
-        log.text.clear();       // Limpia la cadena de texto del log.
-        log.color = LOG_BLACK;  // Establece el color predeterminado del log.
-    }
 }
 
 CServerDisplayer::~CServerDisplayer()
 {
-    // Liberar recursos de fuentes y pinceles
-    DeleteObject(m_font);
-    for (auto& brush : m_brush)
-    {
-        if (brush != nullptr)
-        {
-            DeleteObject(brush);
-            brush = nullptr;  // Opcional: para evitar futuros accesos
-        }
-    }
+	if (m_font) { DeleteObject(m_font);      m_font = nullptr; }
+	if (m_smallfont) { DeleteObject(m_smallfont); m_smallfont = nullptr; }
 
-	if (m_smallfont != nullptr)
+	for (auto& brush : m_brush)
 	{
-		DeleteObject(m_smallfont);
-		m_smallfont	 = nullptr;
+		if (brush) { DeleteObject(brush); brush = nullptr; }
 	}
+	// m_hRichEdit es un child window: se destruye automaticamente
+	// cuando la ventana padre recibe WM_DESTROY. No llamar DestroyWindow aqui.
 }
 
 // Inicializa la clase con el HWND de la ventana principal
@@ -82,8 +67,37 @@ void CServerDisplayer::Init(HWND hWnd)
     // Inicializa RECT con el tamaño de la ventana
     GetClientRect(m_hwnd, &m_rect);
 
+	// Cargar Msftedit.dll (RichEdit 4.1). Ya esta en memoria en cualquier
+	// Windows moderno — LoadLibrary solo incrementa el refcount, costo cero.
+	// Sin esta llamada, la clase MSFTEDIT_CLASS no esta registrada y
+	// CreateWindowExA falla silenciosamente devolviendo nullptr.
+	LoadLibraryA("Msftedit.dll");
+
+	// MSFTEDIT_CLASS = L"RICHDIT50W" (wide) → incompatible con CreateWindowExA
+	// Usar el nombre de clase directamente como string ANSI literal
+	m_hrichedit = CreateWindowExA(
+		0,
+		"RICHEDIT50W",      // Nombre ANSI del MSFTEDIT_CLASS — mismo resultado
+		"",
+		WS_CHILD | WS_VISIBLE | WS_VSCROLL |
+		ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | ES_NOHIDESEL,
+		0, m_serverlistbottom,
+		m_rect.right,
+		m_rect.bottom - m_serverlistbottom,
+		m_hwnd,
+		nullptr, nullptr, nullptr
+	);
+
 	// FIX: area del log: todo el ancho, desde y=100 hasta el final de la ventana.
-	m_logRect = m_rect;
+	SendMessage(m_hrichedit, WM_SETFONT, (WPARAM)m_smallfont, FALSE);
+	SendMessage(m_hrichedit, EM_SETLIMITTEXT, 200 * MAX_LOG_TEXT_SIZE, 0);
+
+	// Fondo del control igual al color del area de log
+#if (GAMESERVER_TYPE2 == 0)
+	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, RGB(0, 0, 0));
+#else
+	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, RGB(210, 210, 210));
+#endif
 
     // Inicializa titulo de la ventana
     UpdateWindowTitle(0);
@@ -150,88 +164,35 @@ void CServerDisplayer::PaintServerState(HDC hdc) const
 
 // Clase para mostrar informacion del servidor en una ventana
 void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
-    // Limitar el tamaño del texto para evitar desbordamientos
-    std::string trimmedText = text.substr(0, MAX_LOG_TEXT_SIZE - 1);
-
-	{
-		CCriticalSection::CLock lock(m_logLock);
-
-		// Copiar el texto recortado al campo m_log
-		m_log[m_count].text = trimmedText;
-
-		// Establecer el color del texto
-		m_log[m_count].color = color;
-
-		// Actualizar el indice de m_count, asegurando que no se exceda MAX_LOG_TEXT_LINE
-		m_count = ((++m_count) >= MAX_LOG_TEXT_LINE) ? 0 : m_count;
-
-	}
+	if (!m_hrichedit) return;
 
 	// FIX: No dibuja nada aca: solo pide repintado al hilo de UI.
-	RedrawWindow(m_hwnd, &m_logRect, NULL, RDW_INVALIDATE);
-}
+	// RedrawWindow(m_hwnd, &m_logrect, NULL, RDW_INVALIDATE);
+	// Truncar si es necesario
+	std::string line = text.substr(0, MAX_LOG_TEXT_SIZE - 1) + "\r\n";
 
-// Pintar los textos del log en la ventana
-void CServerDisplayer::PaintLogText(HDC hdc)
-{
-	m_logRect.left = 0;
-	m_logRect.right = m_rect.right;
-	m_logRect.top = m_serverlistbottom;
-	m_logRect.bottom = m_rect.bottom;
+	// Configurar el color del texto para esta linea via CHARFORMAT2.
+	// EM_SETCHARFORMAT con SCF_SELECTION aplica el formato solo al texto
+	// que se inserte a continuacion — no repintea el historico existente.
+	CHARFORMAT2A cf = {};
+	cf.cbSize = sizeof(cf);
+	cf.dwMask = CFM_COLOR | CFM_EFFECTS;  // ambos necesarios
+	cf.dwEffects = 0;                     // sin CFE_AUTOCOLOR
 
-	FillRect(hdc, &m_logRect, m_brush[4]);
-
-	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
-	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
-
-	CCriticalSection::CLock lock(m_logLock);
-
-	const int lineHeight = 18;
-	const int maxVisibleLines = (m_logRect.bottom - m_logRect.top) / lineHeight;
-
-	// m_count apunta a la próxima posición de escritura.
-	// Por lo tanto, desde ahí comienza el log más antiguo.
-	int start = m_count;
-
-	int y = m_logRect.top;
-	int visibleCount = 0;
-
-	for (int n = 0; n < MAX_LOG_TEXT_LINE && visibleCount < maxVisibleLines; n++)
+	switch (color)
 	{
-		int index = (start + n) % MAX_LOG_TEXT_LINE;
-
-		if (m_log[index].text.empty())
-		{
-			continue;
-		}
-
-		switch (m_log[index].color)
-		{
-		case LOG_RED:
-			SetTextColor(hdc, RGB(239, 0, 0));
-			break;
-
-		case LOG_GREEN:
-			SetTextColor(hdc, RGB(31, 87, 31));
-			break;
-
-		case LOG_BLUE:
-			SetTextColor(hdc, RGB(29, 29, 143));
-			break;
-
-		default:
-			SetTextColor(hdc, RGB(0, 0, 0));
-			break;
-		}
-
-		TextOutA(hdc, 5, y, m_log[index].text.c_str(), (int)m_log[index].text.length());
-
-		y += lineHeight;
-		visibleCount++;
+	case LOG_RED:   cf.crTextColor = RGB(220, 50, 50);  break;
+	case LOG_GREEN: cf.crTextColor = RGB(50, 200, 50);  break;
+	case LOG_BLUE:  cf.crTextColor = RGB(100, 180, 255); break;
+	default:        cf.crTextColor = RGB(220, 220, 220); break;
 	}
 
-	SelectObject(hdc, oldFont);
-	SetBkMode(hdc, oldBkMode);
+	// Estas tres llamadas son seguras desde hilos worker: SendMessage
+	// al HWND de un control hijo es serializada por la cola de mensajes
+	// de Win32 — el hilo de UI la procesa en orden, sin condiciones de carrera.
+	SendMessage(m_hrichedit, EM_SETSEL, -1, -1);
+	SendMessage(m_hrichedit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
+	SendMessage(m_hrichedit, EM_REPLACESEL, FALSE, (LPARAM)line.c_str());
 }
 
 void CServerDisplayer::Refresh()
@@ -240,73 +201,68 @@ void CServerDisplayer::Refresh()
 	InvalidateRect(m_hwnd, NULL, true);
 }
 
-void CServerDisplayer::PaintGameServers(HDC hdc) 
+void CServerDisplayer::PaintGameServers(HDC hdc)
 {
-	RECT back;
-
-	back.left = 0;
-	back.top = 100;
-	back.right = m_rect.right;
-	back.bottom = m_rect.bottom;
-
+	RECT back = { 0, 100, m_rect.right, m_rect.bottom };
 	FillRect(hdc, &back, m_brush[4]);
-
-	RECT rect;
-
-	rect.left = 10;
-	rect.right = m_rect.right - 10;
-	rect.top = 105;
 
 	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
 	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
 
 	TEXTMETRIC tm;
 	GetTextMetrics(hdc, &tm);
-
 	const int lineHeight = tm.tmHeight + 4;
+
+	int y = 105;
 
 	for (const auto& it : gServerList.GetGameServerList())
 	{
 		const SERVER_LIST_INFO& info = it.second;
-
 		char text[128];
 
 		if (info.ServerState)
 		{
 			SetTextColor(hdc, RGB(0, 180, 0));
-
-			sprintf_s(
-				text,
-				"[%d] %s - ONLINE (%d/%d)",
-				info.ServerCode,
-				info.ServerName,
-				info.UserCount,
-				info.MaxUserCount);
+			sprintf_s(text, "[%d] %s - ONLINE (%d/%d)",
+				info.ServerCode, info.ServerName,
+				info.UserCount, info.MaxUserCount);
 		}
 		else
 		{
 			SetTextColor(hdc, RGB(180, 0, 0));
-
-			sprintf_s(
-				text,
-				"[%d] %s - OFFLINE",
-				info.ServerCode,
-				info.ServerName);
+			sprintf_s(text, "[%d] %s - OFFLINE",
+				info.ServerCode, info.ServerName);
 		}
 
-		TextOutA(
-			hdc,
-			rect.left,
-			rect.top,
-			text,
-			(int)strlen(text));
-
-		rect.top += lineHeight;
+		TextOutA(hdc, 10, y, text, (int)strlen(text));
+		y += lineHeight;
 	}
 
-	// Guardar dónde terminó la lista
-	m_serverlistbottom = rect.top + 5;
+	m_serverlistbottom = y + 5;
+	int newBottom = y + 5;
+
+	// Solo llamar MoveWindow si la posición realmente cambió,
+	// y nunca durante WM_PAINT — postear un mensaje al hilo de UI
+	// para que lo procese fuera del ciclo de pintado.
+	if (newBottom != m_serverlistbottom)
+	{
+		m_serverlistbottom = newBottom;
+		PostMessage(m_hwnd, WM_USER + 1, 0, 0);  // señal para reposicionar el RichEdit
+	}
 
 	SelectObject(hdc, oldFont);
 	SetBkMode(hdc, oldBkMode);
+}
+void CServerDisplayer::RepositionRichEdit()
+{
+	if (m_hrichedit)
+	{
+		MoveWindow(
+			m_hrichedit,
+			0, m_serverlistbottom,
+			m_rect.right,
+			m_rect.bottom - m_serverlistbottom,
+			TRUE
+		);
+	}
 }
