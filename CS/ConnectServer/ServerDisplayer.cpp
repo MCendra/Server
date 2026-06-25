@@ -15,7 +15,9 @@ constexpr char JOINSERVER_ACTIVE[] = "ACTIVO";
 CServerDisplayer::CServerDisplayer()
     : m_hwnd(nullptr),                          // Inicializa el puntero al manejador de la ventana a nullptr.
     m_font(nullptr),                            // Inicializa el puntero a la fuente a nullptr.
-    m_count(0),                                 // Inicializa el contador de logs a 0.
+	m_smallfont(nullptr),                       // Inicializa el puntero a la fuente pequeña a nullptr.
+	m_serverlistbottom(100),
+	m_count(0),                                 // Inicializa el contador de logs a 0.
     //m_servercode(0),                            // Inicializa el codigo del servidor a 0.
     m_rect{ 0, 0, 0, 0 },                       // Inicializa RECT con valores predeterminados (0, 0, 0, 0).
 	m_logRect{ 0, 100, 0, 0 }					// Inicializa LOGRECT con valores predeterminados (0, 100, 0, 0).
@@ -23,6 +25,7 @@ CServerDisplayer::CServerDisplayer()
 {
     // Inicializa la fuente con parametros predeterminados para el texto.
     m_font = CreateFont(50, 0, 0, 0, FW_THIN, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times"));
+	m_smallfont = CreateFont(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
 
     // Crear pinceles para diferentes estados de visualizacion.
     #if(GAMESERVER_TYPE2 == 0)
@@ -63,6 +66,12 @@ CServerDisplayer::~CServerDisplayer()
             brush = nullptr;  // Opcional: para evitar futuros accesos
         }
     }
+
+	if (m_smallfont != nullptr)
+	{
+		DeleteObject(m_smallfont);
+		m_smallfont	 = nullptr;
+	}
 }
 
 // Inicializa la clase con el HWND de la ventana principal
@@ -75,11 +84,9 @@ void CServerDisplayer::Init(HWND hWnd)
 
 	// FIX: area del log: todo el ancho, desde y=100 hasta el final de la ventana.
 	m_logRect = m_rect;
-	m_logRect.top = 220;
 
     // Inicializa titulo de la ventana
     UpdateWindowTitle(0);
-
 }
 
 // Actualiza el titulo de la ventana
@@ -159,58 +166,72 @@ void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
 		m_count = ((++m_count) >= MAX_LOG_TEXT_LINE) ? 0 : m_count;
 
 	}
-		// FIX: No dibuja nada aca: solo pide repintado al hilo de UI.
-		InvalidateRect(m_hwnd, &m_logRect, false);
-    
+
+	// FIX: No dibuja nada aca: solo pide repintado al hilo de UI.
+	RedrawWindow(m_hwnd, &m_logRect, NULL, RDW_INVALIDATE);
 }
 
 // Pintar los textos del log en la ventana
 void CServerDisplayer::PaintLogText(HDC hdc)
 {
-	// FIX: limpiar todo el área de log antes de redibujar.
-	// Sin esto, líneas nuevas más cortas que las anteriores dejan
-	// residuos visuales del texto previo -> se ven "superpuestas".
+	m_logRect.left = 0;
+	m_logRect.right = m_rect.right;
+	m_logRect.top = m_serverlistbottom;
+	m_logRect.bottom = m_rect.bottom;
+
 	FillRect(hdc, &m_logRect, m_brush[4]);
 
-	int OldBkMode = SetBkMode(hdc, TRANSPARENT);
+	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
+	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
 
-	// Lock: PaintLogText ahora se llama desde WM_PAINT (hilo de UI),
-	// mientras LogAddText escribe en m_log/m_count desde hilos de red.
 	CCriticalSection::CLock lock(m_logLock);
 
-    int line = MAX_LOG_TEXT_LINE;
-    int count = m_count - 1 >= 0 ? m_count - 1 : MAX_LOG_TEXT_LINE - 1;
+	const int lineHeight = 18;
+	const int maxVisibleLines = (m_logRect.bottom - m_logRect.top) / lineHeight;
 
-    for (int n = 0; n < MAX_LOG_TEXT_LINE; n++)
-    {
-        switch (m_log[count].color)
-        {
-        case LOG_BLACK:
-            SetTextColor(hdc, RGB(0, 0, 0));
-            break;
-        case LOG_RED:
-            SetTextColor(hdc, RGB(239, 0, 0));
-            break;
-        case LOG_GREEN:
-            SetTextColor(hdc, RGB(31, 87, 31));
-            break;
-        case LOG_BLUE:
-            SetTextColor(hdc, RGB(29, 29, 143));
-            break;
-        }
+	// m_count apunta a la próxima posición de escritura.
+	// Por lo tanto, desde ahí comienza el log más antiguo.
+	int start = m_count;
 
-        int size = m_log[count].text.size();
+	int y = m_logRect.top;
+	int visibleCount = 0;
 
-        if (size > 1)
-        {
-            TextOutA(hdc, 0, m_logRect.top + (line * 15), m_log[count].text.c_str(), size);
-            line--;
-        }
+	for (int n = 0; n < MAX_LOG_TEXT_LINE && visibleCount < maxVisibleLines; n++)
+	{
+		int index = (start + n) % MAX_LOG_TEXT_LINE;
 
-        count = --count >= 0 ? count : MAX_LOG_TEXT_LINE - 1;
-    }
-	SetBkMode(hdc, OldBkMode);
+		if (m_log[index].text.empty())
+		{
+			continue;
+		}
 
+		switch (m_log[index].color)
+		{
+		case LOG_RED:
+			SetTextColor(hdc, RGB(239, 0, 0));
+			break;
+
+		case LOG_GREEN:
+			SetTextColor(hdc, RGB(31, 87, 31));
+			break;
+
+		case LOG_BLUE:
+			SetTextColor(hdc, RGB(29, 29, 143));
+			break;
+
+		default:
+			SetTextColor(hdc, RGB(0, 0, 0));
+			break;
+		}
+
+		TextOutA(hdc, 5, y, m_log[index].text.c_str(), (int)m_log[index].text.length());
+
+		y += lineHeight;
+		visibleCount++;
+	}
+
+	SelectObject(hdc, oldFont);
+	SetBkMode(hdc, oldBkMode);
 }
 
 void CServerDisplayer::Refresh()
@@ -219,16 +240,15 @@ void CServerDisplayer::Refresh()
 	InvalidateRect(m_hwnd, NULL, true);
 }
 
-void CServerDisplayer::PaintGameServers(HDC hdc) const
+void CServerDisplayer::PaintGameServers(HDC hdc) 
 {
 	RECT back;
 
 	back.left = 0;
 	back.top = 100;
 	back.right = m_rect.right;
-	back.bottom = 220;
+	back.bottom = m_rect.bottom;
 
-	// Limpiar área de servidores
 	FillRect(hdc, &back, m_brush[4]);
 
 	RECT rect;
@@ -238,12 +258,18 @@ void CServerDisplayer::PaintGameServers(HDC hdc) const
 	rect.top = 105;
 
 	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
+	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
+
+	TEXTMETRIC tm;
+	GetTextMetrics(hdc, &tm);
+
+	const int lineHeight = tm.tmHeight + 4;
 
 	for (const auto& it : gServerList.GetGameServerList())
 	{
 		const SERVER_LIST_INFO& info = it.second;
 
-		char text[128] = { 0 };
+		char text[128];
 
 		if (info.ServerState)
 		{
@@ -275,8 +301,12 @@ void CServerDisplayer::PaintGameServers(HDC hdc) const
 			text,
 			(int)strlen(text));
 
-		rect.top += 20;
+		rect.top += lineHeight;
 	}
 
+	// Guardar dónde terminó la lista
+	m_serverlistbottom = rect.top + 5;
+
+	SelectObject(hdc, oldFont);
 	SetBkMode(hdc, oldBkMode);
 }

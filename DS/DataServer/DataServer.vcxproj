@@ -172,6 +172,7 @@
     <ClInclude Include="GensSystem.h" />
     <ClInclude Include="GuildManager.h" />
     <ClInclude Include="GuildMatching.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LuckyCoin.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="ServerManager.h" />
     <ClInclude Include="SocketManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TargetVer.h" />
     <ClInclude Include="ThemidaSDK.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Warehouse.h" />
@@ -218,13 +220,16 @@
     <ClCompile Include="GensSystem.cpp" />
     <ClCompile Include="GuildManager.cpp" />
     <ClCompile Include="GuildMatching.cpp" />
+    <ClCompile Include="Header.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LuckyCoin.cpp" />
     <ClCompile Include="LuckyItem.cpp" />
     <ClCompile Include="MasterSkillTree.cpp" />
     <ClCompile Include="MemScript.cpp" />
-    <ClCompile Include="MiniDump.cpp" />
+    <ClCompile Include="MiniDump.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MuRummy.cpp" />
     <ClCompile Include="MuunSystem.cpp" />
     <ClCompile Include="NpcTalk.cpp" />

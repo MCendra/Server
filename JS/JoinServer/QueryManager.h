@@ -8,19 +8,19 @@ class CQueryManager
 public:
 	CQueryManager();
 	virtual ~CQueryManager();
-	bool Connect(char* odbc,char* user,char* pass);
+	bool Connect(const char* odbc, const char* user, const char* pass);
 	void Disconnect();
 	void Diagnostic(const char* query);
-	bool ExecQuery(char* query,...);
+	bool ExecQuery(const char* query,...);
 	void Close();
 	SQLRETURN Fetch();
-	int FindIndex(char* ColName);
+	int FindIndex(const char* ColName);
 	int GetResult(int index);
-	int GetAsInteger(char* ColName);
-	float GetAsFloat(char* ColName);
-	__int64 GetAsInteger64(char* ColName);
-	void GetAsString(char* ColName,char* OutBuffer,int OutBufferSize);
-	void GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize);
+	int GetAsInteger(const char* ColName);
+	float GetAsFloat(const char* ColName);
+	__int64 GetAsInteger64(const char* ColName);
+	void GetAsString(const char* ColName,char* OutBuffer,int OutBufferSize);
+	void GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBufferSize);
 	void BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize);
 	void BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize);
 	void ConvertStringToBinary(const char* InBuff,int InSize,BYTE* OutBuff,int OutSize);

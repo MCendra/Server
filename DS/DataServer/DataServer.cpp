@@ -1,28 +1,39 @@
-#include "stdafx.h"
-#include "resource.h"
+// DataServer.cpp : Define el punto de entrada de la aplicacion.
+#include "Header.h"
 #include "DataServer.h"
-#include "AllowableIpList.h"
-#include "BadSyntax.h"
-#include "GuildManager.h"
-#include "MiniDump.h"
-#include "Protect.h"
-#include "QueryManager.h"
-#include "ServerDisplayer.h"
-#include "SocketManager.h"
-#include "ThemidaSDK.h"
-#include "Util.h"
 
-HINSTANCE hInst;
-TCHAR szTitle[MAX_LOADSTRING];
-TCHAR szWindowClass[MAX_LOADSTRING];
-HWND hWnd;
+//#include "stdafx.h"
+//#include "AllowableIpList.h"
+//#include "BadSyntax.h"
+//#include "GuildManager.h"
+//#include "QueryManager.h"
+//#include "ServerDisplayer.h"
+//#include "SocketManager.h"
+//#include "Util.h"
+
+// Variables globales:
+HINSTANCE hInst;                               // Instancia actual
+CHAR szTitle[MAX_LOADSTRING];                  // Texto de la barra de titulo
+CHAR szWindowClass[MAX_LOADSTRING];            // Nombre de clase de la ventana principal
+HWND g_hWnd;                                   // Renombrado para evitar shadowing
+
+// Declaraciones de funciones adelantadas incluidas en este modulo de codigo:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
 char CustomerName[32];
 char CustomerHardwareId[36];
 int AdvancedLog;
 int RSTimeCTC;
-int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow) // OK
+
+constexpr char ERROR_WSA_STARTUP[] = "[CS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
+constexpr char ERROR_WSA_TCP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
+constexpr char ERROR_WSA_UDP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket UDP en el puerto %d.";
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-	VM_START
 
 	CMiniDump::Start();
 
@@ -134,7 +145,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	CMiniDump::Clean();
 
-	VM_END
 
 	return msg.wParam;
 }
@@ -224,20 +234,23 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 	return 0;
 }
 
-LRESULT CALLBACK About(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam) // OK
+// Controlador de mensajes del cuadro Acerca de.
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	switch(message)
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
 	{
-		case WM_INITDIALOG:
-			return 1;
-		case WM_COMMAND:
-			if(LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-			{
-				EndDialog(hDlg,LOWORD(wParam));
-				return 1;
-			}
-			break;
-	}
+	case WM_INITDIALOG:
+		return (INT_PTR)true;
 
-	return 0;
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)true;
+		}
+		break;
+	}
+	return (INT_PTR)false;
 }
+

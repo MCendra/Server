@@ -40,15 +40,15 @@ struct PBMSG_HEAD
 	void set(BYTE packetHead,BYTE packetSize)
 	{
 		this->type = 0xC1;
-		this->size = packetHead;
-		this->head = packetSize;
+		this->size = packetSize;
+		this->head = packetHead;
 	}
 
 	void setE(BYTE packetHead,BYTE packetSize)
 	{
 		this->type = 0xC3;
-		this->size = packetHead;
-		this->head = packetSize;
+		this->size = packetSize;
+		this->head = packetHead;
 	}
 
 	BYTE type;
@@ -61,16 +61,16 @@ struct PSBMSG_HEAD
 	void set(BYTE packetHead,BYTE packetSubHead,BYTE packetSize)
 	{
 		this->type = 0xC1;
-		this->size = packetHead;
-		this->head = packetSize;
+		this->size = packetSize;
+		this->head = packetHead;
 		this->subh = packetSubHead;
 	}
 
 	void setE(BYTE packetHead,BYTE packetSubHead,BYTE packetSize)
 	{
 		this->type = 0xC3;
-		this->size = packetHead;
-		this->head = packetSize;
+		this->size = packetSize;
+		this->head = packetHead;
 		this->subh = packetSubHead;
 	}
 
@@ -329,7 +329,7 @@ void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index
 void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index);
 void GJServerUserInfoRecv(SDHP_SERVER_USER_INFO_RECV* lpMsg,int index);
 void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMsg,int index);
-void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex,char* account);
-void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex,char* account);
+void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex, const char* account);
+void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex, const char* account);
 void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index);
 void GJAccountLockSaveRecv(SDHP_LOCK_SAVE_RECV* lpMsg,int index);

@@ -1,57 +1,62 @@
-// MiniDump.cpp: implementation of the CMiniDump class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// MiniDump.cpp
 #include "MiniDump.h"
 
-LPTOP_LEVEL_EXCEPTION_FILTER PreviousExceptionFilter = 0;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+LPTOP_LEVEL_EXCEPTION_FILTER PreviousExceptionFilter = nullptr;
 
-LONG WINAPI DumpExceptionFilter(EXCEPTION_POINTERS* info) // OK
+// Funcion de filtro para el manejo de excepciones y generacion de minidumps
+LONG WINAPI DumpExceptionFilter(EXCEPTION_POINTERS* info)
 {
-	char path[MAX_PATH];
+    char path[MAX_PATH] = { 0 };
+    SYSTEMTIME systemTime;
 
-	SYSTEMTIME SystemTime;
+    GetLocalTime(&systemTime);
 
-	GetLocalTime(&SystemTime);
+    CreateDirectoryA("dumps", nullptr); // Crear carpeta si no existe
 
-	wsprintf(path,"%d-%d-%d_%dh%dm%ds.dmp",SystemTime.wYear,SystemTime.wMonth,SystemTime.wDay,SystemTime.wHour,SystemTime.wMinute,SystemTime.wSecond);
+    // Utilizando StringCchPrintf para evitar desbordamientos de buffer
+    StringCchPrintfA(path, MAX_PATH, "dumps\\%d-%d-%d_%dh%dm%ds.dmp",
+        systemTime.wYear, systemTime.wMonth, systemTime.wDay,
+        systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
 
-	HANDLE file = CreateFile(path,GENERIC_WRITE,FILE_SHARE_WRITE,0,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,0);
+    // Creacion del archivo de minidump
+    HANDLE file = CreateFileA(path, GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 
-	if(file != INVALID_HANDLE_VALUE)
-	{
-		MINIDUMP_EXCEPTION_INFORMATION mdei;
+    if (file != INVALID_HANDLE_VALUE)
+    {
+        MINIDUMP_EXCEPTION_INFORMATION mdei;
+        mdei.ThreadId = GetCurrentThreadId();
+        mdei.ExceptionPointers = info;
+        mdei.ClientPointers = false;
 
-		mdei.ThreadId = GetCurrentThreadId();
+        if (MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file,
+            (MINIDUMP_TYPE)(MiniDumpScanMemory | MiniDumpWithIndirectlyReferencedMemory),
+            &mdei, nullptr, nullptr))
+        {
+            CloseHandle(file);
+            return EXCEPTION_EXECUTE_HANDLER;
+        }
 
-		mdei.ExceptionPointers = info;
+        // Cerrar el archivo si no se pudo escribir el minidump
+        CloseHandle(file);
+    }
 
-		mdei.ClientPointers = 0;
-
-		if(MiniDumpWriteDump(GetCurrentProcess(),GetCurrentProcessId(),file,(MINIDUMP_TYPE)(MiniDumpScanMemory+MiniDumpWithIndirectlyReferencedMemory),&mdei,0,0) != 0)
-		{
-			CloseHandle(file);
-			return EXCEPTION_EXECUTE_HANDLER;
-		}
-	}
-
-	CloseHandle(file);
-
-	return EXCEPTION_CONTINUE_SEARCH;
+    // Si el archivo no se creo o fallo la escritura del minidump
+    return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void CMiniDump::Start() // OK
+// Inicia el manejo de excepciones con minidump
+void CMiniDump::Start()
 {
-	SetErrorMode(SEM_FAILCRITICALERRORS);
-
-	PreviousExceptionFilter = SetUnhandledExceptionFilter(DumpExceptionFilter);
+    SetErrorMode(SEM_FAILCRITICALERRORS);
+    PreviousExceptionFilter = SetUnhandledExceptionFilter(DumpExceptionFilter);
 }
 
-void CMiniDump::Clean() // OK
+// Restaura el filtro de excepciones previo
+void CMiniDump::Clean()
 {
-	SetUnhandledExceptionFilter(PreviousExceptionFilter);
+    if (PreviousExceptionFilter != nullptr)
+    {
+        SetUnhandledExceptionFilter(PreviousExceptionFilter);
+        PreviousExceptionFilter = nullptr;
+    }
 }

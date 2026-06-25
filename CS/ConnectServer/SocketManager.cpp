@@ -21,59 +21,6 @@
 #include "IpManager.h"
 #include "Log.h"
 
-// Mensajes de log
-constexpr char INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG[] = "[SocketManager - Init] Error al crear evento de shutdown: %d";
-constexpr char INIT_SUCCESS_MSG[] = "[SocketManager - Init] Servidor TCP iniciado en el puerto [%d]";
-
-constexpr char CREATELISTENSOCKET_ERROR_WSA_SOCKET[] = "[SocketManager - CreateListenSocket] WSASocket() fallo con el error: %d";
-constexpr char CREATELISTENSOCKET_ERROR_SETSOCKOPT[] = "[SocketManager - CreateListenSocket] setsockopt(SO_REUSEADDR) fallo con el error: %d";
-constexpr char CREATELISTENSOCKET_ERROR_BIND[] = "[SocketManager - CreateListenSocket] bind() fallo en el puerto %d con el error: %d";
-constexpr char CREATELISTENSOCKET_ERROR_LISTEN[] = "[SocketManager - CreateListenSocket] listen() fallo con el error: %d";
-constexpr char CREATELISTENSOCKET_SUCCESS_MSG[] = "[SocketManager - CreateListenSocket] Socket de escucha creado exitosamente en el puerto: %d";
-
-constexpr char CREATECOMPLETIONPORT_ERROR_MSG[] = "[SocketManager - CreateCompletionPort] - Error al crear el puerto de finalizacion de E/S.";
-constexpr char CREATECOMPLETIONPORT_SUCCESS_MSG[] = "[SocketManager - CreateCompletionPort] - Puerto de finalizacion de E/S creado exitosamente.";
-
-constexpr char CREATEACCEPTTHREAD_ERROR_CREATETHREAD[] = "[SocketManager - CreateAcceptThread] - Error al crear el hilo de aceptacion de conexiones.";
-constexpr char CREATEACCEPTTHREAD_ERROR_SETTHREADPRIORITY[] = "[SocketManager - CreateAcceptThread] - Error al establecer la prioridad del hilo de aceptacion de conexiones.";
-constexpr char CREATEACCEPTTHREAD_SUCCESS_MSG[] = "[SocketManager - CreateAcceptThread] - Hilo de aceptacion de conexiones creado y configurado exitosamente.";
-
-constexpr char CREATEWORKERTHREAD_ERROR_CREATETHREAD[] = "[SocketManager - CreateWorkerThread] - Error al crear el hilo de trabajo %u. Codigo: %lu";
-constexpr char CREATEWORKERTHREAD_ERROR_SETTHREADPRIORITY[] = "[SocketManager - CreateWorkerThread] - Error al establecer la prioridad del hilo de trabajo %u. Codigo: %lu";
-constexpr char CREATEWORKERTHREAD_SUCCESS_MSG[] = "[SocketManager - CreateWorkerThread] - %d hilos de trabajo creados exitosamente.";
-
-constexpr char CREATESERVERQUEUE_ERROR_CREATESEMAPHORE[] = "[SocketManager - CreateServerQueue] - Error al crear el semaforo de la cola del servidor. Codigo: %lu";
-constexpr char CREATESERVERQUEUE_ERROR_CREATETHREAD[] = "[SocketManager - CreateServerQueue] - Error al crear el hilo de la cola del servidor. Codigo: %lu";
-constexpr char CREATESERVERQUEUE_ERROR_SETTHREADPRIORITY[] = "[SocketManager - CreateServerQueue] - Error al establecer la prioridad del hilo de la cola del servidor. Codigo: %lu";
-constexpr char CREATESERVERQUEUE_SUCCESS_MSG[] = "[SocketManager - CreateServerQueue] - Semaforo y hilo de cola del servidor creados exitosamente.";
-
-constexpr char CLEAN_TIMEOUT_SERVER_QUEUE_THREAD[] = "[SocketManager - Clean] - Timeout esperando ServerQueueThread al detenerse.";
-constexpr char CLEAN_TIMEOUT_SERVER_WORKER_THREAD[] = "[SocketManager - Clean] - Timeout esperando ServerWorkerThread %u al detenerse.";
-constexpr char CLEAN_TIMEOUT_SERVER_ACCEPT_THREAD[] = "[SocketManager - Clean] - Timeout esperando ServerAcceptThread al detenerse.";
-
-constexpr char CLOSESOCKET_ERROR_MSG[] = "[SocketManager] closesocket() fallo con el error: %d";
-
-constexpr char ONRECV_ERROR_WSARECV[] = "[SocketManager - OnRecv] WSARecv() fallo con el error : %d";
-
-constexpr char ONSEND_ERROR_WSASEND[] = "[SocketManager - OnSend] WSASend() fallo con el error : %d";
-
-constexpr char SERVERACCEPTTHREAD_ERROR_WSAACCEPT[] = "[SocketManager - ServerAcceptThread] WSAAccept() fallo con error: %d";
-constexpr char SERVERACCEPTTHREAD_ERROR_INETNTOPA[] = "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d";
-constexpr char SERVERACCEPTTHREAD_ERROR_CREATEIOCP[] = "[SocketManager - ServerAcceptThread] CreateIoCompletionPort() fallo con error: %d";
-constexpr char SERVERACCEPTTHREAD_ERROR_WSARECV[] = "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d";
-
-constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManager - DataRecv] Error de cabecera del protocolo (Index: %d, Header: %02X)";
-constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManager - DataRecv] Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)";
-constexpr char DATARECV_SERVER_QUEUE_FULL[] = "[SocketManager - DataRecv] Server queue full (Index: %d, Head: %02X)";
-constexpr char DATARECV_INVALID_CLIENT[] = "[SocketManager - DataRecv] Cliente invalido (Index: %d)";
-
-constexpr char DATASEND_MAXMAINPAQUETSIZE_ERROR[] = "[SocketManager - DataSend] Tamaño maximo de mensaje excedido (Tipo: 1, indice: %d, Tamaño: %d)";
-constexpr char DATASEND_MAXSIDEPACKETSIZE_ERROR[] = "[SocketManager - DataSend] Tamaño maximo de mensaje excedido (Tipo: 2, Índice: %d, Tamaño: %d)";
-constexpr char DATASEND_WSASEND_ERROR[] = "[SocketManager - DataSend] WSASend() fallo con error: %d";
-
-constexpr char SERVERWORKERTHREAD_GETQUEUEDCOMPLETIONSTATUS_ERROR[] = "[SocketManager - ServerWorkerThread] GetQueuedCompletionStatus() fallo con error: %d";
-constexpr char SERVERQUEUETHREAD_WAITFORMULTIPLEOBJECTS_ERROR[] = "[SocketManager - ServerQueueThread] WaitForMultipleObjects() fallo con error: %d";
-
 CSocketManager gSocketManager;
 
 // Construccion / Destruccion
@@ -127,7 +74,7 @@ bool CSocketManager::Init(WORD port)
 	// señalado para todos los hilos que lo consulten (no se auto-resetea).
 	if ((m_shutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
 	{
-		Log.ToDisp(LOG_RED, INIT_CREATE_SHUTDOWN_EVENT_ERROR_MSG, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - Init] Error al crear evento de shutdown: %d", GetLastError());
 		Clean();
 		return false;
 	}
@@ -168,7 +115,7 @@ bool CSocketManager::Init(WORD port)
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, INIT_SUCCESS_MSG, m_port);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - Init] Servidor TCP iniciado en el puerto [%d]", m_port);
 	return true;
 }
 
@@ -186,7 +133,7 @@ bool CSocketManager::CreateListenSocket()
 {
 	if ((m_listen = WSASocket(AF_INET, SOCK_STREAM, 0, nullptr, 0, WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
 	{
-		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_WSA_SOCKET, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] WSASocket() fallo con el error: %d", WSAGetLastError());
 		return false;
 	}
 
@@ -197,7 +144,7 @@ bool CSocketManager::CreateListenSocket()
 	if (setsockopt(m_listen, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseAddr, sizeof(reuseAddr)) == SOCKET_ERROR)
 	{
 		// No es fatal: solo se informa y se continua.
-		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_SETSOCKOPT, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] setsockopt(SO_REUSEADDR) fallo con el error: %d", WSAGetLastError());
 	}
 
 	SOCKADDR_IN SocketAddr;
@@ -207,17 +154,17 @@ bool CSocketManager::CreateListenSocket()
 
 	if (bind(m_listen, (sockaddr*)&SocketAddr, sizeof(SocketAddr)) == SOCKET_ERROR)
 	{
-		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_BIND, m_port, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] bind() fallo en el puerto %d con el error: %d", m_port, WSAGetLastError());
 		return false;
 	}
 
 	if (listen(m_listen, DEFAULT_BACKLOG) == SOCKET_ERROR)
 	{
-		Log.ToDisp(LOG_RED, CREATELISTENSOCKET_ERROR_LISTEN, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] listen() fallo con el error: %d", WSAGetLastError());
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATELISTENSOCKET_SUCCESS_MSG, m_port);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateListenSocket] Socket de escucha creado exitosamente en el puerto: %d", m_port);
 
 	return true;
 }
@@ -234,11 +181,11 @@ bool CSocketManager::CreateCompletionPort()
 	m_CompletionPort = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, 0);
 	if (m_CompletionPort == nullptr)
 	{
-		Log.ToDisp(LOG_RED, CREATECOMPLETIONPORT_ERROR_MSG, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateCompletionPort] Error al crear el puerto de finalizacion de E/S.", GetLastError());
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATECOMPLETIONPORT_SUCCESS_MSG);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateCompletionPort] Puerto de finalizacion de E/S creado exitosamente.");
 	return true;
 }
 
@@ -250,17 +197,17 @@ bool CSocketManager::CreateAcceptThread()
 	m_ServerAcceptThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)ServerAcceptThread, this, 0, nullptr);
 	if (m_ServerAcceptThread == nullptr)
 	{
-		Log.ToDisp(LOG_RED, CREATEACCEPTTHREAD_ERROR_CREATETHREAD, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateAcceptThread] Error al crear el hilo de aceptacion de conexiones.", GetLastError());
 		return false;
 	}
 
 	if (SetThreadPriority(m_ServerAcceptThread, THREAD_PRIORITY_HIGHEST) == 0)
 	{
-		Log.ToDisp(LOG_RED, CREATEACCEPTTHREAD_ERROR_SETTHREADPRIORITY, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateAcceptThread] Error al establecer la prioridad del hilo de aceptacion de conexiones.", GetLastError());
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATEACCEPTTHREAD_SUCCESS_MSG);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateAcceptThread] Hilo de aceptacion de conexiones creado y configurado exitosamente.");
 	return true;
 }
 
@@ -286,18 +233,18 @@ bool CSocketManager::CreateWorkerThread()
 
 		if (m_ServerWorkerThread[n] == nullptr)
 		{
-			Log.ToDisp(LOG_RED, CREATEWORKERTHREAD_ERROR_CREATETHREAD, n, GetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - CreateWorkerThread] Error al crear el hilo de trabajo %u. Codigo: %lu", n, GetLastError());
 			return false;
 		}
 		// FIX: THREAD_PRIORITY_HIGHEST por THREAD_PRIORITY_NORMAL
 		if (SetThreadPriority(m_ServerWorkerThread[n], THREAD_PRIORITY_NORMAL) == 0)
 		{
-			Log.ToDisp(LOG_RED, CREATEWORKERTHREAD_ERROR_SETTHREADPRIORITY, n, GetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - CreateWorkerThread] Error al establecer la prioridad del hilo de trabajo %u. Codigo: %lu", n, GetLastError());
 			return false;
 		}
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATEWORKERTHREAD_SUCCESS_MSG, m_ServerWorkerThreadCount);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateWorkerThread] %d hilos de trabajo creados exitosamente.", m_ServerWorkerThreadCount);
 	return true;
 }
 
@@ -310,23 +257,23 @@ bool CSocketManager::CreateServerQueue()
 	// MAX_QUEUE_SIZE incrementos simultaneos (uno por cada AddToQueue).
 	if ((m_ServerQueueSemaphore = CreateSemaphore(nullptr, 0, MAX_QUEUE_SIZE, nullptr)) == nullptr)
 	{
-		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_CREATESEMAPHORE, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateServerQueue] Error al crear el semaforo de la cola del servidor. Codigo: %lu", GetLastError());
 		return false;
 	}
 
 	if ((m_ServerQueueThread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CSocketManager::ServerQueueThread, this, 0, nullptr)) == nullptr)
 	{
-		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_CREATETHREAD, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateServerQueue] Error al crear el hilo de la cola del servidor. Codigo: %lu", GetLastError());
 		return false;
 	}
 
 	if (SetThreadPriority(m_ServerQueueThread, THREAD_PRIORITY_HIGHEST) == 0)
 	{
-		Log.ToDisp(LOG_RED, CREATESERVERQUEUE_ERROR_SETTHREADPRIORITY, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateServerQueue] Error al establecer la prioridad del hilo de la cola del servidor. Codigo: %lu", GetLastError());
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, CREATESERVERQUEUE_SUCCESS_MSG);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateServerQueue] Semaforo y hilo de cola del servidor creados exitosamente.");
 	return true;
 }
 
@@ -390,7 +337,7 @@ void CSocketManager::Clean()
 	{
 		if (WaitForSingleObject(m_ServerQueueThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
-			Log.ToDisp(LOG_RED, CLEAN_TIMEOUT_SERVER_QUEUE_THREAD);
+			Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerQueueThread al detenerse.");
 		}
 		CloseHandle(m_ServerQueueThread);
 		m_ServerQueueThread = nullptr;
@@ -402,7 +349,7 @@ void CSocketManager::Clean()
 		{
 			if (WaitForSingleObject(m_ServerWorkerThread[n], DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 			{
-				Log.ToDisp(LOG_RED, CLEAN_TIMEOUT_SERVER_WORKER_THREAD, n);
+				Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerWorkerThread %lu al detenerse.", n);
 			}
 			CloseHandle(m_ServerWorkerThread[n]);
 			m_ServerWorkerThread[n] = nullptr;
@@ -413,7 +360,7 @@ void CSocketManager::Clean()
 	{
 		if (WaitForSingleObject(m_ServerAcceptThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
-			Log.ToDisp(LOG_RED, CLEAN_TIMEOUT_SERVER_ACCEPT_THREAD);
+			Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerAcceptThread al detenerse.");
 		}
 		CloseHandle(m_ServerAcceptThread);
 		m_ServerAcceptThread = nullptr;
@@ -526,7 +473,7 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 		else
 		{
 			// Byte de cabecera desconocido: esto si es un error de protocolo real.
-			Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_HEADER_ERROR, index, lpMsg[count]);
+			Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Error de cabecera del protocolo (Header: %02X)", index, lpMsg[count]);
 			return false;
 		}
 
@@ -540,7 +487,7 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 
 		if (size < minSize || size > MAX_MAIN_PACKET_SIZE)
 		{
-			Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_SIZE_ERROR, index, size, head);
+			Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)", index, size, head);
 			return false;
 		}
 
@@ -550,7 +497,7 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 			QUEUE_INFO QueueInfo;
 			if (index < 0 || index > USHRT_MAX)
 			{
-				Log.ToDisp(LOG_RED, DATARECV_INVALID_CLIENT, index);
+				Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Cliente invalido (Index: %d)", index);
 				return false;
 			}
 			QueueInfo.index = static_cast<WORD>(index);
@@ -567,7 +514,7 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 			{
 				// La cola esta llena: no podemos seguir aceptando paquetes
 				// de este cliente, se desconecta.
-				Log.ToDisp(LOG_RED, DATARECV_SERVER_QUEUE_FULL, index, head);
+				Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Cola del servidor llena (Index: %d, Head: %02X)", index, head);
 				return false;
 			}
 
@@ -644,7 +591,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 
 	if (size > MAX_MAIN_PACKET_SIZE)
 	{
-		Log.ToDisp(LOG_RED, DATASEND_MAXMAINPAQUETSIZE_ERROR, index, size);
+		Log.ToDisp(LOG_RED, "[SocketManager - DataSend] Longitud maxima de mensaje excedido (Tipo: 1, Indice: %d, Tamaño: %d)", index, size);
 		return false;
 	}
 
@@ -655,7 +602,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 		// Ya hay un envio en curso: acumulamos en el buffer secundario.
 		if ((lpIoContext->IoSideBuffer.size + size) > MAX_SIDE_PACKET_SIZE)
 		{
-			Log.ToDisp(LOG_RED, DATASEND_MAXSIDEPACKETSIZE_ERROR, index, (lpIoContext->IoSideBuffer.size + size));
+			Log.ToDisp(LOG_RED, "[SocketManager - DataSend] Longitug maxima de mensaje excedido (Tipo: 2, Indice: %d, Tamaño: %d)", index, (lpIoContext->IoSideBuffer.size + size));
 			Disconnect(index);
 			return false;
 		}
@@ -680,7 +627,7 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED, DATASEND_WSASEND_ERROR, WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - DataSend] WSASend() fallo con error: %d", WSAGetLastError());
 			Disconnect(index);
 			return false;
 		}
@@ -732,7 +679,7 @@ void CSocketManager::Disconnect(int index)
 	{
 		if (closesocket(s) == SOCKET_ERROR && WSAGetLastError() != WSAENOTSOCK)
 		{
-			Log.ToDisp(LOG_RED, CLOSESOCKET_ERROR_MSG, WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - Disconnect] closesocket() fallo con el error: %d", WSAGetLastError());
 		}
 		// El IOCP entregará las cancelaciones con IoSize=0.
 		// OnRecv/OnSend llamarán a DelClient() cuando las reciban.
@@ -806,7 +753,7 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED, ONRECV_ERROR_WSARECV, WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - OnRecv] WSARecv() fallo con el error : %d", WSAGetLastError());
 			Disconnect(index);
 			return;
 		}
@@ -914,7 +861,7 @@ void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContex
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED, ONSEND_ERROR_WSASEND, WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - OnSend] WSASend() fallo con el error : %d", WSAGetLastError());
 			Disconnect(index);
 			return;
 		}
@@ -1012,7 +959,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 			if (Error != WSAEWOULDBLOCK)
 			{
-				Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_WSAACCEPT, Error);
+				Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] WSAAccept() fallo con error: %d", Error);
 			}
 			continue;
 		}
@@ -1021,7 +968,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		if (InetNtopA(AF_INET, &SocketAddr.sin_addr, ipAddress, INET_ADDRSTRLEN) == nullptr)
 		{
-			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_INETNTOPA, GetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] InetNtopA() fallo con error: %d", GetLastError());
 			closesocket(socket);
 			continue;
 		}
@@ -1047,7 +994,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 		// corresponde cada evento de E/S.
 		if (CreateIoCompletionPort((HANDLE)socket, lpSocketManager->m_CompletionPort, index, 0) == nullptr)
 		{
-			Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_CREATEIOCP, GetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] CreateIoCompletionPort() fallo con error: %d", GetLastError());
 			closesocket(socket);
 			continue;
 		}
@@ -1068,7 +1015,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 			if (Error != WSA_IO_PENDING)
 			{
-				Log.ToDisp(LOG_RED, SERVERACCEPTTHREAD_ERROR_WSARECV, Error);
+				Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d", Error);
 				lpSocketManager->Disconnect(index);
 				continue;
 			}
@@ -1118,7 +1065,7 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 					Error != ERROR_OPERATION_ABORTED &&
 					Error != ERROR_SEM_TIMEOUT))
 			{
-				Log.ToDisp(LOG_RED, SERVERWORKERTHREAD_GETQUEUEDCOMPLETIONSTATUS_ERROR, Error);
+				Log.ToDisp(LOG_RED, "[SocketManager - ServerWorkerThread] GetQueuedCompletionStatus() fallo con error: %d", Error);
 				return 1;
 			}
 			// Error esperado de desconexion: se sigue procesando con
@@ -1168,35 +1115,49 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 	{
 		DWORD waitResult = WaitForMultipleObjects(2, handles, false, INFINITE);
 
-		if (waitResult == WAIT_OBJECT_0 + 1) // m_shutdownEvent señalado.
+		switch (waitResult)
 		{
-			break;
-		}
-
-		if (waitResult == WAIT_FAILED)
-		{
-			Log.ToDisp(LOG_RED, SERVERQUEUETHREAD_WAITFORMULTIPLEOBJECTS_ERROR, GetLastError());
-			break;
-		}
-
-		QUEUE_INFO QueueInfo;
-
-		if (lpSocketManager->m_ServerQueue.GetFromQueue(&QueueInfo) != 0)
-		{
-			if (CLIENT_RANGE(QueueInfo.index) != 0 && gClientManager[QueueInfo.index].IsOnline() != false)
+			case WAIT_OBJECT_0: // Semaphore señalado
 			{
-				ConnectServerProtocolCore(QueueInfo.index, QueueInfo.head, QueueInfo.buff, QueueInfo.size);
+				QUEUE_INFO QueueInfo;
+
+				if (lpSocketManager->m_ServerQueue.GetFromQueue(&QueueInfo) != 0)
+				{
+					if (CLIENT_RANGE(QueueInfo.index) != 0 && gClientManager[QueueInfo.index].IsOnline() != false)
+					{
+						ConnectServerProtocolCore(QueueInfo.index, QueueInfo.head, QueueInfo.buff, QueueInfo.size);
+					}
+				}
+			}
+			break;
+
+			case WAIT_OBJECT_0 + 1: // ShutdownEvent señalado
+			{
+				Log.ToDisp(LOG_BLUE, "[SocketManager - ServerQueueThread] Finalizando hilo de cola.");
+
+				return 0;
+			}
+
+			case WAIT_FAILED:
+			{
+				Log.ToDisp(LOG_RED, "[SocketManager - ServerQueueThread] WaitForMultipleObjects() fallo con error: %lu", GetLastError());
+
+				return 0;
+			}
+
+			default:
+			{
+				Log.ToDisp(LOG_RED, "[SocketManager - ServerQueueThread] Resultado inesperado: %lu", waitResult);
+
+				return 0;
 			}
 		}
 	}
 
-	return false;
+	return 0;
 }
 
-
-// =====================================================================
 // Utilidades
-// =====================================================================
 
 // Devuelve la cantidad actual de paquetes pendientes en la cola interna.
 DWORD CSocketManager::GetQueueSize()

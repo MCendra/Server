@@ -698,7 +698,7 @@ void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMs
 	JGExternalDisconnectAccountSend(AccountInfo.GameServerCode,AccountInfo.UserIndex,AccountInfo.Account);
 }
 
-void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex,char* account)
+void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex, const char* account)
 {
 	CServerManager* lpServerManager = FindServerByCode(GameServerCode);
 
@@ -720,7 +720,7 @@ void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex,char* acc
 	gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex,char* account)
+void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex, const char* account)
 {
 	CServerManager* lpServerManager = FindServerByCode(GameServerCode);
 

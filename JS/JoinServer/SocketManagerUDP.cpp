@@ -18,26 +18,6 @@
 #include "SocketManagerUDP.h"
 #include "Log.h"
 
-// Mensajes de log
-constexpr char INIT_ERROR_WSA_SOCKET[] = "[SocketManagerUDP - Init] WSASocket() fallo con el error: %d";
-constexpr char INIT_ERROR_BIND[] = "[SocketManagerUDP - Init] bind() fallo en el puerto %d con el error: %d";
-constexpr char INIT_ERROR_CREATETHREAD[] = "[SocketManagerUDP - Init] Error al crear el hilo de recepción.";
-constexpr char INIT_SUCCESS_MSG[] = "[SocketManagerUDP - Init] Servidor UDP iniciado en el puerto [%d]";
-
-constexpr char CONNECT_ERROR_WSA_SOCKET[] = "[SocketManagerUDP - Connect] WSASocket() fallo con el error: %d";
-constexpr char CONNECT_ERROR_GETADDRESSINFO[] = "[SocketManagerUDP - Connect] getaddrinfo() fallo con el error: %d";
-constexpr char CONNECT_ERROR_GETADDRESSINFO_RESULT[] = "[SocketManagerUDP - Connect] getaddrinfo() no retorno resultados.";
-
-constexpr char CLEAN_WAITFORSINGLEOBJECT_TIMEOUT[] = "[SocketManagerUDP - Clean] Timeout esperando WaitForSingleObject: %d";
-
-constexpr char DATASEND_MSGSIZE_ERROR[] = "[SocketManagerUDP - DataSend] Tamaño de mensaje excedido (Tamaño: %d)";
-constexpr char DATASEND_SENDTO_ERROR[] = "[SocketManagerUDP - DataSend] fallo con el error: %d";
-
-constexpr char DATARECV_PROTOCOL_HEADER_ERROR[] = "[SocketManagerUDP - DataRecv] Error de cabecera del protocolo (Header: %02X)";
-constexpr char DATARECV_PROTOCOL_SIZE_ERROR[] = "[SocketManagerUDP - DataRecv] Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)";
-
-constexpr char SERVERRECVTHREAD_RECVFROM_ERROR[] = "[SocketManagerUDP - ServerRecvThread] recvfrom() fallo con el error: %d";
-
 CSocketManagerUdp gSocketManagerUDP;
 
 // Constructor / Destructor
@@ -79,7 +59,7 @@ bool CSocketManagerUdp::Init(WORD port)
 
 	if ((this->m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
-		Log.ToDisp(LOG_RED, INIT_ERROR_WSA_SOCKET, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Init] WSASocket() fallo con el error: %d", WSAGetLastError());
 		this->Clean();
 		return false;
 	}
@@ -90,19 +70,19 @@ bool CSocketManagerUdp::Init(WORD port)
 
 	if (bind(this->m_socket, reinterpret_cast<sockaddr*>(&this->m_SocketAddr), sizeof(this->m_SocketAddr)) == SOCKET_ERROR)
 	{
-		Log.ToDisp(LOG_RED, INIT_ERROR_BIND, port, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Init] bind() fallo en el puerto %d con el error: %d", port, WSAGetLastError());
 		this->Clean();
 		return false;
 	}
 
 	if ((this->m_ServerRecvThread = CreateThread(nullptr, 0, CSocketManagerUdp::ServerRecvThread, this, 0, nullptr)) == nullptr)
 	{
-		Log.ToDisp(LOG_RED, INIT_ERROR_CREATETHREAD, GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Init] Error al crear el hilo de recepción.", GetLastError());
 		this->Clean();
 		return false;
 	}
 
-	Log.ToDisp(LOG_GREEN, INIT_SUCCESS_MSG, port);
+	Log.ToDisp(LOG_GREEN, "[SocketManagerUDP - Init] Servidor UDP iniciado en el puerto [%d]", port);
 	return true;
 }
 
@@ -117,7 +97,7 @@ bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 
 	if ((this->m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
-		Log.ToDisp(LOG_RED, CONNECT_ERROR_WSA_SOCKET, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Connect] WSASocket() fallo con el error: %d", WSAGetLastError());
 		this->Clean();
 		return false;
 	}
@@ -135,7 +115,7 @@ bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 
 		if (getaddrinfo(IpAddress, nullptr, &hints, &result) != 0)
 		{
-			Log.ToDisp(LOG_RED, CONNECT_ERROR_GETADDRESSINFO, WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManagerUDP - Connect] getaddrinfo() fallo con el error: %d", WSAGetLastError());
 			this->Clean();
 			return false;
 		}
@@ -147,7 +127,7 @@ bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 		}
 		else
 		{
-			Log.ToDisp(LOG_RED, CONNECT_ERROR_GETADDRESSINFO_RESULT);
+			Log.ToDisp(LOG_RED, "[SocketManagerUDP - Connect] getaddrinfo() no retorno resultados.");
 			this->Clean();
 			return false;
 		}
@@ -178,7 +158,7 @@ void CSocketManagerUdp::Clean()
 	{
 		if (WaitForSingleObject(this->m_ServerRecvThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
 		{
-			Log.ToDisp(LOG_RED, CLEAN_WAITFORSINGLEOBJECT_TIMEOUT);
+			Log.ToDisp(LOG_RED, "[SocketManagerUDP - Clean] Timeout esperando WaitForSingleObject: %d", GetLastError());
 		}
 		CloseHandle(this->m_ServerRecvThread);
 		this->m_ServerRecvThread = nullptr;
@@ -220,7 +200,7 @@ bool CSocketManagerUdp::DataRecv(int recvSize)
 	}
 	else
 	{
-		Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_HEADER_ERROR, header);
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - DataRecv] Error de cabecera del protocolo (Header: %02X)", header);
 		return false;
 	}
 
@@ -232,7 +212,7 @@ bool CSocketManagerUdp::DataRecv(int recvSize)
 	// un datagrama UDP nunca llega partido a la mitad.
 	if (size < minSize || size > MAX_UDP_PACKET_SIZE)
 	{
-		Log.ToDisp(LOG_RED, DATARECV_PROTOCOL_SIZE_ERROR, header, size, head);
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - DataRecv] Error de tamaño del protocolo (Index: %d, Size: %d, Head: %02X)", header, size, head);
 		return false;
 	}
 
@@ -242,7 +222,7 @@ bool CSocketManagerUdp::DataRecv(int recvSize)
 		// protocolo no coincide con los bytes efectivamente recibidos.
 		// Esto reemplaza la lógica de "paquete incompleto, esperar más"
 		// que tenía sentido en TCP pero es imposible en UDP.
-		Log.ToDisp(LOG_RED, "[SocketManagerUdp] Tamaño declarado (%d) no coincide con datagrama recibido (%d)", size, recvSize);
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - DataRecv] Tamaño declarado (%d) no coincide con datagrama recibido (%d)", size, recvSize);
 		return false;
 	}
 
@@ -262,7 +242,7 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size)
 
 	if (size > MAX_UDP_PACKET_SIZE)
 	{
-		Log.ToDisp(LOG_RED, DATASEND_MSGSIZE_ERROR, size);
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - DataSend] Tamaño de mensaje excedido (Tamaño: %d)", size);
 		return false;
 	}
 
@@ -277,7 +257,7 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg, int size)
 		int Error = WSAGetLastError();
 		if (Error != WSAEWOULDBLOCK)
 		{
-			Log.ToDisp(LOG_RED, DATASEND_SENDTO_ERROR, Error);
+			Log.ToDisp(LOG_RED, "[SocketManagerUDP - DataSend] fallo con el error: %d", Error);
 			return false;
 		}
 		// WSAEWOULDBLOCK en un socket UDP no bloqueante: el datagrama
@@ -331,7 +311,7 @@ DWORD WINAPI CSocketManagerUdp::ServerRecvThread(LPVOID lpParam)
 			// se loguea y se sigue escuchando, sin tocar el buffer
 			// (no hace falta limpiarlo: el próximo recvfrom exitoso
 			// sobreescribe desde el offset 0 igual).
-			Log.ToDisp(LOG_RED, SERVERRECVTHREAD_RECVFROM_ERROR, wsaErr);
+			Log.ToDisp(LOG_RED, "[SocketManagerUDP - ServerRecvThread] recvfrom() fallo con el error: %d", wsaErr);
 			continue;
 		}
 

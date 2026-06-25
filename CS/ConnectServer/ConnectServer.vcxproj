@@ -151,7 +151,7 @@
     <ClInclude Include="QueueHandle.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ServerConfig.h" />
-    <ClInclude Include="ServerConfigLoader.h" />
+    <ClInclude Include="ScriptParser.h" />
     <ClInclude Include="ServerDisplayer.h" />
     <ClInclude Include="ServerList.h" />
     <ClInclude Include="ServerLog.h" />
@@ -189,7 +189,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ServerConfig.cpp" />
-    <ClCompile Include="ServerConfigLoader.cpp" />
+    <ClCompile Include="ScriptParser.cpp" />
     <ClCompile Include="ServerDisplayer.cpp" />
     <ClCompile Include="ServerList.cpp" />
     <ClCompile Include="ServerLog.cpp">

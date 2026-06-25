@@ -1,9 +1,9 @@
-// ServerConfigLoader.h
+// ScriptParser.h
 #pragma once
 #include "FileHandle.h"
 #include "BufferHandle.h"
 
-#define SERVER_CONFIG_ALLOC_ERROR "[%s] No se pudo asignar memoria para ServerConfigLoader"
+#define SERVER_CONFIG_ALLOC_ERROR "[%s] No se pudo asignar memoria para ScriptParser"
 #define SERVER_CONFIG_ERROR_CODE0 "[%s] No se pudo abrir el archivo"
 #define SERVER_CONFIG_ERROR_CODE1 "[%s] No se pudo asignar el buffer del archivo"
 #define SERVER_CONFIG_ERROR_CODE2 "[%s] No se pudo leer el archivo"
@@ -19,11 +19,11 @@ enum eTokenResult
     TOKEN_ERROR = 3,
 };
 
-class CServerConfigLoader
+class CScriptParser
 {
 public:
-    CServerConfigLoader();
-    virtual ~CServerConfigLoader();
+    CScriptParser();
+    virtual ~CScriptParser();
     bool SetBuffer(const char* path);
     bool GetBuffer(char* buff, DWORD* size);
     char GetChar();

@@ -94,4 +94,7 @@ Fix 1.0.0.7
 Fix 1.0.0.8
 - ServerList.cpp agregado MAX_JOINSERVER_OFFLINE_TIME y MAX_GAMESERVER_OFFLINE_TIME en CheckServerTimeouts
 - ServerList.cpp modernizacion de iteraciones
-- ServerManager.cpp cambios menores de logica 
+- ServerManager.cpp cambios menores de logica
+- QueryManager.cpp cambio de algoritmo en ConvertStringToBinary / fix varios
+- SocketManager.cpp refactorizacion ServerQueueThread
+- AccountManager.cpp refactorizacion completa y correcciones

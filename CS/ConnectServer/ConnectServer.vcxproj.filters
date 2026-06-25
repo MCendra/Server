@@ -75,7 +75,7 @@
     <ClInclude Include="SocketManagerUDP.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="ServerConfigLoader.h">
+    <ClInclude Include="ScriptParser.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -128,7 +128,7 @@
     <ClCompile Include="SocketManagerUDP.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="ServerConfigLoader.cpp">
+    <ClCompile Include="ScriptParser.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="ServerProtocol.cpp">

@@ -1,15 +1,10 @@
-// MemScript.cpp: implementation of the CMemScript class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// MemScript.cpp
 #include "Header.h"
 #include "MemScript.h"
 
-//////////////////////////////////////////////////////////////////////
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CMemScript::CMemScript() // OK
+CMemScript::CMemScript()
 {
 	this->m_buff = 0;
 	this->m_size = 0;
@@ -19,7 +14,7 @@ CMemScript::CMemScript() // OK
 	this->SetLastError(4);
 }
 
-CMemScript::~CMemScript() // OK
+CMemScript::~CMemScript()
 {
 	if(this->m_buff != 0)
 	{
@@ -30,7 +25,7 @@ CMemScript::~CMemScript() // OK
 	this->m_size = 0;
 }
 
-bool CMemScript::SetBuffer(char* path) // OK
+bool CMemScript::SetBuffer(char* path)
 {
 	strcpy_s(this->m_path,path);
 
@@ -77,7 +72,7 @@ bool CMemScript::SetBuffer(char* path) // OK
 	return 1;
 }
 
-bool CMemScript::GetBuffer(char* buff,DWORD* size) // OK
+bool CMemScript::GetBuffer(char* buff,DWORD* size)
 {
 	if(this->m_buff == 0)
 	{
@@ -90,7 +85,7 @@ bool CMemScript::GetBuffer(char* buff,DWORD* size) // OK
 	return 1;
 }
 
-char CMemScript::GetChar() // OK
+char CMemScript::GetChar()
 {
 	if(this->m_count >= this->m_size)
 	{
@@ -100,7 +95,7 @@ char CMemScript::GetChar() // OK
 	return this->m_buff[this->m_count++];
 }
 
-void CMemScript::UnGetChar(char ch) // OK
+void CMemScript::UnGetChar(char ch)
 {
 	if(this->m_count == 0)
 	{
@@ -110,7 +105,7 @@ void CMemScript::UnGetChar(char ch) // OK
 	this->m_buff[--this->m_count] = ch;
 }
 
-char CMemScript::CheckComment(char ch) // OK
+char CMemScript::CheckComment(char ch)
 {
 	if(ch != '/' || (ch=this->GetChar()) != '/')
 	{
@@ -133,7 +128,7 @@ char CMemScript::CheckComment(char ch) // OK
 	return ch;
 }
 
-eTokenResult CMemScript::GetToken() // OK
+eTokenResult CMemScript::GetToken()
 {
 	if((GetTickCount()-this->m_tick) > 1000)
 	{
@@ -182,7 +177,7 @@ eTokenResult CMemScript::GetToken() // OK
 	return this->GetTokenCommon(ch);
 }
 
-eTokenResult CMemScript::GetTokenNumber(char ch) // OK
+eTokenResult CMemScript::GetTokenNumber(char ch)
 {
 	int count = 0;
 
@@ -207,7 +202,7 @@ eTokenResult CMemScript::GetTokenNumber(char ch) // OK
 	return TOKEN_NUMBER;
 }
 
-eTokenResult CMemScript::GetTokenString(char ch) // OK
+eTokenResult CMemScript::GetTokenString(char ch)
 {
 	int count = 0;
 
@@ -226,7 +221,7 @@ eTokenResult CMemScript::GetTokenString(char ch) // OK
 	return TOKEN_STRING;
 }
 
-eTokenResult CMemScript::GetTokenCommon(char ch) // OK
+eTokenResult CMemScript::GetTokenCommon(char ch)
 {
 	if(isalpha(ch) == 0)
 	{
@@ -249,7 +244,7 @@ eTokenResult CMemScript::GetTokenCommon(char ch) // OK
 	return TOKEN_STRING;
 }
 
-void CMemScript::SetLastError(int error) // OK
+void CMemScript::SetLastError(int error)
 {
 	switch(error)
 	{
@@ -274,41 +269,41 @@ void CMemScript::SetLastError(int error) // OK
 	}
 }
 
-char* CMemScript::GetLastError() // OK
+char* CMemScript::GetLastError()
 {
 	return this->m_LastError;
 }
 
-int CMemScript::GetNumber() // OK
+int CMemScript::GetNumber()
 {
 	return (int)this->m_number;
 }
 
-int CMemScript::GetAsNumber() // OK
+int CMemScript::GetAsNumber()
 {
 	this->GetToken();
 
 	return (int)this->m_number;
 }
 
-float CMemScript::GetFloatNumber() // OK
+float CMemScript::GetFloatNumber()
 {
 	return this->m_number;
 }
 
-float CMemScript::GetAsFloatNumber() // OK
+float CMemScript::GetAsFloatNumber()
 {
 	this->GetToken();
 
 	return this->m_number;
 }
 
-char* CMemScript::GetString() // OK
+char* CMemScript::GetString()
 {
 	return this->m_string;
 }
 
-char* CMemScript::GetAsString() // OK
+char* CMemScript::GetAsString()
 {
 	this->GetToken();
 

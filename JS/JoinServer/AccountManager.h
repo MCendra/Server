@@ -30,9 +30,9 @@ public:
 	virtual ~CAccountManager();
 	void DisconnectProc();
 	void ClearServerAccountInfo(int serverCode);
-	bool GetAccountInfo(ACCOUNT_INFO* lpAccountInfo,char* account);
-	void InsertAccountInfo(ACCOUNT_INFO AccountInfo);
-	void RemoveAccountInfo(ACCOUNT_INFO AccountInfo);
+	bool GetAccountInfo(ACCOUNT_INFO* lpAccountInfo, const char* account);
+	void InsertAccountInfo(const ACCOUNT_INFO& AccountInfo);
+	void RemoveAccountInfo(const ACCOUNT_INFO& AccountInfo);
 	long GetAccountCount();
 private:
 	CCriticalSection m_critical;

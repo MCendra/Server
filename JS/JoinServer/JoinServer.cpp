@@ -30,7 +30,6 @@ constexpr char ERROR_WSA_STARTUP[] = "[JS] Fallo critico: WSAStartup() error %d.
 constexpr char ERROR_DB_CONNECT[] = "[JS] Fallo critico: no se pudo conectar a la base de datos. Codigo de error: %d";
 constexpr char ERROR_TCP_STARTUP[] = "[JS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
 constexpr char ERROR_UDP_CONNECT[] = "[JS] Fallo critico: no se pudo conectar via UDP a ConnectServer (%s:%d).";
-constexpr char ERROR_CREATE_WINDOW[] = "[JS] CreateWindowA fallo. Codigo error: %d";
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -199,7 +198,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	if (!g_hWnd)
 	{
-		Log.ToFile(LogType::GENERAL, ERROR_CREATE_WINDOW, GetLastError());
+		Log.ToFile(LogType::GENERAL, "[JS] CreateWindowA fallo. Codigo error: %d", GetLastError());
 		return false;
 	}
 

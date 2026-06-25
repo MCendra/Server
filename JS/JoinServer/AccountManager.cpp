@@ -22,145 +22,129 @@ CAccountManager::~CAccountManager()
 
 void CAccountManager::DisconnectProc()
 {
-	this->m_critical.lock();
+	std::vector<ACCOUNT_INFO> disconnectList;
 
-	for(std::map<std::string,ACCOUNT_INFO>::iterator it=this->m_AccountInfo.begin();it != this->m_AccountInfo.end();)
 	{
-		if(it->second.MapServerMove == 0 || (GetTickCount64()-it->second.MapServerMoveTime) < 30000)
+		CCriticalSection::CLock lock(this->m_critical);
+
+		for (auto it = this->m_AccountInfo.begin(); it != this->m_AccountInfo.end();)
 		{
-			it++;
-			continue;
+			if (it->second.MapServerMove == 0 || (GetTickCount64() - it->second.MapServerMoveTime) < 30000)
+			{
+				++it;
+				continue;
+			}
+
+			disconnectList.emplace_back(it->second);
+			it = this->m_AccountInfo.erase(it);
 		}
-
-		Log.ToFile(LogType::ACCOUNT,"[AccountInfo] Account disconnected by proc (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
-
-		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'",it->second.Account);
-
-		gQueryManager.Close();
-
-		JGExternalDisconnectAccountSend(it->second.GameServerCode,it->second.UserIndex,it->second.Account);
-
-		it = this->m_AccountInfo.erase(it);
 	}
 
-	this->m_critical.unlock();
+	for (const auto& account : disconnectList)
+	{
+		Log.ToFile(
+			LogType::ACCOUNT, "[AccountInfo - DisconnectProc] Cuenta desconectada: (Account: %s, IpAddress: %s, GameServerCode: %d)", account.Account, account.IpAddress, account.GameServerCode);
+
+		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'", account.Account);
+		gQueryManager.Close();
+
+		JGExternalDisconnectAccountSend(account.GameServerCode, account.UserIndex, account.Account);
+	}
 }
 
 void CAccountManager::ClearServerAccountInfo(int serverCode)
 {
-	this->m_critical.lock();
+	std::vector<ACCOUNT_INFO> disconnectList;
 
-	for(std::map<std::string,ACCOUNT_INFO>::iterator it=this->m_AccountInfo.begin();it != this->m_AccountInfo.end();)
 	{
-		if(it->second.GameServerCode != serverCode)
+		CCriticalSection::CLock lock(this->m_critical);
+
+		for (auto it = this->m_AccountInfo.begin(); it != this->m_AccountInfo.end();)
 		{
-			it++;
-			continue;
+			if (it->second.GameServerCode != serverCode)
+			{
+				++it;
+				continue;
+			}
+
+			disconnectList.emplace_back(it->second);
+			it = this->m_AccountInfo.erase(it);
 		}
-
-		Log.ToFile(LogType::ACCOUNT,"[AccountInfo] Account disconnected by clear (Account: %s, IpAddress: %s, GameServerCode: %d)",it->second.Account,it->second.IpAddress,it->second.GameServerCode);
-
-		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'",it->second.Account);
-
-		gQueryManager.Close();
-
-		it = this->m_AccountInfo.erase(it);
 	}
 
-	this->m_critical.unlock();
+	for (const auto& account : disconnectList)
+	{
+		Log.ToFile(LogType::ACCOUNT, "[AccountInfo - ClearServerAccountInfo] Cuenta desconectada: (Account: %s, IpAddress: %s, GameServerCode: %d)", account.Account, account.IpAddress, account.GameServerCode);
+
+		gQueryManager.ExecQuery("EXEC WZ_DISCONNECT_MEMB '%s'", account.Account);
+
+		gQueryManager.Close();
+	}
 }
 
-bool CAccountManager::GetAccountInfo(ACCOUNT_INFO* lpAccountInfo,char* account)
+bool CAccountManager::GetAccountInfo(ACCOUNT_INFO* lpAccountInfo, const char* account)
 {
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(this->m_critical);
 
 	std::string acc(account);
 
-	std::transform(acc.begin(),acc.end(),acc.begin(),CheckAccountCaseSensitive);
+	std::transform(acc.begin(), acc.end(), acc.begin(), CheckAccountCaseSensitive);
 
-	std::map<std::string,ACCOUNT_INFO>::iterator it = this->m_AccountInfo.find(acc);
+	auto it = this->m_AccountInfo.find(acc);
 
-	if(it != this->m_AccountInfo.end())
+	if (it == this->m_AccountInfo.end())
 	{
-		(*lpAccountInfo) = it->second;
-		this->m_critical.unlock();
-		return 1;
+		return false;
 	}
 
-	this->m_critical.unlock();
-	return 0;
+	*lpAccountInfo = it->second;
+	return true;
 }
 
-void CAccountManager::InsertAccountInfo(ACCOUNT_INFO AccountInfo)
+void CAccountManager::InsertAccountInfo(const ACCOUNT_INFO& AccountInfo)
 {
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(this->m_critical);
 
 	std::string acc(AccountInfo.Account);
 
 	std::transform(acc.begin(),acc.end(),acc.begin(),CheckAccountCaseSensitive);
 
-	std::map<std::string,ACCOUNT_INFO>::iterator it = this->m_AccountInfo.find(acc);
-
-	if(it == this->m_AccountInfo.end())
-	{
-		this->m_AccountInfo.insert(std::pair<std::string,ACCOUNT_INFO>(acc,AccountInfo));
-	}
-	else
-	{
-		it->second = AccountInfo;
-	}
-
-	this->m_critical.unlock();
+	m_AccountInfo[acc] = AccountInfo;
 }
 
-void CAccountManager::RemoveAccountInfo(ACCOUNT_INFO AccountInfo)
+void CAccountManager::RemoveAccountInfo(const ACCOUNT_INFO& AccountInfo)
 {
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(this->m_critical);
 
 	std::string acc(AccountInfo.Account);
 
 	std::transform(acc.begin(),acc.end(),acc.begin(),CheckAccountCaseSensitive);
 
-	std::map<std::string,ACCOUNT_INFO>::iterator it = this->m_AccountInfo.find(acc);
-
-	if(it != this->m_AccountInfo.end())
-	{
-		this->m_AccountInfo.erase(it);
-		this->m_critical.unlock();
-		return;
-	}
-
-	this->m_critical.unlock();
+	m_AccountInfo.erase(acc);
 }
 
 long CAccountManager::GetAccountCount()
 {
-	long AccountCount = 0;
+	CCriticalSection::CLock lock(this->m_critical);
 
-	this->m_critical.lock();
-
-	AccountCount = this->m_AccountInfo.size();
-
-	this->m_critical.unlock();
-
-	return AccountCount;
+	return static_cast<long>(this->m_AccountInfo.size());;
 }
 
 LONG CheckAccountCaseSensitive(int value)
 {
 	// Si CaseSensitive == 0 (no distingue mayúsculas), normaliza a minúscula.
 	// Si CaseSensitive == 1, deja el valor tal cual.
-	return (CaseSensitive == 0) ? tolower(value) : value;
+	return (CaseSensitive == 0)	? tolower((unsigned char)value) : value;
 }
 
 DWORD MakeAccountKey(const char* account)
 {
-	int  size = strlen(account);
+	size_t size = strlen(account);
 	DWORD key = 0;
 
-	for (int n = 0; n < size; n++)
+	for (size_t n = 0; n < size; n++)
 	{
-		key += account[n] + 17;
+		key += static_cast<BYTE>(account[n]) + 17;
 	}
 
 	return ((key + ((10 - size) * 17)) % 256);

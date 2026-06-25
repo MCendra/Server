@@ -1,8 +1,8 @@
-// ServerConfigLoader.cpp
+// ScriptParser.cpp
 #include "Header.h"
-#include "ServerConfigLoader.h"
+#include "ScriptParser.h"
 
-CServerConfigLoader::CServerConfigLoader()
+CScriptParser::CScriptParser()
 {
     m_buff = 0;
     m_size = 0;
@@ -10,7 +10,7 @@ CServerConfigLoader::CServerConfigLoader()
     SetLastError(4);
 }
 
-CServerConfigLoader::~CServerConfigLoader()
+CScriptParser::~CScriptParser()
 {
     if (m_buff != 0)
     {
@@ -20,7 +20,7 @@ CServerConfigLoader::~CServerConfigLoader()
     m_size = 0;
 }
 
-bool CServerConfigLoader::SetBuffer(const char* path)
+bool CScriptParser::SetBuffer(const char* path)
 {
     strcpy_s(m_path, path);
 
@@ -67,7 +67,7 @@ bool CServerConfigLoader::SetBuffer(const char* path)
     return 1;
 }
 
-bool CServerConfigLoader::GetBuffer(char* buff, DWORD* size)
+bool CScriptParser::GetBuffer(char* buff, DWORD* size)
 {
     if (m_buff == 0)
     {
@@ -79,7 +79,7 @@ bool CServerConfigLoader::GetBuffer(char* buff, DWORD* size)
     return 1;
 }
 
-char CServerConfigLoader::GetChar()
+char CScriptParser::GetChar()
 {
     if (m_count >= m_size)
     {
@@ -88,7 +88,7 @@ char CServerConfigLoader::GetChar()
     return m_buff[m_count++];
 }
 
-void CServerConfigLoader::UnGetChar(char ch)
+void CScriptParser::UnGetChar(char ch)
 {
     if (m_count == 0)
     {
@@ -98,7 +98,7 @@ void CServerConfigLoader::UnGetChar(char ch)
     m_buff[--m_count] = ch;
 }
 
-char CServerConfigLoader::CheckComment(char ch)
+char CScriptParser::CheckComment(char ch)
 {
     if (ch != '/' || (ch = GetChar()) != '/')
     {
@@ -119,7 +119,7 @@ char CServerConfigLoader::CheckComment(char ch)
     return ch;
 }
 
-eTokenResult CServerConfigLoader::GetToken()
+eTokenResult CScriptParser::GetToken()
 {
     if ((GetTickCount64() - m_tick) > 1000)
     {
@@ -168,7 +168,7 @@ eTokenResult CServerConfigLoader::GetToken()
     return GetTokenCommon(ch);
 }
 
-eTokenResult CServerConfigLoader::GetTokenNumber(char ch)
+eTokenResult CScriptParser::GetTokenNumber(char ch)
 {
     int count = 0;
 
@@ -193,7 +193,7 @@ eTokenResult CServerConfigLoader::GetTokenNumber(char ch)
     return TOKEN_NUMBER;
 }
 
-eTokenResult CServerConfigLoader::GetTokenString(char ch)
+eTokenResult CScriptParser::GetTokenString(char ch)
 {
     int count = 0;
 
@@ -212,7 +212,7 @@ eTokenResult CServerConfigLoader::GetTokenString(char ch)
     return TOKEN_STRING;
 }
 
-eTokenResult CServerConfigLoader::GetTokenCommon(char ch)
+eTokenResult CScriptParser::GetTokenCommon(char ch)
 {
     if (isalpha(ch) == 0)
     {
@@ -235,7 +235,7 @@ eTokenResult CServerConfigLoader::GetTokenCommon(char ch)
     return TOKEN_STRING;
 }
 
-void CServerConfigLoader::SetLastError(int error)
+void CScriptParser::SetLastError(int error)
 {
     switch (error)
     {
@@ -260,41 +260,41 @@ void CServerConfigLoader::SetLastError(int error)
     }
 }
 
-char* CServerConfigLoader::GetLastError()
+char* CScriptParser::GetLastError()
 {
     return m_LastError;
 }
 
-int CServerConfigLoader::GetNumber()
+int CScriptParser::GetNumber()
 {
     return (int)m_number;
 }
 
-int CServerConfigLoader::GetAsNumber()
+int CScriptParser::GetAsNumber()
 {
     GetToken();
 
     return (int)m_number;
 }
 
-float CServerConfigLoader::GetFloatNumber()
+float CScriptParser::GetFloatNumber()
 {
     return m_number;
 }
 
-float CServerConfigLoader::GetAsFloatNumber()
+float CScriptParser::GetAsFloatNumber()
 {
     GetToken();
 
     return m_number;
 }
 
-char* CServerConfigLoader::GetString()
+char* CScriptParser::GetString()
 {
     return m_string;
 }
 
-char* CServerConfigLoader::GetAsString()
+char* CScriptParser::GetAsString()
 {
     GetToken();
 

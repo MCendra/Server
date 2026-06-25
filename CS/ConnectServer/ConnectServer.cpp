@@ -3,10 +3,10 @@
 #include "ConnectServer.h"
 
 // Variables globales:
-HINSTANCE hInst;                                // Instancia actual
+HINSTANCE hInst;                               // Instancia actual
 CHAR szTitle[MAX_LOADSTRING];                  // Texto de la barra de titulo
 CHAR szWindowClass[MAX_LOADSTRING];            // Nombre de clase de la ventana principal
-HWND g_hWnd;                                    // Renombrado para evitar shadowing
+HWND g_hWnd;                                   // Renombrado para evitar shadowing
 
 // Declaraciones de funciones adelantadas incluidas en este modulo de codigo:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -14,7 +14,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-constexpr int WINDOW_WIDTH = 700;                   // Ancho de la ventana
+constexpr int WINDOW_WIDTH = 800;                   // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
 
 constexpr UINT TIMER_MAINTENANCE = 1;
@@ -22,12 +22,11 @@ constexpr UINT MAINTENANCE_INTERVAL = 1000;
 constexpr UINT TIMER_CHECKCLIENT = 2;
 constexpr UINT CLIENT_CHECK_TIMEOUTS = 5000;
 
-constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar ConnectServer?"; // \xBF = ¿ en ASCII
+constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar ConnectServer?"; // \xBF = ¿ en ANSI
 constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
 constexpr char ERROR_WSA_STARTUP[] = "[CS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
 constexpr char ERROR_WSA_TCP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
 constexpr char ERROR_WSA_UDP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket UDP en el puerto %d.";
-constexpr char ERROR_CREATE_WINDOW[] = "[CS] CreateWindowA fallo. Codigo error: %d";
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -172,7 +171,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	if (!g_hWnd)
 	{
-		Log.ToFile(ERROR_CREATE_WINDOW, GetLastError());
+		Log.ToFile("[CS] CreateWindowA fallo. Codigo error: %d", GetLastError());
 		return false;
 	}
 

@@ -1,7 +1,7 @@
 // ServerList.cpp
 #include "Header.h"
 #include "ServerList.h"
-#include "ServerConfigLoader.h"
+#include "ScriptParser.h"
 #include "ServerDisplayer.h"
 #include "Util.h"
 #include "Log.h"
@@ -27,8 +27,8 @@ CServerList::~CServerList()
 void CServerList::Init(const char* path)
 {
 	// Objeto en stack: sin heap, sin delete, sin nullptr check.
-	// CServerConfigLoader es pequeño y de vida acotada a esta función.
-	CServerConfigLoader serverConfigLoader;
+	// CScriptParser es pequeño y de vida acotada a esta función.
+	CScriptParser serverConfigLoader;
 
 	if (serverConfigLoader.SetBuffer(path) == 0)
 	{
