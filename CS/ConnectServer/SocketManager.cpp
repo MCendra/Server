@@ -147,7 +147,7 @@ bool CSocketManager::CreateListenSocket()
 		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] setsockopt(SO_REUSEADDR) fallo con el error: %d", WSAGetLastError());
 	}
 
-	SOCKADDR_IN SocketAddr;
+	SOCKADDR_IN SocketAddr {};
 	SocketAddr.sin_family = AF_INET;
 	SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	SocketAddr.sin_port = htons(m_port);
@@ -494,7 +494,7 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 		// ¿Llego el paquete completo (incluyendo payload)?
 		if (size <= available)
 		{
-			QUEUE_INFO QueueInfo;
+			QUEUE_INFO QueueInfo {};
 			if (index < 0 || index > USHRT_MAX)
 			{
 				Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Cliente invalido (Index: %d)", index);
@@ -574,7 +574,6 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 //     y se dispara WSASend de inmediato.
 bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 {
-
 	if (CLIENT_RANGE(index) == 0)
 	{
 		return false;
@@ -703,7 +702,6 @@ void CSocketManager::Disconnect(int index)
 //     remanente que dejo DataRecv en el buffer.
 void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContext)
 {
-
 	if (CLIENT_RANGE(index) == 0)
 	{
 		return;
@@ -749,7 +747,7 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 
 	DWORD RecvSize = 0, Flags = 0;
 
-	if (WSARecv(lpClientManager->m_socket, &lpIoContext->wsabuf, 1, &RecvSize, &Flags, &lpIoContext->overlapped, 0) == SOCKET_ERROR)
+	if (WSARecv(lpClientManager->m_socket, &lpIoContext->wsabuf, 1, &RecvSize, &Flags, &lpIoContext->overlapped, nullptr) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
@@ -758,7 +756,6 @@ void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContex
 			return;
 		}
 	}
-
 }
 
 // Maneja la finalizacion de una operacion de envio (WSASend) para el
@@ -857,7 +854,7 @@ void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContex
 
 	DWORD SendSize = 0, Flags = 0;
 
-	if (WSASend(lpClientManager->m_socket, &lpIoContext->wsabuf, 1, &SendSize, Flags, &lpIoContext->overlapped, 0) == SOCKET_ERROR)
+	if (WSASend(lpClientManager->m_socket, &lpIoContext->wsabuf, 1, &SendSize, Flags, &lpIoContext->overlapped, nullptr) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
@@ -866,9 +863,7 @@ void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContex
 			return;
 		}
 	}
-
 }
-
 
 // =====================================================================
 // Aceptacion de conexiones
@@ -932,7 +927,7 @@ int CALLBACK CSocketManager::ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LP
 //        - Se dispara el primer WSARecv para empezar a recibir datos.
 DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 {
-	SOCKADDR_IN SocketAddr;
+	SOCKADDR_IN SocketAddr {};
 	int SocketAddrSize = sizeof(SocketAddr);
 
 	while (true)
@@ -972,11 +967,6 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 			closesocket(socket);
 			continue;
 		}
-
-		// ANTES tenía:
-		// { CCriticalSection::CLock lock(lpSocketManager->m_critical); ... }
-		// AHORA: sin lock extra. GetFreeClientIndex y AddClient ya se
-		// sincronizan internamente vía gClientArrayLock / m_lock.
 
 		// Busca un indice (slot) libre para el nuevo cliente.
 		// GetFreeClientIndex se sincroniza internamente con gClientArrayLock.
@@ -1020,9 +1010,7 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 				continue;
 			}
 		}
-
 	}
-
 	return 0;
 }
 
@@ -1092,8 +1080,7 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 		}
 
 	}
-
-	return false;
+	return 0;
 }
 
 // Hilo que consume la cola interna de paquetes ya parseados por DataRecv
@@ -1137,14 +1124,12 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 
 				return 0;
 			}
-
 			case WAIT_FAILED:
 			{
 				Log.ToDisp(LOG_RED, "[SocketManager - ServerQueueThread] WaitForMultipleObjects() fallo con error: %lu", GetLastError());
 
 				return 0;
 			}
-
 			default:
 			{
 				Log.ToDisp(LOG_RED, "[SocketManager - ServerQueueThread] Resultado inesperado: %lu", waitResult);
@@ -1153,7 +1138,6 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 			}
 		}
 	}
-
 	return 0;
 }
 

@@ -4,7 +4,7 @@
 #include "CriticalSection.h"
 #include "QueueHandle.h"
 
-#define MAX_SIDE_PACKET_SIZE 65536
+#define MAX_SIDE_PACKET_SIZE MAX_MAIN_PACKET_SIZE // 2048
 #define MAX_SERVER_WORKER_THREAD 8
 #define MAX_IO_OPERATION 2
 #define IO_RECV 0

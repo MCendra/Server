@@ -1,135 +1,154 @@
 // MD5.h
 #pragma once
-#include <windows.h>   // para wsprintf (en ANSI es wsprintfA, opera sobre char*)
-#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <iosfwd>
 #include <fstream>
-#include <cassert>
 
-class MD5 {
-
+class MD5
+{
 public:
+	// Extensiones
+	bool MD5_EncodeKeyVal(
+		const char* lpszInputStr,
+		char* lpszOutputKeyVal,
+		int iKeyIndex);
 
-	//---------------------------------------------
-	//	Métodos agregados a MD5
-	bool MD5_EncodeKeyVal(					// Genera una clave MD5 de 128 bits (16 bytes)
-		// utilizando la cadena de entrada y un índice de clave (0~255)
-		char* lpszInputStr,					// Cadena de entrada
-		char* lpszOutputKeyVal,				// Buffer de salida
-		int iKeyIndex							// Índice de clave (0~255)
-	);
+	bool MD5_EncodeString(
+		const char* lpszInputStr,
+		char* lpszOutputStr,
+		int iKeyIndex);
 
-	bool MD5_EncodeString(					// Genera una cadena MD5 de 128 x 2 bits (32 bytes)
-		// utilizando la cadena de entrada y un índice de clave (0~255)
-		char* lpszInputStr,					// Cadena de entrada
-		char* lpszOutputStr,					// Buffer de salida
-		int iKeyIndex							// Índice de clave (0~255)
-	);
+	bool MD5_CheckValue(
+		const char* lpszInputStr,
+		const char* szKeyVal,
+		int iKeyIndex);
 
-	bool MD5_CheckValue(						// Verifica una clave MD5 utilizando una cadena,
-		// un valor MD5 y un índice de clave (0~255)
-		// (true: válido / false: inválido)
-		// P.S.> El valor debe ser una clave MD5 de 128 bits,
-		// no una cadena MD5 de 256 bits.
-		char* lpszInputStr,					// Cadena de entrada
-		char* szKeyVal,						// Valor MD5 de entrada
-		int iKeyIndex							// Índice de clave (0~255)
-	);
+	// API MD5
+	MD5();
 
+	void update(const unsigned char* input, unsigned int input_length);
+	void update(std::istream& stream);
+	void update(FILE* file);
+	void update(std::ifstream& stream);
 
-	//---------------------------------------------
-	//	Métodos originales de MD5
+	void finalize();
 
-	// Métodos para operación controlada:
-	MD5();  // Inicializador simple
-	void  update(unsigned char* input, unsigned int input_length);
-	void  update(std::istream& stream);
-	void  update(FILE* file);
-	void  update(std::ifstream& stream);
-	void  finalize();
+	MD5(unsigned char* string);
+	MD5(std::istream& stream);
+	MD5(FILE* file);
+	MD5(std::ifstream& stream);
 
-	// Constructores para casos especiales.
-	// Todos estos constructores finalizan el contexto MD5.
-	MD5(unsigned char* string); // Calcula digest de una cadena y finaliza
-	MD5(std::istream& stream);  // Calcula digest de un stream y finaliza
-	MD5(FILE* file);            // Calcula digest de un archivo, lo cierra y finaliza
-	MD5(std::ifstream& stream); // Calcula digest de un stream, lo cierra y finaliza
+	unsigned char* raw_digest() const;
+	char* hex_digest() const;
 
-	// Métodos para obtener el resultado finalizado
-	unsigned char* raw_digest();  // Digest como arreglo binario de 16 bytes
-	char* hex_digest();  // Digest como cadena ASCII hexadecimal de 33 bytes
-	friend std::ostream& operator<< (std::ostream&, MD5 context);
-
-
-
+	friend std::ostream& operator<<(std::ostream&, const MD5&);
 private:
 
-	//---------------------------------------------
-	//	Métodos agregados a MD5
 	void setmagicnum(int keyindex);
 
+	mutable unsigned char m_cRaw_digest[16];
+	mutable char m_cHex_digest[33];
 
-	//---------------------------------------------
-	//	Variables miembro agregadas a MD5
-	unsigned char	m_cRaw_digest[16];
-	char			m_cHex_digest[33];
+	typedef unsigned int   uint4;
+	typedef unsigned short uint2;
+	typedef unsigned char  uint1;
 
-
-
-	//---------------------------------------------
-	//	Variables miembro originales de MD5
-
-	// Primero, algunos tipos:
-	typedef unsigned       int uint4; // Se asume que int tiene 4 bytes
-	typedef unsigned short int uint2; // Se asume que short tiene 2 bytes
-	typedef unsigned      char uint1; // Se asume que char tiene 1 byte
-
-	// Datos privados:
 	uint4 state[4];
-	uint4 count[2];     // Cantidad de bits, módulo 2^64
-	uint1 buffer[64];   // Buffer de entrada
+	uint4 count[2];
+	uint1 buffer[64];
 	uint1 digest[16];
-	uint1 finalized;
+	bool finalized;
 
-	// Métodos privados (la mayoría estáticos):
-	void init();               // Llamado por todos los constructores
-	void transform(uint1* buffer);  // Realiza el trabajo principal de actualización.
-	// La longitud se asume implícitamente en 64 bytes.
+	void init();
+	void transform(const uint1* block);
 
-	static void encode(uint1* dest, uint4* src, uint4 length);
-	static void decode(uint4* dest, uint1* src, uint4 length);
-	static void memcpy(uint1* dest, uint1* src, uint4 length);
-	static void memset(uint1* start, uint1 val, uint4 length);
+	static void encode(uint1* output, const uint4* input, uint4 len);
+	static void decode(uint4* output, const uint1* input, uint4 len);
 
-	static inline uint4  rotate_left(uint4 x, uint4 n);
-	static inline uint4  F(uint4 x, uint4 y, uint4 z);
-	static inline uint4  G(uint4 x, uint4 y, uint4 z);
-	static inline uint4  H(uint4 x, uint4 y, uint4 z);
-	static inline uint4  I(uint4 x, uint4 y, uint4 z);
-	static inline void   FF(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
-	static inline void   GG(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
-	static inline void   HH(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
-	static inline void   II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline uint4 rotate_left(uint4 x, uint4 n);
 
+	static inline uint4 F(uint4 x, uint4 y, uint4 z);
+	static inline uint4 G(uint4 x, uint4 y, uint4 z);
+	static inline uint4 H(uint4 x, uint4 y, uint4 z);
+	static inline uint4 I(uint4 x, uint4 y, uint4 z);
+
+	static inline void FF(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline void GG(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline void HH(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
+	static inline void II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
 };
 
-
-// Constantes para la rutina MD5Transform.
-// Aunque podrían usarse constantes estilo C++,
-// los defines son preferibles porque evitan fácilmente conflictos de ámbito.
+// Constantes MD5
 #define S11 7
 #define S12 12
 #define S13 17
 #define S14 22
+
 #define S21 5
 #define S22 9
 #define S23 14
 #define S24 20
+
 #define S31 4
 #define S32 11
 #define S33 16
 #define S34 23
+
 #define S41 6
 #define S42 10
 #define S43 15
 #define S44 21
 
+inline MD5::uint4 MD5::rotate_left(uint4 x, uint4 n)
+{
+	return (x << n) | (x >> (32 - n));
+}
+
+// Basic MD5 functions
+
+inline MD5::uint4 MD5::F(uint4 x, uint4 y, uint4 z)
+{
+	return (x & y) | (~x & z);
+}
+
+inline MD5::uint4 MD5::G(uint4 x, uint4 y, uint4 z)
+{
+	return (x & z) | (y & ~z);
+}
+
+inline MD5::uint4 MD5::H(uint4 x, uint4 y, uint4 z)
+{
+	return x ^ y ^ z;
+}
+
+inline MD5::uint4 MD5::I(uint4 x, uint4 y, uint4 z)
+{
+	return y ^ (x | ~z);
+}
+
+// Round transformations
+
+inline void MD5::FF(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac)
+{
+	a += F(b, c, d) + x + ac;
+	a = rotate_left(a, s) + b;
+}
+
+inline void MD5::GG(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac)
+{
+	a += G(b, c, d) + x + ac;
+	a = rotate_left(a, s) + b;
+}
+
+inline void MD5::HH(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac)
+{
+	a += H(b, c, d) + x + ac;
+	a = rotate_left(a, s) + b;
+}
+
+inline void MD5::II(uint4& a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac)
+{
+	a += I(b, c, d) + x + ac;
+	a = rotate_left(a, s) + b;
+}

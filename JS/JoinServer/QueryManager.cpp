@@ -289,18 +289,38 @@ void CQueryManager::GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBuffe
 	}
 }
 
-void CQueryManager::BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize)
+void CQueryManager::BindParameterAsString(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize)
 {
-	m_SQLBindValue[(ParamNumber-1)] = SQL_NTS;
+	m_SQLBindValue[ParamNumber - 1] = SQL_NTS;
 
-	SQLBindParameter(m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_CHAR,SQL_VARCHAR,ColumnSize,0,InBuffer,0,&m_SQLBindValue[(ParamNumber-1)]);
+	SQLBindParameter(
+		m_STMT,
+		ParamNumber,
+		SQL_PARAM_INPUT,
+		SQL_C_CHAR,
+		SQL_VARCHAR,
+		ColumnSize,
+		0,
+		InBuffer,
+		0,
+		&m_SQLBindValue[ParamNumber - 1]);
 }
 
-void CQueryManager::BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize)
+void CQueryManager::BindParameterAsBinary(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize)
 {
-	m_SQLBindValue[(ParamNumber-1)] = ColumnSize;
+	m_SQLBindValue[ParamNumber - 1] = static_cast<SQLLEN>(ColumnSize);
 
-	SQLBindParameter(m_STMT,ParamNumber,SQL_PARAM_INPUT,SQL_C_BINARY,SQL_VARBINARY,ColumnSize,0,InBuffer,0,&m_SQLBindValue[(ParamNumber-1)]);
+	SQLBindParameter(
+		m_STMT,
+		ParamNumber,
+		SQL_PARAM_INPUT,
+		SQL_C_BINARY,
+		SQL_VARBINARY,
+		ColumnSize,
+		0,
+		InBuffer,
+		0,
+		&m_SQLBindValue[ParamNumber - 1]);
 }
 
 // CORRECCIÓN CRÍTICA DE ALGORITMO: El original fallaba con letras minúsculas (ej: 'a'-'f')

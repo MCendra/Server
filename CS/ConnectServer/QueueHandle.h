@@ -21,7 +21,7 @@ public:
 	virtual ~CQueue();
 	void ClearQueue();
 	size_t GetQueueSize();
-	bool AddToQueue(QUEUE_INFO* lpInfo);
+	bool AddToQueue(const QUEUE_INFO* lpInfo);
 	bool GetFromQueue(QUEUE_INFO* lpInfo);
 private:
 	CCriticalSection m_critical;

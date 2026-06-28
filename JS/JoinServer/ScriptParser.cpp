@@ -285,7 +285,7 @@ void CScriptParser::SetLastError(int error)
 		break;
 
 	case 2:
-		sprintf_s(m_LastError,  SCRIPTPARSER_ERROR_CODE2, m_path);
+		sprintf_s(m_LastError, SCRIPTPARSER_ERROR_CODE2, m_path);
 		break;
 
 	case 3:

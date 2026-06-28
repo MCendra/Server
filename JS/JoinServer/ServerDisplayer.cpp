@@ -2,12 +2,7 @@
 #include "Header.h"
 #include "ServerDisplayer.h"
 #include "AccountManager.h"
-
-//#include "JoinServerProtocol.h"
-//#include "Log.h"
-//#include "Protect.h"
-//#include "ServerManager.h"
-//#include "SocketManager.h"
+#include "Log.h"
 
 // Instancia global del visualizador de servidor
 CServerDisplayer gServerDisplayer;
@@ -17,72 +12,107 @@ constexpr char TEXT_WINDOWS_TITLE[] = "[JS] JoinServer %s - AccountCount : %d / 
 constexpr char JOINSERVER_WAIT[] = "ESPERANDO";
 constexpr char JOINSERVER_ACTIVE[] = "ACTIVO";
 
-// Constructor de CServerDisplayer
+// Construction/Destruction
 CServerDisplayer::CServerDisplayer()
-	: m_hwnd(nullptr),                          // Inicializa el puntero al manejador de la ventana a nullptr.
-	m_font(nullptr),                            // Inicializa el puntero a la fuente a nullptr.
-	m_count(0),                                 // Inicializa el contador de logs a 0.
-	m_isActive(false),                          // Inicializa el estado activo a false.
-	//m_servercode(0),                            // Inicializa el código del servidor a 0.
-	m_rect{ 0, 0, 0, 0 },                       // Inicializa RECT con valores predeterminados (0, 0, 0, 0)
-	m_logRect{ 0, 100, 0, 0 }					// Inicializa LOGRECT con valores predeterminados (0, 100, 0, 0).
+	: m_hwnd(nullptr),
+	m_hrichedit(nullptr),
+	m_font(nullptr),
+	m_smallfont(nullptr),
+	m_richeditmodule(nullptr),
+	m_serverlistbottom(100),
+	m_lineheight(22),
+	m_rect{ 0, 0, 0, 0 }
 {
-	// Inicializa la fuente con parámetros predeterminados para el texto.
+	// Inicializa la fuente con parametros predeterminados para el texto.
 	m_font = CreateFont(50, 0, 0, 0, FW_THIN, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times"));
+	m_smallfont = CreateFont(18, 0, 0, 0, FW_NORMAL, false, false, false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
 
-	// Crear pinceles para diferentes estados de visualización.
-#if(GAMESERVER_TYPE2 == 0)
-	m_brush[0] = CreateSolidBrush(RGB(105, 105, 105));  // Cuando está activo.
-	m_brush[1] = CreateSolidBrush(RGB(105, 105, 105));  // Cuando está desactivado.
-	m_brush[2] = CreateSolidBrush(RGB(0, 152, 239));    // Encabezado.
-	m_brush[3] = CreateSolidBrush(RGB(41, 37, 44));     // Fondo Principal.
-	m_brush[4] = CreateSolidBrush(RGB(0, 0, 0));        // Fondo de eventos e información.
-#else
-	m_brush[0] = CreateSolidBrush(RGB(60, 255, 51));    // Verde cuando activo.
-	m_brush[1] = CreateSolidBrush(RGB(120, 120, 120));  // Gris cuando desactivado.
-	m_brush[2] = CreateSolidBrush(RGB(39, 79, 121));    // Azul para encabezado.
-	m_brush[3] = CreateSolidBrush(RGB(255, 255, 255));  // Blanco para fondo principal.
-	m_brush[4] = CreateSolidBrush(RGB(210, 210, 210));  // Gris claro para eventos e información.
-#endif
+	// Crear pinceles para diferentes estados de visualizacion.
+	m_brush[0] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(60, 255, 51));
+	m_brush[1] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(120, 120, 120));
+	m_brush[2] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(0, 152, 239) : RGB(39, 79, 121));
+	m_brush[3] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(41, 37, 44) : RGB(255, 255, 255));
+	m_brush[4] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(0, 0, 0) : RGB(210, 210, 210));
 
 	// Inicializa los textos para mostrar en la ventana.
 	strncpy_s(m_displayertext[0], sizeof(m_displayertext[0]), JOINSERVER_WAIT, _TRUNCATE);
 	strncpy_s(m_displayertext[1], sizeof(m_displayertext[1]), JOINSERVER_ACTIVE, _TRUNCATE);
 
-	// Inicializa el log con cadenas vacías y el color predeterminado.
-	for (auto& log : m_log)
-	{
-		log.text.clear();       // Limpia la cadena de texto del log.
-		log.color = LOG_BLACK;  // Establece el color predeterminado del log.
-	}
 }
 
-// Destructor de CServerDisplayer
 CServerDisplayer::~CServerDisplayer()
 {
-	// Liberar recursos de fuentes y pinceles
-	DeleteObject(m_font);
+	if (m_font)
+	{
+		DeleteObject(m_font);
+		m_font = nullptr;
+	}
+
+	if (m_smallfont)
+	{
+		DeleteObject(m_smallfont);
+		m_smallfont = nullptr;
+	}
+
 	for (auto& brush : m_brush)
 	{
-		if (brush != nullptr)
+		if (brush)
 		{
 			DeleteObject(brush);
-			brush = nullptr;  // Opcional: para evitar futuros accesos
+			brush = nullptr;
 		}
+	}
+
+	if (m_richeditmodule != nullptr)
+	{
+		FreeLibrary(m_richeditmodule);
+		m_richeditmodule = nullptr;
 	}
 }
 
 // Inicializa la clase con el HWND de la ventana principal
 void CServerDisplayer::Init(HWND hWnd)
 {
-	m_hwnd = hWnd;
+    m_hwnd = hWnd;
 
-	// Inicializa RECT con el tamaño de la ventana
-	GetClientRect(m_hwnd, &m_rect);
+    GetClientRect(m_hwnd, &m_rect);
 
-	// Inicializa titulo de la ventana
-	UpdateWindowTitle(0, 0);
+	m_richeditmodule = LoadLibraryA("Msftedit.dll");
 
+	if (m_richeditmodule == nullptr)
+	{
+		Log.ToDisp(LOG_RED, "[ServerDisplayer - Init] No se pudo cargar Msftedit.dll");
+		return;
+	}
+
+	m_hrichedit = CreateWindowExA(
+		0,
+		"RICHEDIT50W",      // Nombre ANSI del MSFTEDIT_CLASS — mismo resultado
+		"",
+		WS_CHILD | WS_VISIBLE | WS_VSCROLL |
+		ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | ES_NOHIDESEL,
+		0, m_serverlistbottom,
+		m_rect.right,
+		m_rect.bottom - m_serverlistbottom,
+		m_hwnd,
+		nullptr, nullptr, nullptr
+	);
+
+	if (m_hrichedit == nullptr)
+	{
+		Log.ToDisp(LOG_RED, "[ServerDisplayer - Init] No se pudo crear el control RichEdit. Error: %lu", GetLastError());
+		return;
+	}
+
+	UpdateLayout();
+
+	SendMessage(m_hrichedit, WM_SETFONT, (WPARAM)m_smallfont, true);
+	SendMessage(m_hrichedit, EM_SETLIMITTEXT, 200 * MAX_LOG_TEXT_SIZE, 0);
+
+	COLORREF bkColor = GetSysColor(COLOR_WINDOW);
+	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, bkColor);
+
+    UpdateWindowTitle(0, 0);
 }
 
 // Actualiza el título de la ventana
@@ -93,7 +123,7 @@ void CServerDisplayer::UpdateWindowTitle(int accountCount, int queueSize) const
 	SetWindowText(m_hwnd, buff);
 }
 
-// Pintar el nombre del servidor en la ventana
+// Pintar el nombre del cliente en la ventana
 void CServerDisplayer::PaintName(HDC hdc) const
 {
 	RECT rect = m_rect;
@@ -107,11 +137,12 @@ void CServerDisplayer::PaintName(HDC hdc) const
 	FillRect(hdc, &rect, m_brush[2]);
 
 	// Dibuja el nombre del cliente en la ventana centrado
-	DrawText(hdc, JOINSERVER_CLIENT, -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	DrawText(hdc, SERVER_PART, -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
 	// Restaura los objetos GDI previos
 	SelectObject(hdc, OldFont);
 	SetBkMode(hdc, OldBkMode);
+
 }
 
 void CServerDisplayer::PaintJoinServerState(HDC hdc) const
@@ -145,79 +176,79 @@ void CServerDisplayer::PaintJoinServerState(HDC hdc) const
 
 // Clase para mostrar informacion del servidor en una ventana
 void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
-	// Limitar el tamaño del texto para evitar desbordamientos
-	std::string trimmedText = text.substr(0, MAX_LOG_TEXT_SIZE - 1);
+	if (!m_hrichedit) return;
+
+	std::string line = text.substr(0, MAX_LOG_TEXT_SIZE - 1) + "\r\n";
+
+	CHARFORMAT2A cf = {};
+	cf.cbSize = sizeof(cf);
+	cf.dwMask = CFM_COLOR | CFM_EFFECTS;  // ambos necesarios
+	cf.dwEffects = 0;                     // sin CFE_AUTOCOLOR
+
+	switch (color)
+	{
+	case LOG_RED:   cf.crTextColor = RGB(220, 50, 50);  break;
+	case LOG_GREEN: cf.crTextColor = RGB(50, 200, 50);  break;
+	case LOG_BLUE:  cf.crTextColor = RGB(100, 180, 255); break;
+	default:        cf.crTextColor = RGB(0, 0, 0); break;
+	}
 
 	{
 		CCriticalSection::CLock lock(m_logLock);
 
-		// Copiar el texto recortado al campo m_log
-		m_log[m_count].text = trimmedText;
-
-		// Establecer el color del texto
-		m_log[m_count].color = color;
-
-		// Actualizar el indice de m_count, asegurando que no se exceda MAX_LOG_TEXT_LINE
-		m_count = ((++m_count) >= MAX_LOG_TEXT_LINE) ? 0 : m_count;
-
+		SendMessage(m_hrichedit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+		SendMessage(m_hrichedit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
+		SendMessage(m_hrichedit, EM_REPLACESEL, false, (LPARAM)line.c_str());
+		SendMessage(m_hrichedit, EM_SCROLLCARET, 0, 0);
 	}
-	// FIX: No dibuja nada aca: solo pide repintado al hilo de UI.
-	InvalidateRect(m_hwnd, &m_logRect, false);
-
-}
-
-// Pintar los textos del log en la ventana
-void CServerDisplayer::PaintLogText(HDC hdc)
-{
-	// FIX: limpiar todo el área de log antes de redibujar.
-	// Sin esto, líneas nuevas más cortas que las anteriores dejan
-	// residuos visuales del texto previo -> se ven "superpuestas".
-	FillRect(hdc, &m_logRect, m_brush[4]);
-
-	int OldBkMode = SetBkMode(hdc, TRANSPARENT);
-
-	// Lock: PaintLogText ahora se llama desde WM_PAINT (hilo de UI),
-	// mientras LogAddText escribe en m_log/m_count desde hilos de red.
-	CCriticalSection::CLock lock(m_logLock);
-
-	int line = MAX_LOG_TEXT_LINE;
-	int count = m_count - 1 >= 0 ? m_count - 1 : MAX_LOG_TEXT_LINE - 1;
-
-	for (int n = 0; n < MAX_LOG_TEXT_LINE; n++)
-	{
-		switch (m_log[count].color)
-		{
-		case LOG_BLACK:
-			SetTextColor(hdc, RGB(0, 0, 0));
-			break;
-		case LOG_RED:
-			SetTextColor(hdc, RGB(239, 0, 0));
-			break;
-		case LOG_GREEN:
-			SetTextColor(hdc, RGB(31, 87, 31));
-			break;
-		case LOG_BLUE:
-			SetTextColor(hdc, RGB(29, 29, 143));
-			break;
-		}
-
-		int size = m_log[count].text.size();
-
-		if (size > 1)
-		{
-			TextOutA(hdc, 0, m_logRect.top + (line * 15), m_log[count].text.c_str(), size);
-			line--;
-		}
-
-		count = --count >= 0 ? count : MAX_LOG_TEXT_LINE - 1;
-	}
-	SetBkMode(hdc, OldBkMode);
 
 }
 
 void CServerDisplayer::Refresh()
 {
-	// Invalida la ventana para forzar un repintado
-	InvalidateRect(m_hwnd, NULL, true);
+	if (m_hwnd != nullptr)
+	{
+		InvalidateRect(m_hwnd, nullptr, FALSE);
+	}
+}
+
+void CServerDisplayer::UpdateLayout()
+{
+	if (m_hwnd == nullptr || m_hrichedit == nullptr)
+	{
+		return;
+	}
+
+	GetClientRect(m_hwnd, &m_rect);
+
+	HDC hdc = GetDC(m_hwnd);
+
+	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
+
+	TEXTMETRIC tm;
+	GetTextMetrics(hdc, &tm);
+
+	m_lineheight = tm.tmHeight + 4;
+
+	SelectObject(hdc, oldFont);
+	ReleaseDC(m_hwnd, hdc);
+
+	//int count = (int)gServerList.GetGameServerList().size();
+	int count = 0;
+
+	m_serverlistbottom = 105 + (count * m_lineheight) + 5;
+
+	if (m_hrichedit != nullptr)
+	{
+		MoveWindow(
+			m_hrichedit,
+			0,
+			m_serverlistbottom,
+			m_rect.right,
+			m_rect.bottom - m_serverlistbottom,
+			TRUE);
+	}
+
+	InvalidateRect(m_hwnd, nullptr, FALSE);
 }
 

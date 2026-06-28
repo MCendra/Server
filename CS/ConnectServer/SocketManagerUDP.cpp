@@ -57,7 +57,6 @@ CSocketManagerUdp::~CSocketManagerUdp()
 // se haya alcanzado a crear y se retorna false.
 bool CSocketManagerUdp::Init(WORD port)
 {
-
 	if ((m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
 		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Init] WSASocket() fallo con el error: %d", WSAGetLastError());
@@ -78,7 +77,7 @@ bool CSocketManagerUdp::Init(WORD port)
 
 	if ((m_ServerRecvThread = CreateThread(nullptr, 0, CSocketManagerUdp::ServerRecvThread, this, 0, nullptr)) == nullptr)
 	{
-		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Init] Error al crear el hilo de recepción.", GetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManagerUDP - Init] Error al crear el hilo de recepción.");
 		Clean();
 		return false;
 	}
@@ -89,7 +88,6 @@ bool CSocketManagerUdp::Init(WORD port)
 
 bool CSocketManagerUdp::Connect(char* IpAddress, WORD port)
 {
-
 	if (m_socket != INVALID_SOCKET)
 	{
 		closesocket(m_socket);
@@ -168,7 +166,6 @@ void CSocketManagerUdp::Clean()
 
 bool CSocketManagerUdp::DataRecv(int recvSize)
 {
-
 	if (recvSize < 3)
 	{
 		// Datagrama demasiado corto para contener siquiera la cabecera
@@ -278,7 +275,7 @@ DWORD WINAPI CSocketManagerUdp::ServerRecvThread(LPVOID lpParam)
 
 	while (true)
 	{
-		SOCKADDR_IN SocketAddr;
+		SOCKADDR_IN SocketAddr {};
 		int SocketAddrSize = sizeof(SocketAddr);
 
 		// UDP: cada recvfrom() entrega EXACTAMENTE un datagrama completo

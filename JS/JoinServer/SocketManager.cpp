@@ -16,27 +16,16 @@
 //   - Enviar datos a los clientes usando WSASend con buffer secundario
 //     (side buffer) para no perder datos si hay un envio en curso.
 //   - Apagado cooperativo y ordenado de todos los hilos (Clean()).
-//
-// CORRECCIONES APLICADAS EN ESTA REVISIÓN (ver comentarios "// FIX:"):
-//   1) DataRecv: ya no desconecta al cliente cuando llega un fragmento TCP
-//      mas pequeño que la cabecera del protocolo (bug critico de estabilidad).
-//   2) ServerAcceptCondition / WSAAccept: se evita el truncamiento del
-//      puntero "this" en compilaciones de 64 bits (DWORD -> DWORD_PTR).
-//   3) CreateListenSocket: se agrega SO_REUSEADDR para permitir reinicios
-//      rapidos del servidor durante el desarrollo/pruebas.
 #include "SocketManager.h"
 #include "ServerManager.h"
 #include "AllowableIpList.h"
 #include "Log.h"
-#include "Util.h"
+//#include "Util.h"
 
 CSocketManager gSocketManager;
 
 // Construccion / Destruccion
 
-// Constructor: inicializa todos los miembros a valores "vacios" / invalidos
-// para que CSocketManager::Clean() pueda ejecutarse de forma segura en
-// cualquier momento (incluso si Init() falla a mitad de camino).
 CSocketManager::CSocketManager()
 	: m_listen(INVALID_SOCKET),         // Socket de escucha invalido hasta CreateListenSocket().
 	m_CompletionPort(nullptr),          // Puerto de finalizacion aun no creado.
@@ -159,7 +148,7 @@ bool CSocketManager::CreateListenSocket()
 		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] setsockopt(SO_REUSEADDR) fallo con el error: %d", WSAGetLastError());
 	}
 
-	SOCKADDR_IN SocketAddr;
+	SOCKADDR_IN SocketAddr {};
 	SocketAddr.sin_family = AF_INET;
 	SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	SocketAddr.sin_port = htons(m_port);
@@ -506,7 +495,7 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 		// ¿Llego el paquete completo (incluyendo payload)?
 		if (size <= available)
 		{
-			QUEUE_INFO QueueInfo;
+			QUEUE_INFO QueueInfo {};
 			if (index < 0 || index > MAX_SERVER)
 			{
 				Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Servidor invalido (Index: %d)", index);
@@ -585,26 +574,23 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 //     y se dispara WSASend de inmediato.
 bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 {
-	m_critical.lock();
-
 	if (SERVER_RANGE(index) == 0)
 	{
-		m_critical.unlock();
 		return false;
 	}
 
 	CServerManager* lpServerManager = &gServerManager[index];
 
+	CCriticalSection::CLock lock(lpServerManager->m_lock);
+
 	if(lpServerManager->IsOnline() == false)
 	{
-		m_critical.unlock();
 		return false;
 	}
 
 	if(size > MAX_MAIN_PACKET_SIZE)
 	{
-		Log.ToDisp(LOG_RED, "[SocketManager] Tamaño maximo de mensaje excedido (Tipo: 1, indice: %d, Tamaño: %d)", index, size);
-		m_critical.unlock();
+		Log.ToDisp(LOG_RED, "[SocketManager - DataSend] Tamaño maximo de mensaje excedido (Tipo: 1, indice: %d, Tamaño: %d)", index, size);
 		return false;
 	}
 
@@ -615,15 +601,13 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 		// Ya hay un envio en curso: acumulamos en el buffer secundario.
 		if ((lpIoContext->IoSideBuffer.size + size) > MAX_SIDE_PACKET_SIZE)
 		{
-			Log.ToDisp(LOG_RED, "[SocketManager] Tamaño maximo de mensaje excedido (Tipo: 2, Índice: %d, Tamaño: %d)", index, (lpIoContext->IoSideBuffer.size + size));
+			Log.ToDisp(LOG_RED, "[SocketManager - DataSend] Tamaño maximo de mensaje excedido (Tipo: 2, Índice: %d, Tamaño: %d)", index, (lpIoContext->IoSideBuffer.size + size));
 			Disconnect(index);
-			m_critical.unlock();
 			return false;
 		}
 
 		memcpy(&lpIoContext->IoSideBuffer.buff[lpIoContext->IoSideBuffer.size], lpMsg, size);
 		lpIoContext->IoSideBuffer.size += size;
-		m_critical.unlock();
 		return true;
 	}
 
@@ -638,32 +622,41 @@ bool CSocketManager::DataSend(int index, BYTE* lpMsg, int size)
 
 	DWORD SendSize = 0, Flags = 0;
 	
-	if (WSASend(lpServerManager->m_socket,&lpIoContext->wsabuf,1,&SendSize,Flags,&lpIoContext->overlapped,0) == SOCKET_ERROR)
+	if (WSASend(lpServerManager->m_socket, &lpIoContext->wsabuf, 1, &SendSize, Flags, &lpIoContext->overlapped, nullptr) == SOCKET_ERROR)
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED, "[SocketManager] WSASend() fallo con error: %d", WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - DataSend] WSASend() fallo con error: %d", WSAGetLastError());
 			Disconnect(index);
-			m_critical.unlock();
 			return false;
 		}
 	}
 
-	m_critical.unlock();
 	return true;
 }
 
 // =====================================================================
 // Desconexion
 // =====================================================================
-
-// Cierra el socket del servidor y libera su slot en gServerManager.
-// Usa un lock automatico (RAII) sobre la seccion critica para garantizar
-// que se libere incluso si hay returns tempranos.
+//
+// Disconnect() SOLO cierra el socket. No toca los IO contexts.
+//
+// Razonamiento IOCP:
+//   closesocket() cancela de forma ASÍNCRONA todas las operaciones
+//   WSARecv/WSASend pendientes. El kernel entregará cada una de esas
+//   cancelaciones al IOCP con IoSize = 0 y un error de conexión
+//   (ERROR_NETNAME_DELETED, etc.). Es en ese momento —dentro de
+//   OnRecv/OnSend con IoSize == 0— donde es seguro llamar a DelClient()
+//   y liberar los IO contexts, porque el kernel ya no los usará más.
+//
+//   Si liberásemos los IO contexts aquí (como hacía antes), el kernel
+//   podría escribir en memoria ya liberada → heap corruption / crash.
+//
+// Esta función es idempotente: si el socket ya es INVALID_SOCKET
+// (porque ya se llamó Disconnect antes), IsOnline() retorna false
+// y salimos sin hacer nada.
 void CSocketManager::Disconnect(int index)
 {
-	CCriticalSection::CLock lock(m_critical);
-
 	if(SERVER_RANGE(index) == 0)
 	{
 		return;
@@ -671,175 +664,246 @@ void CSocketManager::Disconnect(int index)
 
 	CServerManager* lpServerManager = &gServerManager[index];
 
-	if(lpServerManager->IsOnline() == false)
-	{
-		return;
-	}
+	// En x86, SOCKET = UINT_PTR = 32 bits = mismo tamaño que LONG.
+	// InterlockedExchange garantiza que solo un hilo obtiene el socket
+	// válido y ejecuta closesocket(), sin necesidad de tomar m_lock.
+	SOCKET s = (SOCKET)InterlockedExchange(
+		reinterpret_cast<volatile LONG*>(&lpServerManager->m_socket),
+		(LONG)INVALID_SOCKET
+	);
 
-	if(closesocket(lpServerManager->m_socket) == SOCKET_ERROR && WSAGetLastError() != WSAENOTSOCK)
+	if (s != INVALID_SOCKET)
 	{
-		Log.ToDisp(LOG_RED, "[SocketManager - CloseSocket] closesocket() fallo con el error: %d", WSAGetLastError());
-		return;
+		if (closesocket(s) == SOCKET_ERROR && WSAGetLastError() != WSAENOTSOCK)
+		{
+			Log.ToDisp(LOG_RED, "[SocketManager - Disconnect] closesocket() fallo con el error: %d", WSAGetLastError());
+		}
+		// El IOCP entregará las cancelaciones con IoSize=0.
+		// OnRecv/OnSend llamarán a DelServer() cuando las reciban.
 	}
-
-	lpServerManager->DelServer();
 }
 
-void CSocketManager::OnRecv(int index,DWORD IoSize,IO_RECV_CONTEXT* lpIoContext) // OK
+// =====================================================================
+// Callbacks de E/S completada (recv / send)
+// =====================================================================
+
+// Maneja la finalizacion de una operacion de recepcion (WSARecv) para
+// el servidor "index".
+//
+// Flujo:
+//   - IoSize == 0  -> el peer cerro la conexion de forma ordenada (FIN):
+//                     se desconecta al servidor.
+//   - Se acumulan los bytes recibidos en IoMainBuffer y se intenta
+//     parsear paquetes completos con DataRecv().
+//   - Si DataRecv detecta un error real de protocolo, se desconecta.
+//   - Se programa el siguiente WSARecv, continuando a partir del
+//     remanente que dejo DataRecv en el buffer.
+void CSocketManager::OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContext)
 {
-	m_critical.lock();
-
-	if(SERVER_RANGE(index) == 0)
+	if (SERVER_RANGE(index) == 0)
 	{
-		m_critical.unlock();
-		return;
-	}
-
-	if(IoSize == 0)
-	{
-		Disconnect(index);
-		m_critical.unlock();
 		return;
 	}
 
 	CServerManager* lpServerManager = &gServerManager[index];
+
+	// Lock por servidor: protege m_socket, m_state y el contenido de
+	// lpIoContext (IoMainBuffer, wsabuf) contra DataSend/DelClient
+	// ejecutándose en paralelo para este mismo servidor.
+	CCriticalSection::CLock lock(lpServerManager->m_lock);
+
+	if (IoSize == 0)
+	{
+		// Conexión cerrada por el peer, o cancelación de closesocket().
+		// AHORA es seguro liberar: el IOCP ya no emitirá más eventos
+		// para este overlapped. Llamamos DelServer SIN pasar por
+		// Disconnect (el socket ya fue cerrado antes de llegar aquí).
+		lpServerManager->DelServer();
+		return;
+	}
+
+	// Verificación adicional: si el estado ya es OFFLINE Disconnect()
+	// fue llamado entre el WSARecv y esta completo, ignoramos.
+	if (lpServerManager->m_state == SERVER_OFFLINE)
+		return;
 
 	lpIoContext->IoMainBuffer.size += IoSize;
 
-	if(DataRecv(index,&lpIoContext->IoMainBuffer) == 0)
+	if (DataRecv(index, &lpIoContext->IoMainBuffer) == 0)
 	{
+		// Error real de protocolo (cabecera invalida, tamaño fuera de
+		// rango o cola llena): se desconecta al servidor.
 		Disconnect(index);
-		m_critical.unlock();
 		return;
 	}
 
+	// Prepara el siguiente recv a partir del remanente dejado por
+	// DataRecv (que ya quedo alineado al comienzo del buffer).
 	lpIoContext->wsabuf.buf = (char*)&lpIoContext->IoMainBuffer.buff[lpIoContext->IoMainBuffer.size];
-
 	lpIoContext->wsabuf.len = MAX_MAIN_PACKET_SIZE-lpIoContext->IoMainBuffer.size;
-
 	lpIoContext->IoType = IO_RECV;
 
-	DWORD RecvSize=0,Flags=0;
+	DWORD RecvSize = 0,Flags = 0;
 
-	if(WSARecv(lpServerManager->m_socket,&lpIoContext->wsabuf,1,&RecvSize,&Flags,&lpIoContext->overlapped,0) == SOCKET_ERROR)
+	if (WSARecv(lpServerManager->m_socket, &lpIoContext->wsabuf, 1, &RecvSize, &Flags, &lpIoContext->overlapped, nullptr) == SOCKET_ERROR)
 	{
-		if(WSAGetLastError() != WSA_IO_PENDING)
+		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED,"[SocketManager] WSARecv() failed with error: %d",WSAGetLastError());
+			Log.ToDisp(LOG_RED,"[SocketManager - OnRecv] WSARecv() failed with error: %d",WSAGetLastError());
 			Disconnect(index);
-			m_critical.unlock();
 			return;
 		}
 	}
-
-	m_critical.unlock();
 }
 
-void CSocketManager::OnSend(int index,DWORD IoSize,IO_SEND_CONTEXT* lpIoContext) // OK
+// Maneja la finalizacion de una operacion de envio (WSASend) para el
+// servidor "index".
+//
+// Flujo:
+//   - IoSize == 0 -> error de envio: se desconecta al servidor.
+//   - Se acumula lo enviado en IoMainBuffer.size.
+//   - Si ya se envio todo lo que habia que enviar (IoMainBuffer.size >=
+//     IoSize):
+//       * Si no hay nada en el side buffer, se marca el envio como
+//         finalizado (IoSize = 0) y no se programa un nuevo WSASend.
+//       * Si hay datos en el side buffer, se mueven al buffer principal
+//         (en bloques de hasta MAX_MAIN_PACKET_SIZE) y se programa un
+//         nuevo WSASend para vaciarlo.
+//   - Si todavia falta enviar parte del mensaje actual, se programa un
+//     WSASend con el resto pendiente.
+void CSocketManager::OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContext)
 {
-	m_critical.lock();
-
-	if(SERVER_RANGE(index) == 0)
+	if (SERVER_RANGE(index) == 0)
 	{
-		m_critical.unlock();
-		return;
-	}
-
-	if(IoSize == 0)
-	{
-		Disconnect(index);
-		m_critical.unlock();
 		return;
 	}
 
 	CServerManager* lpServerManager = &gServerManager[index];
+
+	// Lock por servidor: protege m_socket y lpIoContext (IoMainBuffer,
+	// IoSideBuffer, wsabuf, IoSize) frente a DataSend del mismo servidor.
+	CCriticalSection::CLock lock(lpServerManager->m_lock);
+
+	if (IoSize == 0)
+	{
+		// Ídem OnRecv: cancelación confirmada por IOCP → seguro liberar.
+		// ATENCIÓN: solo llamamos DelClient si OnRecv no lo hizo ya.
+		// DelClient es idempotente (chequea m_state antes de hacer nada).
+		lpServerManager->DelServer();
+		return;
+	}
+
+	if (lpServerManager->m_state == SERVER_OFFLINE)
+		return;
 
 	lpIoContext->IoMainBuffer.size += IoSize;
 
 	if(lpIoContext->IoMainBuffer.size >= lpIoContext->IoSize)
 	{
-		if(lpIoContext->IoSideBuffer.size <= 0)
+		// Se completo el envio del mensaje actual.
+		if (lpIoContext->IoSideBuffer.size <= 0)
 		{
+			// Nada más por enviar: IoSize=0 marca que no hay envío en curso,
+			// permitiendo que el próximo DataSend() dispare un WSASend directo
+			// en vez de acumular en el side buffer.
 			lpIoContext->IoSize = 0;
-			m_critical.unlock();
 			return;
 		}
 
-		if(lpIoContext->IoSideBuffer.size > MAX_MAIN_PACKET_SIZE)
+		if (lpIoContext->IoSideBuffer.size > MAX_MAIN_PACKET_SIZE)
 		{
-			memcpy(lpIoContext->IoMainBuffer.buff,lpIoContext->IoSideBuffer.buff,MAX_MAIN_PACKET_SIZE);
+			// El side buffer no entra entero: enviamos solo el primer
+			// bloque de MAX_MAIN_PACKET_SIZE bytes y dejamos el resto
+			// para la proxima vuelta.
+			memcpy(lpIoContext->IoMainBuffer.buff, lpIoContext->IoSideBuffer.buff, MAX_MAIN_PACKET_SIZE);
 
 			lpIoContext->wsabuf.buf = (char*)lpIoContext->IoMainBuffer.buff;
-
 			lpIoContext->wsabuf.len = MAX_MAIN_PACKET_SIZE;
-
 			lpIoContext->IoType = IO_SEND;
-
 			lpIoContext->IoSize = MAX_MAIN_PACKET_SIZE;
-
 			lpIoContext->IoMainBuffer.size = 0;
 
-			memmove(lpIoContext->IoSideBuffer.buff,&lpIoContext->IoSideBuffer.buff[MAX_MAIN_PACKET_SIZE],(lpIoContext->IoSideBuffer.size-MAX_MAIN_PACKET_SIZE));
-
-			lpIoContext->IoSideBuffer.size = lpIoContext->IoSideBuffer.size-MAX_MAIN_PACKET_SIZE;
+			// Desplaza el remanente del side buffer al comienzo.
+			memmove(lpIoContext->IoSideBuffer.buff,&lpIoContext->IoSideBuffer.buff[MAX_MAIN_PACKET_SIZE],(lpIoContext->IoSideBuffer.size - MAX_MAIN_PACKET_SIZE));
+			lpIoContext->IoSideBuffer.size = lpIoContext->IoSideBuffer.size - MAX_MAIN_PACKET_SIZE;
 		}
 		else
 		{
+			// El side buffer entra completo: lo movemos entero al
+			// buffer principal y lo vaciamos.
 			memcpy(lpIoContext->IoMainBuffer.buff,lpIoContext->IoSideBuffer.buff,lpIoContext->IoSideBuffer.size);
 
 			lpIoContext->wsabuf.buf = (char*)lpIoContext->IoMainBuffer.buff;
-
 			lpIoContext->wsabuf.len = lpIoContext->IoSideBuffer.size;
-
 			lpIoContext->IoType = IO_SEND;
-
 			lpIoContext->IoSize = lpIoContext->IoSideBuffer.size;
-
 			lpIoContext->IoMainBuffer.size = 0;
-
 			lpIoContext->IoSideBuffer.size = 0;
 		}
 	}
 	else
 	{
+		// Envio parcial: queda pendiente el resto del mensaje actual.
 		lpIoContext->wsabuf.buf = (char*)&lpIoContext->IoMainBuffer.buff[lpIoContext->IoMainBuffer.size];
-
-		lpIoContext->wsabuf.len = lpIoContext->IoSize-lpIoContext->IoMainBuffer.size;
-
+		lpIoContext->wsabuf.len = lpIoContext->IoSize - lpIoContext->IoMainBuffer.size;
 		lpIoContext->IoType = IO_SEND;
 	}
 
-	DWORD SendSize=0,Flags=0;
+	DWORD SendSize = 0, Flags = 0;
 
-	if(WSASend(lpServerManager->m_socket,&lpIoContext->wsabuf,1,&SendSize,Flags,&lpIoContext->overlapped,0) == SOCKET_ERROR)
+	if (WSASend(lpServerManager->m_socket, &lpIoContext->wsabuf, 1, &SendSize, Flags,&lpIoContext->overlapped, nullptr) == SOCKET_ERROR)
 	{
-		if(WSAGetLastError() != WSA_IO_PENDING)
+		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
-			Log.ToDisp(LOG_RED,"[SocketManager] WSASend() failed with error: %d",WSAGetLastError());
+			Log.ToDisp(LOG_RED, "[SocketManager - OnSend] WSASend() failed with error: %d", WSAGetLastError());
 			Disconnect(index);
-			m_critical.unlock();
 			return;
 		}
 	}
-
-	m_critical.unlock();
 }
 
+// =====================================================================
+// Aceptacion de conexiones
+// =====================================================================
+
+// Condicion de aceptacion de WSAAccept(): se ejecuta de forma sincrona
+// por cada intento de conexion entrante, ANTES de que el socket sea
+// aceptado, y permite rechazarlo (CF_REJECT) segun la IP de origen.
+//
+// FIX: el ultimo parametro (dwCallbackData) se declara como DWORD_PTR
+// para que coincida con el tipo real que usa WSAAccept en compilaciones
+// de 64 bits. Antes se truncaba el puntero "this" a 32 bits al castearlo
+// a DWORD; aunque este parametro no se usa actualmente (queda
+// reservado para futuro uso, p.ej. loggear desde que instancia se
+// llamo), evita un cast con perdida de datos y warnings del compilador.
 int CALLBACK CSocketManager::ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LPWSABUF lpCallerData, IN OUT LPQOS lpSQOS, IN OUT LPQOS lpGQOS, IN LPWSABUF lpCalleeId, OUT LPWSABUF lpCalleeData, OUT GROUP FAR* g, DWORD_PTR dwCallbackData)
 {
 	UNREFERENCED_PARAMETER(lpCallerData);
 	UNREFERENCED_PARAMETER(lpSQOS);
 	UNREFERENCED_PARAMETER(lpGQOS);
+	UNREFERENCED_PARAMETER(lpCalleeId);
+	UNREFERENCED_PARAMETER(lpCalleeData);
+	UNREFERENCED_PARAMETER(g);
 	UNREFERENCED_PARAMETER(dwCallbackData);
 
 	SOCKADDR_IN* SocketAddr = (SOCKADDR_IN*)lpCallerId->buf;
 
-	if (gAllowableIpList.CheckAllowableIp(inet_ntoa(SocketAddr->sin_addr)) == 0)
+	char ipStr[INET_ADDRSTRLEN];
+	if (InetNtopA(AF_INET, &SocketAddr->sin_addr, ipStr, INET_ADDRSTRLEN) == nullptr)
 	{
 		return CF_REJECT;
 	}
 
-	return CF_ACCEPT;
+	// Consulta al IpManager (listas blancas/negras, limite de
+	// conexiones por IP, etc.) para decidir si se acepta la conexion.
+	if (gAllowableIpList.CheckAllowableIp(ipStr) == 0)
+	{
+		return CF_REJECT;
+	}
+	else
+	{
+		return CF_ACCEPT;
+	}
 }
 
 // Hilo principal de aceptacion de conexiones.
@@ -853,14 +917,14 @@ int CALLBACK CSocketManager::ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LP
 //          se revisa el evento de parada y se sale del bucle.
 //        - Otros errores se loggean y se continua esperando.
 //   4) Si se acepto una conexion:
-//        - Se busca un slot libre en gClientManager.
+//        - Se busca un slot libre en gServerManager.
 //        - Se asocia el socket al IOCP con CreateIoCompletionPort,
 //          usando "index" como clave de finalizacion (completion key).
-//        - Se registra el cliente (AddClient) con su IP.
+//        - Se registra el servidor (AddServer) con su IP.
 //        - Se dispara el primer WSARecv para empezar a recibir datos.
 DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 {
-	SOCKADDR_IN SocketAddr;
+	SOCKADDR_IN SocketAddr {};
 	int SocketAddrSize = sizeof(SocketAddr);
 
 	while (true)
@@ -901,11 +965,6 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 			continue;
 		}
 
-		// ANTES tenía:
-		// { CCriticalSection::CLock lock(lpSocketManager->m_critical); ... }
-		// AHORA: sin lock extra. GetFreeClientIndex y AddClient ya se
-		// sincronizan internamente vía gClientArrayLock / m_lock.
-
 		// Busca un indice (slot) libre para el nuevo servidor.
 		// GetFreeServerIndex se sincroniza internamente con gServerArrayLock.
 		int index = gServerManager[0].GetFreeServerIndex();
@@ -929,26 +988,26 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		CServerManager* lpServerManager = &gServerManager[index];
 
-		// AddClient toma internamente m_lock (del servidor) y
+		// AddServer toma internamente m_lock (del servidor) y
 		// gServerArrayLock (para gServerSearchStart); deja los IO contexts
 		// inicializados y listos para WSARecv.
 		lpServerManager->AddServer(index, ipAddress, socket);
 
-		DWORD RecvSize=0,Flags=0;
+		DWORD RecvSize = 0, Flags = 0;
 
 		// Dispara la primera recepcion asincrona para este cliente.
 		if (WSARecv(socket, &lpServerManager->m_IoRecvContext->wsabuf, 1, &RecvSize, &Flags, &lpServerManager->m_IoRecvContext->overlapped, 0) == SOCKET_ERROR)
 		{
-			if(WSAGetLastError() != WSA_IO_PENDING)
+			int Error = WSAGetLastError();
+
+			if(Error != WSA_IO_PENDING)
 			{
-				Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d", WSAGetLastError());
+				Log.ToDisp(LOG_RED, "[SocketManager - ServerAcceptThread] WSARecv() fallo con error: %d", Error);
 				lpSocketManager->Disconnect(index);
 				continue;
 			}
 		}
-
 	}
-
 	return 0;
 }
 
@@ -978,7 +1037,7 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 	DWORD index;
 	LPOVERLAPPED lpOverlapped;
 
-	while(true)
+	while (true)
 	{
 		if (GetQueuedCompletionStatus(lpSocketManager->m_CompletionPort, &IoSize, &index, &lpOverlapped, INFINITE) == 0)
 		{
@@ -1016,12 +1075,11 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 			break;
 		}
 	}
-
 	return 0;
 }
 
 // Hilo que consume la cola interna de paquetes ya parseados por DataRecv
-// y los despacha hacia ConnectServerProtocolCore.
+// y los despacha hacia JoinServerProtocolCore.
 //
 // Espera simultaneamente (WaitForMultipleObjects) en dos handles:
 //   - m_ServerQueueSemaphore: se libera una vez por cada paquete
@@ -1061,14 +1119,12 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 
 				return 0;
 			}
-
 			case WAIT_FAILED:
 			{
 				Log.ToDisp(LOG_RED, "[SocketManager - ServerQueueThread] WaitForMultipleObjects() fallo con error: %lu", GetLastError());
 
 				return 0;
 			}
-
 			default:
 			{
 				Log.ToDisp(LOG_RED, "[SocketManager - ServerQueueThread] Resultado inesperado: %lu", waitResult);
@@ -1077,7 +1133,6 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 			}
 		}
 	}
-
 	return 0;
 }
 

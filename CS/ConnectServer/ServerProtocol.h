@@ -61,21 +61,22 @@ constexpr BYTE MSG_HEADER_SERVER_INFO_RECV = 0x03;
 constexpr BYTE MSG_HEADER_SERVER_LIST_RECV = 0x06;
 constexpr BYTE MSG_HEADER_SERVER_INIT_SEND = 0x00;
 
-//**********************************************//
-//************ Packet Base *********************//
-//**********************************************//
+// Packet Base
 
-struct PBMSG_HEAD {
-	void set(BYTE h, BYTE s) {
+struct PBMSG_HEAD
+{
+	void set(BYTE packetHead, BYTE packetSize)
+	{
 		this->type = PACKET_HEADER_C1;
-		this->size = s;
-		this->head = h;
+		this->size = packetSize;
+		this->head = packetHead;
 	}
 
-	void setE(BYTE h, BYTE s) {
+	void setE(BYTE packetHead, BYTE packetSize)
+	{
 		this->type = PACKET_HEADER_C3;
-		this->size = s;
-		this->head = h;
+		this->size = packetSize;
+		this->head = packetHead;
 	}
 
 	BYTE type;
@@ -83,19 +84,22 @@ struct PBMSG_HEAD {
 	BYTE head;
 };
 
-struct PSBMSG_HEAD {
-	void set(BYTE h, BYTE subhParam, BYTE s) {
+struct PSBMSG_HEAD
+{
+	void set(BYTE packetHead, BYTE packetSubHead, BYTE packetSize)
+	{
 		this->type = PACKET_HEADER_C1;
-		this->size = s;
-		this->head = h;
-		this->subh = subhParam;
+		this->size = packetSize;
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
-	void setE(BYTE h, BYTE subhParam, BYTE s) {
+	void setE(BYTE packetHead, BYTE packetSubHead, BYTE packetSize)
+	{
 		this->type = PACKET_HEADER_C3;
-		this->size = s;
-		this->head = h;
-		this->subh = subhParam;
+		this->size = packetSize;
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
 	BYTE type;
@@ -104,19 +108,21 @@ struct PSBMSG_HEAD {
 	BYTE subh;
 };
 
-struct PWMSG_HEAD {
-	void set(BYTE h, WORD s) {
+struct PWMSG_HEAD
+{
+	void set(BYTE packetHeadh, WORD packetSize)
+	{
 		this->type = PACKET_HEADER_C2;
-		this->size[0] = SET_NUMBERHB(s);
-		this->size[1] = SET_NUMBERLB(s);
-		this->head = h;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHeadh;
 	}
 
-	void setE(BYTE h, WORD s) {
+	void setE(BYTE packetHead, WORD packetSize) {
 		this->type = PACKET_HEADER_C4;
-		this->size[0] = SET_NUMBERHB(s);
-		this->size[1] = SET_NUMBERLB(s);
-		this->head = h;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
 	}
 
 	BYTE type;
@@ -125,20 +131,22 @@ struct PWMSG_HEAD {
 };
 
 struct PSWMSG_HEAD {
-	void set(BYTE h, BYTE subhParam, WORD s) {
+	void set(BYTE packetHead, BYTE packetSubHead, WORD packetSize)
+	{
 		this->type = PACKET_HEADER_C2;
-		this->size[0] = SET_NUMBERHB(s);
-		this->size[1] = SET_NUMBERLB(s);
-		this->head = h;
-		this->subh = subhParam;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
-	void setE(BYTE h, BYTE subhParam, WORD s) {
+	void setE(BYTE packetHead, BYTE packetSubHead, WORD packetSize)
+	{
 		this->type = PACKET_HEADER_C4;
-		this->size[0] = SET_NUMBERHB(s);
-		this->size[1] = SET_NUMBERLB(s);
-		this->head = h;
-		this->subh = subhParam;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
 	BYTE type;
@@ -147,9 +155,7 @@ struct PSWMSG_HEAD {
 	BYTE subh;
 };
 
-//**********************************************//
-//********** Client -> ConnectServer ***********//
-//**********************************************//
+// Client -> ConnectServer
 
 struct PMSG_SERVER_INFO_RECV {
 	PSBMSG_HEAD header; // C1:F4:03
@@ -160,9 +166,7 @@ struct PMSG_SERVER_LIST_RECV {
 	PSBMSG_HEAD header; // C1:F4:06
 };
 
-//**********************************************//
-//********** ConnectServer -> Client ***********//
-//**********************************************//
+// ConnectServer -> Client
 
 struct PMSG_SERVER_INIT_SEND {
 	PBMSG_HEAD header; // C1:00
@@ -185,10 +189,6 @@ struct PMSG_SERVER_LIST {
 	BYTE UserTotal;
 	BYTE type;
 };
-
-//**********************************************//
-//**********************************************//
-//**********************************************//
 
 void ConnectServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size);
 void CCServerInfoRecv(PMSG_SERVER_INFO_RECV* lpMsg, int index);

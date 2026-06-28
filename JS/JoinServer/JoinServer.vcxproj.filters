@@ -57,7 +57,7 @@
     <ClInclude Include="JoinServerProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MemScript.h">
+    <ClInclude Include="ScriptParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QueryManager.h">
@@ -114,6 +114,9 @@
     <ClInclude Include="MD5_KEYVAL.H">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BufferHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JoinServer.cpp">
@@ -128,7 +131,7 @@
     <ClCompile Include="JoinServerProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MemScript.cpp">
+    <ClCompile Include="ScriptParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="QueryManager.cpp">
@@ -177,6 +180,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MD5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

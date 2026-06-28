@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="AccountManager.h" />
     <ClInclude Include="AllowableIpList.h" />
+    <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="CriticalSection.h" />
     <ClInclude Include="FileHandle.h" />
     <ClInclude Include="JoinServer.h" />
@@ -168,7 +169,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="MD5.h" />
     <ClInclude Include="MD5_KEYVAL.H" />
-    <ClInclude Include="MemScript.h" />
+    <ClInclude Include="ScriptParser.h" />
     <ClInclude Include="MiniDump.h" />
     <ClInclude Include="Protect.h" />
     <ClInclude Include="QueryManager.h" />
@@ -192,6 +193,9 @@
     <ClCompile Include="AllowableIpList.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Header.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="BufferHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="CriticalSection.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Header.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -208,7 +212,7 @@
     <ClCompile Include="MD5.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MemScript.cpp" />
+    <ClCompile Include="ScriptParser.cpp" />
     <ClCompile Include="MiniDump.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

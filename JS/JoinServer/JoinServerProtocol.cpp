@@ -448,7 +448,7 @@ void GJMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg,int index)
 
 	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
 
-	AccountInfo.MapServerMove = 1;
+	AccountInfo.MapServerMove = true;
 	AccountInfo.MapServerMoveTime = GetTickCount64();
 	AccountInfo.LastServerCode = pMsg.GameServerCode;
 	AccountInfo.NextServerCode = pMsg.NextServerCode;
@@ -551,7 +551,7 @@ void GJMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg,int index)
 
 	AccountInfo.UserIndex = lpMsg->index;
 	AccountInfo.GameServerCode = gServerManager[index].m_ServerCode;
-	AccountInfo.MapServerMove = 0;
+	AccountInfo.MapServerMove = false;
 	AccountInfo.MapServerMoveTime = 0;
 	AccountInfo.LastServerCode = -1;
 	AccountInfo.NextServerCode = -1;

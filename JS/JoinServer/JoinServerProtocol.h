@@ -22,16 +22,41 @@
 #define CREATE_ACCOUNT_SUCCESS				1
 #define CREATE_ACCOUNT_FAIL_RESIDENT		2
 
-#define SET_NUMBERHB(x) ((BYTE)((DWORD)(x)>>(DWORD)8))
-#define SET_NUMBERLB(x) ((BYTE)((DWORD)(x)&0xFF))
-#define SET_NUMBERHW(x) ((WORD)((DWORD)(x)>>(DWORD)16))
-#define SET_NUMBERLW(x) ((WORD)((DWORD)(x)&0xFFFF))
-#define SET_NUMBERHDW(x) ((DWORD)((QWORD)(x)>>(QWORD)32))
-#define SET_NUMBERLDW(x) ((DWORD)((QWORD)(x)&0xFFFFFFFF))
+constexpr BYTE SET_NUMBERHB(DWORD x) {
+	return static_cast<BYTE>(x >> 8);
+}
 
-#define MAKE_NUMBERW(x,y) ((WORD)(((BYTE)((y)&0xFF))|((BYTE)((x)&0xFF)<<8)))
-#define MAKE_NUMBERDW(x,y) ((DWORD)(((WORD)((y)&0xFFFF))|((WORD)((x)&0xFFFF)<<16)))
-#define MAKE_NUMBERQW(x,y) ((QWORD)(((DWORD)((y)&0xFFFFFFFF))|((DWORD)((x)&0xFFFFFFFF)<<32)))
+constexpr BYTE SET_NUMBERLB(DWORD x) {
+	return static_cast<BYTE>(x & 0xFF);
+}
+
+constexpr WORD SET_NUMBERHW(DWORD x) {
+	return static_cast<WORD>(x >> 16);
+}
+
+constexpr WORD SET_NUMBERLW(DWORD x) {
+	return static_cast<WORD>(x & 0xFFFF);
+}
+
+constexpr DWORD SET_NUMBERHDW(QWORD x) {
+	return static_cast<DWORD>(x >> 32);
+}
+
+constexpr DWORD SET_NUMBERLDW(QWORD x) {
+	return static_cast<DWORD>(x & 0xFFFFFFFF);
+}
+
+constexpr WORD MAKE_NUMBERW(BYTE x, BYTE y) {
+	return static_cast<WORD>((static_cast<WORD>(y) & 0xFF) | (static_cast<WORD>(x) << 8));
+}
+
+constexpr DWORD MAKE_NUMBERDW(WORD x, WORD y) {
+	return static_cast<DWORD>((static_cast<DWORD>(y) & 0xFFFF) | (static_cast<DWORD>(x) << 16));
+}
+
+constexpr QWORD MAKE_NUMBERQW(DWORD x, DWORD y) {
+	return (static_cast<QWORD>(y) & 0xFFFFFFFF) | (static_cast<QWORD>(x) << 32);
+}
 
 // Packet Base
 
@@ -39,14 +64,14 @@ struct PBMSG_HEAD
 {
 	void set(BYTE packetHead,BYTE packetSize)
 	{
-		this->type = 0xC1;
+		this->type = PACKET_HEADER_C1;
 		this->size = packetSize;
 		this->head = packetHead;
 	}
 
 	void setE(BYTE packetHead,BYTE packetSize)
 	{
-		this->type = 0xC3;
+		this->type = PACKET_HEADER_C3;
 		this->size = packetSize;
 		this->head = packetHead;
 	}
@@ -60,7 +85,7 @@ struct PSBMSG_HEAD
 {
 	void set(BYTE packetHead,BYTE packetSubHead,BYTE packetSize)
 	{
-		this->type = 0xC1;
+		this->type = PACKET_HEADER_C1;
 		this->size = packetSize;
 		this->head = packetHead;
 		this->subh = packetSubHead;
@@ -68,7 +93,7 @@ struct PSBMSG_HEAD
 
 	void setE(BYTE packetHead,BYTE packetSubHead,BYTE packetSize)
 	{
-		this->type = 0xC3;
+		this->type = PACKET_HEADER_C3;
 		this->size = packetSize;
 		this->head = packetHead;
 		this->subh = packetSubHead;
@@ -84,7 +109,7 @@ struct PWMSG_HEAD
 {
 	void set(BYTE packetHead,WORD packetSize)
 	{
-		this->type = 0xC2;
+		this->type = PACKET_HEADER_C2;
 		this->size[0] = SET_NUMBERHB(packetSize);
 		this->size[1] = SET_NUMBERLB(packetSize);
 		this->head = packetHead;
@@ -92,7 +117,7 @@ struct PWMSG_HEAD
 
 	void setE(BYTE packetHead,WORD packetSize)
 	{
-		this->type = 0xC4;
+		this->type = PACKET_HEADER_C4;
 		this->size[0] = SET_NUMBERHB(packetSize);
 		this->size[1] = SET_NUMBERLB(packetSize);
 		this->head = packetHead;
@@ -107,7 +132,7 @@ struct PSWMSG_HEAD
 {
 	void set(BYTE packetHead,BYTE packetSubHead,WORD packetSize)
 	{
-		this->type = 0xC2;
+		this->type = PACKET_HEADER_C2;
 		this->size[0] = SET_NUMBERHB(packetSize);
 		this->size[1] = SET_NUMBERLB(packetSize);
 		this->head = packetHead;
@@ -116,7 +141,7 @@ struct PSWMSG_HEAD
 
 	void setE(BYTE packetHead,BYTE packetSubHead,WORD packetSize)
 	{
-		this->type = 0xC4;
+		this->type = PACKET_HEADER_C4;
 		this->size[0] = SET_NUMBERHB(packetSize);
 		this->size[1] = SET_NUMBERLB(packetSize);
 		this->head = packetHead;
@@ -148,6 +173,7 @@ struct SDHP_CONNECT_ACCOUNT_RECV
 	char password[11];
 	char IpAddress[16];
 };
+
 struct SDHP_REGISTER_ACCOUNT_SEND
 {
 	PBMSG_HEAD header; // C1:01
@@ -157,6 +183,7 @@ struct SDHP_REGISTER_ACCOUNT_SEND
 	char personalcode[11];
 	char Email[50];
 };
+
 struct SDHP_DISCONNECT_ACCOUNT_RECV
 {
 	PBMSG_HEAD header; // C1:02

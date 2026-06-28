@@ -12,6 +12,8 @@ constexpr size_t MAX_LOADSTRING = 100;
 // Define la version del servidor de conexion
 constexpr auto CONNECTSERVER_VERSION = "1.0.0";
 
+constexpr auto SERVER_PART = "CONNECT SERVER";
+
 // Define el tipo de servidor de juegos
 #define GAMESERVER_TYPE2 3
 

@@ -254,10 +254,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case TIMER_MAINTENANCE:
 			JoinServerLiveProc();
-
 			gServerDisplayer.UpdateWindowTitle(gAccountManager.GetAccountCount(), gSocketManager.GetQueueSize());
-			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
-			InvalidateRect(hWnd, nullptr, false);
+			gServerDisplayer.UpdateLayout();
 			break;
 		case TIMER_CHECKSERVER:
 			gAccountManager.DisconnectProc();
@@ -271,12 +269,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		gServerDisplayer.PaintName(hdc);
 		gServerDisplayer.PaintJoinServerState(hdc);
-		//gServerDisplayer.PaintGameServers(hdc);
-		gServerDisplayer.PaintLogText(hdc);
 
 		EndPaint(hWnd, &ps);
 	}
 	break;
+	case WM_SIZE:
+	{
+		if (g_hWnd != nullptr)
+		{
+			gServerDisplayer.UpdateLayout();
+		}
+		break;
+	}
 	case WM_DESTROY:
 		KillTimer(hWnd, TIMER_MAINTENANCE);
 		KillTimer(hWnd, TIMER_CHECKSERVER);

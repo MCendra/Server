@@ -21,8 +21,8 @@ public:
 	__int64 GetAsInteger64(const char* ColName);
 	void GetAsString(const char* ColName,char* OutBuffer,int OutBufferSize);
 	void GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBufferSize);
-	void BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize);
-	void BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize);
+	void BindParameterAsString(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize);
+	void BindParameterAsBinary(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize);
 	void ConvertStringToBinary(const char* InBuff,int InSize,BYTE* OutBuff,int OutSize);
 	void ConvertBinaryToString(BYTE* InBuff,int InSize,char* OutBuff,int OutSize);
 private:

@@ -3,70 +3,59 @@
 
 // Construction/Destruction
 
-CQueue::CQueue()
-{
-    // No es necesario inicializar aqui m_critical; se inicializa automaticamente en su constructor
-}
+CQueue::CQueue() = default;
 
-CQueue::~CQueue()
-{
-    this->ClearQueue();
-}
+CQueue::~CQueue() = default;
 
 void CQueue::ClearQueue()
 {
-    CCriticalSection::CLock lock(this->m_critical);
+	CCriticalSection::CLock lock(m_critical);
 
-    this->m_QueueInfo = std::queue<QUEUE_INFO>();  // Asignacion directa de una cola vacia
+	std::queue<QUEUE_INFO> empty;
+	m_QueueInfo.swap(empty);
 }
 
 size_t CQueue::GetQueueSize()
 {
-    CCriticalSection::CLock lock(this->m_critical);
-
-    return this->m_QueueInfo.size();
+	CCriticalSection::CLock lock(m_critical);
+	return m_QueueInfo.size();
 }
 
-bool CQueue::AddToQueue(QUEUE_INFO* lpInfo)
+bool CQueue::AddToQueue(const QUEUE_INFO* lpInfo)
 {
-
-	if (lpInfo == nullptr)
+	if (lpInfo == nullptr || lpInfo->size > MAX_BUFFER_QUEUE_SIZE)
 	{
 		return false;
 	}
 
-	if (lpInfo->size > MAX_BUFFER_QUEUE_SIZE)
+	CCriticalSection::CLock lock(m_critical);
+
+	if (m_QueueInfo.size() >= MAX_QUEUE_SIZE)
 	{
 		return false;
 	}
 
-	CCriticalSection::CLock lock(this->m_critical);
+	m_QueueInfo.push(*lpInfo);
 
-    if (this->m_QueueInfo.size() < MAX_QUEUE_SIZE)
-    {
-        this->m_QueueInfo.push(*lpInfo);
-        return true;
-    }
-
-    return false;
+	return true;
 }
 
 bool CQueue::GetFromQueue(QUEUE_INFO* lpInfo)
 {
-
 	if (lpInfo == nullptr)
 	{
 		return false;
 	}
 
-    CCriticalSection::CLock lock(this->m_critical);
+	CCriticalSection::CLock lock(m_critical);
 
-    if (!this->m_QueueInfo.empty())
-    {
-        *lpInfo = this->m_QueueInfo.front();
-        this->m_QueueInfo.pop();
-        return true;
-    }
+	if (m_QueueInfo.empty())
+	{
+		return false;
+	}
 
-    return false;
+	*lpInfo = m_QueueInfo.front();
+	m_QueueInfo.pop();
+
+	return true;
 }

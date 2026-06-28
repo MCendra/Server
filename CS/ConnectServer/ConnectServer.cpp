@@ -91,7 +91,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	gServerList.Init(ServerListFilePath);
 
 	// FIX:
-	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
 	InvalidateRect(g_hWnd, nullptr, true);
     
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CONNECTSERVER));
@@ -229,9 +228,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case TIMER_MAINTENANCE:
 			gServerDisplayer.UpdateWindowTitle(gSocketManager.GetQueueSize());
 			// Invalida la ventana para forzar un repaint y actualizar la informacion visual
-			gServerDisplayer.InvalidateServerList();
+			gServerDisplayer.UpdateLayout();
 			break;
-
 		case TIMER_CHECKCLIENT:
 			gServerList.CheckServerTimeouts();
 			CClientManager::CheckClientTimeouts();
@@ -245,12 +243,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HDC hdc = BeginPaint(hWnd, &ps);
 
 			gServerDisplayer.PaintName(hdc);
-			gServerDisplayer.PaintServerState(hdc);
+			gServerDisplayer.PaintConnectServerState(hdc);
 			gServerDisplayer.PaintGameServers(hdc);
 
 			EndPaint(hWnd, &ps);
         }
         break;
+	case WM_SIZE:
+	{
+		if (g_hWnd != nullptr)
+		{
+			gServerDisplayer.UpdateLayout();
+		}
+		break;
+	}
     case WM_DESTROY:
 		KillTimer(hWnd, TIMER_MAINTENANCE);
 		KillTimer(hWnd, TIMER_CHECKCLIENT);

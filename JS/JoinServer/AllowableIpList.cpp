@@ -2,93 +2,67 @@
 #include "Header.h"
 #include "AllowableIpList.h"
 #include "Log.h"
-#include "MemScript.h"
+#include "ScriptParser.h"
 #include "Util.h"
 
 CAllowableIpList gAllowableIpList;
 
 // Construction/Destruction
 
-CAllowableIpList::CAllowableIpList()
+CAllowableIpList::CAllowableIpList() = default;
+
+CAllowableIpList::~CAllowableIpList() = default;
+
+void CAllowableIpList::Load(const char* path)
 {
-	this->m_AllowableIpInfo.clear();
-}
+	CScriptParser scriptParser;
 
-CAllowableIpList::~CAllowableIpList()
-{
-
-}
-
-void CAllowableIpList::Load(char* path)
-{
-	CMemScript* lpMemScript = new CMemScript;
-
-	if(lpMemScript == 0)
+	if (!scriptParser.SetBuffer(path))
 	{
-		Log.ToFile(LogType::GENERAL,MEM_SCRIPT_ALLOC_ERROR,path);
+		Log.ToFile(LogType::GENERAL, scriptParser.GetLastError());
 		return;
 	}
 
-	if(lpMemScript->SetBuffer(path) == 0)
-	{
-		Log.ToFile(LogType::GENERAL,lpMemScript->GetLastError());
-		delete lpMemScript;
-		return;
-	}
-
-	this->m_AllowableIpInfo.clear();
+	m_AllowableIpInfo.clear();
 
 	try
 	{
-		while(true)
+		while (true)
 		{
-			if(lpMemScript->GetToken() == TOKEN_END)
+			if (scriptParser.GetToken() == TOKEN_END)
 			{
 				break;
 			}
 
-			int section = lpMemScript->GetNumber();
+			int section = scriptParser.GetNumber();
 
-			while(true)
+			while (true)
 			{
-				if(section == 0)
-				{
-					if(strcmp("end",lpMemScript->GetAsString()) == 0)
-					{
-						break;
-					}
-
-					ALLOWABLE_IP_INFO info;
-
-					strcpy_s(info.IpAddr,lpMemScript->GetString());
-
-					this->m_AllowableIpInfo.insert(std::pair<std::string,ALLOWABLE_IP_INFO>(std::string(info.IpAddr),info));
-				}
-				else
+				if (section != 0)
 				{
 					break;
 				}
+
+				if (strcmp("end", scriptParser.GetAsString()) == 0)
+				{
+					break;
+				}
+
+				ALLOWABLE_IP_INFO info{};
+
+				strcpy_s(info.IpAddr, scriptParser.GetString());
+
+				m_AllowableIpInfo.emplace(info.IpAddr, info);
 			}
 		}
 	}
-	catch(...)
+	catch (...)
 	{
-		Log.ToFile(LogType::GENERAL,lpMemScript->GetLastError());
+		Log.ToFile(LogType::GENERAL, scriptParser.GetLastError());
 	}
-
-	delete lpMemScript;
 }
 
-bool CAllowableIpList::CheckAllowableIp(char* ip) // OK
+bool CAllowableIpList::CheckAllowableIp(const char* ip) const
 {
-	std::map<std::string,ALLOWABLE_IP_INFO>::iterator it = this->m_AllowableIpInfo.find(std::string(ip));
-
-	if(it == this->m_AllowableIpInfo.end())
-	{
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	return (m_AllowableIpInfo.find(ip) != m_AllowableIpInfo.end());
 }
