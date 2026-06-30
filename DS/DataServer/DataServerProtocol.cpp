@@ -1,6 +1,10 @@
-#include "stdafx.h"
+// DataServerProtocol.cpp
 #include "DataServerProtocol.h"
+#include "ServerManager.h"
+#include "Log.h"
 #include "BadSyntax.h"
+#include "Helper.h"
+
 #include "CashShop.h"
 #include "CastleDBSet.h"
 #include "CharacterManager.h"
@@ -12,7 +16,6 @@
 #include "GensSystem.h"
 #include "GuildManager.h"
 #include "GuildMatching.h"
-#include "Helper.h"
 #include "LuckyCoin.h"
 #include "LuckyItem.h"
 #include "MasterSkillTree.h"
@@ -23,29 +26,28 @@
 #include "PcPoint.h"
 #include "PentagramSystem.h"
 #include "PersonalShop.h"
-#include "Protect.h"
 #include "QueryManager.h"
 #include "Quest.h"
 #include "QuestWorld.h"
-#include "ServerManager.h"
 #include "SocketManager.h"
-#include "Util.h"
 #include "Warehouse.h"
 #include "ReiDoMU.h"
+#include "Util.h"
 
-void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
+void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 {
-	PROTECT_START
-
-	gServerManager[index].m_PacketTime = GetTickCount();
+	gServerManager[index].m_LastPacketTime = GetTickCount64();
 
 	if (AdvancedLog != 0)
 	{
 		if ((head != 0x00) && (head != 0x07))
 		{
-			LogAdd(LOG_BLACK,"DSPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x, 5: %x",head,lpMsg[1],lpMsg[2],lpMsg[3],lpMsg[4],lpMsg[5]);
+			Log.ToFile(LogType::GENERAL,"DSPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x, 5: %x",head,lpMsg[1],lpMsg[2],lpMsg[3],lpMsg[4],lpMsg[5]);
 		}
 	}
+
+	const BYTE packetHeader = lpMsg[0];
+	const BYTE subHead = (packetHeader == PACKET_HEADER_C1) ? lpMsg[3] : lpMsg[4];
 
 	switch(head)
 	{
@@ -64,12 +66,234 @@ void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 		case 0x04:
 			GDCharacterInfoRecv((SDHP_CHARACTER_INFO_RECV*)lpMsg,index);
 			break;
+		case 0x05:
+			switch (subHead)
+			{
+			case 0x00:
+				gWarehouse.GDWarehouseItemRecv((SDHP_WAREHOUSE_ITEM_RECV*)lpMsg, index);
+				break;
+			case 0x30:
+				gWarehouse.GDWarehouseItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
+				break;
+			case 0x70:
+				gWarehouse.GDWarehouseGuildItemRecv((SDHP_WAREHOUSE_ITEM_RECV*)lpMsg, index);
+				break;
+			case 0x75:
+				gWarehouse.GDWarehouseGuildItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
+				break;
+			case 0x76:
+				gWarehouse.GDWarehouseGuildConsult((SDHP_WAREHOUSE_GUILD_STATUS_RECV*)lpMsg, index);
+				break;
+			case 0x77:
+				gWarehouse.GDWarehouseGuildUpdate((SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV*)lpMsg);
+				break;
+			}
+			break;
+		case 0x07:
+			GDCreateItemRecv((SDHP_CREATE_ITEM_RECV*)lpMsg, index);
+			break;
+		case 0x08:
+			GDOptionDataRecv((SDHP_OPTION_DATA_RECV*)lpMsg, index);
+			break;
+		case 0x09:
+			GDPetItemInfoRecv((SDHP_PET_ITEM_INFO_RECV*)lpMsg, index);
+			break;
+		case 0x0A:
+#if(DATASERVER_UPDATE>=401)
+			GDCharacterNameCheckRecv((SDHP_CHARACTER_NAME_CHECK_RECV*)lpMsg, index);
+#endif
+			break;
+		case 0x0B:
+#if(DATASERVER_UPDATE>=401)
+			GDCharacterNameChangeRecv((SDHP_CHARACTER_NAME_CHANGE_RECV*)lpMsg, index);
+#endif
+			break;
+		case 0x0C:
+			switch (subHead)
+			{
+#if(HIDE_VT)
+			case 0x00:
+				gQuest.GDQuestKillCountRecv((SDHP_QUEST_KILL_COUNT_RECV*)lpMsg, index);
+				break;
+			case 0x30:
+				gQuest.GDQuestKillCountSaveRecv((SDHP_QUEST_KILL_COUNT_SAVE_RECV*)lpMsg);
+				break;
+#endif
+			}
+			break;
+		case 0x0D:
+			switch (subHead)
+			{
+			case 0x00:
+#if(DATASERVER_UPDATE>=401)
+				gMasterSkillTree.GDMasterSkillTreeRecv((SDHP_MASTER_SKILL_TREE_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x30:
+#if(DATASERVER_UPDATE>=401)
+				gMasterSkillTree.GDMasterSkillTreeSaveRecv((SDHP_MASTER_SKILL_TREE_SAVE_RECV*)lpMsg);
+#endif
+				break;
+			}
+			break;
+		case 0x0E:
+			switch (subHead)
+			{
+			case 0x00:
+#if(DATASERVER_UPDATE>=202)
+				gNpcTalk.GDNpcLeoTheHelperRecv((SDHP_NPC_LEO_THE_HELPER_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x01:
+#if(DATASERVER_UPDATE>=401)
+				gNpcTalk.GDNpcSantaClausRecv((SDHP_NPC_SANTA_CLAUS_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x30:
+#if(DATASERVER_UPDATE>=202)
+				gNpcTalk.GDNpcLeoTheHelperSaveRecv((SDHP_NPC_LEO_THE_HELPER_SAVE_RECV*)lpMsg);
+#endif
+				break;
+			case 0x31:
+#if(DATASERVER_UPDATE>=401)
+				gNpcTalk.GDNpcSantaClausSaveRecv((SDHP_NPC_SANTA_CLAUS_SAVE_RECV*)lpMsg);
+#endif
+				break;
+			}
+			break;
+		case 0x0F:
+			switch (subHead)
+			{
+			case 0x00:
+				gCommandManager.GDCommandResetRecv((SDHP_COMMAND_RESET_RECV*)lpMsg, index);
+				break;
+			case 0x01:
+				gCommandManager.GDCommandMasterResetRecv((SDHP_COMMAND_MASTER_RESET_RECV*)lpMsg, index);
+				break;
+			case 0x02:
+				gCommandManager.GDCommandMarryRecv((SDHP_COMMAND_MARRY_RECV*)lpMsg, index);
+				break;
+			case 0x03:
+				gCommandManager.GDCommandRewardRecv((SDHP_COMMAND_REWARD_RECV*)lpMsg, index);
+				break;
+			case 0x04:
+				gCommandManager.GDCommandRewardAllRecv((SDHP_COMMAND_REWARDALL_RECV*)lpMsg, index);
+				break;
+			case 0x05:
+				gCommandManager.GDCommandRenameRecv((SDHP_COMMAND_RENAME_RECV*)lpMsg, index);
+				break;
+			case 0x06:
+				gCommandManager.GDCommandBlocAccRecv((SDHP_COMMAND_BLOC_RECV*)lpMsg, index);
+				break;
+			case 0x07:
+				gCommandManager.GDCommandBlocCharRecv((SDHP_COMMAND_BLOC_RECV*)lpMsg, index);
+				break;
+			case 0x08:
+				gCommandManager.GDCommandGiftRecv((SDHP_GIFT_RECV*)lpMsg, index);
+				break;
+			case 0x09:
+				gCommandManager.GDCommandTopRecv((SDHP_TOP_RECV*)lpMsg, index);
+				break;
+			}
+			break;
+		case 0x10:
+			switch (subHead)
+			{
+#if(HIDE_VT)
+			case 0x00:
+#if(DATASERVER_UPDATE>=501)
+				gQuestWorld.GDQuestWorldRecv((SDHP_QUEST_WORLD_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x30:
+#if(DATASERVER_UPDATE>=501)
+				gQuestWorld.GDQuestWorldSaveRecv((SDHP_QUEST_WORLD_SAVE_RECV*)lpMsg);
+#endif
+				break;
+#endif
+			}
+			break;
+		case 0x11:
+			switch (subHead)
+			{
+			case 0x00:
+#if(DATASERVER_UPDATE>=501)
+				gGensSystem.GDGensSystemInsertRecv((SDHP_GENS_SYSTEM_INSERT_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x01:
+#if(DATASERVER_UPDATE>=501)
+				gGensSystem.GDGensSystemDeleteRecv((SDHP_GENS_SYSTEM_DELETE_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x02:
+#if(DATASERVER_UPDATE>=501)
+				gGensSystem.GDGensSystemMemberRecv((SDHP_GENS_SYSTEM_MEMBER_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x03:
+#if(DATASERVER_UPDATE>=501)
+				gGensSystem.GDGensSystemUpdateRecv((SDHP_GENS_SYSTEM_UPDATE_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x04:
+#if(DATASERVER_UPDATE>=501)
+				gGensSystem.GDGensSystemRewardRecv((SDHP_GENS_SYSTEM_REWARD_RECV*)lpMsg, index);
+#endif
+				break;
+			case 0x30:
+#if(DATASERVER_UPDATE>=501)
+				gGensSystem.GDGensSystemRewardSaveRecv((SDHP_GENS_SYSTEM_REWARD_SAVE_RECV*)lpMsg);
+#endif
+				break;
+			}
+			break;
+		case 0x12:
+			switch (subHead)
+			{
+			case 0x00:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqCardInfo((_tagPMSG_REQ_MURUMMY_SELECT_DS*)lpMsg, index);
+#endif
+				break;
+			case 0x30:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqCardInfoInsert((_tagPMSG_REQ_MURUMMY_INSERT_DS*)lpMsg);
+#endif
+				break;
+			case 0x31:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqCardInfoUpdate((_tagPMSG_REQ_MURUMMY_UPDATE_DS*)lpMsg);
+#endif
+				break;
+			case 0x32:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqScoreUpdate((_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS*)lpMsg);
+#endif
+				break;
+			case 0x33:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqScoreDelete((_tagPMSG_REQ_MURUMMY_DELETE_DS*)lpMsg);
+#endif
+				break;
+			case 0x34:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqSlotInfoUpdate((_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS*)lpMsg);
+#endif
+				break;
+			case 0x35:
+#if(DATASERVER_UPDATE>=802)
+				gMuRummy.GDReqMuRummyInfoUpdate((_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS*)lpMsg);
+#endif
+				break;
+			}
+			break;
+
 		case 0x78:
 			GDGlobalItemPostRecv((SDHP_GLOBAL_ITEM_POST_RECV*)lpMsg, index);
 			break;
-			//===========================================================================
 		case 0xB0:
-			switch (((lpMsg[0] == 0xC1) ? lpMsg[3] : lpMsg[4]))
+			switch (subHead)
 			{
 #if (SACHTHUOCTINH_NEW)
 			case 0x03:
@@ -93,228 +317,6 @@ void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 			break;
 
 
-		case 0x05:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					gWarehouse.GDWarehouseItemRecv((SDHP_WAREHOUSE_ITEM_RECV*)lpMsg,index);
-					break;
-				case 0x30:
-					gWarehouse.GDWarehouseItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
-					break;
-				case 0x70:
-					gWarehouse.GDWarehouseGuildItemRecv((SDHP_WAREHOUSE_ITEM_RECV*)lpMsg,index);
-					break;
-				case 0x75:
-					gWarehouse.GDWarehouseGuildItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
-					break;
-				case 0x76:
-					gWarehouse.GDWarehouseGuildConsult((SDHP_WAREHOUSE_GUILD_STATUS_RECV*)lpMsg,index);
-					break;
-				case 0x77:
-					gWarehouse.GDWarehouseGuildUpdate((SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV*)lpMsg);
-					break;
-			}
-			break;
-		case 0x07:
-			GDCreateItemRecv((SDHP_CREATE_ITEM_RECV*)lpMsg,index);
-			break;
-		case 0x08:
-			GDOptionDataRecv((SDHP_OPTION_DATA_RECV*)lpMsg,index);
-			break;
-		case 0x09:
-			GDPetItemInfoRecv((SDHP_PET_ITEM_INFO_RECV*)lpMsg,index);
-			break;
-		case 0x0A:
-			#if(DATASERVER_UPDATE>=401)
-			GDCharacterNameCheckRecv((SDHP_CHARACTER_NAME_CHECK_RECV*)lpMsg,index);
-			#endif
-			break;
-		case 0x0B:
-			#if(DATASERVER_UPDATE>=401)
-			GDCharacterNameChangeRecv((SDHP_CHARACTER_NAME_CHANGE_RECV*)lpMsg,index);
-			#endif
-			break;
-		case 0x0C:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-#if(HIDE_VT)
-			case 0x00:
-				gQuest.GDQuestKillCountRecv((SDHP_QUEST_KILL_COUNT_RECV*)lpMsg, index);
-				break;
-			case 0x30:
-				gQuest.GDQuestKillCountSaveRecv((SDHP_QUEST_KILL_COUNT_SAVE_RECV*)lpMsg);
-				break;
-#endif
-			}
-			break;
-		case 0x0D:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=401)
-					gMasterSkillTree.GDMasterSkillTreeRecv((SDHP_MASTER_SKILL_TREE_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=401)
-					gMasterSkillTree.GDMasterSkillTreeSaveRecv((SDHP_MASTER_SKILL_TREE_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-			}
-			break;
-		case 0x0E:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=202)
-					gNpcTalk.GDNpcLeoTheHelperRecv((SDHP_NPC_LEO_THE_HELPER_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE>=401)
-					gNpcTalk.GDNpcSantaClausRecv((SDHP_NPC_SANTA_CLAUS_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=202)
-					gNpcTalk.GDNpcLeoTheHelperSaveRecv((SDHP_NPC_LEO_THE_HELPER_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE>=401)
-					gNpcTalk.GDNpcSantaClausSaveRecv((SDHP_NPC_SANTA_CLAUS_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-			}
-			break;
-		case 0x0F:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					gCommandManager.GDCommandResetRecv((SDHP_COMMAND_RESET_RECV*)lpMsg,index);
-					break;
-				case 0x01:
-					gCommandManager.GDCommandMasterResetRecv((SDHP_COMMAND_MASTER_RESET_RECV*)lpMsg,index);
-					break;
-                case 0x02:
-                    gCommandManager.GDCommandMarryRecv((SDHP_COMMAND_MARRY_RECV*)lpMsg,index);
-                    break;
-                case 0x03:
-                    gCommandManager.GDCommandRewardRecv((SDHP_COMMAND_REWARD_RECV*)lpMsg,index);
-                    break;
-                case 0x04:
-                    gCommandManager.GDCommandRewardAllRecv((SDHP_COMMAND_REWARDALL_RECV*)lpMsg,index);
-                    break;
-                case 0x05:
-                    gCommandManager.GDCommandRenameRecv((SDHP_COMMAND_RENAME_RECV*)lpMsg,index);
-                    break;
-                case 0x06:
-                    gCommandManager.GDCommandBlocAccRecv((SDHP_COMMAND_BLOC_RECV*)lpMsg,index);
-                    break;
-                case 0x07:
-                    gCommandManager.GDCommandBlocCharRecv((SDHP_COMMAND_BLOC_RECV*)lpMsg,index);
-                    break;
-                case 0x08:
-                    gCommandManager.GDCommandGiftRecv((SDHP_GIFT_RECV*)lpMsg,index);
-                    break;
-                case 0x09:
-                    gCommandManager.GDCommandTopRecv((SDHP_TOP_RECV*)lpMsg,index);
-                    break;
-			}
-			break;
-		case 0x10:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-#if(HIDE_VT)
-			case 0x00:
-#if(DATASERVER_UPDATE>=501)
-				gQuestWorld.GDQuestWorldRecv((SDHP_QUEST_WORLD_RECV*)lpMsg, index);
-#endif
-				break;
-			case 0x30:
-#if(DATASERVER_UPDATE>=501)
-				gQuestWorld.GDQuestWorldSaveRecv((SDHP_QUEST_WORLD_SAVE_RECV*)lpMsg);
-#endif
-				break;
-#endif
-			}
-			break;
-		case 0x11:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=501)
-					gGensSystem.GDGensSystemInsertRecv((SDHP_GENS_SYSTEM_INSERT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE>=501)
-					gGensSystem.GDGensSystemDeleteRecv((SDHP_GENS_SYSTEM_DELETE_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x02:
-					#if(DATASERVER_UPDATE>=501)
-					gGensSystem.GDGensSystemMemberRecv((SDHP_GENS_SYSTEM_MEMBER_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x03:
-					#if(DATASERVER_UPDATE>=501)
-					gGensSystem.GDGensSystemUpdateRecv((SDHP_GENS_SYSTEM_UPDATE_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x04:
-					#if(DATASERVER_UPDATE>=501)
-					gGensSystem.GDGensSystemRewardRecv((SDHP_GENS_SYSTEM_REWARD_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=501)
-					gGensSystem.GDGensSystemRewardSaveRecv((SDHP_GENS_SYSTEM_REWARD_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-			}
-			break;
-		case 0x12:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqCardInfo((_tagPMSG_REQ_MURUMMY_SELECT_DS*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqCardInfoInsert((_tagPMSG_REQ_MURUMMY_INSERT_DS*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqCardInfoUpdate((_tagPMSG_REQ_MURUMMY_UPDATE_DS*)lpMsg);
-					#endif
-					break;
-				case 0x32:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqScoreUpdate((_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS*)lpMsg);
-					#endif
-					break;
-				case 0x33:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqScoreDelete((_tagPMSG_REQ_MURUMMY_DELETE_DS*)lpMsg);
-					#endif
-					break;
-				case 0x34:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqSlotInfoUpdate((_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS*)lpMsg);
-					#endif
-					break;
-				case 0x35:
-					#if(DATASERVER_UPDATE>=802)
-					gMuRummy.GDReqMuRummyInfoUpdate((_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS*)lpMsg);
-					#endif
-					break;
-			}
-			break;
 		case 0x17:
 			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
 			{
@@ -945,8 +947,6 @@ void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 
 
 	}
-
-	PROTECT_FINAL
 }
 
 void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg) // OK
@@ -954,7 +954,6 @@ void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg) // OK
 	gQueryManager.ExecQuery("UPDATE Character SET TheGift = %d WHERE Name = '%s'",lpMsg->TheGift, lpMsg->Name);
 	gQueryManager.Close();
 }
-
 
 void GDServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index) // OK
 {
@@ -1015,10 +1014,9 @@ void GDDOIMK_SAVEDB(CSENDGS_DOIMK_INFOSAVE* lpMsg, int aIndex) // OK
 	gQueryManager.ExecQuery("UPDATE MEMB_INFO SET memb__pwd = '%s' WHERE memb___id = '%s'", lpMsg->PASS_NEW, lpMsg->ACCOUNT);
 	pMsg.result = 3; //== Doi MK THanh Cong
 	gSocketManager.DataSend(aIndex, (BYTE*)& pMsg, pMsg.h.size);
-	LogAdd(LOG_RED, "[ChangePass] [%s] Doi MK [%s] -> [%s]", lpMsg->ACCOUNT, lpMsg->PASS_OLD, lpMsg->PASS_NEW);
+	Log.ToDisp(LOG_RED, "[ChangePass] [%s] Doi MK [%s] -> [%s]", lpMsg->ACCOUNT, lpMsg->PASS_OLD, lpMsg->PASS_NEW);
 	gQueryManager.Close();
 }
-
 
 void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg,int index) // OK
 {
@@ -1174,7 +1172,7 @@ void GDCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg,int index) // OK
 
 	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
 
-	if(CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0 || gBadSyntax.CheckSyntax(lpMsg->name) == 0)
+	if(gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0 || gBadSyntax.CheckSyntax(lpMsg->name) == 0)
 	{
 		pMsg.result = 0;
 	}
@@ -1248,7 +1246,7 @@ void GDCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg,int index) // OK
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	if(CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0)
+	if(gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0)
 	{
 		pMsg.result = 0;
 	}
@@ -1314,7 +1312,7 @@ void GDCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg,int index) // OK
 
 	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
 
-	pMsg.result = ((CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name))==0)?0:1);
+	pMsg.result = ((gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name))==0)?0:1);
 
 	if(pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM Character WHERE AccountID='%s' AND Name='%s'",lpMsg->account,lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
@@ -1726,7 +1724,7 @@ void GDCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg,int index) /
 
 	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
 
-	if(CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0 || gBadSyntax.CheckSyntax(lpMsg->name) == 0)
+	if(gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0 || gBadSyntax.CheckSyntax(lpMsg->name) == 0)
 	{
 		pMsg.result = 1;
 	}
@@ -1756,7 +1754,7 @@ void GDCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg,int index)
 
 	memcpy(pMsg.NewName,lpMsg->NewName,sizeof(pMsg.NewName));
 
-	if(CheckTextSyntax(lpMsg->NewName,sizeof(lpMsg->NewName)) == 0 || gBadSyntax.CheckSyntax(lpMsg->NewName) == 0)
+	if(gUtil.CheckTextSyntax(lpMsg->NewName,sizeof(lpMsg->NewName)) == 0 || gBadSyntax.CheckSyntax(lpMsg->NewName) == 0)
 	{
 		pMsg.result = 1;
 	}
@@ -1800,7 +1798,7 @@ void GDCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg,int index) // OK
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
@@ -1851,7 +1849,7 @@ void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg,int index) // OK
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
@@ -1874,7 +1872,7 @@ void GDGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg, int index) // OK
 
 	for (int n = 0; n < MAX_SERVER; n++)
 	{
-		if (gServerManager[n].CheckState() != 0)
+		if (gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n, (BYTE*)&pMsg, pMsg.header.size);
 		}
@@ -1905,7 +1903,7 @@ void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg,int index) // OK
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
@@ -1997,7 +1995,7 @@ void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg) // OK
 #if(TULUYEN_NEW)
 	gQueryManager.ExecQuery("UPDATE Character SET rTuLuyen=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->rTuLuyen, lpMsg->account, lpMsg->name);
 	gQueryManager.Close();
-	LogAdd(LOG_BLACK, "UPDATE Character SET rTuLuyen=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->rTuLuyen, lpMsg->account, lpMsg->name);
+	Log.ToDisp(LOG_BLACK, "UPDATE Character SET rTuLuyen=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->rTuLuyen, lpMsg->account, lpMsg->name);
 
 #endif
 
@@ -2788,7 +2786,7 @@ void DS_GDReqMapSvrMsgMultiCast(BYTE *lpRecv, int aIndex)
     
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n, (BYTE*)&pMsgSend, sizeof(CSP_ANS_MAPSVRMULTICAST));
 		}
@@ -2933,7 +2931,7 @@ void DS_GDReqCastleStateSync(BYTE *lpRecv, int aIndex)
     
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLESTATESYNC));
 		}
@@ -3638,7 +3636,7 @@ void GetInfoCharTopBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 
 	memcpy(pMsg.name, lpMsg->Name, sizeof(pMsg.name));
 
-	pMsg.result = ((CheckTextSyntax(lpMsg->Name, sizeof(lpMsg->Name)) == 0) ? 0 : 1);
+	pMsg.result = ((gUtil.CheckTextSyntax(lpMsg->Name, sizeof(lpMsg->Name)) == 0) ? 0 : 1);
 
 	if (pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM Character WHERE Name='%s'", lpMsg->Name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
@@ -4019,11 +4017,11 @@ void GDCustomGHRSRecv(SDHP_CUSTOM_GHRS_RECV* lpMsg, int index) // OK
 		}
 		gQueryManager.Close();
 		gQueryManager.ExecQuery("INSERT INTO GHRS_top1 (time, MasterResetCount, ResetCount) VALUES (%d, %d, %d)", lpMsg->time, pMsg.Grand, pMsg.resets);
-		LogAdd(LOG_GREEN, "Gioi han reset Updated!");
+		Log.ToDisp(LOG_GREEN, "Gioi han reset Updated!");
 
 #if(CHIENTRUONGCO == 1)
 		gQueryManager.ExecQuery("Update Character SET CTCTime = 900 , CTCRegDay = 0");
-		LogAdd(LOG_BLUE, "ChienTruongCo Update!");
+		Log.ToDisp(LOG_BLUE, "ChienTruongCo Update!");
 		gQueryManager.Close();
 #endif
 #if(EVENT_END_LESS)
@@ -4077,7 +4075,7 @@ void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index) // OK
 	}
 	memcpy(pMsg.name, CharName, sizeof(pMsg.name));
 
-	pMsg.result = ((CheckTextSyntax(CharName, sizeof(CharName)) == 0) ? 0 : 1);
+	pMsg.result = ((gUtil.CheckTextSyntax(CharName, sizeof(CharName)) == 0) ? 0 : 1);
 
 	if (pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM Character WHERE Name='%s'", CharName) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
@@ -4170,7 +4168,7 @@ void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index) // OK
 			pMsg.GuildNumber = (BYTE)gQueryManager.GetAsInteger("Number");
 			gQueryManager.Close();
 
-			LogAdd(LOG_RED, "Send Guild Name %s", pMsg.GuildName);
+			Log.ToDisp(LOG_RED, "Send Guild Name %s", pMsg.GuildName);
 		}
 		//==========================
 	}
@@ -4347,7 +4345,7 @@ void GDCharacterMocNapRecv(MOCNAP_GD_REQ_DATA* lpMsg, int index) // OK
 void GDCharacterMocNapSaveRecv(MOCNAP_GD_SAVE_DATA* lpMsg) // OK
 {
 	gQueryManager.ExecQuery("UPDATE CustomMocNap SET MOCNAP1 = %d, MOCNAP2 = %d, MOCNAP3 = %d, MOCNAP4 = %d, MOCNAP5 = %d, MOCNAP6 = %d, MOCNAP7 = %d, MOCNAP8 = %d, MOCNAP9 = %d, MOCNAP10 = %d, MOCNAP11 = %d, MOCNAP12 = %d, MOCNAP13 = %d WHERE Name = '%s'", lpMsg->MOCNAP1, lpMsg->MOCNAP2, lpMsg->MOCNAP3, lpMsg->MOCNAP4, lpMsg->MOCNAP5, lpMsg->MOCNAP6, lpMsg->MOCNAP7, lpMsg->MOCNAP8, lpMsg->MOCNAP9, lpMsg->MOCNAP10, lpMsg->MOCNAP11, lpMsg->MOCNAP12, lpMsg->MOCNAP13, lpMsg->Name);
-	LogAdd(LOG_BLUE, "SET MOCNAP1 = %d, MOCNAP2 = %d, MOCNAP3 = %d, MOCNAP4 = %d, MOCNAP5 = %d, MOCNAP6 = %d, MOCNAP7 = %d, MOCNAP8 = %d, MOCNAP9 = %d, MOCNAP10 = %d, MOCNAP11 = %d, MOCNAP12 = %d, MOCNAP13 = %d WHERE Name = '%s'", lpMsg->MOCNAP1, lpMsg->MOCNAP2, lpMsg->MOCNAP3, lpMsg->MOCNAP4, lpMsg->MOCNAP5, lpMsg->MOCNAP6, lpMsg->MOCNAP7, lpMsg->MOCNAP8, lpMsg->MOCNAP9, lpMsg->MOCNAP10, lpMsg->MOCNAP11, lpMsg->MOCNAP12, lpMsg->MOCNAP13, lpMsg->Name);
+	Log.ToDisp(LOG_BLUE, "SET MOCNAP1 = %d, MOCNAP2 = %d, MOCNAP3 = %d, MOCNAP4 = %d, MOCNAP5 = %d, MOCNAP6 = %d, MOCNAP7 = %d, MOCNAP8 = %d, MOCNAP9 = %d, MOCNAP10 = %d, MOCNAP11 = %d, MOCNAP12 = %d, MOCNAP13 = %d WHERE Name = '%s'", lpMsg->MOCNAP1, lpMsg->MOCNAP2, lpMsg->MOCNAP3, lpMsg->MOCNAP4, lpMsg->MOCNAP5, lpMsg->MOCNAP6, lpMsg->MOCNAP7, lpMsg->MOCNAP8, lpMsg->MOCNAP9, lpMsg->MOCNAP10, lpMsg->MOCNAP11, lpMsg->MOCNAP12, lpMsg->MOCNAP13, lpMsg->Name);
 	gQueryManager.Close();
 }
 #endif

@@ -1,14 +1,8 @@
-// ArcaBattle.h: interface for the CArcaBattle class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// ArcaBattle.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_ARCA_BATTLE_GUILD_MASTER_REGISTER_RECV
 {

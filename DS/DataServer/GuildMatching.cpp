@@ -1,17 +1,13 @@
-// GuildMatching.cpp: implementation of the CGuildMatching class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// GuildMatching.cpp
+#include "Header.h"
 #include "GuildMatching.h"
 #include "CharacterManager.h"
 #include "SocketManager.h"
 #include "Util.h"
 
 CGuildMatching gGuildMatching;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CGuildMatching::CGuildMatching() // OK
 {

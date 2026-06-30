@@ -37,7 +37,7 @@ public:
 	// Actualiza el layout de la ventana
 	void UpdateLayout();
 
-	void SetActiveState(bool active) { m_isActive = active; }
+	void SetActiveState(bool active) { m_isactive = active; }
 
 	// Restriccion explicita mediante C++ moderno: se deshabilitan copias y movimientos de la instancia
 	CServerDisplayer(const CServerDisplayer&) = delete;
@@ -53,7 +53,7 @@ private:
 	HMODULE m_richeditmodule;                   // Handle del modulo DLL cargado en memoria para dar soporte al Rich Edit
 	HBRUSH m_brush[5];                          // Brochas GDI para pintar los fondos de la ventana segun el color activo
 	RECT m_rect;								// Almacena las coordenadas del rectangulo de visualizacion de la ventana
-	bool m_isActive;
+	bool m_isactive;
 	int m_serverlistbottom;                     // Coordenada inferior limite asignada al bloque de la lista de servidores
 	int m_lineheight;                           // Altura en pixeles calculada para cada linea de texto renderizada
 	char m_displayertext[2][32];                // Buffers estaticos para almacenar strings informativos de corta longitud

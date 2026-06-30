@@ -344,6 +344,13 @@ struct SDHP_ACCOUNT_ALREADY_CONNECTED_SEND
 	char account[11];
 };
 
+struct SDHP_JOIN_SERVER_LIVE_SEND
+{
+	PBMSG_HEAD header; // C1:02
+	DWORD QueueSize;
+};
+
+
 void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index);
 void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size);
 void GJServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index);
@@ -360,3 +367,4 @@ void JGExternalDisconnectAccountSend(int GameServerCode,WORD UserIndex, const ch
 void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex, const char* account);
 void GJAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg,int index);
 void GJAccountLockSaveRecv(SDHP_LOCK_SAVE_RECV* lpMsg,int index);
+void JoinServerLiveProc();

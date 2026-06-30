@@ -1,19 +1,17 @@
-// Queue.h: interface for the CQueue class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// QueueHandle.h
 #pragma once
-
 #include "CriticalSection.h"
+#include <queue>
 
 #define MAX_QUEUE_SIZE 2048
+#define MAX_BUFFER_QUEUE_SIZE 2048
 
 struct QUEUE_INFO
 {
 	WORD index;
+	WORD size;
 	BYTE head;
-	BYTE buff[8192];
-	DWORD size;
+	BYTE buff[MAX_BUFFER_QUEUE_SIZE];
 };
 
 class CQueue
@@ -22,8 +20,8 @@ public:
 	CQueue();
 	virtual ~CQueue();
 	void ClearQueue();
-	DWORD GetQueueSize();
-	bool AddToQueue(QUEUE_INFO* lpInfo);
+	size_t GetQueueSize();
+	bool AddToQueue(const QUEUE_INFO* lpInfo);
 	bool GetFromQueue(QUEUE_INFO* lpInfo);
 private:
 	CCriticalSection m_critical;

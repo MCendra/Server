@@ -1,16 +1,12 @@
-// CastleDBSet.cpp: implementation of the CCastleDBSet class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// CastleDBSet.cpp
+#include "Header.h"
 #include "CastleDBSet.h"
 #include "QueryManager.h"
 #include "Util.h"
 
 CCastleDBSet gCastleDBSet;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CCastleDBSet::CCastleDBSet()
 {
@@ -312,7 +308,7 @@ BOOL CCastleDBSet::DSDB_QueryGuildMarkRegInfo(int iMapSvrGroup, char* lpszGuildN
 		return TRUE;
 	}
 
-	if (CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) == FALSE)
+	if (gUtil.CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) == FALSE)
 	{
 		return TRUE;
 	}
@@ -387,7 +383,7 @@ BOOL CCastleDBSet::DSDB_QueryCastleOwnerChange(int iMapSvrGroup, CSP_REQ_CASTLEO
 	char szGuildName[9] = {'\0'};
 	memcpy(szGuildName, lpCastleOwnerInfo->szOwnerGuildName, 8);
 	
-	if (CheckTextSyntax(szGuildName,strlen(szGuildName)) == FALSE)
+	if (gUtil.CheckTextSyntax(szGuildName,strlen(szGuildName)) == FALSE)
 	{
 		return TRUE;
 	}
@@ -425,7 +421,7 @@ BOOL CCastleDBSet::DSDB_QueryRegAttackGuild(int iMapSvrGroup, CSP_REQ_REGATTACKG
 	char szGuildName[9] = {'\0'};
 	memcpy(szGuildName, lpRegAttackGuild->szEnemyGuildName, 8);
 	
-	if (CheckTextSyntax(szGuildName,strlen(szGuildName)) == FALSE)
+	if (gUtil.CheckTextSyntax(szGuildName,strlen(szGuildName)) == FALSE)
 	{
 		return TRUE;
 	}
@@ -487,7 +483,7 @@ BOOL CCastleDBSet::DSDB_QueryGuildMarkRegMark(int iMapSvrGroup, char* lpszGuildN
 		return TRUE;
 	}
 
-	if ( !CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) )
+	if (!gUtil.CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) )
 	{
 		return TRUE;
 	}
@@ -524,7 +520,7 @@ BOOL CCastleDBSet::DSDB_QueryGuildMarkReset(int iMapSvrGroup, char* lpszGuildNam
 		return TRUE;
 	}
 
-	if (CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) == FALSE)
+	if (gUtil.CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) == FALSE)
 	{
 		return TRUE;
 	}
@@ -559,7 +555,7 @@ BOOL CCastleDBSet::DSDB_QueryGuildSetGiveUp(int iMapSvrGroup, char* lpszGuildNam
 		return TRUE;
 	}
 	
-	if (CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) == FALSE)
+	if (gUtil.CheckTextSyntax(lpszGuildName,strlen(lpszGuildName)) == FALSE)
 	{
 		return TRUE;
 	}

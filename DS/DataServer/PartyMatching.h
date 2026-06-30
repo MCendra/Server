@@ -1,17 +1,11 @@
-// PartyMatching.h: interface for the CPartyMatching class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// PartyMatching.h
 #pragma once
-
 #include "CriticalSection.h"
 #include "DataServerProtocol.h"
 
 #define MAX_PARTY_USER 5
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_PARTY_MATCHING_INSERT_RECV
 {

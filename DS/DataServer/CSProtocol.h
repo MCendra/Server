@@ -1,10 +1,8 @@
+// CSProtocol.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct FHP_FRIENDLIST_REQ
 {

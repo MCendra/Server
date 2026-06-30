@@ -92,8 +92,6 @@ private:
 	CQueue m_ServerQueue;
 	HANDLE m_ServerQueueSemaphore;
 	HANDLE m_ServerQueueThread;
-	CCriticalSection m_critical;
-	// CORRECIÓN: evento para señalizar parada cooperativa de hilos
 	HANDLE m_shutdownEvent;
 };
 

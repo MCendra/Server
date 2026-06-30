@@ -1,14 +1,8 @@
-// Quest.h: interface for the CQuest class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// Quest.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_QUEST_KILL_COUNT_RECV
 {

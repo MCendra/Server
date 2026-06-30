@@ -1,14 +1,9 @@
-// CommandManager.h: interface for the CCommandManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// CommandManager.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
+
 struct SDHP_COMMAND_RESET_RECV
 {
 	PSBMSG_HEAD header; // C1:0F:00

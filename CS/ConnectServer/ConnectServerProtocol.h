@@ -1,4 +1,4 @@
-// ServerProtocol.h
+// ConnectServerProtocol.h
 #pragma once
 #include "Header.h"
 #include <array>

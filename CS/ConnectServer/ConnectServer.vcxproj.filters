@@ -54,7 +54,7 @@
     <ClInclude Include="ServerList.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="ServerProtocol.h">
+    <ClInclude Include="ConnectServerProtocol.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="SocketManager.h">
@@ -131,7 +131,7 @@
     <ClCompile Include="ScriptParser.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="ServerProtocol.cpp">
+    <ClCompile Include="ConnectServerProtocol.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Header.cpp">

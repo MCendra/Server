@@ -1,14 +1,8 @@
-// LuckyItem.h: interface for the CLuckyItem class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// LuckyItem.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_LUCKY_ITEM_RECV
 {

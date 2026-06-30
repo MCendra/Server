@@ -1,4 +1,17 @@
 #pragma once
+#include "Header.h"
+
+#define MAX_MAIN_PACKET_SIZE 2048
+#define MAX_UDP_PACKET_SIZE 8192
+
+// Encabezados de paquetes
+#define PACKET_HEADER_C1 0xC1
+#define PACKET_HEADER_C2 0xC2
+#define PACKET_HEADER_C3 0xC3
+#define PACKET_HEADER_C4 0xC4
+
+#define DEFAULT_TIME_WAIT 5000
+#define DEFAULT_BACKLOG 5
 
 #if(DATASERVER_UPDATE>=701)
 #define INVENTORY_SIZE 237
@@ -18,35 +31,58 @@
 #define MAX_SKILL_LIST 60
 #endif
 
-#define SET_NUMBERHB(x) ((BYTE)((DWORD)(x)>>(DWORD)8))
-#define SET_NUMBERLB(x) ((BYTE)((DWORD)(x)&0xFF))
-#define SET_NUMBERHW(x) ((WORD)((DWORD)(x)>>(DWORD)16))
-#define SET_NUMBERLW(x) ((WORD)((DWORD)(x)&0xFFFF))
-#define SET_NUMBERHDW(x) ((DWORD)((QWORD)(x)>>(QWORD)32))
-#define SET_NUMBERLDW(x) ((DWORD)((QWORD)(x)&0xFFFFFFFF))
+constexpr BYTE SET_NUMBERHB(DWORD x) {
+	return static_cast<BYTE>(x >> 8);
+}
 
-#define MAKE_NUMBERW(x,y) ((WORD)(((BYTE)((y)&0xFF))|((BYTE)((x)&0xFF)<<8)))
-#define MAKE_NUMBERDW(x,y) ((DWORD)(((WORD)((y)&0xFFFF))|((WORD)((x)&0xFFFF)<<16)))
-#define MAKE_NUMBERQW(x,y) ((QWORD)(((DWORD)((y)&0xFFFFFFFF))|((DWORD)((x)&0xFFFFFFFF)<<32)))
+constexpr BYTE SET_NUMBERLB(DWORD x) {
+	return static_cast<BYTE>(x & 0xFF);
+}
 
-//**********************************************//
-//************ Packet Base *********************//
-//**********************************************//
+constexpr WORD SET_NUMBERHW(DWORD x) {
+	return static_cast<WORD>(x >> 16);
+}
+
+constexpr WORD SET_NUMBERLW(DWORD x) {
+	return static_cast<WORD>(x & 0xFFFF);
+}
+
+constexpr DWORD SET_NUMBERHDW(QWORD x) {
+	return static_cast<DWORD>(x >> 32);
+}
+
+constexpr DWORD SET_NUMBERLDW(QWORD x) {
+	return static_cast<DWORD>(x & 0xFFFFFFFF);
+}
+
+constexpr WORD MAKE_NUMBERW(BYTE x, BYTE y) {
+	return static_cast<WORD>((static_cast<WORD>(y) & 0xFF) | (static_cast<WORD>(x) << 8));
+}
+
+constexpr DWORD MAKE_NUMBERDW(WORD x, WORD y) {
+	return static_cast<DWORD>((static_cast<DWORD>(y) & 0xFFFF) | (static_cast<DWORD>(x) << 16));
+}
+
+constexpr QWORD MAKE_NUMBERQW(DWORD x, DWORD y) {
+	return (static_cast<QWORD>(y) & 0xFFFFFFFF) | (static_cast<QWORD>(x) << 32);
+}
+
+// Packet Base
 
 struct PBMSG_HEAD
 {
-	void set(BYTE head,BYTE size) // OK
+	void set(BYTE packetHead, BYTE packetSize)
 	{
-		this->type = 0xC1;
-		this->size = size;
-		this->head = head;
+		this->type = PACKET_HEADER_C1;
+		this->size = packetSize;
+		this->head = packetHead;
 	}
 
-	void setE(BYTE head,BYTE size) // OK
+	void setE(BYTE packetHead, BYTE packetSize)
 	{
-		this->type = 0xC3;
-		this->size = size;
-		this->head = head;
+		this->type = PACKET_HEADER_C3;
+		this->size = packetSize;
+		this->head = packetHead;
 	}
 
 	BYTE type;
@@ -56,20 +92,20 @@ struct PBMSG_HEAD
 
 struct PSBMSG_HEAD
 {
-	void set(BYTE head,BYTE subh,BYTE size) // OK
+	void set(BYTE packetHead, BYTE packetSubHead, BYTE packetSize)
 	{
-		this->type = 0xC1;
-		this->size = size;
-		this->head = head;
-		this->subh = subh;
+		this->type = PACKET_HEADER_C1;
+		this->size = packetSize;
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
-	void setE(BYTE head,BYTE subh,BYTE size) // OK
+	void setE(BYTE packetHead, BYTE packetSubHead, BYTE packetSize)
 	{
-		this->type = 0xC3;
-		this->size = size;
-		this->head = head;
-		this->subh = subh;
+		this->type = PACKET_HEADER_C3;
+		this->size = packetSize;
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
 	BYTE type;
@@ -80,20 +116,20 @@ struct PSBMSG_HEAD
 
 struct PWMSG_HEAD
 {
-	void set(BYTE head,WORD size) // OK
+	void set(BYTE packetHead, WORD packetSize)
 	{
-		this->type = 0xC2;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
+		this->type = PACKET_HEADER_C2;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
 	}
 
-	void setE(BYTE head,WORD size) // OK
+	void setE(BYTE packetHead, WORD packetSize)
 	{
-		this->type = 0xC4;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
+		this->type = PACKET_HEADER_C4;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
 	}
 
 	BYTE type;
@@ -103,22 +139,22 @@ struct PWMSG_HEAD
 
 struct PSWMSG_HEAD
 {
-	void set(BYTE head,BYTE subh,WORD size) // OK
+	void set(BYTE packetHead, BYTE packetSubHead, WORD packetSize)
 	{
-		this->type = 0xC2;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-		this->subh = subh;
+		this->type = PACKET_HEADER_C2;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
-	void setE(BYTE head,BYTE subh,WORD size) // OK
+	void setE(BYTE packetHead, BYTE packetSubHead, WORD packetSize)
 	{
-		this->type = 0xC4;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-		this->subh = subh;
+		this->type = PACKET_HEADER_C4;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
 	}
 
 	BYTE type;
@@ -127,9 +163,7 @@ struct PSWMSG_HEAD
 	BYTE subh;
 };
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_CHARACTER_LIST_RECV
 {
@@ -653,11 +687,7 @@ struct DGCharTop
 };
 #endif
 
-
-
-
 //----------------------------------------------------
-
 
 struct SDHP_CARESUME_RECV
 {
@@ -722,9 +752,7 @@ struct SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV
 	DWORD monsterqtd;
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_SERVER_INFO_SEND
 {
@@ -1259,9 +1287,6 @@ struct SDHP_CUSTOM_JEWELBANK_INFO_SEND
 	int HighStone;
 };
 
-//**********************************************//
-//**********************************************//
-//**********************************************//
 void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg);
 void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size);
 void GDServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index);
@@ -1329,9 +1354,9 @@ void GDCharacterMocNapSaveRecv(MOCNAP_GD_SAVE_DATA* lpMsg);
 
 void GDCustomJewelBankRecv(SDHP_CUSTOM_JEWELBANK_RECV* lpMsg);
 void GDCustomJewelBankInfoRecv(SDHP_CUSTOM_JEWELBANK_INFO_RECV* lpMsg, int index);
-//**************************************************************************//
-// RAW FUNCTIONS ***********************************************************//
-//**************************************************************************//
+
+// RAW FUNCTIONS
+
 #if (RANKING_NEW == 1)
 void CharacterRanking(GDTop* lpMsg, int pIndex);
 #endif
@@ -1374,7 +1399,6 @@ void DS_GDReqCsSaveTotalGuildInfo(BYTE *lpRecv, int aIndex);
 void DS_GDReqCsLoadTotalGuildInfo(BYTE *lpRecv, int aIndex);
 void DS_GDReqCastleNpcUpdate(BYTE *lpRecv, int aIndex);
 
-
 //==Change Pass
 #pragma pack(push, 1)
 struct CSENDGS_DOIMK_INFOSAVE
@@ -1406,6 +1430,7 @@ struct BCUSTOM_SKINMODEL_DATA
 	int SkinIndex;
 	int StatusBuy;
 };
+
 //=======Xai CHung All Count
 struct CBCUSTOM_LOAD_COUNT
 {
@@ -1417,7 +1442,6 @@ struct CBCUSTOM_LOAD_COUNT
 
 void GDGetSkinIsBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index);
 void GDSaveSkinBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index);
-
 
 //====================================================
 #if (SACHTHUOCTINH_NEW)
@@ -1454,15 +1478,11 @@ struct SACHTHUOCTINH_GD_SAVE_DATA
 };
 #endif
 //====================================================
-
-//===================================================================================
 #if (SACHTHUOCTINH_NEW)
 void GDCharacterSachThuocTinhRecv(SACHTHUOCTINH_GD_REQ_DATA* lpMsg, int index);
 void GDCharacterSachThuocTinhSaveRecv(SACHTHUOCTINH_GD_SAVE_DATA* lpMsg);
 #endif
 //===================================================================================
-
-
 struct BUFFPHE_REQUESTDS
 {
 	PSBMSG_HEAD header;
@@ -1475,7 +1495,6 @@ struct BUFFPHE_REQUESTDS_SETINFO
 	int  mDT_TongPoint;
 	char mDT_Top1Name[11];
 	int  mDT_Top1Point;
-	//==
 	int  mBT_TongPoint;
 	char mBT_Top1Name[11];
 	int  mBT_Top1Point;

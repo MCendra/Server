@@ -1,14 +1,8 @@
-// Helper.h: interface for the CHelper class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// Helper.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_HELPER_DATA_RECV
 {
@@ -27,9 +21,7 @@ struct SDHP_HELPER_DATA_SAVE_RECV
 	BYTE data[256];
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_HELPER_DATA_SEND
 {
@@ -41,17 +33,14 @@ struct SDHP_HELPER_DATA_SEND
 	BYTE data[256];
 };
 
-//**********************************************//
-//**********************************************//
-//**********************************************//
-
 class CHelper
 {
 public:
-	CHelper();
-	virtual ~CHelper();
-	void GDHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg,int index);
-	void GDHelperDataSaveRecv(SDHP_HELPER_DATA_SAVE_RECV* lpMsg);
+	CHelper() = default;
+	~CHelper() = default;
+
+	void GDHelperDataRecv(const SDHP_HELPER_DATA_RECV* lpMsg, int index);
+	void GDHelperDataSaveRecv(const SDHP_HELPER_DATA_SAVE_RECV* lpMsg);
 };
 
 extern CHelper gHelper;

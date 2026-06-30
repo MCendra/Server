@@ -1,14 +1,8 @@
-// PcPoint.h: interface for the CPcPoint class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// PcPoint.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_PC_POINT_POINT_RECV
 {

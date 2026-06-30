@@ -1,16 +1,12 @@
-// EventInventory.cpp: implementation of the CEventInventory class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// EventInventory.cpp
+#include "Header.h"
 #include "EventInventory.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
 CEventInventory gEventInventory;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CEventInventory::CEventInventory() // OK
 {

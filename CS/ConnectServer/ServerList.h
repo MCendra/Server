@@ -1,6 +1,6 @@
 // ServerList.h
 #pragma once
-#include "ServerProtocol.h"
+#include "ConnectServerProtocol.h"
 #include <map>
 
 // Definicion del tamaño maximo de la cola de servidores para unirse

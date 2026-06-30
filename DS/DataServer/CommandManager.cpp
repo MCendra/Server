@@ -1,17 +1,13 @@
-// CommandManager.cpp: implementation of the CCommandManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// CommandManager.cpp
+#include "Header.h"
 #include "CommandManager.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 #include "Util.h"
 
 CCommandManager gCommandManager;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CCommandManager::CCommandManager() // OK
 {

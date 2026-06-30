@@ -1,8 +1,5 @@
-// PersonalShop.cpp: implementation of the CPersonalShop class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// PersonalShop.cpp
+#include "Header.h"
 #include "PersonalShop.h"
 #include "QueryManager.h"
 #include "SocketManager.h"

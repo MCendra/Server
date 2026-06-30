@@ -3,11 +3,6 @@
 #include "ServerManager.h"
 #include "Log.h"
 #include "AccountManager.h"
-#include "Util.h"
-
-// Mensajes de log
-constexpr char ADDSERVER_SUCCESS_MSG[] = "[ServerManager - AddServer] Servidor agregado (Index: %d, IP: %s)";
-constexpr char DELSERVER_SUCCESS_MSG[] = "[ServerManager - DelServer] Servidor eliminado (Index: %d, IP: %s)";
 
 CServerManager gServerManager[MAX_SERVER];
 
@@ -101,7 +96,7 @@ void CServerManager::AddServer(int index,char* ip,SOCKET socket)
 		m_MaxUserCount = 0;
 	}
 
-	Log.ToDisp(LOG_BLACK, ADDSERVER_SUCCESS_MSG, m_index, m_IpAddr);
+	Log.ToDisp(LOG_BLACK, "[ServerManager - AddServer] Servidor agregado (Index: %d, IP: %s)", m_index, m_IpAddr);
 }
 
 // Elimina un servidor de la lista de servidores activos
@@ -118,7 +113,7 @@ void CServerManager::DelServer()
 	m_state = SERVER_OFFLINE;
 	m_index = -1;
 
-	Log.ToDisp(LOG_BLACK, DELSERVER_SUCCESS_MSG, m_index, m_IpAddr);
+	Log.ToDisp(LOG_BLACK, "[ServerManager - DelServer] Servidor eliminado (Index: %d, IP: %s)", m_index, m_IpAddr);
 	// Eliminar info de las cuentas servidor del manager
 	gAccountManager.ClearServerAccountInfo(m_ServerCode);
 	memset(m_IpAddr, 0, sizeof(m_IpAddr));

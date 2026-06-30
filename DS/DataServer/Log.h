@@ -1,37 +1,29 @@
-// Log.h: interface for the CLog class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// Log.h
 #pragma once
+#include "ServerLog.h"      // Define LogType (GENERAL) y gServerLog
+#include "ServerDisplayer.h" // Define LogColor y gServerDisplayer
 
-#define MAX_LOG 1
-
-enum eLogType
-{
-	LOG_GENERAL = 0,
-};
-
-struct LOG_INFO
-{
-	BOOL Active;
-	char Directory[256];
-	int Day;
-	int Month;
-	int Year;
-	char Filename[256];
-	HANDLE File;
-};
+// La diferencia con ConnectServer es que ToFile recibe LogType como
+// primer parametro, permitiendo dirigir el mensaje al archivo correcto.
+// ToDisp siempre va a GENERAL (los eventos de cuenta son demasiado
+// verbosos para mostrarlos en pantalla en tiempo real).
 
 class CLog
 {
 public:
 	CLog();
 	virtual ~CLog();
-	void AddLog(BOOL active,char* directory);
-	void Output(eLogType type,char* text,...);
+
+	// Escribe a disco en el archivo correspondiente al tipo indicado.
+	// No muestra nada en pantalla.
+	void ToFile(LogType type, const char* text, ...);
+
+	// Muestra en pantalla Y escribe en el log GENERAL a disco.
+	// Para eventos de operacion que el operador necesita ver en tiempo real.
+	void ToDisp(LogColor color, const char* text, ...);
+
 private:
-	LOG_INFO m_LogInfo[MAX_LOG];
-	int m_count;
+	std::string FormatMessage(const char* text, va_list args) const;
 };
 
-extern CLog gLog;
+extern CLog Log;

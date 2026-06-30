@@ -1,7 +1,7 @@
-#include "stdafx.h"
+// CSProtocol.cpp
+#include "Header.h"
 #include "CSProtocol.h"
 #include "CharacterManager.h"
-#include "Protect.h"
 #include "QueryManager.h"
 #include "ServerManager.h"
 #include "Util.h"
@@ -82,7 +82,6 @@ void CSDataRecv(int index,BYTE head,BYTE* lpMsg,int size) // OK
 
 void ChatServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 {
-	PROTECT_START
 
 	switch(head)
 	{
@@ -114,8 +113,6 @@ void ChatServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 			FriendMemoDelReq((FHP_FRIEND_MEMO_DEL_REQ*)lpMsg,index);
 			break;
 	}
-
-	PROTECT_FINAL
 }
 
 void FriendListRequest(FHP_FRIENDLIST_REQ* lpMsg,int index)

@@ -1,6 +1,6 @@
 // SocketManagerUDP.h
 #pragma once
-#include "ServerProtocol.h"
+#include "ConnectServerProtocol.h"
 #include "CriticalSection.h"
 
 class CSocketManagerUdp

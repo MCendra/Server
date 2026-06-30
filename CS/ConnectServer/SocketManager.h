@@ -1,6 +1,6 @@
 // SocketManager.h
 #pragma once
-#include "ServerProtocol.h"
+#include "ConnectServerProtocol.h"
 #include "CriticalSection.h"
 #include "QueueHandle.h"
 
@@ -69,7 +69,15 @@ public:
 	// FIX: el ultimo parametro pasa de "CSocketManager*" a "DWORD_PTR" para
 	// coincidir con el tipo real de dwCallbackData en WSAAccept y evitar
 	// truncamiento de puntero en compilaciones x64 (ver SocketManager.cpp).
-	static int CALLBACK ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LPWSABUF lpCallerData, IN OUT LPQOS lpSQOS, IN OUT LPQOS lpGQOS, IN LPWSABUF lpCalleeId, OUT LPWSABUF lpCalleeData, OUT GROUP FAR* g, DWORD_PTR dwCallbackData);
+	static int CALLBACK ServerAcceptCondition(
+		IN LPWSABUF lpCallerId,
+		IN LPWSABUF lpCallerData,
+		IN OUT LPQOS lpSQOS,
+		IN OUT LPQOS lpGQOS,
+		IN LPWSABUF lpCalleeId,
+		OUT LPWSABUF lpCalleeData,
+		OUT GROUP FAR* g,
+		DWORD_PTR dwCallbackData);
 	static DWORD WINAPI ServerAcceptThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerWorkerThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerQueueThread(CSocketManager* lpSocketManager);
@@ -84,9 +92,6 @@ private:
 	CQueue m_ServerQueue;
 	HANDLE m_ServerQueueSemaphore;
 	HANDLE m_ServerQueueThread;
-	// CORRECIÓN: se elimina la sección crítica que protegía el acceso a la cola de
-	// CCriticalSection m_critical;
-	// CORRECIÓN: evento para señalizar parada cooperativa de hilos
 	HANDLE m_shutdownEvent;
 };
 

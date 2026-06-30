@@ -1,9 +1,5 @@
-// MuRummy.h: interface for the CMuRummy class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// MuRummy.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #define MURUMMY_MAX_CARD 24

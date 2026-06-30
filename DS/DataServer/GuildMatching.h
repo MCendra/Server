@@ -1,15 +1,9 @@
-// GuildMatching.h: interface for the CGuildMatching class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// GuildMatching.h
 #pragma once
-
 #include "CriticalSection.h"
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_GUILD_MATCHING_LIST_RECV
 {

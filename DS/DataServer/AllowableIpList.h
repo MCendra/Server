@@ -1,23 +1,20 @@
-// AllowableIpList.h: interface for the CAllowableIpList class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// AllowableIpList.h:
 #pragma once
 
 struct ALLOWABLE_IP_INFO
 {
-	char IpAddr[32];
+	char IpAddr[16];
 };
 
 class CAllowableIpList
 {
 public:
-	CAllowableIpList();
-	virtual ~CAllowableIpList();
-	void Load(char* path);
-	bool CheckAllowableIp(char* ip);
+	CAllowableIpList() = default;;
+	virtual ~CAllowableIpList() = default;
+	void Load(const char* path);
+	bool CheckAllowableIp(const char* ip) const;
 private:
-	std::map<std::string,ALLOWABLE_IP_INFO> m_AllowableIpInfo;
+	std::map<std::string, ALLOWABLE_IP_INFO> m_AllowableIpInfo;
 };
 
 extern CAllowableIpList gAllowableIpList;

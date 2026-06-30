@@ -1,9 +1,5 @@
-// QuestWorld.h: interface for the CQuestWorld class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// QuestWorld.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #define MAX_QUEST_WORLD_LIST 20

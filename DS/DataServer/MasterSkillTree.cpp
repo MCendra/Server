@@ -1,16 +1,12 @@
-// MasterSkillTree.cpp: implementation of the CMasterSkillTree class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// MasterSkillTree.cpp
+#include "Header.h"
 #include "MasterSkillTree.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
 CMasterSkillTree gMasterSkillTree;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CMasterSkillTree::CMasterSkillTree() // OK
 {

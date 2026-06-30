@@ -1,10 +1,11 @@
 // JoinServerProtocol.cpp
 #include "JoinServerProtocol.h"
 #include "ServerManager.h"
+#include "SocketManagerUDP.h"
+#include "Log.h"
 #include "MD5.h"
 #include "AccountManager.h"
 #include "QueryManager.h"
-#include "Log.h"
 #include "Util.h"
 
 void JoinServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
@@ -85,7 +86,7 @@ void GJConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg,int index)
 
 	pMsg.result = 1;
 
-	if(CheckTextSyntax(lpMsg->account,sizeof(lpMsg->account)) == 0)
+	if(gUtil.CheckTextSyntax(lpMsg->account,sizeof(lpMsg->account)) == 0)
 	{
 		pMsg.result = 2;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
@@ -258,7 +259,7 @@ void GJRegisterAccountRecv(SDHP_REGISTER_ACCOUNT_SEND* lpMsg,int index)
 
 	pMsg.result = CREATE_ACCOUNT_FAIL_ID;
 
-	if(CheckTextSyntax(lpMsg->account,sizeof(lpMsg->account)) == 0)
+	if(gUtil.CheckTextSyntax(lpMsg->account,sizeof(lpMsg->account)) == 0)
 	{
 		pMsg.result = CREATE_ACCOUNT_FAIL_RESIDENT;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
@@ -738,4 +739,16 @@ void JGAccountAlreadyConnectedSend(int GameServerCode,WORD UserIndex, const char
 	memcpy(pMsg.account,account,sizeof(pMsg.account));
 
 	gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
+}
+
+void JoinServerLiveProc()
+{
+	SDHP_JOIN_SERVER_LIVE_SEND pMsg = {};
+
+	pMsg.header.set(0x02, sizeof(pMsg));
+
+	pMsg.QueueSize = gSocketManager.GetQueueSize();
+
+	gSocketManagerUDP.DataSend((BYTE*)&pMsg, pMsg.header.size);
+
 }

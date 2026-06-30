@@ -1,8 +1,7 @@
-// GuildManager.h: interface for the CGuildManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// GuildManager.h
 #pragma once
+#include <vector>
+#include <unordered_map>
 
 #define MAX_GUILD_UNION 5
 #define MAX_GUILD_RIVAL 2
@@ -12,16 +11,14 @@ struct GUILD_MEMBER_INFO
 {
 	void Clear()
 	{
-		memset(this->szGuildMember,0,sizeof(this->szGuildMember));
-
-		this->btServer = 0xFFFF;
-
-		this->btStatus = 0;
+		szGuildMember[0] = '\0';
+		btStatus = 0;
+		btServer = 0xFFFF;
 	}
 
-	bool IsEmpty()
+	bool IsEmpty() const
 	{
-		return ((this->szGuildMember[0]==0)?1:0);
+		return (szGuildMember[0] == '\0');
 	}
 
 	char szGuildMember[11];
@@ -33,36 +30,38 @@ struct GUILD_INFO
 {
 	void Clear()
 	{
-		this->dwNumber = 0;
+		dwNumber = 0;
+		dwUnionNumber = 0;
+		dwRivalNumber = 0;
+		dwScore = 0;
 
-		this->dwUnionNumber = 0;
+#if (NEWBOSSGUILD == 1)
+		dwScore1 = 0;
+#endif
 
-		this->dwRivalNumber = 0;
+		btType = 0;
 
-		this->dwScore = 0;
+		szName[0] = '\0';
+		szMaster[0] = '\0';
+		szNotice[0] = '\0';
 
-		this->btType = 0;
+		memset(arMark, 0, sizeof(arMark));
 
-		memset(this->szName,0,sizeof(this->szName));
-
-		memset(this->szMaster,0,sizeof(this->szMaster));
-
-		memset(this->szNotice,0,sizeof(this->szNotice));
-
-		memset(this->arMark,0,sizeof(this->arMark));
-
-		for(int n=0;n < MAX_GUILD_MEMBER;n++){this->arGuildMember[n].Clear();}
+		for (auto& member : arGuildMember)
+		{
+			member.Clear();
+		}
 	}
 
-	BYTE GetMemberCount()
+	BYTE GetMemberCount() const
 	{
 		BYTE count = 0;
 
-		for(int n=0;n < MAX_GUILD_MEMBER;n++)
+		for (const auto& member : arGuildMember)
 		{
-			if(this->arGuildMember[n].IsEmpty() == 0)
+			if (!member.IsEmpty())
 			{
-				count++;
+				++count;
 			}
 		}
 
@@ -73,9 +72,11 @@ struct GUILD_INFO
 	DWORD dwUnionNumber;
 	DWORD dwRivalNumber;
 	DWORD dwScore;
-#if(NEWBOSSGUILD == 1)
+
+#if (NEWBOSSGUILD == 1)
 	DWORD dwScore1;
 #endif
+
 	BYTE btType;
 	char szName[9];
 	char szMaster[11];
@@ -87,34 +88,51 @@ struct GUILD_INFO
 class CGuildManager
 {
 public:
-	CGuildManager();
-	virtual ~CGuildManager();
+	CGuildManager() = default;
+	~CGuildManager() = default;
+
 	void Init();
-	GUILD_INFO* GetGuildInfo(char* szName);
+
+	GUILD_INFO* GetGuildInfo(const char* szName);
 	GUILD_INFO* GetGuildInfo(DWORD dwNumber);
-	GUILD_INFO* GetMemberGuildInfo(char* szGuildMember);
-	GUILD_MEMBER_INFO* GetGuildMemberInfo(char* szGuildMember);
-	BOOL CheckGuildOnCS(char* szGuildName);
-	void ConnectMember(char* szGuildMember,WORD btServer);
-	void DisconnectMember(char* szGuildMember);
-	BYTE AddGuild(int index,char* szGuildName,char* szMasterName,BYTE* lpMark,BYTE btType);
-	BYTE DelGuild(int index,char* szGuildName);
-	BYTE AddGuildMember(int index,char* szGuildName,char* szGuildMember,BYTE btStatus,WORD btServer);
-	BYTE DelGuildMember(int index,char* szGuildMember);
-	BYTE AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwTargetGuild,BYTE btRelationType);
-	BYTE DelGuildRelationship(int index,DWORD dwSourceGuild,BYTE btRelationType);
-	BYTE SetGuildRelationship(int index,char* szGuildMember,char* szGuildMaster);
-	BYTE SetGuildScore(char* szGuildName,DWORD dwScore);
-#if(NEWBOSSGUILD == 1)
-	BYTE SetGuildScore1(char* szGuildName, DWORD dwScore1);
+	GUILD_INFO* GetMemberGuildInfo(const char* szGuildMember);
+	GUILD_MEMBER_INFO* GetGuildMemberInfo(const char* szGuildMember);
+
+	BOOL CheckGuildOnCS(const char* szGuildName);
+
+	void ConnectMember(const char* szGuildMember, WORD btServer);
+	void DisconnectMember(const char* szGuildMember);
+
+	BYTE AddGuild(int index, const char* szGuildName, const char* szMasterName, BYTE* lpMark, BYTE btType);
+	BYTE DelGuild(int index, const char* szGuildName);
+
+	BYTE AddGuildMember(int index, const char* szGuildName, const char* szGuildMember, BYTE btStatus, WORD btServer);
+	BYTE DelGuildMember(int index, const char* szGuildMember);
+
+	BYTE AddGuildRelationship(int index, DWORD dwSourceGuild, DWORD dwTargetGuild, BYTE btRelationType);
+	BYTE DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE btRelationType);
+
+	BYTE SetGuildRelationship(int index, const char* szGuildMember, const char* szGuildMaster);
+
+	BYTE SetGuildScore(const char* szGuildName, DWORD dwScore);
+
+#if (NEWBOSSGUILD == 1)
+	BYTE SetGuildScore1(const char* szGuildName, DWORD dwScore1);
 #endif
-	BYTE SetGuildNotice(char* szGuildName,char* szNotice);
-	BYTE SetGuildType(char* szGuildName,BYTE btType);
-	BYTE SetGuildMemberStatus(char* szGuildMember,BYTE btStatus);
-	long GetUnionList(DWORD dwUnionNumber,DWORD* lpUnionList);
-	long GetRivalList(DWORD dwRivalNumber,DWORD* lpRivalList);
+
+	BYTE SetGuildNotice(const char* szGuildName, const char* szNotice);
+	BYTE SetGuildType(const char* szGuildName, BYTE btType);
+	BYTE SetGuildMemberStatus(const char* szGuildMember, BYTE btStatus);
+
+	long GetUnionList(DWORD dwUnionNumber, DWORD* lpUnionList);
+	long GetRivalList(DWORD dwRivalNumber, DWORD* lpRivalList);
+
 private:
-	std::vector<GUILD_INFO> vGuildList;
+	std::deque<GUILD_INFO> vGuildList;
+
+	std::unordered_map<std::string, GUILD_INFO*> m_GuildByName;
+	std::unordered_map<DWORD, GUILD_INFO*> m_GuildByNumber;
+	std::unordered_map<std::string, GUILD_MEMBER_INFO*> m_GuildMembers;
 };
 
 extern CGuildManager gGuildManager;

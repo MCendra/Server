@@ -1,10 +1,8 @@
+// ESProtocol.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer 
 
 struct SDHP_USERCLOSE
 {

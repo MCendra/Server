@@ -52,7 +52,7 @@ public:
 	WORD m_ServerPort;					// Puerto del servidor
 	int m_ServerCode;					// Codigo del servidor
 	ULONGLONG m_LastStateChangeTime;	// Tiempo del ultimo cambio de estado
-	ULONGLONG m_LastPacketTime;				// Tiempo del ultimo paquete recibido/enviado
+	ULONGLONG m_LastPacketTime;			// Tiempo del ultimo paquete recibido/enviado
 	int m_CurUserCount;					// Contador de usuarios actuales conectados al servidor
 	int m_MaxUserCount;					// Contador del maximo de usuarios permitidos en el servidor
 };

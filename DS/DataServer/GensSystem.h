@@ -1,14 +1,8 @@
-// GensSystem.h: interface for the CGensSystem class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// GensSystem.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_GENS_SYSTEM_INSERT_RECV
 {

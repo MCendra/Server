@@ -1,233 +1,269 @@
-// ServerDisplayer.cpp: implementation of the CServerDisplayer class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// ServerDisplayer.cpp
+#include "Header.h"
 #include "ServerDisplayer.h"
 #include "Log.h"
-#include "Protect.h"
-#include "ServerManager.h"
-#include "SocketManager.h"
 
+// Instancia global del visualizador de servidor
 CServerDisplayer gServerDisplayer;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CServerDisplayer::CServerDisplayer() // OK
+// Definicion de textos de estado
+constexpr char TEXT_WINDOWS_TITLE[] = "[DS] DataServer %s - (QueueSize : %d)";
+constexpr char DATASERVER_WAIT[] = "ESPERANDO";
+constexpr char DATASERVER_ACTIVE[] = "ACTIVO";
+
+// Construction/Destruction
+CServerDisplayer::CServerDisplayer()
+	: m_hwnd(nullptr),
+	m_hrichedit(nullptr),
+	m_font(nullptr),
+	m_smallfont(nullptr),
+	m_richeditmodule(nullptr),
+	m_serverlistbottom(100),
+	m_lineheight(22),
+	m_rect{ 0, 0, 0, 0 }
+
 {
-	for(int n=0;n < MAX_LOG_TEXT_LINE;n++)
+	// Inicializa la fuente con parametros predeterminados para el texto.
+	m_font = CreateFont(50, 0, 0, 0, FW_THIN, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Times"));
+	m_smallfont = CreateFont(18, 0, 0, 0, FW_NORMAL, false, false, false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
+
+	// Crear pinceles para diferentes estados de visualizacion.
+	m_brush[0] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(60, 255, 51));
+	m_brush[1] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(120, 120, 120));
+	m_brush[2] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(0, 152, 239) : RGB(39, 79, 121));
+	m_brush[3] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(41, 37, 44) : RGB(255, 255, 255));
+	m_brush[4] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(0, 0, 0) : RGB(210, 210, 210));
+
+	// Inicializa los textos para mostrar en la ventana.
+	strncpy_s(m_displayertext[0], sizeof(m_displayertext[0]), DATASERVER_WAIT, _TRUNCATE);
+	strncpy_s(m_displayertext[1], sizeof(m_displayertext[1]), DATASERVER_ACTIVE, _TRUNCATE);
+
+}
+
+CServerDisplayer::~CServerDisplayer()
+{
+	if (m_font)
 	{
-		memset(&this->m_log[n],0,sizeof(this->m_log[n]));
+		DeleteObject(m_font);
+		m_font = nullptr;
 	}
 
-	this->m_font = CreateFont(50,0,0,0,FW_THIN,0,0,0,ANSI_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,DEFAULT_PITCH | FF_DONTCARE,"Times");
+	if (m_smallfont)
+	{
+		DeleteObject(m_smallfont);
+		m_smallfont = nullptr;
+	}
 
-#if(GAMESERVER_NOMBRE == 0)
-	this->m_brush[0] = CreateSolidBrush(RGB(105,105,105)); //-- cuando esta activo
-	this->m_brush[1] = CreateSolidBrush(RGB(105,105,105)); //-- cuando esta desactivado
-	this->m_brush[2] = CreateSolidBrush(RGB(0, 152, 239)); //-- Encabezado
-	this->m_brush[3] = CreateSolidBrush(RGB(41, 37, 44)); //-- Fondo Principal
-	this->m_brush[4] = CreateSolidBrush(RGB(0, 0, 0)); //-- fondo de eventos e informacion
-#elif(GAMESERVER_NOMBRE == 1)
-	this->m_brush[0] = CreateSolidBrush(RGB(60, 255, 51));
-	this->m_brush[1] = CreateSolidBrush(RGB(120, 120, 120));	//rojo
-	this->m_brush[2] = CreateSolidBrush(RGB(39, 79, 121));	// 0, 152, 239	//<-
-	this->m_brush[3] = CreateSolidBrush(RGB(255, 255, 255));	//semiblack	//<- blanco
-	this->m_brush[4] = CreateSolidBrush(RGB(210, 210, 210));	//Black //<- semi blanco
-#else
-	this->m_brush[0] = CreateSolidBrush(RGB(3, 196, 161)); //-- cuando esta activo
-	this->m_brush[1] = CreateSolidBrush(RGB(3, 196, 161)); //-- cuando esta desactivado
-	this->m_brush[2] = CreateSolidBrush(RGB(84, 21, 224)); //-- Encabezado
-	this->m_brush[3] = CreateSolidBrush(RGB(24, 24, 24)); //-- Fondo Principal
-	this->m_brush[4] = CreateSolidBrush(RGB(0, 0, 0)); //-- fondo de eventos e informacion
-#endif
-	strcpy_s(this->m_DisplayerText[0],"STANDBY MODE");
-	strcpy_s(this->m_DisplayerText[1],"ACTIVE MODE");
-	
+	for (auto& brush : m_brush)
+	{
+		if (brush)
+		{
+			DeleteObject(brush);
+			brush = nullptr;
+		}
+	}
+
+	if (m_richeditmodule != nullptr)
+	{
+		FreeLibrary(m_richeditmodule);
+		m_richeditmodule = nullptr;
+	}
 }
 
-CServerDisplayer::~CServerDisplayer() // OK
+// Inicializa la clase con el HWND de la ventana principal
+void CServerDisplayer::Init(HWND hWnd)
 {
-	DeleteObject(this->m_font);
-	DeleteObject(this->m_brush[0]);
-	DeleteObject(this->m_brush[1]);
-	DeleteObject(this->m_brush[2]);
-	DeleteObject(this->m_brush[3]);
-	DeleteObject(this->m_brush[4]);
+	m_hwnd = hWnd;
+
+	GetClientRect(m_hwnd, &m_rect);
+
+	m_richeditmodule = LoadLibraryA("Msftedit.dll");
+
+	if (m_richeditmodule == nullptr)
+	{
+		Log.ToDisp(LOG_RED, "[ServerDisplayer - Init] No se pudo cargar Msftedit.dll");
+		return;
+	}
+
+	m_hrichedit = CreateWindowExA(
+		0,
+		"RICHEDIT50W",      // Nombre ANSI del MSFTEDIT_CLASS — mismo resultado
+		"",
+		WS_CHILD | WS_VISIBLE | WS_VSCROLL |
+		ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | ES_NOHIDESEL,
+		0, m_serverlistbottom,
+		m_rect.right,
+		m_rect.bottom - m_serverlistbottom,
+		m_hwnd,
+		nullptr, nullptr, nullptr
+	);
+
+	if (m_hrichedit == nullptr)
+	{
+		Log.ToDisp(LOG_RED, "[ServerDisplayer - Init] No se pudo crear el control RichEdit. Error: %lu", GetLastError());
+		return;
+	}
+
+	UpdateLayout();
+
+	SendMessage(m_hrichedit, WM_SETFONT, (WPARAM)m_smallfont, true);
+	SendMessage(m_hrichedit, EM_SETLIMITTEXT, 200 * MAX_LOG_TEXT_SIZE, 0);
+
+	COLORREF bkColor = GetSysColor(COLOR_WINDOW);
+	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, bkColor);
+
+	UpdateWindowTitle(0);
 }
 
-void CServerDisplayer::Init(HWND hWnd) // OK
+// Actualiza el titulo de la ventana
+void CServerDisplayer::UpdateWindowTitle(int queueSize) const
 {
-	PROTECT_START
-
-	this->m_hwnd = hWnd;
-
-	PROTECT_FINAL
-
-	gLog.AddLog(1,"LOG");
+	char buff[MAX_LOADSTRING];
+	StringCchPrintfA(buff, ARRAYSIZE(buff), TEXT_WINDOWS_TITLE, DATASERVER_VERSION, queueSize);
+	SetWindowText(m_hwnd, buff);
 }
 
-void CServerDisplayer::Run() // OK
+// Pintar el nombre del cliente en la ventana
+void CServerDisplayer::PaintName(HDC hdc) const
 {
-	this->SetWindowName();
-	this->PaintAllInfo();
-	this->LogTextPaint();
-	this->PaintName();
+	RECT rect = m_rect;
+	rect.bottom = 50;
+
+	int OldBkMode = SetBkMode(hdc, TRANSPARENT);
+	HFONT OldFont = (HFONT)SelectObject(hdc, m_font);
+
+	// Establece el color del texto y rellena el fondo
+	SetTextColor(hdc, RGB(255, 255, 255));
+	FillRect(hdc, &rect, m_brush[2]);
+
+	// Dibuja el nombre del cliente en la ventana centrado
+	DrawText(hdc, SERVER_PART, -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+	// Restaura los objetos GDI previos
+	SelectObject(hdc, OldFont);
+	SetBkMode(hdc, OldBkMode);
+
 }
 
-void CServerDisplayer::SetWindowName() // OK
+void CServerDisplayer::PaintDataServerState(HDC hdc) const
 {
-	char buff[256];
-
-	wsprintf(buff,"[%s] %s DataServer (QueueSize : %d)",DATASERVER_VERSION,DATASERVER_CLIENT,gSocketManager.GetQueueSize());
-
-	SetWindowText(this->m_hwnd,buff);
-}
-
-void CServerDisplayer::PaintAllInfo() // OK
-{
-	RECT rect;
-
-	GetClientRect(this->m_hwnd,&rect);
-
+	RECT rect = m_rect;
 	rect.top = 50;
 	rect.bottom = 100;
 
-	HDC hdc = GetDC(this->m_hwnd);
+	int OldBkMode = SetBkMode(hdc, TRANSPARENT);
+	HFONT OldFont = (HFONT)SelectObject(hdc, m_font);
 
-	int OldBkMode = SetBkMode(hdc,TRANSPARENT);
-
-	HFONT OldFont = (HFONT)SelectObject(hdc,this->m_font);
-
-	int state = 0;
-
-	for(int n=0;n < MAX_SERVER;n++)
+	// Actualiza el texto y el fondo basado en el estado del servidor
+	if (m_isactive == false)
 	{
-		if(gServerManager[n].CheckState() == 0)
-		{
-			continue;
-		}
-
-		if((GetTickCount()-gServerManager[n].m_PacketTime) <= 60000)
-		{
-			state = 1;
-			break;
-		}
-	}
-
-	if(state == 0)
-	{
-		SetTextColor(hdc,RGB(200,200,200));
-		FillRect(hdc,&rect,this->m_brush[1]);
-		TextOut(hdc,120,50,this->m_DisplayerText[0],strlen(this->m_DisplayerText[0]));
+		SetTextColor(hdc, RGB(200, 200, 200));
+		FillRect(hdc, &rect, m_brush[1]);
+		DrawText(hdc, m_displayertext[0], -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 	else
 	{
-		SetTextColor(hdc,RGB(250,250,250));
-		FillRect(hdc,&rect,this->m_brush[0]);
-		TextOut(hdc,150,50,this->m_DisplayerText[1],strlen(this->m_DisplayerText[1]));
+		SetTextColor(hdc, RGB(250, 250, 250));
+		FillRect(hdc, &rect, m_brush[0]);
+		DrawText(hdc, m_displayertext[1], -1, &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 
-	SelectObject(hdc,OldFont);
-	SetBkMode(hdc,OldBkMode);
-	ReleaseDC(this->m_hwnd,hdc);
+	// Restaura los objetos GDI previos
+	SelectObject(hdc, OldFont);
+	SetBkMode(hdc, OldBkMode);
+
 }
 
-void CServerDisplayer::PaintName() // OK
-{
-	RECT rect;
+// Clase para mostrar informacion del servidor en una ventana
+void CServerDisplayer::LogAddText(LogColor color, const std::string& text) {
+	if (!m_hrichedit) return;
 
-	GetClientRect(this->m_hwnd,&rect);
+	std::string line = text.substr(0, MAX_LOG_TEXT_SIZE - 1) + "\r\n";
 
-	rect.top = 0;
+	CHARFORMAT2A cf = {};
+	cf.cbSize = sizeof(cf);
+	cf.dwMask = CFM_COLOR | CFM_EFFECTS;  // ambos necesarios
+	cf.dwEffects = 0;                     // sin CFE_AUTOCOLOR
 
-	rect.bottom = 50;
-
-	HDC hdc = GetDC(this->m_hwnd);
-
-	int OldBkMode = SetBkMode(hdc,TRANSPARENT);
-
-	HFONT OldFont = (HFONT)SelectObject(hdc,this->m_font);
-
-	SetTextColor(hdc,RGB(255,255,255));
-
-	FillRect(hdc,&rect,this->m_brush[2]);
-
-	DrawText(hdc, DATASERVER_CLIENT, sizeof(DATASERVER_CLIENT), &rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-	SelectObject(hdc,OldFont);
-
-	SetBkMode(hdc,OldBkMode);
-
-	ReleaseDC(this->m_hwnd,hdc);
-}
-
-void CServerDisplayer::LogTextPaint() // OK
-{
-	RECT rect;
-
-	GetClientRect(this->m_hwnd,&rect);
-
-	rect.top = 100;
-
-	HDC hdc = GetDC(this->m_hwnd);
-
-	int OldBkMode = SetBkMode(hdc,TRANSPARENT);
-
-	FillRect(hdc,&rect,this->m_brush[3]);
-
-	int line = MAX_LOG_TEXT_LINE;
-
-	int count = (((this->m_count-1)>=0)?(this->m_count-1):(MAX_LOG_TEXT_LINE-1));
-
-	for(int n=0;n < MAX_LOG_TEXT_LINE;n++)
+	switch (color)
 	{
-		switch(this->m_log[count].color)
-		{
-			case LOG_BLACK:
-				SetTextColor(hdc,RGB(0,0,0));
-				break;
-			case LOG_RED:
-				SetTextColor(hdc,RGB(239,0,0));
-				break;
-			case LOG_GREEN:
-				SetTextColor(hdc,RGB(0,255,0));
-				break;
-			case LOG_BLUE:
-				SetTextColor(hdc,RGB(0, 152, 239));
-				break;
-		}
-
-		int size = strlen(this->m_log[count].text);
-
-		if(size > 1)
-		{
-			TextOut(hdc,0,(85+(line*15)),this->m_log[count].text,size);
-			line--;
-		}
-
-		count = (((--count)>=0)?count:(MAX_LOG_TEXT_LINE-1));
+	case LOG_RED:   cf.crTextColor = RGB(220, 50, 50);  break;
+	case LOG_GREEN: cf.crTextColor = RGB(50, 200, 50);  break;
+	case LOG_BLUE:  cf.crTextColor = RGB(100, 180, 255); break;
+	default:        cf.crTextColor = RGB(0, 0, 0); break;
 	}
 
-	ReleaseDC(this->m_hwnd,hdc);
+	{
+		CCriticalSection::CLock lock(m_logLock);
+
+		SendMessage(m_hrichedit, EM_SETSEL, (WPARAM)-1, (LPARAM)-1);
+		SendMessage(m_hrichedit, EM_SETCHARFORMAT, SCF_SELECTION, (LPARAM)&cf);
+		SendMessage(m_hrichedit, EM_REPLACESEL, false, (LPARAM)line.c_str());
+		SendMessage(m_hrichedit, EM_SCROLLCARET, 0, 0);
+	}
 }
 
-void CServerDisplayer::LogAddText(eLogColor color,char* text,int size) // OK
+void CServerDisplayer::Refresh()
 {
-	PROTECT_START
+	if (m_hwnd != nullptr)
+	{
+		InvalidateRect(m_hwnd, nullptr, FALSE);
+	}
+}
 
-	size = ((size>=MAX_LOG_TEXT_SIZE)?(MAX_LOG_TEXT_SIZE-1):size);
+void CServerDisplayer::InvalidateServerList()
+{
+	UpdateLayout();
 
-	memset(&this->m_log[this->m_count].text,0,sizeof(this->m_log[this->m_count].text));
+	if (m_hwnd != nullptr)
+	{
+		RECT rc =
+		{
+			0,
+			100,
+			m_rect.right,
+			m_rect.bottom
+		};
 
-	memcpy(&this->m_log[this->m_count].text,text,size);
+		InvalidateRect(m_hwnd, &rc, true);
+	}
+}
 
-	this->m_log[this->m_count].color = color;
+void CServerDisplayer::UpdateLayout()
+{
+	if (m_hwnd == nullptr || m_hrichedit == nullptr)
+	{
+		return;
+	}
 
-	this->m_count = (((++this->m_count)>=MAX_LOG_TEXT_LINE)?0:this->m_count);
+	GetClientRect(m_hwnd, &m_rect);
 
-	PROTECT_FINAL
+	HDC hdc = GetDC(m_hwnd);
 
-	gLog.Output(LOG_GENERAL,"%s",&text[9]);
+	HFONT oldFont = (HFONT)SelectObject(hdc, m_smallfont);
+
+	TEXTMETRIC tm;
+	GetTextMetrics(hdc, &tm);
+
+	m_lineheight = tm.tmHeight + 4;
+
+	SelectObject(hdc, oldFont);
+	ReleaseDC(m_hwnd, hdc);
+
+	int count = 1; // (int)gServerList.GetGameServerList().size();
+
+	m_serverlistbottom = 105 + (count * m_lineheight) + 5;
+
+	if (m_hrichedit != nullptr)
+	{
+		MoveWindow(
+			m_hrichedit,
+			0,
+			m_serverlistbottom,
+			m_rect.right,
+			m_rect.bottom - m_serverlistbottom,
+			TRUE);
+	}
+
+	InvalidateRect(m_hwnd, nullptr, FALSE);
 }

@@ -1,16 +1,11 @@
-// EventInventory.h: interface for the CEventInventory class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// EventInventory.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #define EVENT_INVENTORY_SIZE 32
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
+
 
 struct SDHP_EVENT_INVENTORY_RECV
 {

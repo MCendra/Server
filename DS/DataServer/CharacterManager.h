@@ -1,9 +1,5 @@
-// CharacterManager.h: interface for the CCharacterManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// CharacterManager.h
 #pragma once
-
 #include "CriticalSection.h"
 
 struct CHARACTER_INFO

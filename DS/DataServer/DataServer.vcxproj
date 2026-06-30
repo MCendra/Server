@@ -89,10 +89,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +160,7 @@
     <ClInclude Include="AllowableIpList.h" />
     <ClInclude Include="ArcaBattle.h" />
     <ClInclude Include="BadSyntax.h" />
+    <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="CashShop.h" />
     <ClInclude Include="CastleDBSet.h" />
     <ClInclude Include="CharacterManager.h" />
@@ -169,6 +171,7 @@
     <ClInclude Include="DataServerProtocol.h" />
     <ClInclude Include="ESProtocol.h" />
     <ClInclude Include="EventInventory.h" />
+    <ClInclude Include="FileHandle.h" />
     <ClInclude Include="GensSystem.h" />
     <ClInclude Include="GuildManager.h" />
     <ClInclude Include="GuildMatching.h" />
@@ -178,7 +181,7 @@
     <ClInclude Include="LuckyCoin.h" />
     <ClInclude Include="LuckyItem.h" />
     <ClInclude Include="MasterSkillTree.h" />
-    <ClInclude Include="MemScript.h" />
+    <ClInclude Include="ScriptParser.h" />
     <ClInclude Include="MiniDump.h" />
     <ClInclude Include="MuRummy.h" />
     <ClInclude Include="MuunSystem.h" />
@@ -187,19 +190,18 @@
     <ClInclude Include="PcPoint.h" />
     <ClInclude Include="PentagramSystem.h" />
     <ClInclude Include="PersonalShop.h" />
-    <ClInclude Include="Protect.h" />
     <ClInclude Include="QueryManager.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuestWorld.h" />
-    <ClInclude Include="Queue.h" />
+    <ClInclude Include="QueueHandle.h" />
     <ClInclude Include="ReiDoMU.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ServerConfig.h" />
     <ClInclude Include="ServerDisplayer.h" />
+    <ClInclude Include="ServerLog.h" />
     <ClInclude Include="ServerManager.h" />
     <ClInclude Include="SocketManager.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="TargetVer.h" />
-    <ClInclude Include="ThemidaSDK.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Warehouse.h" />
   </ItemGroup>
@@ -207,16 +209,26 @@
     <ClCompile Include="AllowableIpList.cpp" />
     <ClCompile Include="ArcaBattle.cpp" />
     <ClCompile Include="BadSyntax.cpp" />
+    <ClCompile Include="BufferHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="CashShop.cpp" />
     <ClCompile Include="CastleDBSet.cpp" />
     <ClCompile Include="CharacterManager.cpp" />
     <ClCompile Include="CommandManager.cpp" />
-    <ClCompile Include="CriticalSection.cpp" />
+    <ClCompile Include="CriticalSection.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="CSProtocol.cpp" />
     <ClCompile Include="DataServer.cpp" />
-    <ClCompile Include="DataServerProtocol.cpp" />
+    <ClCompile Include="DataServerProtocol.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ESProtocol.cpp" />
     <ClCompile Include="EventInventory.cpp" />
+    <ClCompile Include="FileHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="GensSystem.cpp" />
     <ClCompile Include="GuildManager.cpp" />
     <ClCompile Include="GuildMatching.cpp" />
@@ -226,7 +238,7 @@
     <ClCompile Include="LuckyCoin.cpp" />
     <ClCompile Include="LuckyItem.cpp" />
     <ClCompile Include="MasterSkillTree.cpp" />
-    <ClCompile Include="MemScript.cpp" />
+    <ClCompile Include="ScriptParser.cpp" />
     <ClCompile Include="MiniDump.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -237,20 +249,23 @@
     <ClCompile Include="PcPoint.cpp" />
     <ClCompile Include="PentagramSystem.cpp" />
     <ClCompile Include="PersonalShop.cpp" />
-    <ClCompile Include="Protect.cpp" />
-    <ClCompile Include="QueryManager.cpp" />
+    <ClCompile Include="QueryManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuestWorld.cpp" />
-    <ClCompile Include="Queue.cpp" />
+    <ClCompile Include="QueueHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ReiDoMU.cpp" />
+    <ClCompile Include="ServerConfig.cpp" />
     <ClCompile Include="ServerDisplayer.cpp" />
-    <ClCompile Include="ServerManager.cpp" />
-    <ClCompile Include="SocketManager.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_EX603|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_EX401|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_EX803|Win32'">Create</PrecompiledHeader>
+    <ClCompile Include="ServerLog.cpp" />
+    <ClCompile Include="ServerManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SocketManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Warehouse.cpp" />

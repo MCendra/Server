@@ -1,16 +1,12 @@
-// PentagramSystem.cpp: implementation of the CPentagramSystem class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// PentagramSystem.cpp
+#include "Header.h"
 #include "PentagramSystem.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
 CPentagramSystem gPentagramSystem;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CPentagramSystem::CPentagramSystem() // OK
 {

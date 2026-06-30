@@ -1,14 +1,23 @@
+// Util.h
 #pragma once
-
 #include "ServerDisplayer.h"
 #include "ServerManager.h"
 
-void ErrorMessageBox(char* message,...);
-void LogAdd(eLogColor color,char* text,...);
+// Clase Util para funciones utilitarias
+class CUtil
+{
+public:
+	// Obtiene el path del ejecutable y lo convierte a formato extendido
+	void GetExecutablePath();
+	// Mensaje de error para terminar el proceso
+	void ErrorMessageBox(const char* message, ...);
+	// Verifica la sintaxis de un texto
+	bool CheckTextSyntax(const char* text, int size);
+};
+
+extern CUtil gUtil;
+
 bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot);
-bool CheckTextSyntax(char* text,int size);
-int GetFreeServerIndex();
-int SearchFreeServerIndex(int* index,int MinIndex,int MaxIndex,DWORD MinTime);
 WORD GetServerCodeByName(char* name);
 CServerManager* FindServerByCode(WORD ServerCode);
 

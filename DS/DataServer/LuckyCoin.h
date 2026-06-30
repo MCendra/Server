@@ -1,14 +1,8 @@
-// LuckyCoin.h: interface for the CLuckyCoin class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// LuckyCoin.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_LUCKY_COIN_COUNT_RECV
 {

@@ -1,9 +1,10 @@
-#include "stdafx.h"
+// ESProtocol.cpp
+#include "Header.h"
 #include "ESProtocol.h"
+#include "Log.h"
 #include "CharacterManager.h"
 #include "DataServer.h"
 #include "GuildManager.h"
-#include "Protect.h"
 #include "ServerManager.h"
 #include "SocketManager.h"
 #include "Util.h"
@@ -84,11 +85,10 @@ void ESDataRecv(int index,BYTE head,BYTE* lpMsg,int size) // OK
 
 void ExDBServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 {
-	PROTECT_START
 
 	if (AdvancedLog != 0)
 	{
-		LogAdd(LOG_BLACK,"ESPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x",head,lpMsg[1],lpMsg[2],lpMsg[3],lpMsg[4]);
+		Log.ToDisp(LOG_BLACK,"ESPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x",head,lpMsg[1],lpMsg[2],lpMsg[3],lpMsg[4]);
 	}
 
 	switch(head)
@@ -154,12 +154,11 @@ void ExDBServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
 			break;
 	}
 
-	PROTECT_FINAL
 }
 
 void GDCharClose(SDHP_USERCLOSE* lpMsg,int index)
 {
-	SDHP_USERCLOSE pMsg;
+	SDHP_USERCLOSE pMsg {};
 
 	pMsg.h.set(0x02,sizeof(pMsg));
 
@@ -171,7 +170,7 @@ void GDCharClose(SDHP_USERCLOSE* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
 		}
@@ -218,7 +217,7 @@ void GDGuildCreateSend(SDHP_GUILDCREATE* lpMsg,int index)
 
 		for(int n=0;n < MAX_SERVER;n++)
 		{
-			if(gServerManager[n].CheckState() != 0)
+			if(gServerManager[n].IsOnline() != 0)
 			{
 				pMsg.Flag = ((n==index)?1:0);
 				ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -263,7 +262,7 @@ void GDGuildDestroySend(SDHP_GUILDDESTROY* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.Flag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -299,7 +298,7 @@ void GDGuildMemberAdd(SDHP_GUILDMEMBERADD* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.Flag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -333,7 +332,7 @@ void GDGuildMemberDel(SDHP_GUILDMEMBERDEL* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.Flag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -377,7 +376,7 @@ void DGGuildScoreUpdate(SDHP_GUILDSCOREUPDATE* lpMsg,int index)
 
 		for(int n=0;n < MAX_SERVER;n++)
 		{
-			if(gServerManager[n].CheckState() != 0)
+			if(gServerManager[n].IsOnline() != 0)
 			{
 				ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
 			}
@@ -399,7 +398,7 @@ void DGGuildScoreUpdate1(SDHP_GUILDSCOREUPDATE1* lpMsg, int index)
 
 		for (int n = 0; n < MAX_SERVER; n++)
 		{
-			if (gServerManager[n].CheckState() != 0)
+			if (gServerManager[n].IsOnline() != 0)
 			{
 				ESDataSend(n, (BYTE*)&pMsg, sizeof(pMsg));
 			}
@@ -422,7 +421,7 @@ void GDGuildNoticeSave(SDHP_GUILDNOTICE* lpMsg,int index)
 
 		for(int n=0;n < MAX_SERVER;n++)
 		{
-			if(gServerManager[n].CheckState() != 0)
+			if(gServerManager[n].IsOnline() != 0)
 			{
 				ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
 			}
@@ -444,7 +443,7 @@ void GDGuildServerGroupChattingSend(EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND* lpMs
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
 		}
@@ -465,7 +464,7 @@ void GDUnionServerGroupChattingSend(EXSDHP_SERVERGROUP_UNION_CHATTING_SEND* lpMs
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
 		}
@@ -494,7 +493,7 @@ void GDGuildReqAssignStatus(EXSDHP_GUILD_ASSIGN_STATUS_REQ* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -520,7 +519,7 @@ void GDGuildReqAssignType(EXSDHP_GUILD_ASSIGN_TYPE_REQ* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -570,7 +569,7 @@ void GDRelationShipReqJoin(EXSDHP_RELATIONSHIP_JOIN_REQ* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -580,7 +579,7 @@ void GDRelationShipReqJoin(EXSDHP_RELATIONSHIP_JOIN_REQ* lpMsg,int index)
 
 void GDUnionBreakOff(EXSDHP_RELATIONSHIP_BREAKOFF_REQ* lpMsg,int index)
 {
-	EXSDHP_RELATIONSHIP_BREAKOFF_RESULT pMsg;
+	EXSDHP_RELATIONSHIP_BREAKOFF_RESULT pMsg {};
 
 	pMsg.h.set(0xE6,sizeof(pMsg));
 
@@ -606,7 +605,7 @@ void GDUnionBreakOff(EXSDHP_RELATIONSHIP_BREAKOFF_REQ* lpMsg,int index)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -618,7 +617,7 @@ void GDUnionListSend(EXSDHP_UNION_LIST_REQ* lpMsg,int index)
 {
 	BYTE send[2048];
 
-	EXSDHP_UNION_LIST_COUNT pMsg;
+	EXSDHP_UNION_LIST_COUNT pMsg {};
 
 	pMsg.h.set(0xE9,0);
 
@@ -683,7 +682,7 @@ void GDUnionListSend(EXSDHP_UNION_LIST_REQ* lpMsg,int index)
 
 void GDRelationShipReqKickOutUnionMember(EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg,int index)
 {
-	EXSDHP_KICKOUT_UNIONMEMBER_RESULT pMsg;
+	EXSDHP_KICKOUT_UNIONMEMBER_RESULT pMsg {};
 
 	pMsg.h.set(0xEB,0x01,sizeof(pMsg));
 
@@ -707,7 +706,7 @@ void GDRelationShipReqKickOutUnionMember(EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg,i
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -717,7 +716,7 @@ void GDRelationShipReqKickOutUnionMember(EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg,i
 
 void DGGuildMemberInfo(int index,char* GuildName,char* MemberID,BYTE Status,BYTE Type,BYTE Server)
 {
-	SDHP_GUILDMEMBER_INFO pMsg;
+	SDHP_GUILDMEMBER_INFO pMsg {};
 
 	pMsg.h.set(0x35,sizeof(pMsg));
 
@@ -733,7 +732,7 @@ void DGGuildMemberInfo(int index,char* GuildName,char* MemberID,BYTE Status,BYTE
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
 		}
@@ -815,7 +814,7 @@ void DGGuildMasterListRecv(int index,int GuildNumber)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			ESDataSend(n,send,size);
 		}
@@ -831,7 +830,7 @@ void DGRelationShipListRecv(int index,int GuildNumber,int RelationshipType)
 		return;
 	}
 
-	EXSDHP_UNION_RELATIONSHIP_LIST pMsg;
+	EXSDHP_UNION_RELATIONSHIP_LIST pMsg {};
 
 	pMsg.h.set(0xE7,sizeof(pMsg));
 
@@ -851,7 +850,7 @@ void DGRelationShipListRecv(int index,int GuildNumber,int RelationshipType)
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
@@ -861,7 +860,7 @@ void DGRelationShipListRecv(int index,int GuildNumber,int RelationshipType)
 
 void DGRelationShipNotificationRecv(int index,int UpdateFlag,int GuildListCount,int* GuildList)
 {
-	EXSDHP_NOTIFICATION_RELATIONSHIP pMsg;
+	EXSDHP_NOTIFICATION_RELATIONSHIP pMsg {};
 
 	pMsg.h.set(0xE8,sizeof(pMsg));
 
@@ -875,7 +874,7 @@ void DGRelationShipNotificationRecv(int index,int UpdateFlag,int GuildListCount,
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			pMsg.btFlag = ((n==index)?1:0);
 			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));

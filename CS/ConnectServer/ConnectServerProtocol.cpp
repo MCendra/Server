@@ -1,5 +1,5 @@
-// ServerProtocol.cpp
-#include "ServerProtocol.h"
+// ConnectServerProtocol.cpp
+#include "ConnectServerProtocol.h"
 #include "ClientManager.h"
 #include "ServerList.h"
 #include "SocketManager.h"

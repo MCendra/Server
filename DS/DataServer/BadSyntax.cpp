@@ -1,84 +1,62 @@
-// BadSyntax.cpp: implementation of the CBadSyntax class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// BadSyntax.cpp
+#include "Header.h"
 #include "BadSyntax.h"
-#include "MemScript.h"
+#include "ScriptParser.h"
 #include "Util.h"
 
 CBadSyntax gBadSyntax;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CBadSyntax::CBadSyntax() // OK
+void CBadSyntax::Load(const char* path)
 {
-	this->m_BadSyntaxInfo.clear();
-}
+	CScriptParser gScriptParser;
 
-CBadSyntax::~CBadSyntax() // OK
-{
-
-}
-
-void CBadSyntax::Load(char* path) // OK
-{
-	CMemScript* lpMemScript = new CMemScript;
-
-	if(lpMemScript == 0)
+	if (gScriptParser.SetBuffer(path) == 0)
 	{
-		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR,path);
+		gUtil.ErrorMessageBox(gScriptParser.GetLastError());
 		return;
 	}
 
-	if(lpMemScript->SetBuffer(path) == 0)
-	{
-		ErrorMessageBox(lpMemScript->GetLastError());
-		delete lpMemScript;
-		return;
-	}
-
-	this->m_BadSyntaxInfo.clear();
+	m_BadSyntaxInfo.clear();
 
 	try
 	{
-		while(true)
+		while (true)
 		{
-			if(lpMemScript->GetToken() == TOKEN_END)
+			if (gScriptParser.GetToken() == TOKEN_END)
 			{
 				break;
 			}
 
-			if(strcmp("end",lpMemScript->GetString()) == 0)
+			if (std::strcmp(gScriptParser.GetString(), "end") == 0)
 			{
 				break;
 			}
 
-			BAD_SYNTAX_INFO info;
-
-			strcpy_s(info.syntax,lpMemScript->GetString());
-
-			this->m_BadSyntaxInfo.push_back(info);
+			m_BadSyntaxInfo.push_back({ gScriptParser.GetString() });
 		}
 	}
-	catch(...)
+	catch (...)
 	{
-		ErrorMessageBox(lpMemScript->GetLastError());
+		gUtil.ErrorMessageBox(gScriptParser.GetLastError());
 	}
-
-	delete lpMemScript;
 }
 
-bool CBadSyntax::CheckSyntax(char* text) // OK
+bool CBadSyntax::CheckSyntax(const char* text) const
 {
-	for(std::vector<BAD_SYNTAX_INFO>::iterator it=this->m_BadSyntaxInfo.begin();it != this->m_BadSyntaxInfo.end();it++)
+	if (text == nullptr)
 	{
-		if(strstr(text,it->syntax) != 0)
+		return false;
+	}
+
+	for (const auto& syntax : m_BadSyntaxInfo)
+	{
+		if (std::strstr(text, syntax.syntax.c_str()) != nullptr)
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	return 1;
+	return true;
 }

@@ -1,9 +1,5 @@
-// CashShop.h: interface for the CCashShop class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// CashShop.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #define MAX_CASH_SHOP_PAGE 5

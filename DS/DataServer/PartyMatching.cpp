@@ -1,17 +1,13 @@
-// PartyMatching.cpp: implementation of the CPartyMatching class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// PartyMatching.cpp
+#include "Header.h"
 #include "PartyMatching.h"
 #include "CharacterManager.h"
 #include "SocketManager.h"
 #include "Util.h"
 
 CPartyMatching gPartyMatching;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CPartyMatching::CPartyMatching() // OK
 {

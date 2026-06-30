@@ -1,28 +1,14 @@
-// Helper.cpp: implementation of the CHelper class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// Helper.cpp
+#include "Header.h"
 #include "Helper.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
 CHelper gHelper;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CHelper::CHelper() // OK
-{
-
-}
-
-CHelper::~CHelper() // OK
-{
-
-}
-
-void CHelper::GDHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg,int index) // OK
+void CHelper::GDHelperDataRecv(const SDHP_HELPER_DATA_RECV* lpMsg, int index)
 {
 	#if(DATASERVER_UPDATE>=603)
 
@@ -32,24 +18,21 @@ void CHelper::GDHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg,int index) // OK
 
 	pMsg.index = lpMsg->index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.account, lpMsg->account, sizeof(pMsg.account));
+	std::memcpy(pMsg.name, lpMsg->name, sizeof(pMsg.name));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	if(gQueryManager.ExecQuery("SELECT Data FROM HelperData WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT Data FROM HelperData WHERE Name='%s'", lpMsg->name) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
 		pMsg.result = 1;
-
-		memset(pMsg.data,0xFF,sizeof(pMsg.data));
+		std::memset(pMsg.data, 0xFF, sizeof(pMsg.data));
 	}
 	else
 	{
 		pMsg.result = 0;
 
-		gQueryManager.GetAsBinary("Data",pMsg.data,sizeof(pMsg.data));
-
+		gQueryManager.GetAsBinary("Data", pMsg.data, sizeof(pMsg.data));
 		gQueryManager.Close();
 	}
 
@@ -58,7 +41,7 @@ void CHelper::GDHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg,int index) // OK
 	#endif
 }
 
-void CHelper::GDHelperDataSaveRecv(SDHP_HELPER_DATA_SAVE_RECV* lpMsg) // OK
+void CHelper::GDHelperDataSaveRecv(const SDHP_HELPER_DATA_SAVE_RECV* lpMsg)
 {
 	#if(DATASERVER_UPDATE>=603)
 

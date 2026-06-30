@@ -1,9 +1,5 @@
-// Warehouse.h: interface for the CWarehouse class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// Warehouse.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #if(DATASERVER_UPDATE>=602)
@@ -12,9 +8,8 @@
 #define WAREHOUSE_SIZE 120
 #endif
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+//
+// GameServer -> DataServer
 
 struct SDHP_WAREHOUSE_ITEM_RECV
 {
@@ -35,9 +30,7 @@ struct SDHP_WAREHOUSE_ITEM_SAVE_RECV
 	UINT WarehouseNumber;
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_WAREHOUSE_ITEM_SEND
 {
@@ -56,8 +49,6 @@ struct SDHP_WAREHOUSE_FREE_SEND
 	char account[11];
 };
 
-//**********************************************//
-//**********************************************//
 //**********************************************//
 struct SDHP_WAREHOUSE_GUILD_STATUS_RECV
 {

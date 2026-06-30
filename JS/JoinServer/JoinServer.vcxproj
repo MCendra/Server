@@ -171,7 +171,6 @@
     <ClInclude Include="MD5_KEYVAL.H" />
     <ClInclude Include="ScriptParser.h" />
     <ClInclude Include="MiniDump.h" />
-    <ClInclude Include="Protect.h" />
     <ClInclude Include="QueryManager.h" />
     <ClInclude Include="QueueHandle.h" />
     <ClInclude Include="Resource.h" />
@@ -183,7 +182,6 @@
     <ClInclude Include="SocketManagerUDP.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="TargetVer.h" />
-    <ClInclude Include="ThemidaSDK.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +214,6 @@
     <ClCompile Include="MiniDump.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Protect.cpp" />
     <ClCompile Include="QueryManager.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

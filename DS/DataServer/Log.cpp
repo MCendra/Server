@@ -1,135 +1,42 @@
-// Log.cpp: implementation of the CLog class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// Log.cpp
+#include "Header.h"
 #include "Log.h"
 
-CLog gLog;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+CLog Log;
 
-CLog::CLog() // OK
+// CLog no tiene estado propio: toda la persistencia a disco vive en
+// gServerLog y la visualizacion en gServerDisplayer.
+CLog::CLog()
+{}
+
+CLog::~CLog()
+{}
+
+std::string CLog::FormatMessage(const char* text, va_list args) const
 {
-	this->m_count = 0;
+	char buffer[1024];
+	vsnprintf(buffer, sizeof(buffer), text, args);
+	return std::string(buffer);
 }
 
-CLog::~CLog() // OK
+void CLog::ToFile(LogType type, const char* text, ...)
 {
-	for(int n=0;n < this->m_count;n++)
-	{
-		if(this->m_LogInfo[n].Active != 0)
-		{
-			CloseHandle(this->m_LogInfo[n].File);
-		}
-	}
+	va_list args;
+	va_start(args, text);
+	std::string formattedMessage = FormatMessage(text, args);
+	va_end(args);
+
+	gServerLog.Output(type, formattedMessage);
 }
 
-void CLog::AddLog(BOOL active,char* directory) // OK
+void CLog::ToDisp(LogColor color, const char* text, ...)
 {
-	if(this->m_count < 0 || this->m_count >= MAX_LOG)
-	{
-		return;
-	}
+	va_list args;
+	va_start(args, text);
+	std::string formattedMessage = FormatMessage(text, args);
+	va_end(args);
 
-	LOG_INFO* lpInfo = &this->m_LogInfo[this->m_count++];
+	gServerDisplayer.LogAddText(color, formattedMessage);
 
-	lpInfo->Active = active;
-
-	strcpy_s(lpInfo->Directory,directory);
-
-	if(lpInfo->Active != 0)
-	{
-		CreateDirectory(lpInfo->Directory,0);
-
-		SYSTEMTIME time;
-
-		GetLocalTime(&time);
-
-		lpInfo->Day = time.wDay;
-
-		lpInfo->Month = time.wMonth;
-
-		lpInfo->Year = time.wYear;
-
-		wsprintf(lpInfo->Filename,".\\%s\\%04d-%02d-%02d.txt",lpInfo->Directory,lpInfo->Year,lpInfo->Month,lpInfo->Day);
-
-		lpInfo->File = CreateFile(lpInfo->Filename,GENERIC_WRITE,FILE_SHARE_READ,0,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,0);
-
-		if(lpInfo->File == INVALID_HANDLE_VALUE)
-		{
-			lpInfo->Active = 0;
-			return;
-		}
-
-		if(SetFilePointer(lpInfo->File,0,0,FILE_END) == INVALID_SET_FILE_POINTER)
-		{
-			lpInfo->Active = 0;
-			CloseHandle(lpInfo->File);
-			return;
-		}
-	}
-}
-
-void CLog::Output(eLogType type,char* text,...) // OK
-{
-	if(type < 0 || type >= this->m_count)
-	{
-		return;
-	}
-
-	LOG_INFO* lpInfo = &this->m_LogInfo[type];
-
-	if(lpInfo->Active == 0)
-	{
-		return;
-	}
-
-	SYSTEMTIME time;
-
-	GetLocalTime(&time);
-
-	if(time.wDay != lpInfo->Day || time.wMonth != lpInfo->Month || time.wYear != lpInfo->Year)
-	{
-		CloseHandle(lpInfo->File);
-
-		lpInfo->Day = time.wDay;
-
-		lpInfo->Month = time.wMonth;
-
-		lpInfo->Year = time.wYear;
-
-		wsprintf(lpInfo->Filename,".\\%s\\%04d-%02d-%02d.txt",lpInfo->Directory,lpInfo->Year,lpInfo->Month,lpInfo->Day);
-
-		lpInfo->File = CreateFile(lpInfo->Filename,GENERIC_WRITE,FILE_SHARE_READ,0,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,0);
-
-		if(lpInfo->File == INVALID_HANDLE_VALUE)
-		{
-			lpInfo->Active = 0;
-			return;
-		}
-
-		if(SetFilePointer(lpInfo->File,0,0,FILE_END) == INVALID_SET_FILE_POINTER)
-		{
-			lpInfo->Active = 0;
-			CloseHandle(lpInfo->File);
-			return;
-		}
-	}
-
-	char temp[1024] = {0};
-
-	va_list arg;
-	va_start(arg,text);
-	vsprintf_s(temp,text,arg);
-	va_end(arg);
-
-	char buff[1024] = {0};
-
-	wsprintf(buff,"%02d:%02d:%02d %s\r\n",time.wHour,time.wMinute,time.wSecond,temp);
-
-	DWORD OutSize;
-
-	WriteFile(lpInfo->File,buff,strlen(buff),&OutSize,0);
+	gServerLog.Output(LogType::GENERAL, formattedMessage);
 }

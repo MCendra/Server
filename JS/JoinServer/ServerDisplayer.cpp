@@ -8,7 +8,7 @@
 CServerDisplayer gServerDisplayer;
 
 // Definición de textos de estado
-constexpr char TEXT_WINDOWS_TITLE[] = "[JS] JoinServer %s - AccountCount : %d / %d (QueueSize : %d) ";
+constexpr char TEXT_WINDOWS_TITLE[] = "[JS] JoinServer %s - AccountCount : %d / %d (QueueSize : %d)";
 constexpr char JOINSERVER_WAIT[] = "ESPERANDO";
 constexpr char JOINSERVER_ACTIVE[] = "ACTIVO";
 
@@ -19,6 +19,7 @@ CServerDisplayer::CServerDisplayer()
 	m_font(nullptr),
 	m_smallfont(nullptr),
 	m_richeditmodule(nullptr),
+	m_isactive(false),
 	m_serverlistbottom(100),
 	m_lineheight(22),
 	m_rect{ 0, 0, 0, 0 }
@@ -155,7 +156,7 @@ void CServerDisplayer::PaintJoinServerState(HDC hdc) const
 	HFONT OldFont = (HFONT)SelectObject(hdc, m_font);
 
 	// Actualiza el texto y el fondo basado en el estado del servidor
-	if (m_isActive == false)
+	if (m_isactive == false)
 	{
 		SetTextColor(hdc, RGB(200, 200, 200));
 		FillRect(hdc, &rect, m_brush[1]);

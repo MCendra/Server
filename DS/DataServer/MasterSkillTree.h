@@ -1,16 +1,10 @@
-// MasterSkillTree.h: interface for the CMasterSkillTree class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// MasterSkillTree.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #define MAX_MASTER_SKILL_LIST 120
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_MASTER_SKILL_TREE_RECV
 {

@@ -46,25 +46,20 @@ constexpr auto SERVER_PART = "JOIN SERVER";
 #include <Psapi.h>
 
 // Archivos de encabezado en tiempo de ejecución de C
-// #include <stdlib.h>     // Utilidades generales: memoria dinámica, random, exit, etc.
-// #include <malloc.h>     // Asignación de memoria: malloc, free, etc. (específico de algunas plataformas)
-// #include <memory.h>     // Manipulación de memoria (alias de <string.h> en algunas plataformas)
-// #include <tchar.h>      // Soporte para caracteres Unicode/ANSI (útil en aplicaciones que usan TCHAR)
+#include <stdlib.h>     // Utilidades generales: memoria dinámica, random, exit, etc.
+#include <malloc.h>     // Asignación de memoria: malloc, free, etc. (específico de algunas plataformas)
+#include <memory.h>     // Manipulación de memoria (alias de <string.h> en algunas plataformas)
+#include <tchar.h>      // Soporte para caracteres Unicode/ANSI (útil en aplicaciones que usan TCHAR)
 
 // Archivos de encabezado en tiempo de ejecución de C++
 #include <string>       // Manejo de cadenas en C++
 #include <cstdint>		// Proporciona definiciones de tipos enteros con tamaños fijos
 
-//#include <commctrl.h>
 #include <sql.h>
 #include <sqltypes.h>
 #include <sqlext.h>
 #include <process.h>
 #include <iostream>
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
-#include <tchar.h>
 #include <time.h>
 #include <math.h>
 #include <map>
@@ -73,12 +68,9 @@ constexpr auto SERVER_PART = "JOIN SERVER";
 #include <algorithm>
 #include <assert.h>
 #include <fstream>
-//#include <dbghelp.h>
 
 #pragma comment(lib,"ws2_32.lib")
-//#pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"Rpcrt4.lib")
-//#pragma comment(lib,"dbghelp.lib")
 #pragma comment(lib,"Psapi.lib")
 
 // Define un tipo de dato específico (QWORD es un entero sin signo de 64 bits)

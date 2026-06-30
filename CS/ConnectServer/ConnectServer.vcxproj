@@ -155,7 +155,7 @@
     <ClInclude Include="ServerDisplayer.h" />
     <ClInclude Include="ServerList.h" />
     <ClInclude Include="ServerLog.h" />
-    <ClInclude Include="ServerProtocol.h" />
+    <ClInclude Include="ConnectServerProtocol.h" />
     <ClInclude Include="SocketManager.h" />
     <ClInclude Include="SocketManagerUDP.h" />
     <ClInclude Include="TargetVer.h" />
@@ -195,7 +195,7 @@
     <ClCompile Include="ServerLog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ServerProtocol.cpp">
+    <ClCompile Include="ConnectServerProtocol.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SocketManager.cpp">

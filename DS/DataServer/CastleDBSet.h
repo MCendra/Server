@@ -1,9 +1,5 @@
-// CastleDBSet.h: interface for the CCastleDBSet class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// CastleDBSet.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 struct CASTLE_DATA

@@ -1,16 +1,10 @@
-// MuunSystem.h: interface for the CMuunSystem class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// MuunSystem.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 #define MUUN_INVENTORY_SIZE 62
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_MUUN_INVENTORY_RECV
 {

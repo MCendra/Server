@@ -1,14 +1,8 @@
-// PersonalShop.h: interface for the CPersonalShop class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// PersonalShop.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_PSHOP_ITEM_VALUE_RECV
 {

@@ -1,9 +1,5 @@
-// ReiDoMU.h: interface for the ReiDoMU class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// ReiDoMU.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 //**********************************************//

@@ -1,17 +1,13 @@
-// GensSystem.cpp: implementation of the CGensSystem class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// GensSystem.cpp
+#include "Header.h"
 #include "GensSystem.h"
 #include "QueryManager.h"
 #include "ServerManager.h"
 #include "SocketManager.h"
 
 CGensSystem gGensSystem;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CGensSystem::CGensSystem() // OK
 {
@@ -326,7 +322,7 @@ void CGensSystem::DGGensSystemCreateSend(DWORD GensFamily,DWORD GensRankStart,DW
 
 	for(int n=0;n < MAX_SERVER;n++)
 	{
-		if(gServerManager[n].CheckState() != 0)
+		if(gServerManager[n].IsOnline() != 0)
 		{
 			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}

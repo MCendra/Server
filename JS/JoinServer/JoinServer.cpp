@@ -3,10 +3,10 @@
 #include "JoinServer.h"
 
 // Variables globales:
-HINSTANCE hInst;                                // Instancia actual
+HINSTANCE hInst;                               // Instancia actual
 CHAR szTitle[MAX_LOADSTRING];                  // Texto de la barra de título
 CHAR szWindowClass[MAX_LOADSTRING];            // Nombre de clase de la ventana principal
-HWND g_hWnd;                                    // Renombrado para evitar shadowing
+HWND g_hWnd;                                   // Renombrado para evitar shadowing
 
 // Declaraciones de funciones adelantadas incluidas en este módulo de código:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -16,8 +16,6 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 constexpr int WINDOW_WIDTH = 700;                  // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 600;                  // Alto de la ventana
-
-constexpr UINT TIMER_MAINTENANCE_INTERVAL = 1000;   // Intervalo de TIMER_1000, en ms
 
 constexpr UINT TIMER_MAINTENANCE = 1;
 constexpr UINT MAINTENANCE_INTERVAL = 1000;

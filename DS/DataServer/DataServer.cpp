@@ -2,14 +2,11 @@
 #include "Header.h"
 #include "DataServer.h"
 
-//#include "stdafx.h"
 //#include "AllowableIpList.h"
 //#include "BadSyntax.h"
 //#include "GuildManager.h"
 //#include "QueryManager.h"
-//#include "ServerDisplayer.h"
 //#include "SocketManager.h"
-//#include "Util.h"
 
 // Variables globales:
 HINSTANCE hInst;                               // Instancia actual
@@ -23,214 +20,271 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-char CustomerName[32];
-char CustomerHardwareId[36];
-int AdvancedLog;
-int RSTimeCTC;
+constexpr int WINDOW_WIDTH = 800;                  // Ancho de la ventana
+constexpr int WINDOW_HEIGHT = 600;                 // Alto de la ventana
 
-constexpr char ERROR_WSA_STARTUP[] = "[CS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
-constexpr char ERROR_WSA_TCP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
-constexpr char ERROR_WSA_UDP_STARTUP[] = "[CS] Fallo critico: no se pudo iniciar el socket UDP en el puerto %d.";
+constexpr UINT TIMER_MAINTENANCE = 1;
+constexpr UINT MAINTENANCE_INTERVAL = 1000;
+
+constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar DataServer?"; // \xBF = ¿ en ANSI
+constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
+constexpr char ERROR_WSA_STARTUP[] = "[DS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
+constexpr char ERROR_DB_CONNECT[] = "[DS] Fallo critico: no se pudo conectar a la base de datos. Codigo de error: %d";
+constexpr char ERROR_TCP_STARTUP[] = "[DS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
+constexpr char ERROR_UDP_CONNECT[] = "[DS] Fallo critico: no se pudo conectar via UDP a ConnectServer (%s:%d).";
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
-
+	// Inicia la captura de minidumps en caso de fallos
 	CMiniDump::Start();
 
-	LoadString(hInstance,IDS_APP_TITLE,szTitle,MAX_LOADSTRING);
-	LoadString(hInstance,IDC_DATASERVER,szWindowClass,MAX_LOADSTRING);
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
 
+	// Inicializar cadenas globales en ASCII
+	LoadStringA(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringA(hInstance, IDC_DATASERVER, szWindowClass, MAX_LOADSTRING);
+
+	// Registrar el tipo de ventana
 	MyRegisterClass(hInstance);
 
-	if(InitInstance(hInstance,nCmdShow) == 0)
+	// Realizar la inicializacion de la aplicacion:
+	if (!InitInstance(hInstance, nCmdShow))
 	{
-		return 0;
+		// Asegurar limpieza del minidump antes de salir
+		CMiniDump::Clean();
+		return false;
 	}
 
-	GetPrivateProfileString("DataServerInfo","CustomerName","",CustomerName,sizeof(CustomerName),".\\DataServer.ini");
+	// Obtener el path del ejecutable
+	gUtil.GetExecutablePath();
 
-	GetPrivateProfileString("DataServerInfo","CustomerHardwareId","",CustomerHardwareId,sizeof(CustomerHardwareId),".\\DataServer.ini");
+	// Inicializa controlador de visualizacion de mensajes
+	gServerDisplayer.Init(g_hWnd);
 
-	#if(PROTECT_STATE==0)
+	// Inicializa el log al disco
+	gServerLog.Init(true);
 
-	#if(DATASERVER_UPDATE>=801)
-	gProtect.StartAuth(AUTH_SERVER_TYPE_S8_DATA_SERVER);
-	#elif(DATASERVER_UPDATE>=601)
-	gProtect.StartAuth(AUTH_SERVER_TYPE_S6_DATA_SERVER);
-	#elif(DATASERVER_UPDATE>=401)
-	gProtect.StartAuth(AUTH_SERVER_TYPE_S4_DATA_SERVER);
-	#else
-	gProtect.StartAuth(AUTH_SERVER_TYPE_S2_DATA_SERVER);
-	#endif
-
-	#endif
-
-	char buff[256];
-
-	wsprintf(buff,"[%s] %s DataServer (QueueSize : %d)",DATASERVER_VERSION,DATASERVER_CLIENT,0);
-
-	SetWindowText(hWnd,buff);
-
-	gServerDisplayer.Init(hWnd);
+	// Inicializa el archivo ini de configuración del servidor
+	gServerConfig.Init();
 
 	WSADATA wsa;
-
-	if(WSAStartup(MAKEWORD(2,2),&wsa) == 0)
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
-		char DataServerODBC[32] = {0};
+		Log.ToFile(LogType::GENERAL, ERROR_WSA_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_WSA_STARTUP, WSAGetLastError());
+		CMiniDump::Clean();
+		return false;  // gUtil.ErrorMessageBox ya llama ExitProcess, pero por claridad dejamos el return
+	}
 
-		char DataServerUSER[32] = {0};
+	bool wsaStarted = true;
 
-		char DataServerPASS[32] = {0};
+	if (!gQueryManager.Connect(DataServerODBC, DataServerUSER, DataServerPASS))
+	{
+		Log.ToFile(LogType::GENERAL, ERROR_DB_CONNECT, GetLastError());
+		gUtil.ErrorMessageBox(ERROR_DB_CONNECT, GetLastError());
+		return false;
+	}
 
-		GetPrivateProfileString("DataServerInfo","DataServerODBC","",DataServerODBC,sizeof(DataServerODBC),".\\DataServer.ini");
+	WORD DataServerPort = GetPrivateProfileInt("DataServerInfo","DataServerPort",55960,".\\DataServer.ini");
 
-		GetPrivateProfileString("DataServerInfo","DataServerUSER","",DataServerUSER,sizeof(DataServerUSER),".\\DataServer.ini");
-
-		GetPrivateProfileString("DataServerInfo","DataServerPASS","",DataServerPASS,sizeof(DataServerPASS),".\\DataServer.ini");
-
-		WORD DataServerPort = GetPrivateProfileInt("DataServerInfo","DataServerPort",55960,".\\DataServer.ini");
-
-		AdvancedLog = GetPrivateProfileInt("DataServerInfo","AdvancedLog",0,".\\DataServer.ini");
+	AdvancedLog = GetPrivateProfileInt("DataServerInfo","AdvancedLog",0,".\\DataServer.ini");
 
 #if(CHIEN_TRUONG_CO)
-		RSTimeCTC = GetPrivateProfileInt("DataServerInfo", "RSTimeCTC", 40, ".\\DataServer.ini");
+	RSTimeCTC = GetPrivateProfileInt("DataServerInfo", "RSTimeCTC", 40, ".\\DataServer.ini");
 #endif
 
-		if(gQueryManager.Connect(DataServerODBC,DataServerUSER,DataServerPASS) == 0)
-		{
-			LogAdd(LOG_RED,"Could not connect to database");
-		}
-		else
-		{
-			if(gSocketManager.Start(DataServerPort) == 0)
-			{
-				gQueryManager.Disconnect();
-			}
-			else
-			{
-				gAllowableIpList.Load("AllowableIpList.txt");
-
-				gBadSyntax.Load("BadSyntax.txt");
-
-				SetTimer(hWnd,TIMER_1000,1000,0);
-
-				gGuildManager.Init();
-			}
-		}
-	}
-	else
+	if (!gSocketManager.Init(DataServerPort))
 	{
-		LogAdd(LOG_RED,"WSAStartup() failed with error: %d",WSAGetLastError());
+		Log.ToFile(LogType::GENERAL, ERROR_TCP_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_TCP_STARTUP, DataServerPort);
+		gQueryManager.Disconnect();
+		return false;
 	}
 
-	gServerDisplayer.PaintAllInfo();
+	gAllowableIpList.Load(AllowableIpListFilePath);
 
-	gServerDisplayer.PaintName();
+	gBadSyntax.Load(BadSyntaxFilePath);
 
-	SetTimer(hWnd,TIMER_2000,2000,0);
+	//SetTimer(hWnd,TIMER_1000,1000,0);
 
-	HACCEL hAccelTable = LoadAccelerators(hInstance,(LPCTSTR)IDC_DATASERVER);
+	gGuildManager.Init();
+
+	//SetTimer(hWnd,TIMER_2000,2000,0);
+
+	// FIX:
+	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
+	InvalidateRect(g_hWnd, nullptr, true);
+
+	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DATASERVER));
 
 	MSG msg;
 
-	while(GetMessage(&msg,0,0,0) != 0)
+	// Bucle principal de mensajes:
+	while (GetMessage(&msg, nullptr, 0, 0))
 	{
-		if(TranslateAccelerator(msg.hwnd,hAccelTable,&msg) == 0)
+		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
-			DispatchMessageA(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 
+	// Limpieza Winsock si se inicializo
+	if (wsaStarted)
+	{
+		// Detener primero todos los sockets e hilos, igual que en CS:
+		// cerrar la red antes de WSACleanup evita que callbacks de
+		// IOCP pendientes intenten usar Winsock ya finalizado.
+		gSocketManager.Clean();
+		gQueryManager.Disconnect();
+
+		WSACleanup();
+	}
+
+	// Limpia el minidump al finalizar
 	CMiniDump::Clean();
 
-
-	return msg.wParam;
+	return (int)msg.wParam;
 }
 
-ATOM MyRegisterClass(HINSTANCE hInstance) // OK
+//
+//  FUNCIÓN: MyRegisterClass()
+//
+//  PROPÓSITO: Registra la clase de ventana.
+//
+ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-	WNDCLASSEX wcex;
+	// Inicializa toda la estructura a cero
+	WNDCLASSEXA wcex = {};
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
-
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = (WNDPROC)WndProc;
+	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance,(LPCTSTR)IDI_DATASERVER);
-	wcex.hCursor = LoadCursor(0,IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName = (LPCSTR)IDC_DATASERVER;
+	wcex.hIcon = LoadIconA(hInstance, MAKEINTRESOURCEA(IDI_DATASERVER));
+	wcex.hCursor = LoadCursorA(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCEA(IDC_DATASERVER);
 	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(wcex.hInstance,(LPCTSTR)IDI_SMALL);
+	wcex.hIconSm = LoadIconA(wcex.hInstance, MAKEINTRESOURCEA(IDI_SMALL));
 
-	return RegisterClassEx(&wcex);
+	return RegisterClassExA(&wcex);
 }
 
-BOOL InitInstance(HINSTANCE hInstance,int nCmdShow) // OK
+//
+//   FUNCIÓN: InitInstance(HINSTANCE, int)
+//
+//   PROPÓSITO: Guarda el identificador de instancia y crea la ventana principal
+//
+//   COMENTARIOS:
+//
+//        En esta función, se guarda el identificador de instancia en una variable común y
+//        se crea y muestra la ventana principal del programa.
+//
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
+	// Almacenar identificador de instancia en una variable global
 	hInst = hInstance;
 
-	hWnd = CreateWindow(szWindowClass,szTitle,WS_OVERLAPPEDWINDOW | WS_THICKFRAME,CW_USEDEFAULT,0,600,600,0,0,hInstance,0);
+	g_hWnd = CreateWindowA(szWindowClass, szTitle, WS_OVERLAPPED | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		CW_USEDEFAULT, 0, WINDOW_WIDTH, WINDOW_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
-	if(hWnd == 0)
+	if (!g_hWnd)
 	{
-		return 0;
+		Log.ToFile(LogType::GENERAL, "[JS] CreateWindowA fallo. Codigo error: %d", GetLastError());
+		return false;
 	}
 
-	ShowWindow(hWnd,nCmdShow);
-	UpdateWindow(hWnd);
-	return 1;
+	ShowWindow(g_hWnd, nCmdShow);
+
+	// Timer 1: refresco de UI cada 1 segundo
+	SetTimer(g_hWnd, TIMER_MAINTENANCE, MAINTENANCE_INTERVAL, nullptr);
+
+	// Timer 2: chequeo de estado de servidores cada 5 segundos
+	// SetTimer(g_hWnd, TIMER_CHECKSERVER, SERVER_CHECK_TIMEOUTS, nullptr);
+
+	UpdateWindow(g_hWnd);
+
+	return true;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // OK
+//
+//  FUNCIÓN: WndProc(HWND, UINT, WPARAM, LPARAM)
+//
+//  PROPÓSITO: Procesa mensajes de la ventana principal.
+//
+//  WM_COMMAND  - Procesar el menú de aplicaciones
+//  WM_PAINT    - Pintar la ventana principal
+//  WM_DESTROY  - Publicar un mensaje de salida y volver
+//
+//
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	switch(message)
+	switch (message)
 	{
-		case WM_COMMAND:
-			switch(LOWORD(wParam))
-			{
-				case IDM_ABOUT:
-					DialogBox(hInst,(LPCTSTR)IDD_ABOUTBOX,hWnd,(DLGPROC)About);
-					break;
-				case IDM_EXIT:
-					if(MessageBox(0,"Are you sure to terminate DataServer?","Ask terminate server",MB_YESNO | MB_ICONQUESTION) == IDYES)
-					{
-						DestroyWindow(hWnd);
-					}
-					break;
-				default:
-					return DefWindowProc(hWnd,message,wParam,lParam);
-			}
+	case WM_COMMAND:
+	{
+		int wmId = LOWORD(wParam);
+		// Analizar las selecciones de menu:
+		switch (wmId)
+		{
+		case IDM_ABOUT:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
-		case WM_TIMER:
-			switch(wParam)
-			{
-				case TIMER_1000:
-					break;
-				case TIMER_2000:
-					gServerDisplayer.Run();
-					break;
-				default:
-					break;
-			}
-			break;
-		case WM_CLOSE:
-			if (MessageBox(0, "Close DataServer?", "DataServer", MB_OKCANCEL) == IDOK)
+		case IDM_EXIT:
+			if (MessageBoxA(nullptr, CONFIRM_EXIT_MESSAGE, CONFIRM_EXIT_TITLE, MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				DestroyWindow(hWnd);
 			}
 			break;
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
 		default:
-			return DefWindowProc(hWnd,message,wParam,lParam);
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
 	}
+	break;
+	case WM_TIMER:
+		switch (wParam)
+		{
+		case TIMER_MAINTENANCE:
+			gServerDisplayer.UpdateWindowTitle(gSocketManager.GetQueueSize());
+			gServerDisplayer.UpdateLayout();
+			break;
+		}
+		break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hWnd, &ps);
 
+		gServerDisplayer.PaintName(hdc);
+
+		EndPaint(hWnd, &ps);
+	}
+	break;
+	case WM_SIZE:
+	{
+		if (g_hWnd != nullptr)
+		{
+			gServerDisplayer.UpdateLayout();
+		}
+		break;
+	}
+	case WM_DESTROY:
+		KillTimer(hWnd, TIMER_MAINTENANCE);
+		PostQuitMessage(0);
+		break;
+	case WM_CLOSE: // Manejar el cierre de la ventana con el boton X
+		if (MessageBoxA(hWnd, CONFIRM_EXIT_MESSAGE, CONFIRM_EXIT_TITLE, MB_YESNO | MB_ICONQUESTION) == IDYES)
+		{
+			DestroyWindow(hWnd);
+		}
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
 	return 0;
 }
 
@@ -253,4 +307,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return (INT_PTR)false;
 }
+
 

@@ -1,14 +1,6 @@
 // Util.h
 #pragma once
-#include "JoinServerProtocol.h"
-#include "SocketManager.h"
-#include "SocketManagerUDP.h"
-
-struct SDHP_JOIN_SERVER_LIVE_SEND
-{
-	PBMSG_HEAD header; // C1:02
-	DWORD QueueSize;
-};
+#include <vector>
 
 // Clase Util para funciones utilitarias
 class CUtil
@@ -18,11 +10,8 @@ public:
 	void GetExecutablePath();
 	// Mensaje de error para terminar el proceso
 	void ErrorMessageBox(const char* message, ...);
+	// Verifica la sintaxis de un texto
+	bool CheckTextSyntax(const char* text, int size);
 };
 
 extern CUtil gUtil;
-
-extern int gServerCount;
-
-bool CheckTextSyntax(char* text, int size);
-void JoinServerLiveProc();

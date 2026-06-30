@@ -84,7 +84,7 @@ void CUtil::ErrorMessageBox(const char* message, ...)
 
 }
 
-bool CheckTextSyntax(char* text,int size)
+bool CUtil::CheckTextSyntax(const char* text,int size)
 {
 	for(int n=0;n < size;n++)
 	{
@@ -95,18 +95,6 @@ bool CheckTextSyntax(char* text,int size)
 	}
 
 	return 1;
-}
-
-void JoinServerLiveProc()
-{
-	SDHP_JOIN_SERVER_LIVE_SEND pMsg = {};
-
-	pMsg.header.set(0x02,sizeof(pMsg));
-
-	pMsg.QueueSize = gSocketManager.GetQueueSize();
-
-	gSocketManagerUDP.DataSend((BYTE*)&pMsg,pMsg.header.size);
-
 }
 
 

@@ -1,14 +1,10 @@
-// SocketManager.h: interface for the CSocketManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// SocketManager.h
 #pragma once
-
+#include "DataServerProtocol.h"
 #include "CriticalSection.h"
-#include "Queue.h"
+#include "QueueHandle.h"
 
-#define MAX_MAIN_PACKET_SIZE 8192
-#define MAX_SIDE_PACKET_SIZE 262144
+#define MAX_SIDE_PACKET_SIZE MAX_MAIN_PACKET_SIZE // 2048
 #define MAX_SERVER_WORKER_THREAD 8
 #define MAX_IO_OPERATION 2
 #define IO_RECV 0
@@ -58,19 +54,30 @@ class CSocketManager
 public:
 	CSocketManager();
 	virtual ~CSocketManager();
-	bool Start(WORD port);
+	bool Init(WORD port);
 	void Clean();
 	bool CreateListenSocket();
 	bool CreateCompletionPort();
 	bool CreateAcceptThread();
 	bool CreateWorkerThread();
 	bool CreateServerQueue();
-	bool DataRecv(int index,IO_MAIN_BUFFER* lpIoBuffer);
-	bool DataSend(int index,BYTE* lpMsg,int size);
+	bool DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer);
+	bool DataSend(int index, BYTE* lpMsg, int size);
 	void Disconnect(int index);
-	void OnRecv(int index,DWORD IoSize,IO_RECV_CONTEXT* lpIoContext);
-	void OnSend(int index,DWORD IoSize,IO_SEND_CONTEXT* lpIoContext);
-	static int CALLBACK ServerAcceptCondition(IN LPWSABUF lpCallerId,IN LPWSABUF lpCallerData,IN OUT LPQOS lpSQOS,IN OUT LPQOS lpGQOS,IN LPWSABUF lpCalleeId,OUT LPWSABUF lpCalleeData,OUT GROUP FAR* g,CSocketManager* lpSocketManager);
+	void OnRecv(int index, DWORD IoSize, IO_RECV_CONTEXT* lpIoContext);
+	void OnSend(int index, DWORD IoSize, IO_SEND_CONTEXT* lpIoContext);
+	// FIX: el ultimo parametro pasa de "CSocketManager*" a "DWORD_PTR" para
+	// coincidir con el tipo real de dwCallbackData en WSAAccept y evitar
+	// truncamiento de puntero en compilaciones x64 (ver SocketManager.cpp).
+	static int CALLBACK ServerAcceptCondition(
+		IN LPWSABUF lpCallerId,
+		IN LPWSABUF lpCallerData,
+		IN OUT LPQOS lpSQOS,
+		IN OUT LPQOS lpGQOS,
+		IN LPWSABUF lpCalleeId,
+		OUT LPWSABUF lpCalleeData,
+		OUT GROUP FAR* g,
+		DWORD_PTR dwCallbackData);
 	static DWORD WINAPI ServerAcceptThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerWorkerThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerQueueThread(CSocketManager* lpSocketManager);
@@ -85,7 +92,8 @@ private:
 	CQueue m_ServerQueue;
 	HANDLE m_ServerQueueSemaphore;
 	HANDLE m_ServerQueueThread;
-	CCriticalSection m_critical;
+	HANDLE m_shutdownEvent;
 };
 
 extern CSocketManager gSocketManager;
+

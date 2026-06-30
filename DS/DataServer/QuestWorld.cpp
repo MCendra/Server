@@ -1,8 +1,5 @@
-// QuestWorld.cpp: implementation of the CQuestWorld class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// QuestWorld.cpp
+#include "Header.h"
 #include "QuestWorld.h"
 #include "QueryManager.h"
 #include "SocketManager.h"

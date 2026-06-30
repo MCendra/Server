@@ -1,14 +1,9 @@
-// NpcTalk.h: interface for the CNpcTalk class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// NpcTalk.h
 #pragma once
 
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_NPC_LEO_THE_HELPER_RECV
 {

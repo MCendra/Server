@@ -1,61 +1,106 @@
-#include "stdafx.h"
+// Util.cpp
+#include "Header.h"
 #include "CharacterManager.h"
-#include "ServerManager.h"
 #include "Util.h"
-#include "ThemidaSDK.h"
+
+//#include "CharacterManager.h"
+//#include "ServerManager.h"
 
 int gServerCount = 0;
 
-void ErrorMessageBox(char* message,...) // OK
+// Instancia global
+CUtil gUtil;
+
+char* WorkingPath = nullptr;                 // Path del ejecutable declarado en Header.h
+
+constexpr char ERROR_TITLE[] = "Error";
+
+//int gServerCount = 0;
+
+void CUtil::GetExecutablePath()
 {
-	VM_START
+	DWORD bufferSize = MAX_PATH;
+	std::vector<char> buffer;
+	buffer.resize(bufferSize);
 
-	char buff[256];
+	while (true)
+	{
+		DWORD result = GetModuleFileNameA(nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
+		if (result == 0)
+		{
+			// No se pudo obtener la ruta
+			if (WorkingPath)
+			{
+				free(WorkingPath);
+				WorkingPath = nullptr;
+			}
+			return;
+		}
 
-	memset(buff,0,sizeof(buff));
+		// Si el buffer fue insuficiente, GetModuleFileName devuelve igual al tamaño del buffer
+		if (result >= buffer.size())
+		{
+			// Aumentar y volver a intentar
+			buffer.resize(buffer.size() * 2);
+			continue;
+		}
 
-	va_list arg;
-	va_start(arg,message);
-	vsprintf_s(buff,message,arg);
-	va_end(arg);
+		// Encontrar la última barra invertida para mantener solo el directorio
+		char* lastSlash = strrchr(buffer.data(), '\\');
+		if (lastSlash)
+		{
+			*(lastSlash + 1) = '\0';
+		}
 
-	MessageBox(0,buff,"Error",MB_OK | MB_ICONERROR);
-
-	VM_END
-
-	ExitProcess(0);
+		// Liberar anterior si existe y duplicar
+		if (WorkingPath)
+		{
+			free(WorkingPath);
+		}
+		WorkingPath = _strdup(buffer.data());
+		return;
+	}
 }
 
-void LogAdd(eLogColor color,char* text,...) // OK
+// IMPORTANTE: "message" debe ser SIEMPRE un string literal o constante interna.
+// NUNCA pasar aquí texto proveniente de un cliente, archivo de configuración,
+// o cualquier fuente externa: es un formato de printf y un %s/%n malicioso
+// podría leer/escribir memoria fuera de buff.
+void CUtil::ErrorMessageBox(const char* message, ...)
 {
-	tm today;
-	time_t ltime;
-	time(&ltime);
 
-	if(localtime_s(&today,&ltime) != 0)
+	if (message == nullptr)
 	{
-		return;
+		MessageBoxA(nullptr, "Unknown error", ERROR_TITLE, MB_OK | MB_ICONERROR);
+		ExitProcess(0);
 	}
 
-	char time[32];
-
-	if(asctime_s(time,sizeof(time),&today) != 0)
-	{
-		return;
-	}
-
-	char temp[1024];
+	char buff[512] = {};
 
 	va_list arg;
-	va_start(arg,text);
-	vsprintf_s(temp,text,arg);
+	va_start(arg, message);
+
+	vsnprintf_s(buff, sizeof(buff), _TRUNCATE, message, arg);
+
 	va_end(arg);
 
-	char log[1024];
+	MessageBoxA(nullptr, buff, ERROR_TITLE, MB_OK | MB_ICONERROR);
 
-	wsprintf(log,"%.8s %s",&time[11],temp);
+	ExitProcess(0);
 
-	gServerDisplayer.LogAddText(color,log,strlen(log));
+}
+
+bool CUtil::CheckTextSyntax(const char* text, int size)
+{
+	for (int n = 0;n < size;n++)
+	{
+		if (text[n] == 0x20 || text[n] == 0x22 || text[n] == 0x27)
+		{
+			return 0;
+		}
+	}
+
+	return 1;
 }
 
 bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot) // OK
@@ -72,64 +117,6 @@ bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot) // OK
 	return 0;
 }
 
-bool CheckTextSyntax(char* text,int size) // OK
-{
-	for(int n=0;n < size;n++)
-	{
-		if(text[n] == 0x20 || text[n] == 0x22 || text[n] == 0x27)
-		{
-			return 0;
-		}
-	}
-
-	return 1;
-}
-
-int GetFreeServerIndex() // OK
-{
-	int index = -1;
-	int count = gServerCount;
-
-	if(SearchFreeServerIndex(&index,0,MAX_SERVER,10000) != 0)
-	{
-		return index;
-	}
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[count].CheckState() == 0)
-		{
-			return count;
-		}
-		else
-		{
-			count = (((++count)>=MAX_SERVER)?0:count);
-		}
-	}
-
-	return -1;
-}
-
-int SearchFreeServerIndex(int* index,int MinIndex,int MaxIndex,DWORD MinTime) // OK
-{
-	DWORD CurOnlineTime = 0;
-	DWORD MaxOnlineTime = 0;
-
-	for(int n=MinIndex;n < MaxIndex;n++)
-	{
-		if(gServerManager[n].CheckState() == 0 && gServerManager[n].CheckAlloc() != 0)
-		{
-			if((CurOnlineTime=(GetTickCount()-gServerManager[n].m_OnlineTime)) > MinTime && CurOnlineTime > MaxOnlineTime)
-			{
-				(*index) = n;
-				MaxOnlineTime = CurOnlineTime;
-			}
-		}
-	}
-
-	return (((*index)==-1)?0:1);
-}
-
 WORD GetServerCodeByName(char* name) // OK
 {
 	CHARACTER_INFO CharacterInfo;
@@ -144,15 +131,4 @@ WORD GetServerCodeByName(char* name) // OK
 	}
 }
 
-CServerManager* FindServerByCode(WORD ServerCode) // OK
-{
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].CheckState() != 0 && gServerManager[n].m_ServerCode == ServerCode)
-		{
-			return &gServerManager[n];
-		}
-	}
 
-	return 0;
-}

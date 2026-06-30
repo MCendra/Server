@@ -1,16 +1,12 @@
-// CharacterManager.cpp: implementation of the CCharacterManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// CharacterManager.cpp
+#include "Header.h"
 #include "CharacterManager.h"
 #include "ServerManager.h"
 #include "Util.h"
 
 CCharacterManager gCharacterManager;
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CCharacterManager::CCharacterManager() // OK
 {

@@ -161,12 +161,12 @@ void CQueryManager::Diagnostic(const char* query)
 
 bool CQueryManager::ExecQuery(const char* query,...)
 {
-	char buff[8192];
+	std::array<char, 8192> queryBuffer{};
 
 	va_list arg;
 	va_start(arg,query);
 	// Protección crítica: Evita desbordamiento de búfer e interrupción del proceso
-	int written = _vsnprintf_s(buff, sizeof(buff), _TRUNCATE, query, arg);
+	int written = _vsnprintf_s(queryBuffer.data(), queryBuffer.size(), _TRUNCATE, query, arg);
 	va_end(arg);
 
 	if (written == -1)
@@ -180,12 +180,12 @@ bool CQueryManager::ExecQuery(const char* query,...)
 	memset(m_SQLData, 0, sizeof(m_SQLData));
 	memset(m_SQLDataLen, 0, sizeof(m_SQLDataLen));
 
-	SQLRETURN result = SQLExecDirect(m_STMT, (SQLCHAR*)buff, SQL_NTS);
+	SQLRETURN result = SQLExecDirect(m_STMT, (SQLCHAR*)queryBuffer.data(), SQL_NTS);
 
 	// Lógica correcta sin comparar macros booleanas contra ceros directos
 	if (!SQL_SUCCEEDED(result) && result != SQL_NO_DATA)
 	{
-		Diagnostic(buff);
+		Diagnostic(queryBuffer.data());
 		return false;
 	}
 
@@ -277,50 +277,29 @@ void CQueryManager::GetAsString(const char* ColName,char* OutBuffer,int OutBuffe
 
 void CQueryManager::GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBufferSize)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	if(index == -1)
+	if (index == -1)
 	{
-		memset(OutBuffer,0,OutBufferSize);
+		std::memset(OutBuffer, 0, OutBufferSize);
+		return;
 	}
-	else
-	{
-		ConvertStringToBinary(m_SQLData[index], (int)strlen(m_SQLData[index]), OutBuffer, OutBufferSize);
-	}
+
+	ConvertStringToBinary(m_SQLData[index], static_cast<int>(std::strlen(m_SQLData[index])), OutBuffer, OutBufferSize);
 }
 
 void CQueryManager::BindParameterAsString(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize)
 {
 	m_SQLBindValue[ParamNumber - 1] = SQL_NTS;
 
-	SQLBindParameter(
-		m_STMT,
-		ParamNumber,
-		SQL_PARAM_INPUT,
-		SQL_C_CHAR,
-		SQL_VARCHAR,
-		ColumnSize,
-		0,
-		InBuffer,
-		0,
-		&m_SQLBindValue[ParamNumber - 1]);
+	SQLBindParameter(m_STMT, ParamNumber, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, ColumnSize, 0, InBuffer, 0, &m_SQLBindValue[ParamNumber - 1]);
 }
 
 void CQueryManager::BindParameterAsBinary(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize)
 {
 	m_SQLBindValue[ParamNumber - 1] = static_cast<SQLLEN>(ColumnSize);
 
-	SQLBindParameter(
-		m_STMT,
-		ParamNumber,
-		SQL_PARAM_INPUT,
-		SQL_C_BINARY,
-		SQL_VARBINARY,
-		ColumnSize,
-		0,
-		InBuffer,
-		0,
-		&m_SQLBindValue[ParamNumber - 1]);
+	SQLBindParameter(m_STMT,ParamNumber, SQL_PARAM_INPUT, SQL_C_BINARY, SQL_VARBINARY, ColumnSize, 0, InBuffer, 0, &m_SQLBindValue[ParamNumber - 1]);
 }
 
 // CORRECCIÓN CRÍTICA DE ALGORITMO: El original fallaba con letras minúsculas (ej: 'a'-'f')
@@ -389,7 +368,6 @@ void CQueryManager::ConvertStringToBinary(const char* InBuff, int InSize, BYTE* 
 		OutBuff[n] = (high << 4) | low;
 	}
 }
-
 
 // OPTIMIZACIÓN: Reemplazadas las divisiones (/ 16 y % 16) por corrimientos de bits (>> 4 y & 0x0F)
 // Es mucho más rápido en procesadores x86 de 32 bits.

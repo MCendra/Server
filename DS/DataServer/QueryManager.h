@@ -1,7 +1,4 @@
-// QueryManager.h: interface for the CQueryManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// QueryManager.h
 #pragma once
 
 #define MAX_COLUMNS 1000
@@ -11,23 +8,24 @@ class CQueryManager
 public:
 	CQueryManager();
 	virtual ~CQueryManager();
-	bool Connect(char* odbc,char* user,char* pass);
+	bool Connect(const char* odbc, const char* user, const char* pass);
 	void Disconnect();
-	void Diagnostic(char* query);
-	bool ExecQuery(char* query,...);
+	void Diagnostic(const char* query);
+	bool ExecQuery(const char* query, ...);
 	void Close();
 	SQLRETURN Fetch();
-	int FindIndex(char* ColName);
+	int FindIndex(const char* columnName);
 	int GetResult(int index);
-	int GetAsInteger(char* ColName);
-	float GetAsFloat(char* ColName);
-	__int64 GetAsInteger64(char* ColName);
-	void GetAsString(char* ColName,char* OutBuffer,int OutBufferSize);
-	void GetAsBinary(char* ColName,BYTE* OutBuffer,int OutBufferSize);
-	void BindParameterAsString(int ParamNumber,void* InBuffer,int ColumnSize);
-	void BindParameterAsBinary(int ParamNumber,void* InBuffer,int ColumnSize);
-	void ConvertStringToBinary(char* InBuff,int InSize,BYTE* OutBuff,int OutSize);
-	void ConvertBinaryToString(BYTE* InBuff,int InSize,char* OutBuff,int OutSize);
+	int GetAsInteger(const char* ColName);
+	float GetAsFloat(const char* ColName);
+	__int64 GetAsInteger64(const char* ColName);
+	void GetAsString(const char* ColName,char* OutBuffer,int OutBufferSize);
+	void GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBufferSize);
+	void BindParameterAsString(SQLUSMALLINT ParamNumber, const void* InBuffer, SQLULEN ColumnSize);
+	void BindParameterAsBinary(SQLUSMALLINT ParamNumber, const void* InBuffer, SQLULEN ColumnSize);
+	void ConvertStringToBinary(const char* InBuff, int InSize, BYTE* OutBuff, int OutSize);
+	void ConvertBinaryToString(BYTE* InBuff, int InSize, char* OutBuff, int OutSize);
+
 private:
 	SQLHANDLE m_SQLEnvironment;
 	SQLHANDLE m_SQLConnection;

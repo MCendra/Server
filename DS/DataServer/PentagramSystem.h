@@ -1,14 +1,8 @@
-// PentagramSystem.h: interface for the CPentagramSystem class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// PentagramSystem.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
-//**********************************************//
-//********** GameServer -> DataServer **********//
-//**********************************************//
+// GameServer -> DataServer
 
 struct SDHP_PENTAGRAM_JEWEL_INFO_RECV
 {
