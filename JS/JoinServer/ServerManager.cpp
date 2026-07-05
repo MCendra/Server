@@ -52,24 +52,11 @@ void CServerManager::AddServer(int index,char* ip,SOCKET socket)
 
 		strcpy_s(m_IpAddr, sizeof(m_IpAddr), ip);
 
-		// Avanzar el cursor circular solo cuando el slot no tenía IO contexts
-		// previamente asignados (primera conexión en este slot, no reutilización).
-		// Si reutilizamos un slot ya allocado, el cursor no cambia: el slot
-		// reutilizado puede estar en cualquier posición del array, no
-		// necesariamente adyacente al cursor actual.
-		const bool firstAlloc = !CheckAlloc();
-
 		if (m_IoRecvContext == nullptr)
 			m_IoRecvContext = new IO_RECV_CONTEXT;
 
 		if (m_IoSendContext == nullptr)
 			m_IoSendContext = new IO_SEND_CONTEXT;
-
-		if (firstAlloc)
-		{
-			CCriticalSection::CLock arrayLock(gServerArrayLock);
-			gServerSearchStart = (m_index + 1) % MAX_SERVER;
-		}
 
 		memset(&m_IoRecvContext->overlapped, 0, sizeof(m_IoRecvContext->overlapped));
 		m_IoRecvContext->wsabuf.buf = (char*)m_IoRecvContext->IoMainBuffer.buff;
@@ -142,20 +129,25 @@ void CServerManager::SetServerInfo(char* name, WORD port, WORD code)
 // Si no hay ninguno elegible, hace búsqueda circular desde gServerSearchStart.
 int CServerManager::GetFreeServerIndex()
 {
-	// Proteger el recorrido para evitar lecturas inconsistentes del array de clientes
 	CCriticalSection::CLock lock(gServerArrayLock);
 
-	// Intento 1: slot offline con IO contexts y suficiente tiempo offline
 	int index = SearchFreeServerIndex(0, MAX_SERVER, MAX_SERVER_OFFLINE_TIME_FOR_REUSE);
-	if (index != -1) return index;
 
-	// Intento 2: búsqueda circular desde el cursor
+	if (index != -1)
+	{
+		gServerSearchStart = (index + 1) % MAX_SERVER;
+		return index;
+	}
+
 	int start = gServerSearchStart;
+
 	for (int n = 0; n < MAX_SERVER; n++)
 	{
 		int i = (start + n) % MAX_SERVER;
+
 		if (gServerManager[i].m_state == SERVER_OFFLINE)
 		{
+			gServerSearchStart = (i + 1) % MAX_SERVER;
 			return i;
 		}
 	}

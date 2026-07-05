@@ -88,12 +88,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	WORD DataServerPort = GetPrivateProfileInt("DataServerInfo","DataServerPort",55960,".\\DataServer.ini");
 
-	AdvancedLog = GetPrivateProfileInt("DataServerInfo","AdvancedLog",0,".\\DataServer.ini");
-
-#if(CHIEN_TRUONG_CO)
-	RSTimeCTC = GetPrivateProfileInt("DataServerInfo", "RSTimeCTC", 40, ".\\DataServer.ini");
-#endif
-
 	if (!gSocketManager.Init(DataServerPort))
 	{
 		Log.ToFile(LogType::GENERAL, ERROR_TCP_STARTUP, WSAGetLastError());
@@ -111,6 +105,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	gGuildManager.Init();
 
 	//SetTimer(hWnd,TIMER_2000,2000,0);
+
+	gServerDisplayer.SetActiveState(true);
 
 	// FIX:
 	// PaintName se dibuja en WM_PAINT via InvalidateRect, no directamente.
@@ -260,6 +256,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		HDC hdc = BeginPaint(hWnd, &ps);
 
 		gServerDisplayer.PaintName(hdc);
+		gServerDisplayer.PaintDataServerState(hdc);
 
 		EndPaint(hWnd, &ps);
 	}

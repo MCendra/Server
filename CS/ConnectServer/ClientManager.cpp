@@ -54,24 +54,11 @@ void CClientManager::AddClient(int index, char* ip, SOCKET socket)
 
 		strcpy_s(m_IpAddr, sizeof(m_IpAddr), ip);
 
-		// Avanzar el cursor circular solo cuando el slot no tenía IO contexts
-		// previamente asignados (primera conexión en este slot, no reutilización).
-		// Si reutilizamos un slot ya allocado, el cursor no cambia: el slot
-		// reutilizado puede estar en cualquier posición del array, no
-		// necesariamente adyacente al cursor actual.
-		const bool firstAlloc = !CheckAlloc();
-
 		if (m_IoRecvContext == nullptr)
 			m_IoRecvContext = new IO_RECV_CONTEXT;
 
 		if (m_IoSendContext == nullptr)
 			m_IoSendContext = new IO_SEND_CONTEXT;
-
-		if (firstAlloc)
-		{
-			CCriticalSection::CLock arrayLock(gClientArrayLock);
-			gClientSearchStart = (m_index + 1) % MAX_CLIENT;
-		}
 
 		memset(&m_IoRecvContext->overlapped, 0, sizeof(m_IoRecvContext->overlapped));
 
@@ -130,20 +117,25 @@ void CClientManager::DelClient()
 // Si no hay ninguno elegible, hace búsqueda circular desde gClientSearchStart.
 int CClientManager::GetFreeClientIndex()
 {
-	// Proteger el recorrido para evitar lecturas inconsistentes del array de clientes
 	CCriticalSection::CLock lock(gClientArrayLock);
 
-	// Primero busca slot reutilizable (con IO contexts ya asignados)
 	int index = SearchFreeClientIndex(0, MAX_CLIENT, MAX_CLIENT_OFFLINE_TIME_FOR_REUSE);
-	if (index != -1) return index;
 
-	// Búsqueda circular iniciando desde el cursor
+	if (index != -1)
+	{
+		gClientSearchStart = (index + 1) % MAX_CLIENT;
+		return index;
+	}
+
 	int start = gClientSearchStart;
+
 	for (int n = 0; n < MAX_CLIENT; n++)
 	{
 		int i = (start + n) % MAX_CLIENT;
+
 		if (gClientManager[i].m_state == CLIENT_OFFLINE)
 		{
+			gClientSearchStart = (i + 1) % MAX_CLIENT;
 			return i;
 		}
 	}

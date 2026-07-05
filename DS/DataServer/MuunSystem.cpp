@@ -30,9 +30,9 @@ void CMuunSystem::GDMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg,int index)
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
-	if(gQueryManager.ExecQuery("SELECT Items FROM MuunInventory WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Items FROM MuunInventory WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 

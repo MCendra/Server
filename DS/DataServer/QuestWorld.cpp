@@ -55,18 +55,18 @@ void CQuestWorld::GDQuestWorldSaveRecv(SDHP_QUEST_WORLD_SAVE_RECV* lpMsg) // OK
 {
 	#if(DATASERVER_UPDATE>=501)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM QuestWorld WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Name FROM QuestWorld WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->QuestWorldList[0],sizeof(lpMsg->QuestWorldList));
-		gQueryManager.ExecQuery("INSERT INTO QuestWorld (Name,QuestWorldList) VALUES ('%s',?)",lpMsg->name);
+		gQueryManager.ExecQuery("INSERT INTO QuestWorld (Name,QuestWorldList) VALUES ('%s',?)",lpMsg->charactername);
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->QuestWorldList[0],sizeof(lpMsg->QuestWorldList));
-		gQueryManager.ExecQuery("UPDATE QuestWorld SET QuestWorldList=? WHERE Name='%s'",lpMsg->name);
+		gQueryManager.ExecQuery("UPDATE QuestWorld SET QuestWorldList=? WHERE Name='%s'",lpMsg->charactername);
 		gQueryManager.Close();
 	}
 

@@ -7,859 +7,794 @@
 
 CGuildMatching gGuildMatching;
 
-// Construction/Destruction
-
-CGuildMatching::CGuildMatching() // OK
+void CGuildMatching::ClearGuildMatchingInfo(WORD serverCode)
 {
+#if (DATASERVER_UPDATE >= 801)
 
-}
+	CCriticalSection::CLock lock(m_critical);
 
-CGuildMatching::~CGuildMatching() // OK
-{
-
-}
-
-void CGuildMatching::ClearGuildMatchingInfo(WORD ServerCode) // OK
-{
-	#if(DATASERVER_UPDATE>=801)
-
-	this->m_critical.lock();
-
-	for(std::map<std::string,GUILD_MATCHING_INFO>::iterator it=this->m_GuildMatchingInfo.begin();it != this->m_GuildMatchingInfo.end();)
+	for (auto it = m_GuildMatchingInfo.begin(); it != m_GuildMatchingInfo.end();)
 	{
-		CHARACTER_INFO CharacterInfo;
+		CHARACTER_INFO characterInfo{};
 
-		if(gCharacterManager.GetCharacterInfo(&CharacterInfo,it->second.Name) != 0)
+		if (gCharacterManager.GetCharacterInfo(&characterInfo, it->second.CharacterName) != 0)
 		{
-			it++;
+			++it;
 			continue;
 		}
 
-		this->RemoveGuildMatchingJoinInfoNotifyAll(it->second);
+		RemoveGuildMatchingJoinInfoNotifyAll(it->second);
 
-		it = this->m_GuildMatchingInfo.erase(it);
+		it = m_GuildMatchingInfo.erase(it);
 	}
 
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-void CGuildMatching::ClearGuildMatchingJoinInfo(WORD ServerCode) // OK
+void CGuildMatching::ClearGuildMatchingJoinInfo(WORD serverCode)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	for(std::map<std::string,GUILD_MATCHING_JOIN_INFO>::iterator it=this->m_GuildMatchingJoinInfo.begin();it != this->m_GuildMatchingJoinInfo.end();)
+	for (auto it = m_GuildMatchingJoinInfo.begin(); it != m_GuildMatchingJoinInfo.end();)
 	{
-		CHARACTER_INFO CharacterInfo;
+		CHARACTER_INFO characterInfo{};
 
-		if(gCharacterManager.GetCharacterInfo(&CharacterInfo,it->second.Name) != 0)
+		if (gCharacterManager.GetCharacterInfo(&characterInfo, it->second.CharacterName) != 0)
 		{
-			it++;
+			++it;
 			continue;
 		}
 
-		it = this->m_GuildMatchingJoinInfo.erase(it);
+		it = m_GuildMatchingJoinInfo.erase(it);
 	}
 
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-bool CGuildMatching::GetGuildMatchingInfo(GUILD_MATCHING_INFO* lpGuildMatchingInfo,char* name) // OK
+bool CGuildMatching::GetGuildMatchingInfo(GUILD_MATCHING_INFO* lpGuildMatchingInfo, const char* guildName)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
-
-	std::string nme(name);
-
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,GUILD_MATCHING_INFO>::iterator it = this->m_GuildMatchingInfo.find(nme);
-
-	if(it != this->m_GuildMatchingInfo.end())
+	if (lpGuildMatchingInfo == nullptr || guildName == nullptr)
 	{
-		(*lpGuildMatchingInfo) = it->second;
-		this->m_critical.unlock();
-		return 1;
+		return false;
 	}
 
-	this->m_critical.unlock();
-	return 0;
+	CCriticalSection::CLock lock(m_critical);
 
-	#else
+	const auto it = m_GuildMatchingInfo.find(NormalizeToLower(guildName));
 
-	return 0;
+	if (it == m_GuildMatchingInfo.end())
+	{
+		return false;
+	}
 
-	#endif
+	*lpGuildMatchingInfo = it->second;
+
+	return true;
+
+#else
+
+	return false;
+
+#endif
 }
 
-void CGuildMatching::InsertGuildMatchingInfo(GUILD_MATCHING_INFO GuildMatchingInfo) // OK
+void CGuildMatching::InsertGuildMatchingInfo(const GUILD_MATCHING_INFO& guildMatchingInfo)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	std::string nme(GuildMatchingInfo.GuildName);
+	m_GuildMatchingInfo[NormalizeToLower(guildMatchingInfo.GuildName)] = guildMatchingInfo;
 
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,GUILD_MATCHING_INFO>::iterator it = this->m_GuildMatchingInfo.find(nme);
-
-	if(it == this->m_GuildMatchingInfo.end())
-	{
-		this->m_GuildMatchingInfo.insert(std::pair<std::string,GUILD_MATCHING_INFO>(nme,GuildMatchingInfo));
-	}
-	else
-	{
-		it->second = GuildMatchingInfo;
-	}
-
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-void CGuildMatching::RemoveGuildMatchingInfo(GUILD_MATCHING_INFO GuildMatchingInfo) // OK
+void CGuildMatching::RemoveGuildMatchingInfo(const GUILD_MATCHING_INFO& guildMatchingInfo)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	std::string nme(GuildMatchingInfo.GuildName);
+	m_GuildMatchingInfo.erase(NormalizeToLower(guildMatchingInfo.GuildName));
 
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,GUILD_MATCHING_INFO>::iterator it = this->m_GuildMatchingInfo.find(nme);
-
-	if(it != this->m_GuildMatchingInfo.end())
-	{
-		this->m_GuildMatchingInfo.erase(it);
-		this->m_critical.unlock();
-		return;
-	}
-
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-bool CGuildMatching::GetGuildMatchingJoinInfo(GUILD_MATCHING_JOIN_INFO* lpGuildMatchingJoinInfo,char* name) // OK
+bool CGuildMatching::GetGuildMatchingJoinInfo(GUILD_MATCHING_JOIN_INFO* lpGuildMatchingJoinInfo, const char* characterName)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
-
-	std::string nme(name);
-
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,GUILD_MATCHING_JOIN_INFO>::iterator it = this->m_GuildMatchingJoinInfo.find(nme);
-
-	if(it != this->m_GuildMatchingJoinInfo.end())
+	if (lpGuildMatchingJoinInfo == nullptr || characterName == nullptr)
 	{
-		(*lpGuildMatchingJoinInfo) = it->second;
-		this->m_critical.unlock();
-		return 1;
+		return false;
 	}
 
-	this->m_critical.unlock();
-	return 0;
+	CCriticalSection::CLock lock(m_critical);
 
-	#else
+	const auto it = m_GuildMatchingJoinInfo.find(NormalizeToLower(characterName));
 
-	return 0;
+	if (it == m_GuildMatchingJoinInfo.end())
+	{
+		return false;
+	}
 
-	#endif
+	*lpGuildMatchingJoinInfo = it->second;
+
+	return true;
+
+#else
+
+	return false;
+
+#endif
 }
 
-void CGuildMatching::InsertGuildMatchingJoinInfo(GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo) // OK
+void CGuildMatching::InsertGuildMatchingJoinInfo(const GUILD_MATCHING_JOIN_INFO& guildMatchingJoinInfo)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	std::string nme(GuildMatchingJoinInfo.Name);
+	m_GuildMatchingJoinInfo[NormalizeToLower(guildMatchingJoinInfo.CharacterName)] = guildMatchingJoinInfo;
 
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,GUILD_MATCHING_JOIN_INFO>::iterator it = this->m_GuildMatchingJoinInfo.find(nme);
-
-	if(it == this->m_GuildMatchingJoinInfo.end())
-	{
-		this->m_GuildMatchingJoinInfo.insert(std::pair<std::string,GUILD_MATCHING_JOIN_INFO>(nme,GuildMatchingJoinInfo));
-	}
-	else
-	{
-		it->second = GuildMatchingJoinInfo;
-	}
-
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-void CGuildMatching::RemoveGuildMatchingJoinInfo(GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo) // OK
+void CGuildMatching::RemoveGuildMatchingJoinInfo(const GUILD_MATCHING_JOIN_INFO& guildMatchingJoinInfo)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	std::string nme(GuildMatchingJoinInfo.Name);
+	m_GuildMatchingJoinInfo.erase(NormalizeToLower(guildMatchingJoinInfo.CharacterName));
 
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,GUILD_MATCHING_JOIN_INFO>::iterator it = this->m_GuildMatchingJoinInfo.find(nme);
-
-	if(it != this->m_GuildMatchingJoinInfo.end())
-	{
-		this->m_GuildMatchingJoinInfo.erase(it);
-		this->m_critical.unlock();
-		return;
-	}
-
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-void CGuildMatching::RemoveGuildMatchingJoinInfoNotifyAll(GUILD_MATCHING_INFO GuildMatchingInfo) // OK
+void CGuildMatching::RemoveGuildMatchingJoinInfoNotifyAll(const GUILD_MATCHING_INFO& guildMatchingInfo)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	this->m_critical.lock();
+	// Se asume que el llamador ya posee m_critical.
 
-	for(std::map<std::string,GUILD_MATCHING_JOIN_INFO>::iterator it=this->m_GuildMatchingJoinInfo.begin();it != this->m_GuildMatchingJoinInfo.end();it++)
+	for (const auto& entry : m_GuildMatchingJoinInfo)
 	{
-		if(_stricmp(it->second.GuildName,GuildMatchingInfo.GuildName) == 0)
+		if (_stricmp(entry.second.GuildName, guildMatchingInfo.GuildName) == 0)
 		{
-			this->DGGuildMatchingNotifySend(it->second.Name,it->second.GuildName,2);
+			DGGuildMatchingNotifySend(
+				entry.second.CharacterName,
+				entry.second.GuildName,
+				2);
 		}
 	}
 
-	this->m_critical.unlock();
-
-	#endif
+#endif
 }
 
-DWORD CGuildMatching::GenerateGuildMatchingList(DWORD* CurPage,DWORD* MaxPage,BYTE* lpMsg,int* size) // OK
+DWORD CGuildMatching::GenerateGuildMatchingList(DWORD* curPage, DWORD* maxPage,	BYTE* lpMsg, int* size)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
+
+	CCriticalSection::CLock lock(m_critical);
 
 	DWORD count = 0;
+	DWORD pageCount = 0;
 
-	DWORD PageCount = 0;
+	const DWORD firstEntry = (*curPage - 1) * 9;
+	const DWORD lastEntry = (*curPage) * 9;
 
-	this->m_critical.lock();
+	SDHP_GUILD_MATCHING_LIST info{};
 
-	SDHP_GUILD_MATCHING_LIST info;
-
-	for(std::map<std::string,GUILD_MATCHING_INFO>::iterator it=this->m_GuildMatchingInfo.begin();it != this->m_GuildMatchingInfo.end();it++)
+	for (const auto& entry : m_GuildMatchingInfo)
 	{
-		if(PageCount >= (((*CurPage)-1)*9) && PageCount < ((*CurPage)*9))
+		const GUILD_MATCHING_INFO& guildInfo = entry.second;
+
+		if (pageCount >= firstEntry && pageCount < lastEntry)
 		{
-			memcpy(info.text,it->second.Text,sizeof(info.text));
+			std::memcpy(info.Text, guildInfo.Text, sizeof(info.Text));
+			std::memcpy(info.CharacterName, guildInfo.CharacterName, sizeof(info.CharacterName));
+			std::memcpy(info.GuildName, guildInfo.GuildName, sizeof(info.GuildName));
 
-			memcpy(info.name,it->second.Name,sizeof(info.name));
+			info.GuildMemberCount = guildInfo.GuildMemberCount;
+			info.GuildMasterClass = guildInfo.GuildMasterClass;
+			info.InterestType = guildInfo.InterestType;
+			info.LevelRange = guildInfo.LevelRange;
+			info.ClassType = guildInfo.ClassType;
+			info.GuildMasterLevel = guildInfo.GuildMasterLevel;
+			info.BoardNumber = guildInfo.BoardNumber;
+			info.GuildNumber = guildInfo.GuildNumber;
+			info.GensType = guildInfo.GensType;
 
-			memcpy(info.GuildName,it->second.GuildName,sizeof(info.GuildName));
+			std::memcpy(lpMsg + *size, &info, sizeof(info));
 
-			info.GuildMemberCount = it->second.GuildMemberCount;
+			*size += sizeof(info);
 
-			info.GuildMasterClass = it->second.GuildMasterClass;
-
-			info.InterestType = it->second.InterestType;
-
-			info.LevelRange = it->second.LevelRange;
-
-			info.ClassType = it->second.ClassType;
-
-			info.GuildMasterLevel = it->second.GuildMasterLevel;
-
-			info.BoardNumber = it->second.BoardNumber;
-
-			info.GuildNumber = it->second.GuildNumber;
-
-			info.GensType = it->second.GensType;
-
-			memcpy(&lpMsg[(*size)],&info,sizeof(info));
-			(*size) += sizeof(info);
-
-			count++;
+			++count;
 		}
 
-		PageCount++;
+		++pageCount;
 	}
 
-	(*MaxPage) = ((PageCount==0)?1:(((PageCount-1)/9)+1));
-
-	this->m_critical.unlock();
+	*maxPage = (pageCount == 0) ? 1 : (((pageCount - 1) / 9) + 1);
 
 	return count;
 
-	#else
+#else
 
 	return 0;
 
-	#endif
+#endif
 }
 
-DWORD CGuildMatching::GenerateGuildMatchingList(DWORD* CurPage,DWORD* MaxPage,char* SearchWord,BYTE* lpMsg,int* size) // OK
+DWORD CGuildMatching::GenerateGuildMatchingList(DWORD* curPage, DWORD* maxPage, const char* searchWord, BYTE* lpMsg, int* size)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
+
+	CCriticalSection::CLock lock(m_critical);
 
 	DWORD count = 0;
+	DWORD pageCount = 0;
 
-	DWORD PageCount = 0;
+	const DWORD firstEntry = (*curPage - 1) * 9;
+	const DWORD lastEntry = (*curPage) * 9;
 
-	this->m_critical.lock();
+	SDHP_GUILD_MATCHING_LIST info{};
 
-	SDHP_GUILD_MATCHING_LIST info;
-
-	for(std::map<std::string,GUILD_MATCHING_INFO>::iterator it=this->m_GuildMatchingInfo.begin();it != this->m_GuildMatchingInfo.end();it++)
+	for (const auto& entry : m_GuildMatchingInfo)
 	{
-		if(strstr(it->second.Text,SearchWord) != 0)
+		const GUILD_MATCHING_INFO& guildInfo = entry.second;
+
+		if (strstr(guildInfo.Text, searchWord) == nullptr)
 		{
-			if(PageCount >= (((*CurPage)-1)*9) && PageCount < ((*CurPage)*9))
-			{
-				memcpy(info.text,it->second.Text,sizeof(info.text));
-
-				memcpy(info.name,it->second.Name,sizeof(info.name));
-
-				memcpy(info.GuildName,it->second.GuildName,sizeof(info.GuildName));
-
-				info.GuildMemberCount = it->second.GuildMemberCount;
-
-				info.GuildMasterClass = it->second.GuildMasterClass;
-
-				info.InterestType = it->second.InterestType;
-
-				info.LevelRange = it->second.LevelRange;
-
-				info.ClassType = it->second.ClassType;
-
-				info.GuildMasterLevel = it->second.GuildMasterLevel;
-
-				info.BoardNumber = it->second.BoardNumber;
-
-				info.GuildNumber = it->second.GuildNumber;
-
-				info.GensType = it->second.GensType;
-
-				memcpy(&lpMsg[(*size)],&info,sizeof(info));
-				(*size) += sizeof(info);
-
-				count++;
-			}
-
-			PageCount++;
+			continue;
 		}
+
+		if (pageCount >= firstEntry && pageCount < lastEntry)
+		{
+			std::memcpy(info.Text, guildInfo.Text, sizeof(info.Text));
+			std::memcpy(info.CharacterName, guildInfo.CharacterName, sizeof(info.CharacterName));
+			std::memcpy(info.GuildName, guildInfo.GuildName, sizeof(info.GuildName));
+
+			info.GuildMemberCount = guildInfo.GuildMemberCount;
+			info.GuildMasterClass = guildInfo.GuildMasterClass;
+			info.InterestType = guildInfo.InterestType;
+			info.LevelRange = guildInfo.LevelRange;
+			info.ClassType = guildInfo.ClassType;
+			info.GuildMasterLevel = guildInfo.GuildMasterLevel;
+			info.BoardNumber = guildInfo.BoardNumber;
+			info.GuildNumber = guildInfo.GuildNumber;
+			info.GensType = guildInfo.GensType;
+
+			std::memcpy(lpMsg + *size, &info, sizeof(info));
+
+			*size += sizeof(info);
+
+			++count;
+		}
+
+		++pageCount;
 	}
 
-	(*MaxPage) = ((PageCount==0)?1:(((PageCount-1)/9)+1));
-
-	this->m_critical.unlock();
+	*maxPage = (pageCount == 0) ? 1 : (((pageCount - 1) / 9) + 1);
 
 	return count;
 
-	#else
+#else
 
 	return 0;
 
-	#endif
+#endif
 }
 
-DWORD CGuildMatching::GenerateGuildMatchingJoinList(char* GuildName,BYTE* lpMsg,int* size) // OK
+DWORD CGuildMatching::GenerateGuildMatchingJoinList(const char* guildName, BYTE* lpMsg, int* size)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
+
+	CCriticalSection::CLock lock(m_critical);
 
 	DWORD count = 0;
 
-	this->m_critical.lock();
+	SDHP_GUILD_MATCHING_JOIN_LIST info{};
 
-	SDHP_GUILD_MATCHING_JOIN_LIST info;
-
-	for(std::map<std::string,GUILD_MATCHING_JOIN_INFO>::iterator it=this->m_GuildMatchingJoinInfo.begin();it != this->m_GuildMatchingJoinInfo.end();it++)
+	for (const auto& entry : m_GuildMatchingJoinInfo)
 	{
-		if(_stricmp(it->second.GuildName,GuildName) == 0)
+		const GUILD_MATCHING_JOIN_INFO& joinInfo = entry.second;
+
+		if (_stricmp(joinInfo.GuildName, guildName) != 0)
 		{
-			memcpy(info.name,it->second.Name,sizeof(info.name));
-
-			info.Class = it->second.Class;
-
-			info.Level = it->second.Level;
-
-			memcpy(&lpMsg[(*size)],&info,sizeof(info));
-			(*size) += sizeof(info);
-
-			count++;
+			continue;
 		}
-	}
 
-	this->m_critical.unlock();
+		std::memcpy(info.CharacterName, joinInfo.CharacterName, sizeof(info.CharacterName));
+
+		info.Class = joinInfo.Class;
+		info.Level = joinInfo.Level;
+
+		std::memcpy(lpMsg + (*size), &info, sizeof(info));
+
+		*size += sizeof(info);
+
+		++count;
+	}
 
 	return count;
 
-	#else
+#else
 
 	return 0;
 
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingListRecv(SDHP_GUILD_MATCHING_LIST_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingListRecv(const SDHP_GUILD_MATCHING_LIST_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	BYTE send[1024];
+	BYTE send[1024]{};
 
-	SDHP_GUILD_MATCHING_LIST_SEND pMsg;
+	SDHP_GUILD_MATCHING_LIST_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x00,0);
+	pMsg.Header.set(0x28, 0x00, 0);
 
 	int size = sizeof(pMsg);
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	pMsg.result = 0;
-
-	pMsg.CurPage = lpMsg->page;
-
+	pMsg.Result = 0;
+	pMsg.CurPage = lpMsg->Page;
 	pMsg.MaxPage = 1;
 
-	pMsg.count = this->GenerateGuildMatchingList(&pMsg.CurPage,&pMsg.MaxPage,send,&size);
+	pMsg.count = GenerateGuildMatchingList(
+		&pMsg.CurPage,
+		&pMsg.MaxPage,
+		send,
+		&size);
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index,send,size);
+	gSocketManager.DataSend(index, send, size);
 
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingListSearchRecv(SDHP_GUILD_MATCHING_LIST_SEARCH_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingListSearchRecv(const SDHP_GUILD_MATCHING_LIST_SEARCH_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	BYTE send[1024];
+	BYTE send[1024]{};
 
-	SDHP_GUILD_MATCHING_LIST_SEND pMsg;
+	SDHP_GUILD_MATCHING_LIST_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x00,0);
+	pMsg.Header.set(0x28, 0x00, 0);
 
 	int size = sizeof(pMsg);
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	pMsg.result = 0;
-
-	pMsg.CurPage = lpMsg->page;
-
+	pMsg.Result = 0;
+	pMsg.CurPage = lpMsg->Page;
 	pMsg.MaxPage = 1;
 
-	pMsg.count = this->GenerateGuildMatchingList(&pMsg.CurPage,&pMsg.MaxPage,lpMsg->SearchWord,send,&size);
+	pMsg.count = GenerateGuildMatchingList(
+		&pMsg.CurPage,
+		&pMsg.MaxPage,
+		lpMsg->SearchWord,
+		send,
+		&size);
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index,send,size);
+	gSocketManager.DataSend(index, send, size);
 
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingInsertRecv(SDHP_GUILD_MATCHING_INSERT_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingInsertRecv(const SDHP_GUILD_MATCHING_INSERT_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_GUILD_MATCHING_INSERT_SEND pMsg;
+	SDHP_GUILD_MATCHING_INSERT_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x02,sizeof(pMsg));
+	pMsg.Header.set(0x28, 0x02, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
 
-	pMsg.result = 0;
+	GUILD_MATCHING_INFO guildMatchingInfo{};
 
-	GUILD_MATCHING_INFO GuildMatchingInfo;
-
-	if(this->GetGuildMatchingInfo(&GuildMatchingInfo,lpMsg->GuildName) != 0)
+	if (GetGuildMatchingInfo(&guildMatchingInfo, lpMsg->GuildName))
 	{
-		pMsg.result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	memcpy(GuildMatchingInfo.Name,lpMsg->name,sizeof(GuildMatchingInfo.Name));
+	std::memcpy(
+		guildMatchingInfo.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(guildMatchingInfo.CharacterName));
 
-	memcpy(GuildMatchingInfo.Text,lpMsg->text,sizeof(GuildMatchingInfo.Text));
+	std::memcpy(
+		guildMatchingInfo.Text,
+		lpMsg->Text,
+		sizeof(guildMatchingInfo.Text));
 
-	memcpy(GuildMatchingInfo.GuildName,lpMsg->GuildName,sizeof(GuildMatchingInfo.GuildName));
+	std::memcpy(
+		guildMatchingInfo.GuildName,
+		lpMsg->GuildName,
+		sizeof(guildMatchingInfo.GuildName));
 
-	GuildMatchingInfo.GuildMemberCount = lpMsg->GuildMemberCount;
+	guildMatchingInfo.GuildMemberCount = lpMsg->GuildMemberCount;
+	guildMatchingInfo.GuildMasterClass = lpMsg->GuildMasterClass;
+	guildMatchingInfo.InterestType = lpMsg->InterestType;
+	guildMatchingInfo.LevelRange = lpMsg->LevelRange;
+	guildMatchingInfo.ClassType = lpMsg->ClassType;
+	guildMatchingInfo.GuildMasterLevel = lpMsg->GuildMasterLevel;
+	guildMatchingInfo.BoardNumber = 0;
+	guildMatchingInfo.GuildNumber = lpMsg->GuildNumber;
+	guildMatchingInfo.GensType = lpMsg->GensType;
 
-	GuildMatchingInfo.GuildMasterClass = lpMsg->GuildMasterClass;
+	InsertGuildMatchingInfo(guildMatchingInfo);
 
-	GuildMatchingInfo.InterestType = lpMsg->InterestType;
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
-	GuildMatchingInfo.LevelRange = lpMsg->LevelRange;
-
-	GuildMatchingInfo.ClassType = lpMsg->ClassType;
-
-	GuildMatchingInfo.GuildMasterLevel = lpMsg->GuildMasterLevel;
-
-	GuildMatchingInfo.BoardNumber = 0;
-
-	GuildMatchingInfo.GuildNumber = lpMsg->GuildNumber;
-
-	GuildMatchingInfo.GensType = lpMsg->GensType;
-
-	this->InsertGuildMatchingInfo(GuildMatchingInfo);
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
-
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingCancelRecv(SDHP_GUILD_MATCHING_CANCEL_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingCancelRecv(const SDHP_GUILD_MATCHING_CANCEL_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_GUILD_MATCHING_CANCEL_SEND pMsg;
+	SDHP_GUILD_MATCHING_CANCEL_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x03,sizeof(pMsg));
+	pMsg.Header.set(0x28, 0x03, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
+	pMsg.Flag = lpMsg->Flag;
 
-	pMsg.result = 0;
+	GUILD_MATCHING_INFO guildMatchingInfo{};
 
-	pMsg.flag = lpMsg->flag;
-
-	GUILD_MATCHING_INFO GuildMatchingInfo;
-
-	if(this->GetGuildMatchingInfo(&GuildMatchingInfo,lpMsg->GuildName) == 0)
+	if (!GetGuildMatchingInfo(&guildMatchingInfo, lpMsg->GuildName))
 	{
-		pMsg.result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	this->RemoveGuildMatchingInfo(GuildMatchingInfo);
+	RemoveGuildMatchingInfo(guildMatchingInfo);
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
-	this->RemoveGuildMatchingJoinInfoNotifyAll(GuildMatchingInfo);
+	RemoveGuildMatchingJoinInfoNotifyAll(guildMatchingInfo);
 
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinInsertRecv(SDHP_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingJoinInsertRecv(const SDHP_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_GUILD_MATCHING_JOIN_INSERT_SEND pMsg;
+	SDHP_GUILD_MATCHING_JOIN_INSERT_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x04,sizeof(pMsg));
+	pMsg.Header.set(0x28, 0x04, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
 
-	pMsg.result = 0;
+	GUILD_MATCHING_INFO guildMatchingInfo{};
+	GUILD_MATCHING_JOIN_INFO guildMatchingJoinInfo{};
 
-	GUILD_MATCHING_INFO GuildMatchingInfo;
-
-	GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo;
-
-	if(this->GetGuildMatchingInfo(&GuildMatchingInfo,lpMsg->GuildName) == 0 || this->GetGuildMatchingJoinInfo(&GuildMatchingJoinInfo,lpMsg->name) != 0)
+	if (!GetGuildMatchingInfo(&guildMatchingInfo, lpMsg->GuildName) ||
+		GetGuildMatchingJoinInfo(&guildMatchingJoinInfo, lpMsg->CharacterName))
 	{
-		pMsg.result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	memcpy(GuildMatchingJoinInfo.Name,lpMsg->name,sizeof(GuildMatchingInfo.Name));
+	std::memcpy(
+		guildMatchingJoinInfo.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(guildMatchingJoinInfo.CharacterName));
 
-	memcpy(GuildMatchingJoinInfo.GuildName,GuildMatchingInfo.GuildName,sizeof(GuildMatchingJoinInfo.GuildName));
+	std::memcpy(
+		guildMatchingJoinInfo.GuildName,
+		guildMatchingInfo.GuildName,
+		sizeof(guildMatchingJoinInfo.GuildName));
 
-	memcpy(GuildMatchingJoinInfo.GuildMasterName,GuildMatchingInfo.Name,sizeof(GuildMatchingJoinInfo.GuildMasterName));
+	std::memcpy(
+		guildMatchingJoinInfo.GuildMasterName,
+		guildMatchingInfo.CharacterName,
+		sizeof(guildMatchingJoinInfo.GuildMasterName));
 
-	GuildMatchingJoinInfo.Class = lpMsg->Class;
+	guildMatchingJoinInfo.Class = lpMsg->Class;
+	guildMatchingJoinInfo.Level = lpMsg->Level;
 
-	GuildMatchingJoinInfo.Level = lpMsg->Level;
+	InsertGuildMatchingJoinInfo(guildMatchingJoinInfo);
 
-	this->InsertGuildMatchingJoinInfo(GuildMatchingJoinInfo);
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+	DGGuildMatchingNotifyMasterSend(guildMatchingInfo.CharacterName, 0);
 
-	this->DGGuildMatchingNotifyMasterSend(GuildMatchingInfo.Name,0);
-
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinCancelRecv(SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingJoinCancelRecv(const SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_GUILD_MATCHING_JOIN_CANCEL_SEND pMsg;
+	SDHP_GUILD_MATCHING_JOIN_CANCEL_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x05,sizeof(pMsg));
+	pMsg.Header.set(0x28, 0x05, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
+	pMsg.Flag = lpMsg->Flag;
 
-	pMsg.result = 0;
+	GUILD_MATCHING_JOIN_INFO guildMatchingJoinInfo{};
 
-	pMsg.flag = lpMsg->flag;
-
-	GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo;
-
-	if(this->GetGuildMatchingJoinInfo(&GuildMatchingJoinInfo,lpMsg->name) == 0)
+	if (!GetGuildMatchingJoinInfo(&guildMatchingJoinInfo, lpMsg->CharacterName))
 	{
-		pMsg.result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	this->RemoveGuildMatchingJoinInfo(GuildMatchingJoinInfo);
+	RemoveGuildMatchingJoinInfo(guildMatchingJoinInfo);
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinAcceptRecv(SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingJoinAcceptRecv(const SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_GUILD_MATCHING_JOIN_ACCEPT_SEND pMsg;
+	SDHP_GUILD_MATCHING_JOIN_ACCEPT_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x06,sizeof(pMsg));
+	pMsg.Header.set(0x28, 0x06, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
+	pMsg.Type = lpMsg->Type;
 
-	pMsg.result = 0;
+	std::memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	std::memcpy(pMsg.MemberName, lpMsg->MemberName, sizeof(pMsg.MemberName));
 
-	pMsg.type = lpMsg->type;
+	GUILD_MATCHING_INFO guildMatchingInfo{};
+	GUILD_MATCHING_JOIN_INFO guildMatchingJoinInfo{};
 
-	memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
-
-	memcpy(pMsg.MemberName,lpMsg->MemberName,sizeof(pMsg.MemberName));
-
-	GUILD_MATCHING_INFO GuildMatchingInfo;
-
-	GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo;
-
-	if(this->GetGuildMatchingInfo(&GuildMatchingInfo,lpMsg->GuildName) == 0 || this->GetGuildMatchingJoinInfo(&GuildMatchingJoinInfo,lpMsg->MemberName) == 0)
+	if (!GetGuildMatchingInfo(&guildMatchingInfo, lpMsg->GuildName) ||
+		!GetGuildMatchingJoinInfo(&guildMatchingJoinInfo, lpMsg->MemberName))
 	{
-		pMsg.result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	CHARACTER_INFO CharacterInfo;
+	CHARACTER_INFO characterInfo{};
 
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,lpMsg->MemberName) == 0)
+	if (!gCharacterManager.GetCharacterInfo(&characterInfo, lpMsg->MemberName))
 	{
-		pMsg.result = 1;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
-		this->RemoveGuildMatchingJoinInfo(GuildMatchingJoinInfo);
-	}
-	else
-	{
-		pMsg.result = 0;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
-		this->DGGuildMatchingNotifySend(lpMsg->MemberName,lpMsg->GuildName,((lpMsg->type==0)?2:1));
+		pMsg.Result = 1;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+
+		RemoveGuildMatchingJoinInfo(guildMatchingJoinInfo);
+
+		return;
 	}
 
-	#endif
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+
+	DGGuildMatchingNotifySend(
+		lpMsg->MemberName,
+		lpMsg->GuildName,
+		(lpMsg->Type == 0) ? 2 : 1);
+
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinListRecv(SDHP_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingJoinListRecv(const SDHP_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	BYTE send[2048];
+	BYTE send[2048]{};
 
-	SDHP_GUILD_MATCHING_JOIN_LIST_SEND pMsg;
+	SDHP_GUILD_MATCHING_JOIN_LIST_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x07,0);
+	pMsg.Header.set(0x28, 0x07, 0);
 
 	int size = sizeof(pMsg);
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
 
-	pMsg.result = 0;
+	pMsg.Count = GenerateGuildMatchingJoinList(
+		lpMsg->GuildName,
+		send,
+		&size);
 
-	pMsg.count = this->GenerateGuildMatchingJoinList(lpMsg->GuildName,send,&size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	gSocketManager.DataSend(index, send, size);
 
-	gSocketManager.DataSend(index,send,size);
-
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinInfoRecv(SDHP_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg,int index) // OK
+void CGuildMatching::GDGuildMatchingJoinInfoRecv(const SDHP_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_GUILD_MATCHING_JOIN_INFO_SEND pMsg;
+	SDHP_GUILD_MATCHING_JOIN_INFO_SEND pMsg{};
 
-	pMsg.header.set(0x28,0x08,sizeof(pMsg));
+	pMsg.Header.set(0x28, 0x08, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Result = 0;
 
-	pMsg.result = 0;
+	GUILD_MATCHING_JOIN_INFO guildMatchingJoinInfo{};
 
-	GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo;
-
-	if(this->GetGuildMatchingJoinInfo(&GuildMatchingJoinInfo,lpMsg->name) == 0)
+	if (!GetGuildMatchingJoinInfo(&guildMatchingJoinInfo, lpMsg->CharacterName))
 	{
-		pMsg.result = 0xFFFFFFFE;
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		pMsg.Result = 0xFFFFFFFE;
+
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	memcpy(pMsg.GuildName,GuildMatchingJoinInfo.GuildName,sizeof(pMsg.GuildName));
+	std::memcpy(pMsg.GuildName, guildMatchingJoinInfo.GuildName, sizeof(pMsg.GuildName));
+	std::memcpy(pMsg.GuildMasterName, guildMatchingJoinInfo.GuildMasterName, sizeof(pMsg.GuildMasterName));
 
-	memcpy(pMsg.GuildMasterName,GuildMatchingJoinInfo.GuildMasterName,sizeof(pMsg.GuildMasterName));
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
-
-	#endif
+#endif
 }
 
-void CGuildMatching::GDGuildMatchingInsertSaveRecv(SDHP_GUILD_MATCHING_INSERT_SAVE_RECV* lpMsg) // OK
+void CGuildMatching::GDGuildMatchingInsertSaveRecv(const SDHP_GUILD_MATCHING_INSERT_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	GUILD_MATCHING_INFO GuildMatchingInfo;
+	GUILD_MATCHING_INFO guildMatchingInfo{};
 
-	if(this->GetGuildMatchingInfo(&GuildMatchingInfo,lpMsg->GuildName) == 0)
-	{
-		return;
-	}
-
-	GuildMatchingInfo.GuildMemberCount = lpMsg->GuildMemberCount;
-
-	GuildMatchingInfo.GuildMasterClass = lpMsg->GuildMasterClass;
-
-	GuildMatchingInfo.GuildMasterLevel = lpMsg->GuildMasterLevel;
-
-	GuildMatchingInfo.GensType = lpMsg->GensType;
-
-	this->InsertGuildMatchingInfo(GuildMatchingInfo);
-
-	#endif
-}
-
-void CGuildMatching::DGGuildMatchingNotifySend(char* name,char* GuildName,DWORD result) // OK
-{
-	#if(DATASERVER_UPDATE>=801)
-
-	CHARACTER_INFO CharacterInfo;
-
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,name) == 0)
+	if (!GetGuildMatchingInfo(&guildMatchingInfo, lpMsg->GuildName))
 	{
 		return;
 	}
 
-	SDHP_GUILD_MATCHING_NOTIFY_SEND pMsg;
+	guildMatchingInfo.GuildMemberCount = lpMsg->GuildMemberCount;
+	guildMatchingInfo.GuildMasterClass = lpMsg->GuildMasterClass;
+	guildMatchingInfo.GuildMasterLevel = lpMsg->GuildMasterLevel;
+	guildMatchingInfo.GensType = lpMsg->GensType;
 
-	pMsg.header.set(0x28,0x09,sizeof(pMsg));
+	InsertGuildMatchingInfo(guildMatchingInfo);
 
-	pMsg.index = CharacterInfo.UserIndex;
-
-	memcpy(pMsg.account,CharacterInfo.Account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,CharacterInfo.Name,sizeof(pMsg.name));
-
-	pMsg.result = result;
-
-	memcpy(pMsg.GuildName,GuildName,sizeof(pMsg.GuildName));
-
-	CServerManager* lpServerManager = FindServerByCode(CharacterInfo.GameServerCode);
-
-	if(lpServerManager != 0)
-	{
-		gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
-	}
-
-	#endif
+#endif
 }
 
-void CGuildMatching::DGGuildMatchingNotifyMasterSend(char* name,DWORD result) // OK
+void CGuildMatching::DGGuildMatchingNotifySend(const char* characterName, const char* guildName, DWORD result)
 {
-	#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	CHARACTER_INFO CharacterInfo;
+	CHARACTER_INFO characterInfo{};
 
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,name) == 0)
+	if (!gCharacterManager.GetCharacterInfo(&characterInfo, characterName))
 	{
 		return;
 	}
 
-	SDHP_GUILD_MATCHING_NOTIFY_MASTER_SEND pMsg;
+	CServerManager* const lpServerManager = FindServerByCode(characterInfo.GameServerCode);
 
-	pMsg.header.set(0x28,0x0A,sizeof(pMsg));
-
-	pMsg.index = CharacterInfo.UserIndex;
-
-	memcpy(pMsg.account,CharacterInfo.Account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,CharacterInfo.Name,sizeof(pMsg.name));
-
-	pMsg.result = result;
-
-	CServerManager* lpServerManager = FindServerByCode(CharacterInfo.GameServerCode);
-
-	if(lpServerManager != 0)
+	if (lpServerManager == nullptr)
 	{
-		gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
+		return;
 	}
 
-	#endif
+	SDHP_GUILD_MATCHING_NOTIFY_SEND pMsg{};
+
+	pMsg.Header.set(0x28, 0x09, sizeof(pMsg));
+
+	pMsg.Index = characterInfo.UserIndex;
+	pMsg.Result = result;
+
+	std::memcpy(pMsg.Account, characterInfo.Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, characterInfo.CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(pMsg.GuildName, guildName, sizeof(pMsg.GuildName));
+
+	gSocketManager.DataSend(
+		lpServerManager->m_index,
+		reinterpret_cast<BYTE*>(&pMsg),
+		pMsg.Header.size);
+
+#endif
+}
+
+void CGuildMatching::DGGuildMatchingNotifyMasterSend(const char* characterName, DWORD result)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	CHARACTER_INFO characterInfo{};
+
+	if (!gCharacterManager.GetCharacterInfo(&characterInfo, characterName))
+	{
+		return;
+	}
+
+	CServerManager* const lpServerManager = FindServerByCode(characterInfo.GameServerCode);
+
+	if (lpServerManager == nullptr)
+	{
+		return;
+	}
+
+	SDHP_GUILD_MATCHING_NOTIFY_MASTER_SEND pMsg{};
+
+	pMsg.Header.set(0x28, 0x0A, sizeof(pMsg));
+
+	pMsg.Index = characterInfo.UserIndex;
+	pMsg.Result = result;
+
+	std::memcpy(pMsg.Account, characterInfo.Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, characterInfo.CharacterName, sizeof(pMsg.CharacterName));
+
+	gSocketManager.DataSend(
+		lpServerManager->m_index,
+		reinterpret_cast<BYTE*>(&pMsg),
+		pMsg.Header.size);
+
+#endif
 }

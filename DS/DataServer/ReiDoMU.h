@@ -27,7 +27,7 @@ struct SDHP_RANKING_KING_PLAYER_SAVE_RECV
 	PBMSG_HEAD header; // C1:75
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD score;
 };
 

@@ -30,12 +30,12 @@ void CNpcTalk::GDNpcLeoTheHelperRecv(SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg,int ind
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
-	if(gQueryManager.ExecQuery("SELECT Status FROM EventLeoTheHelper WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Status FROM EventLeoTheHelper WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',0)",lpMsg->name);
+		gQueryManager.ExecQuery("INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',0)",lpMsg->charactername);
 		gQueryManager.Close();
 
 		pMsg.status = 0;
@@ -64,12 +64,12 @@ void CNpcTalk::GDNpcSantaClausRecv(SDHP_NPC_SANTA_CLAUS_RECV* lpMsg,int index) /
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
-	if(gQueryManager.ExecQuery("SELECT Status FROM EventSantaClaus WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Status FROM EventSantaClaus WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO EventSantaClaus (Name,Status) VALUES ('%s',0)",lpMsg->name);
+		gQueryManager.ExecQuery("INSERT INTO EventSantaClaus (Name,Status) VALUES ('%s',0)",lpMsg->charactername);
 		gQueryManager.Close();
 
 		pMsg.status = 0;
@@ -90,16 +90,16 @@ void CNpcTalk::GDNpcLeoTheHelperSaveRecv(SDHP_NPC_LEO_THE_HELPER_SAVE_RECV* lpMs
 {
 	#if(DATASERVER_UPDATE>=202)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM EventLeoTheHelper WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Name FROM EventLeoTheHelper WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',%d)",lpMsg->name,lpMsg->status);
+		gQueryManager.ExecQuery("INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',%d)",lpMsg->charactername,lpMsg->status);
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE EventLeoTheHelper SET Status=%d WHERE Name='%s'",lpMsg->status,lpMsg->name);
+		gQueryManager.ExecQuery("UPDATE EventLeoTheHelper SET Status=%d WHERE Name='%s'",lpMsg->status,lpMsg->charactername);
 		gQueryManager.Close();
 	}
 

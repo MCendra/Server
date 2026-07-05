@@ -9,7 +9,7 @@ struct SDHP_GENS_SYSTEM_INSERT_RECV
 	PSBMSG_HEAD header; // C1:11:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE GensFamily;
 };
 
@@ -18,7 +18,7 @@ struct SDHP_GENS_SYSTEM_DELETE_RECV
 	PSBMSG_HEAD header; // C1:11:01
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE GensFamily;
 	DWORD GensRank;
 };
@@ -28,7 +28,7 @@ struct SDHP_GENS_SYSTEM_MEMBER_RECV
 	PSBMSG_HEAD header; // C1:11:02
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_GENS_SYSTEM_UPDATE_RECV
@@ -36,7 +36,7 @@ struct SDHP_GENS_SYSTEM_UPDATE_RECV
 	PSBMSG_HEAD header; // C1:11:03
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE GensFamily;
 	DWORD GensRank;
 	DWORD GensContribution;
@@ -47,7 +47,7 @@ struct SDHP_GENS_SYSTEM_REWARD_RECV
 	PSBMSG_HEAD header; // C1:11:04
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE GensFamily;
 };
 
@@ -56,7 +56,7 @@ struct SDHP_GENS_SYSTEM_REWARD_SAVE_RECV
 	PSBMSG_HEAD header; // C1:11:30
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE GensFamily;
 	DWORD GensRank;
 	DWORD GensRewardStatus;
@@ -71,7 +71,7 @@ struct SDHP_GENS_SYSTEM_INSERT_SEND
 	PSBMSG_HEAD header; // C1:11:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE result;
 	BYTE GensFamily;
 	DWORD GensRank;
@@ -83,7 +83,7 @@ struct SDHP_GENS_SYSTEM_DELETE_SEND
 	PSBMSG_HEAD header; // C1:11:01
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE result;
 };
 
@@ -92,7 +92,7 @@ struct SDHP_GENS_SYSTEM_MEMBER_SEND
 	PSBMSG_HEAD header; // C1:11:02
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE result;
 	BYTE GensFamily;
 	DWORD GensRank;
@@ -104,7 +104,7 @@ struct SDHP_GENS_SYSTEM_UPDATE_SEND
 	PSBMSG_HEAD header; // C1:11:03
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE result;
 	BYTE GensFamily;
 	DWORD GensRank;
@@ -116,7 +116,7 @@ struct SDHP_GENS_SYSTEM_REWARD_SEND
 	PSBMSG_HEAD header; // C1:11:04
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE result;
 	BYTE GensFamily;
 	DWORD GensRank;

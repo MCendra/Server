@@ -1094,7 +1094,7 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 
 	while (true)
 	{
-		DWORD waitResult = WaitForMultipleObjects(2, handles, FALSE, INFINITE);
+		DWORD waitResult = WaitForMultipleObjects(2, handles, false, INFINITE);
 
 		switch (waitResult)
 		{

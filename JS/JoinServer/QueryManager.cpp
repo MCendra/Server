@@ -60,7 +60,7 @@ bool CQueryManager::Connect(const char* odbc, const char* user, const char* pass
 	}
 
 	if (!SQL_SUCCEEDED(SQLAllocHandle(SQL_HANDLE_STMT, m_SQLConnection, &m_STMT)))
-	{		
+	{
 		SQLDisconnect(m_SQLConnection);
 		SQLFreeHandle(SQL_HANDLE_DBC, m_SQLConnection);
 
@@ -138,7 +138,7 @@ void CQueryManager::Diagnostic(const char* query)
 	if (reconnect)
 	{
 		Log.ToDisp(
-			LOG_RED,"[QueryManager - Diagnostic] Falla en la conexion detectada. Reconectando...");
+			LOG_RED, "[QueryManager - Diagnostic] Falla en la conexion detectada. Reconectando...");
 
 		if (m_STMT != SQL_NULL_HANDLE)
 		{
@@ -159,12 +159,12 @@ void CQueryManager::Diagnostic(const char* query)
 	}
 }
 
-bool CQueryManager::ExecQuery(const char* query,...)
+bool CQueryManager::ExecQuery(const char* query, ...)
 {
 	std::array<char, 8192> queryBuffer{};
 
 	va_list arg;
-	va_start(arg,query);
+	va_start(arg, query);
 	// Protección crítica: Evita desbordamiento de búfer e interrupción del proceso
 	int written = _vsnprintf_s(queryBuffer.data(), queryBuffer.size(), _TRUNCATE, query, arg);
 	va_end(arg);
@@ -214,19 +214,25 @@ bool CQueryManager::ExecQuery(const char* query,...)
 void CQueryManager::Close()
 {
 	SQLCloseCursor(m_STMT);
-	SQLFreeStmt(m_STMT,SQL_UNBIND);
+	SQLFreeStmt(m_STMT, SQL_UNBIND);
+	m_RowCount = -1;
+	m_ColCount = -1;
 }
 
 SQLRETURN CQueryManager::Fetch()
 {
-	return SQLFetch(m_STMT);
+	const SQLRETURN result = SQLFetch(m_STMT);
+
+	m_RowCount = (result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO);
+
+	return result;
 }
 
 int CQueryManager::FindIndex(const char* ColName)
 {
-	for(int n=0;n < m_ColCount;n++)
+	for (int n = 0;n < m_ColCount;n++)
 	{
-		if(_stricmp(ColName,(char*)m_SQLColName[n]) == 0)
+		if (_stricmp(ColName, (char*)m_SQLColName[n]) == 0)
 		{
 			return n;
 		}
@@ -237,49 +243,88 @@ int CQueryManager::FindIndex(const char* ColName)
 
 int CQueryManager::GetResult(int index)
 {
-	return atoi(m_SQLData[index]);
+	if (index < 0 || index >= m_ColCount)
+	{
+		return 0;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0;
+	}
+
+	return std::atoi(m_SQLData[index]);
 }
 
 int CQueryManager::GetAsInteger(const char* ColName)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	return (index == -1) ? index : atoi(m_SQLData[index]);
+	if (index == -1)
+	{
+		return 0;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0;
+	}
+
+	return std::atoi(m_SQLData[index]);
 }
 
 float CQueryManager::GetAsFloat(const char* ColName)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	return (index == -1) ? (float)index : (float)atof(m_SQLData[index]);
+	if (index == -1)
+	{
+		return 0.0f;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0.0f;
+	}
+
+	return static_cast<float>(std::atof(m_SQLData[index]));
 }
 
 __int64 CQueryManager::GetAsInteger64(const char* ColName)
 {
-	int index = FindIndex(ColName);
-
-	return (index == -1) ? index : _atoi64(m_SQLData[index]);
-}
-
-void CQueryManager::GetAsString(const char* ColName,char* OutBuffer,int OutBufferSize)
-{
-	int index = FindIndex(ColName);
-
-	if(index == -1)
-	{
-		memset(OutBuffer,0,OutBufferSize);
-	}
-	else
-	{
-		strncpy_s(OutBuffer, OutBufferSize, m_SQLData[index], _TRUNCATE);
-	}
-}
-
-void CQueryManager::GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBufferSize)
-{
 	const int index = FindIndex(ColName);
 
 	if (index == -1)
+	{
+		return 0;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0;
+	}
+
+	return _atoi64(m_SQLData[index]);
+}
+
+void CQueryManager::GetAsString(const char* ColName, char* OutBuffer, int OutBufferSize)
+{
+	const int index = FindIndex(ColName);
+
+	if (index == -1 || m_SQLData[index] == nullptr)
+	{
+		memset(OutBuffer, 0, OutBufferSize);
+		return;
+	}
+
+	strncpy_s(OutBuffer, OutBufferSize, m_SQLData[index], _TRUNCATE);
+}
+
+void CQueryManager::GetAsBinary(const char* ColName, BYTE* OutBuffer, int OutBufferSize)
+{
+	const int index = FindIndex(ColName);
+
+	if (index == -1 || m_SQLData[index] == nullptr)
 	{
 		std::memset(OutBuffer, 0, OutBufferSize);
 		return;
@@ -288,18 +333,38 @@ void CQueryManager::GetAsBinary(const char* ColName,BYTE* OutBuffer,int OutBuffe
 	ConvertStringToBinary(m_SQLData[index], static_cast<int>(std::strlen(m_SQLData[index])), OutBuffer, OutBufferSize);
 }
 
-void CQueryManager::BindParameterAsString(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize)
+void CQueryManager::BindParameterAsString(SQLUSMALLINT ParamNumber, const void* InBuffer, SQLULEN ColumnSize)
 {
 	m_SQLBindValue[ParamNumber - 1] = SQL_NTS;
 
-	SQLBindParameter(m_STMT, ParamNumber, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, ColumnSize, 0, InBuffer, 0, &m_SQLBindValue[ParamNumber - 1]);
+	SQLBindParameter(
+		m_STMT,
+		ParamNumber,
+		SQL_PARAM_INPUT,
+		SQL_C_CHAR,
+		SQL_VARCHAR,
+		ColumnSize,
+		0,
+		const_cast<void*>(InBuffer),
+		0,
+		&m_SQLBindValue[ParamNumber - 1]);
 }
 
-void CQueryManager::BindParameterAsBinary(SQLUSMALLINT ParamNumber, void* InBuffer, SQLULEN ColumnSize)
+void CQueryManager::BindParameterAsBinary(SQLUSMALLINT ParamNumber, const void* InBuffer, SQLULEN ColumnSize)
 {
 	m_SQLBindValue[ParamNumber - 1] = static_cast<SQLLEN>(ColumnSize);
 
-	SQLBindParameter(m_STMT,ParamNumber, SQL_PARAM_INPUT, SQL_C_BINARY, SQL_VARBINARY, ColumnSize, 0, InBuffer, 0, &m_SQLBindValue[ParamNumber - 1]);
+	SQLBindParameter(
+		m_STMT,
+		ParamNumber,
+		SQL_PARAM_INPUT,
+		SQL_C_BINARY,
+		SQL_VARBINARY,
+		ColumnSize,
+		0,
+		const_cast<void*>(InBuffer),
+		0,
+		&m_SQLBindValue[ParamNumber - 1]);
 }
 
 // CORRECCIÓN CRÍTICA DE ALGORITMO: El original fallaba con letras minúsculas (ej: 'a'-'f')
@@ -353,7 +418,7 @@ void CQueryManager::ConvertStringToBinary(const char* InBuff, int InSize, BYTE* 
 	// 6. Bucle de conversión lineal seguro
 	for (int n = 0; n < bytesToProcess; ++n)
 	{
-	
+
 		BYTE high = HexTable[(BYTE)InBuff[n * 2]];
 		BYTE low = HexTable[(BYTE)InBuff[n * 2 + 1]];
 

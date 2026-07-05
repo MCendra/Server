@@ -30,9 +30,9 @@ void CMasterSkillTree::GDMasterSkillTreeRecv(SDHP_MASTER_SKILL_TREE_RECV* lpMsg,
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
-	if(gQueryManager.ExecQuery("SELECT * FROM MasterSkillTree WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT * FROM MasterSkillTree WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -79,7 +79,7 @@ void CMasterSkillTree::GDMasterSkillTreeSaveRecv(SDHP_MASTER_SKILL_TREE_SAVE_REC
 		#if(DATASERVER_UPDATE>=602)
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->MasterSkill[0],sizeof(lpMsg->MasterSkill));
-		gQueryManager.ExecQuery("INSERT INTO MasterSkillTree (Name,MasterLevel,MasterPoint,MasterExperience,MasterSkill) VALUES ('%s',%d,%d,%I64d,?)",lpMsg->name,lpMsg->MasterLevel,lpMsg->MasterPoint,lpMsg->MasterExperience);
+		gQueryManager.ExecQuery("INSERT INTO MasterSkillTree (Name,MasterLevel,MasterPoint,MasterExperience,MasterSkill) VALUES ('%s',%d,%d,%I64d,?)",lpMsg->charactername,lpMsg->MasterLevel,lpMsg->MasterPoint,lpMsg->MasterExperience);
 		gQueryManager.Close();
 		#else
 		gQueryManager.Close();

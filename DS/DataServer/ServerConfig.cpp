@@ -18,12 +18,14 @@ constexpr char KEY_DATA_SERVER_PORT[] = "DataServerPort";
 constexpr char KEY_DATA_SERVER_ODBC[] = "DataServerODBC";
 constexpr char KEY_DATA_SERVER_USER[] = "DataServerUSER";
 constexpr char KEY_DATA_SERVER_PASS[] = "DataServerPASS";
+constexpr char KEY_DATA_ADVANCED_LOG[] = "AdvancedLog";
 constexpr char KEY_RSTIME_CTC[] = "RSTimeCTC";
 
 constexpr WORD DEFAULT_DATA_SERVER_PORT = 55960;
 constexpr char DEFAULT_DATA_SERVER_ODBC[] = "MuOnlineS6";
 constexpr char DEFAULT_DATA_SERVER_USER[] = "sa";
 constexpr char DEFAULT_DATA_SERVER_PASS[] = "$Magda314$$$";
+constexpr BYTE DEFAULT_ADVANCED_LOG = 1;
 constexpr WORD DEFAULT_RSTIME_CTC = 40;
 
 constexpr char DEFAULT_CONFIG[] = "[DataServerInfo]\n"
@@ -33,6 +35,7 @@ constexpr char DEFAULT_CONFIG[] = "[DataServerInfo]\n"
 "DataServerODBC=%s\n"
 "DataServerUSER=%s\n"
 "DataServerPASS=%s\n"
+"AdvancedLog=%d\n"
 "RSTimeCTC=%d\n";
 
 constexpr char DEFAULT_ALLOWABLE_IP_LIST[] = "0\n"
@@ -51,6 +54,7 @@ WORD DataServerPort;
 char DataServerODBC[32];
 char DataServerUSER[32];
 char DataServerPASS[32];
+BOOL AdvancedLog;
 WORD RSTimeCTC;
 
 // Construction/Destruction
@@ -80,7 +84,7 @@ bool CServerConfig::EnsureConfigFileExists() {
 			if (file.getHandle() != INVALID_HANDLE_VALUE) {
 				char buffer[2048];
 				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG, DEFAULT_DATA_SERVER_PORT, DEFAULT_DATA_SERVER_ODBC,
-					DEFAULT_DATA_SERVER_USER, DEFAULT_DATA_SERVER_PASS,	DEFAULT_RSTIME_CTC);
+					DEFAULT_DATA_SERVER_USER, DEFAULT_DATA_SERVER_PASS, DEFAULT_ADVANCED_LOG, DEFAULT_RSTIME_CTC);
 
 				DWORD bytesWritten;
 				if (file.write(buffer, static_cast<DWORD>(strlen(buffer)), bytesWritten)) {
@@ -157,14 +161,19 @@ bool CServerConfig::LoadConfig() {
 		allValuesLoaded = false;
 	}
 
-	RSTimeCTC = static_cast<WORD>(GetPrivateProfileIntA(SECTION_DATA_SERVER_INFO, KEY_RSTIME_CTC, 0, ConfigFilePath));
-	if (RSTimeCTC > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] RSTimeCTC: %d", RSTimeCTC);
+	AdvancedLog = static_cast<BYTE>(GetPrivateProfileIntA(SECTION_DATA_SERVER_INFO, KEY_DATA_ADVANCED_LOG, 0, ConfigFilePath));
+	if (AdvancedLog == 0 || AdvancedLog == 1) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Registro de acciones avanzados: %s", (AdvancedLog == 1) ? "SI" : "NO");
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar RSTimeCTC desde %s.", CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar AdvancedLog desde %s.", CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
+
+#if(CHIEN_TRUONG_CO)
+	RSTimeCTC = static_cast<WORD>(GetPrivateProfileIntA(SECTION_DATA_SERVER_INFO, KEY_RSTIME_CTC, 0, ConfigFilePath));
+	Log.ToDisp(LOG_BLACK, "[InitConfig] RSTimeCTC: %d", RSTimeCTC);
+#endif
 
 	// Informar si todos los valores fueron leídos correctamente
 	if (allValuesLoaded) {

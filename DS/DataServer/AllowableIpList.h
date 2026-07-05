@@ -9,8 +9,8 @@ struct ALLOWABLE_IP_INFO
 class CAllowableIpList
 {
 public:
-	CAllowableIpList() = default;;
-	virtual ~CAllowableIpList() = default;
+	CAllowableIpList() = default;
+	~CAllowableIpList() = default;
 	void Load(const char* path);
 	bool CheckAllowableIp(const char* ip) const;
 private:

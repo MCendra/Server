@@ -9,7 +9,7 @@ struct SDHP_PSHOP_ITEM_VALUE_RECV
 	PSBMSG_HEAD header; // C1:25:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PSHOP_ITEM_VALUE_SAVE_RECV
@@ -17,7 +17,7 @@ struct SDHP_PSHOP_ITEM_VALUE_SAVE_RECV
 	PSWMSG_HEAD header; // C2:25:30
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE count;
 };
 
@@ -36,7 +36,7 @@ struct SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV
 	PSBMSG_HEAD header; // C1:25:31
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD slot;
 	DWORD serial;
 	DWORD value;
@@ -50,7 +50,7 @@ struct SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV
 	PSBMSG_HEAD header; // C1:25:32
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD slot;
 };
 
@@ -63,7 +63,7 @@ struct SDHP_PSHOP_ITEM_VALUE_SEND
 	PSWMSG_HEAD header; // C2:25:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE count;
 };
 

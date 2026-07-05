@@ -31,7 +31,7 @@ void CGensSystem::GDGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg,int
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
@@ -41,7 +41,7 @@ void CGensSystem::GDGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg,int
 
 	pMsg.GensContribution = 0;
 
-	if(gQueryManager.ExecQuery("INSERT INTO Gens_Rank (Name,Family,Contribution) VALUES ('%s',%d,0)",lpMsg->name,lpMsg->GensFamily) == 0)
+	if(gQueryManager.ExecQuery("INSERT INTO Gens_Rank (Name,Family,Contribution) VALUES ('%s',%d,0)",lpMsg->charactername,lpMsg->GensFamily) == 0)
 	{
 		gQueryManager.Close();
 
@@ -53,7 +53,7 @@ void CGensSystem::GDGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg,int
 
 		gQueryManager.Close();
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->name,lpMsg->GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->charactername,lpMsg->GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
 
@@ -86,11 +86,11 @@ void CGensSystem::GDGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg,int
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
-	if(gQueryManager.ExecQuery("DELETE FROM Gens_Rank WHERE Name='%s'",lpMsg->name) == 0)
+	if(gQueryManager.ExecQuery("DELETE FROM Gens_Rank WHERE Name='%s'",lpMsg->charactername) == 0)
 	{
 		gQueryManager.Close();
 
@@ -122,7 +122,7 @@ void CGensSystem::GDGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg,int
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
@@ -132,7 +132,7 @@ void CGensSystem::GDGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg,int
 
 	pMsg.GensContribution = 0;
 
-	if(gQueryManager.ExecQuery("SELECT Family FROM Gens_Rank WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Family FROM Gens_Rank WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -144,7 +144,7 @@ void CGensSystem::GDGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg,int
 
 		gQueryManager.Close();
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->name,pMsg.GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->charactername,pMsg.GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
 
@@ -177,7 +177,7 @@ void CGensSystem::GDGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg,int
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
@@ -187,7 +187,7 @@ void CGensSystem::GDGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg,int
 
 	pMsg.GensContribution = 0;
 
-	if(gQueryManager.ExecQuery("UPDATE Gens_Rank SET Contribution=%d WHERE Name='%s'",lpMsg->GensContribution,lpMsg->name) == 0)
+	if(gQueryManager.ExecQuery("UPDATE Gens_Rank SET Contribution=%d WHERE Name='%s'",lpMsg->GensContribution,lpMsg->charactername) == 0)
 	{
 		gQueryManager.Close();
 
@@ -199,7 +199,7 @@ void CGensSystem::GDGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg,int
 
 		gQueryManager.Close();
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->name,lpMsg->GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->charactername,lpMsg->GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
 
@@ -254,7 +254,7 @@ void CGensSystem::GDGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg,int
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
@@ -264,7 +264,7 @@ void CGensSystem::GDGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg,int
 
 	pMsg.GensRewardStatus = 0;
 
-	if(gQueryManager.ExecQuery("SELECT Rank,Status FROM Gens_Reward WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Rank,Status FROM Gens_Reward WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -290,16 +290,16 @@ void CGensSystem::GDGensSystemRewardSaveRecv(SDHP_GENS_SYSTEM_REWARD_SAVE_RECV* 
 {
 	#if(DATASERVER_UPDATE>=501)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM Gens_Reward WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Name FROM Gens_Reward WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO Gens_Reward (Name,Rank,Status) VALUES ('%s',%d,%d)",lpMsg->name,lpMsg->GensRank,lpMsg->GensRewardStatus);
+		gQueryManager.ExecQuery("INSERT INTO Gens_Reward (Name,Rank,Status) VALUES ('%s',%d,%d)",lpMsg->charactername,lpMsg->GensRank,lpMsg->GensRewardStatus);
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE Gens_Reward SET Status=%d WHERE Name='%s'",lpMsg->GensRewardStatus,lpMsg->name);
+		gQueryManager.ExecQuery("UPDATE Gens_Reward SET Status=%d WHERE Name='%s'",lpMsg->GensRewardStatus,lpMsg->charactername);
 		gQueryManager.Close();
 	}
 

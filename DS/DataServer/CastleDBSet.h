@@ -680,8 +680,8 @@ struct CSP_NPCUPDATEDATA
 class CCastleDBSet
 {
 public:
-	CCastleDBSet();
-	virtual ~CCastleDBSet();
+	CCastleDBSet() = default;
+	~CCastleDBSet() = default;
 	BOOL DSDB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventCycle, CASTLE_DATA* lpCastleData);
 	BOOL DSDB_QueryOwnerGuildMaster(int iMapSvrGroup, CSP_ANS_OWNERGUILDMASTER* lpOwnerGuildMaster);
 	BOOL DSDB_QueryCastleNpcBuy(int iMapSvrGroup, CSP_REQ_NPCBUY* lpNpcBuy, int* lpiResult);

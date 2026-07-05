@@ -23,10 +23,19 @@ public:
 	{
 	public:
 		// Constructor: Bloquea la seccion critica
-		CLock(CCriticalSection& cs) : m_cs(cs) { m_cs.lock(); }
-
+		explicit CLock(CCriticalSection& cs)
+			: m_cs(cs)
+		{
+			m_cs.lock();
+		}
+		
 		// Destructor: Desbloquea la seccion critica
-		~CLock() { m_cs.unlock(); }
+		~CLock()
+		{
+			m_cs.unlock();
+		}
+		CLock(const CLock&) = delete;
+		CLock& operator=(const CLock&) = delete;
 
 	private:
 		CCriticalSection& m_cs;  // Referencia a la seccion critica

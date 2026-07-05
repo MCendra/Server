@@ -13,12 +13,12 @@ public:
 	void ErrorMessageBox(const char* message, ...);
 	// Verifica la sintaxis de un texto
 	bool CheckTextSyntax(const char* text, int size);
+
 };
 
 extern CUtil gUtil;
 
 bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot);
-WORD GetServerCodeByName(char* name);
-CServerManager* FindServerByCode(WORD ServerCode);
-
-extern int gServerCount;
+WORD GetServerCodeByName(const char* name);
+[[nodiscard]]
+std::string NormalizeToLower(const char* text);

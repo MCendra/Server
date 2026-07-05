@@ -377,7 +377,7 @@ DWORD CPartyMatching::GeneratePartyMatchingJoinList(char* LeaderName,BYTE* lpMsg
 	{
 		if(_stricmp(it->second.LeaderName,LeaderName) == 0)
 		{
-			memcpy(info.name,it->second.Name,sizeof(info.name));
+			memcpy(info.charactername,it->second.Name,sizeof(info.charactername));
 
 			info.Class = it->second.Class;
 
@@ -413,20 +413,20 @@ void CPartyMatching::GDPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* 
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
 	PARTY_MATCHING_INFO PartyMatchingInfo;
 
-	if(this->GetPartyMatchingInfo(&PartyMatchingInfo,lpMsg->name) != 0)
+	if(this->GetPartyMatchingInfo(&PartyMatchingInfo,lpMsg->charactername) != 0)
 	{
 		pMsg.result = 0xFFFFFFFE;
 		gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
 		return;
 	}
 
-	memcpy(PartyMatchingInfo.Name,lpMsg->name,sizeof(PartyMatchingInfo.Name));
+	memcpy(PartyMatchingInfo.Name,lpMsg->charactername,sizeof(PartyMatchingInfo.Name));
 
 	memcpy(PartyMatchingInfo.Text,lpMsg->text,sizeof(PartyMatchingInfo.Text));
 
@@ -479,7 +479,7 @@ void CPartyMatching::GDPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMs
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
@@ -630,11 +630,11 @@ void CPartyMatching::GDPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_R
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.result = 0;
 
-	pMsg.count = this->GeneratePartyMatchingJoinList(lpMsg->name,send,&size);
+	pMsg.count = this->GeneratePartyMatchingJoinList(lpMsg->charactername,send,&size);
 
 	pMsg.header.size[0] = SET_NUMBERHB(size);
 	pMsg.header.size[1] = SET_NUMBERLB(size);
@@ -700,7 +700,7 @@ void CPartyMatching::GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANC
 
 		memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-		memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+		memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 		pMsg.result = 0;
 
@@ -710,7 +710,7 @@ void CPartyMatching::GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANC
 
 		PARTY_MATCHING_INFO PartyMatchingInfo;
 
-		if(this->GetPartyMatchingInfo(&PartyMatchingInfo,lpMsg->name) == 0)
+		if(this->GetPartyMatchingInfo(&PartyMatchingInfo,lpMsg->charactername) == 0)
 		{
 			pMsg.result = 0xFFFFFFFF;
 			gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
@@ -733,7 +733,7 @@ void CPartyMatching::GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANC
 
 		memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-		memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+		memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 		pMsg.result = 0;
 
@@ -743,7 +743,7 @@ void CPartyMatching::GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANC
 
 		PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo;
 
-		if(this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo,lpMsg->name) == 0)
+		if(this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo,lpMsg->charactername) == 0)
 		{
 			pMsg.result = 0xFFFFFFFF;
 			gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
@@ -801,7 +801,7 @@ void CPartyMatching::DGPartyMatchingNotifySend(char* name,char* LeaderName,DWORD
 
 	memcpy(pMsg.account,CharacterInfo.Account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,CharacterInfo.Name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,CharacterInfo.Name,sizeof(pMsg.charactername));
 
 	memcpy(pMsg.LeaderName,LeaderName,sizeof(pMsg.LeaderName));
 
@@ -836,7 +836,7 @@ void CPartyMatching::DGPartyMatchingNotifyLeaderSend(char* name,DWORD result) //
 
 	memcpy(pMsg.account,CharacterInfo.Account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,CharacterInfo.Name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,CharacterInfo.Name,sizeof(pMsg.charactername));
 
 	pMsg.result = result;
 

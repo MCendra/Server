@@ -6,93 +6,91 @@
 
 struct SDHP_COMMAND_RESET_RECV
 {
-	PSBMSG_HEAD header; // C1:0F:00
-	WORD index;
-	char account[11];
-	char name[11];
+	PSBMSG_HEAD Header; // C1:0F:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_COMMAND_MASTER_RESET_RECV
 {
-	PSBMSG_HEAD header; // C1:0F:01
-	WORD index;
-	char account[11];
-	char name[11];
+	PSBMSG_HEAD Header; // C1:0F:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_COMMAND_MARRY_RECV
 {
-    PSBMSG_HEAD header; // C1:0F:02
-    WORD index;
-    char name[11];
-    char marryname[11];
-    char mode[11];
+    PSBMSG_HEAD Header; // C1:0F:02
+	WORD Index;
+	char CharacterName[MAX_CHARACTER_NAME];
+	char MarryName[11];
+    char Mode[11];
 };
 
 struct SDHP_COMMAND_REWARD_RECV
 {
-	PSBMSG_HEAD header; // C1:0F:03
-	WORD index;
-	char account[11];
-	char name[11];
-	char accountGM[11];
-	char nameGM[11];
+	PSBMSG_HEAD Header; // C1:0F:03
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	char AccountGM[MAX_ACCOUNT_NAME];
+	char NameGM[MAX_CHARACTER_NAME];
 	UINT Type;
 	UINT Value;
 };
 
 struct SDHP_COMMAND_REWARDALL_RECV
 {
-	PSBMSG_HEAD header; // C1:0F:04
-	WORD index;
-	char accountGM[11];
-	char nameGM[11];
+	PSBMSG_HEAD Header; // C1:0F:04
+	WORD Index;
+	char AccountGM[MAX_ACCOUNT_NAME];
+	char NameGM[MAX_CHARACTER_NAME];
 	UINT Type;
 	UINT Value;
 };
 
 struct SDHP_COMMAND_RENAME_RECV
 {
-    PSBMSG_HEAD header; // C1:F0:05
-    WORD index;
-	char account[11];
-    char name[11];
-    char newname[11];
+    PSBMSG_HEAD Header; // C1:F0:05
+    WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+    char CharacterName[MAX_CHARACTER_NAME];
+    char NewName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_COMMAND_BLOC_RECV
 {
-    PSBMSG_HEAD header; // C1:F0:06
-    WORD index;
-    char namebloc[11];
-	WORD days;
+    PSBMSG_HEAD Header; // C1:F0:06
+    WORD Index;
+    char CharacterNameBloc[MAX_CHARACTER_NAME];
+	WORD Days;
 };
 
 struct SDHP_GIFT_RECV
 {
-    PSBMSG_HEAD header; // C1:F0:08
-    WORD index;
-	char account[11];
+    PSBMSG_HEAD Header; // C1:F0:08
+    WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 };
 
 struct SDHP_TOP_RECV
 {
-    PSBMSG_HEAD header; // C1:F0:09
-    WORD index;
-	WORD type;
-	WORD classe;
+    PSBMSG_HEAD Header; // C1:F0:09
+    WORD Index;
+	WORD Type;
+	WORD Class;
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_COMMAND_RESET_SEND
 {
-	PSBMSG_HEAD header; // C1:0F:00
-	WORD index;
-	char account[11];
-	char name[11];
+	PSBMSG_HEAD Header; // C1:0F:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	UINT ResetDay;
 	UINT ResetWek;
 	UINT ResetMon;
@@ -100,10 +98,10 @@ struct SDHP_COMMAND_RESET_SEND
 
 struct SDHP_COMMAND_MASTER_RESET_SEND
 {
-	PSBMSG_HEAD header; // C1:0F:01
-	WORD index;
-	char account[11];
-	char name[11];
+	PSBMSG_HEAD Header; // C1:0F:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	UINT MasterResetDay;
 	UINT MasterResetWek;
 	UINT MasterResetMon;
@@ -111,72 +109,70 @@ struct SDHP_COMMAND_MASTER_RESET_SEND
 
 struct SDHP_COMMAND_MARRY_SEND
 {
-    PSBMSG_HEAD header; // C1:0F:02
-    WORD index;
-    char name[11];
-    char marryname[11];
-    char mode[11];
+    PSBMSG_HEAD Header; // C1:0F:02
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
+    char MarryName[MAX_CHARACTER_NAME];
+    char Mode[11];
     char NameGet1[11];
     char NameGet2[11];
-    UINT countyou;
-    UINT counthim;
-    UINT marriedon;
+    UINT CountYou;
+    UINT CountHim;
+    UINT MarriedOn;
 };
 
 struct SDHP_COMMAND_RENAME_SEND
 {
-    PSBMSG_HEAD header; // C1:0F:05
-    WORD index;
-	char account[11];
-    char name[11];
-    char newname[11];
-	BYTE result;
+    PSBMSG_HEAD Header; // C1:0F:05
+    WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+    char CharacterName[MAX_CHARACTER_NAME];
+    char NewName[MAX_CHARACTER_NAME];
+	BYTE Result;
 };
 
 struct SDHP_GIFT_SEND
 {
-    PSBMSG_HEAD header; // C1:0F:08
-    WORD index;
-	BYTE result;
+    PSBMSG_HEAD Header; // C1:0F:08
+    WORD Index;
+	BYTE Result;
 };
 
 struct SDHP_TOP_SEND
 {
-	PSWMSG_HEAD header; // C1:0F:09
-	WORD index;
-	WORD type;
-	WORD classe;
-	BYTE count;
+	PSWMSG_HEAD Header; // C1:0F:09
+	WORD Index;
+	WORD Type;
+	WORD Class;
+	BYTE Count;
 };
 
 struct SDHP_COMMAND_BLOC_SEND
 {
-    PSBMSG_HEAD header; // C1:0F:06
-    WORD index;
-	BYTE result;
+    PSBMSG_HEAD Header; // C1:0F:06
+    WORD Index;
+	BYTE Result;
 };
 
-//**********************************************//
-//**********************************************//
 //**********************************************//
 
 struct SDHP_TOP_INFO
 {
-	char name[11];
-	UINT value;
+	char CharacterName[MAX_CHARACTER_NAME];
+	UINT Value;
 };
 
 struct CUSTOM_RANKING_DATA
 {
 	char szName[20];
-	int valor;
+	int Value;
 };
 
 class CCommandManager
 {
 public:
-	CCommandManager();
-	virtual ~CCommandManager();
+	CCommandManager() = default;
+	~CCommandManager() = default;
 	void GDCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg,int index);
 	void GDCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* lpMsg,int index);
 	void GDCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg,int index);

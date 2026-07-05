@@ -52,7 +52,7 @@ bool CBadSyntax::CheckSyntax(const char* text) const
 
 	for (const auto& syntax : m_BadSyntaxInfo)
 	{
-		if (std::strstr(text, syntax.syntax.c_str()) != nullptr)
+		if (std::strstr(text, syntax.Syntax.c_str()) != nullptr)
 		{
 			return false;
 		}

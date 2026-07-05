@@ -9,875 +9,1015 @@
 #include "SocketManager.h"
 #include "Util.h"
 
-void ESDataSend(int index,BYTE* lpMsg,int size)
+void ExDBServerProtocolCore(int index, BYTE head, const BYTE* lpMsg, int size)
 {
-	switch(lpMsg[0])
+
+	if (lpMsg == nullptr || size <= 0)
 	{
-		case 0xC1:
-			{
-				BYTE send[8192];
-
-				PSBMSG_HEAD pMsg;
-
-				pMsg.set(0xE0,lpMsg[2],(size=(size+1)));
-
-				memcpy(&send[0],&pMsg,sizeof(pMsg));
-
-				memcpy(&send[4],&lpMsg[3],(size-4));
-
-				gSocketManager.DataSend(index,send,size);
-			}
-			break;
-		case 0xC2:
-			{
-				BYTE send[8192];
-
-				PSWMSG_HEAD pMsg;
-
-				pMsg.set(0xE0,lpMsg[3],(size=(size+1)));
-
-				memcpy(&send[0],&pMsg,sizeof(pMsg));
-
-				memcpy(&send[5],&lpMsg[4],(size-5));
-
-				gSocketManager.DataSend(index,send,size);
-			}
-			break;
+		return;
 	}
-}
-
-void ESDataRecv(int index,BYTE head,BYTE* lpMsg,int size) // OK
-{
-	switch(lpMsg[0])
-	{
-		case 0xC1:
-			{
-				BYTE recv[8192];
-
-				PBMSG_HEAD pMsg;
-
-				pMsg.set(lpMsg[3],(size=(size-1)));
-
-				memcpy(&recv[0],&pMsg,sizeof(pMsg));
-
-				memcpy(&recv[3],&lpMsg[4],(size-3));
-
-				ExDBServerProtocolCore(index,pMsg.head,recv,size);
-			}
-			break;
-		case 0xC2:
-			{
-				BYTE recv[8192];
-
-				PWMSG_HEAD pMsg;
-
-				pMsg.set(lpMsg[4],(size=(size-1)));
-
-				memcpy(&recv[0],&pMsg,sizeof(pMsg));
-
-				memcpy(&recv[4],&lpMsg[5],(size-4));
-
-				ExDBServerProtocolCore(index,pMsg.head,recv,size);
-			}
-			break;
-	}
-}
-
-void ExDBServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size) // OK
-{
 
 	if (AdvancedLog != 0)
 	{
-		Log.ToDisp(LOG_BLACK,"ESPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x",head,lpMsg[1],lpMsg[2],lpMsg[3],lpMsg[4]);
+		Log.ToDisp(LOG_BLACK, "ESPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x", head, lpMsg[1], lpMsg[2], lpMsg[3], lpMsg[4]);
 	}
 
-	switch(head)
+	switch (head)
 	{
-		case 0x02:
-			GDCharClose((SDHP_USERCLOSE*)lpMsg,index);
-			break;
-		case 0x30:
-			GDGuildCreateSend((SDHP_GUILDCREATE*)lpMsg,index);
-			break;
-		case 0x31:
-			GDGuildDestroySend((SDHP_GUILDDESTROY*)lpMsg,index);
-			break;
-		case 0x32:
-			GDGuildMemberAdd((SDHP_GUILDMEMBERADD*)lpMsg,index);
-			break;
-		case 0x33:
-			GDGuildMemberDel((SDHP_GUILDMEMBERDEL*)lpMsg,index);
-			break;
-		case 0x35:
-			DGGuildMemberInfoRequest((SDHP_GUILDMEMBER_INFO_REQUEST*)lpMsg,index);
-			break;
-		case 0x37:
-			DGGuildScoreUpdate((SDHP_GUILDSCOREUPDATE*)lpMsg,index);
-			break;
-		case 0x38:
-			GDGuildNoticeSave((SDHP_GUILDNOTICE*)lpMsg,index);
-			break;
+	case EXDB_HEAD_CHAR_CLOSE:
+		GDCharClose((SDHP_USERCLOSE*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_CREATE:
+		GDGuildCreateSend((SDHP_GUILDCREATE*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_DESTROY:
+		GDGuildDestroySend((SDHP_GUILDDESTROY*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_MEMBER_ADD:
+		GDGuildMemberAdd((SDHP_GUILDMEMBERADD*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_MEMBER_DEL:
+		GDGuildMemberDel((SDHP_GUILDMEMBERDEL*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_MEMBER_INFO:
+		DGGuildMemberInfoRequest((SDHP_GUILDMEMBER_INFO_REQUEST*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_SCORE_UPDATE:
+		DGGuildScoreUpdate((SDHP_GUILDSCOREUPDATE*)lpMsg, index);
+		break;
+	case EXDB_HEAD_GUILD_NOTICE:
+		GDGuildNoticeSave((SDHP_GUILDNOTICE*)lpMsg, index);
+		break;
 #if(NEWBOSSGUILD == 1)
-		case 0x39:
-			DGGuildScoreUpdate1((SDHP_GUILDSCOREUPDATE1*)lpMsg, index);
-			break;
+	case EXDB_HEAD_GUILD_SCORE_UPDATE_EX:
+		DGGuildScoreUpdate1((SDHP_GUILDSCOREUPDATE1*)lpMsg, index);
+		break;
 #endif
 
-		case 0x50:
-			GDGuildServerGroupChattingSend((EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND*)lpMsg,index);
+	case EXDB_HEAD_GUILD_CHAT:
+		GDGuildServerGroupChattingSend((EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND*)lpMsg, index);
+		break;
+	case EXDB_HEAD_UNION_CHAT:
+		GDUnionServerGroupChattingSend((EXSDHP_SERVERGROUP_UNION_CHATTING_SEND*)lpMsg, index);
+		break;
+	case EXDB_HEAD_ASSIGN_STATUS:
+		GDGuildReqAssignStatus((EXSDHP_GUILD_ASSIGN_STATUS_REQ*)lpMsg, index);
+		break;
+	case EXDB_HEAD_ASSIGN_TYPE:
+		GDGuildReqAssignType((EXSDHP_GUILD_ASSIGN_TYPE_REQ*)lpMsg, index);
+		break;
+	case EXDB_HEAD_RELATIONSHIP_JOIN:
+		GDRelationShipReqJoin((EXSDHP_RELATIONSHIP_JOIN_REQ*)lpMsg, index);
+		break;
+	case EXDB_HEAD_RELATIONSHIP_BREAK:
+		GDUnionBreakOff((EXSDHP_RELATIONSHIP_BREAKOFF_REQ*)lpMsg, index);
+		break;
+	case EXDB_HEAD_UNION_LIST:
+		GDUnionListSend((EXSDHP_UNION_LIST_REQ*)lpMsg, index);
+		break;
+	case EXDB_HEAD_KICKOUT_UNION_MEMBER:
+		switch (lpMsg[3])
+		{
+		case EXDB_SUB_HEAD_KICKOUT_UNION_MEMBER:
+			GDRelationShipReqKickOutUnionMember((EXSDHP_KICKOUT_UNIONMEMBER_REQ*)lpMsg, index);
 			break;
-		case 0x51:
-			GDUnionServerGroupChattingSend((EXSDHP_SERVERGROUP_UNION_CHATTING_SEND*)lpMsg,index);
-			break;
-		case 0xE1:
-			GDGuildReqAssignStatus((EXSDHP_GUILD_ASSIGN_STATUS_REQ*)lpMsg,index);
-			break;
-		case 0xE2:
-			GDGuildReqAssignType((EXSDHP_GUILD_ASSIGN_TYPE_REQ*)lpMsg,index);
-			break;
-		case 0xE5:
-			GDRelationShipReqJoin((EXSDHP_RELATIONSHIP_JOIN_REQ*)lpMsg,index);
-			break;
-		case 0xE6:
-			GDUnionBreakOff((EXSDHP_RELATIONSHIP_BREAKOFF_REQ*)lpMsg,index);
-			break;
-		case 0xE9:
-			GDUnionListSend((EXSDHP_UNION_LIST_REQ*)lpMsg,index);
-			break;
-		case 0xEB:
-			switch(lpMsg[3])
-			{
-				case 0x01:
-					GDRelationShipReqKickOutUnionMember((EXSDHP_KICKOUT_UNIONMEMBER_REQ*)lpMsg,index);
-					break;
-			}
-			break;
+		}
+		break;
 	}
 
 }
 
-void GDCharClose(SDHP_USERCLOSE* lpMsg,int index)
+void ESDataSend(int index, const BYTE* lpMsg, int size)
 {
-	SDHP_USERCLOSE pMsg {};
+	if (lpMsg == nullptr || size <= 0)
+	{
+		return;
+	}
 
-	pMsg.h.set(0x02,sizeof(pMsg));
+	BYTE send[8192];
 
-	memcpy(pMsg.CharName,lpMsg->CharName,sizeof(pMsg.CharName));
+	switch (lpMsg[PACKET_TYPE_OFFSET])
+	{
+	case PACKET_C1:
+	{
+		const int packetSize = size + 1;
 
-	memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
+		if (packetSize > static_cast<int>(sizeof(send)))
+		{
+			return;
+		}
+
+		PSBMSG_HEAD header;
+
+		header.set(
+			DS_HEAD_EXDB_PROTOCOL,
+			lpMsg[C1_PACKET_HEAD_OFFSET],
+			packetSize);
+
+		memcpy(send, &header, sizeof(header));
+
+		memcpy(
+			send + sizeof(header),
+			lpMsg + C1_PACKET_DATA_OFFSET,
+			packetSize - static_cast<int>(sizeof(header)));
+
+		gSocketManager.DataSend(index, send, packetSize);
+	}
+	break;
+
+	case PACKET_C2:
+	{
+		const int packetSize = size + 1;
+
+		if (packetSize > static_cast<int>(sizeof(send)))
+		{
+			return;
+		}
+
+		PSWMSG_HEAD header;
+
+		header.set(
+			DS_HEAD_EXDB_PROTOCOL,
+			lpMsg[C2_PACKET_HEAD_OFFSET],
+			packetSize);
+
+		memcpy(send, &header, sizeof(header));
+
+		memcpy(
+			send + sizeof(header),
+			lpMsg + C2_PACKET_DATA_OFFSET,
+			packetSize - static_cast<int>(sizeof(header)));
+
+		gSocketManager.DataSend(index, send, packetSize);
+	}
+	break;
+	}
+}
+
+void ESDataRecv(int index, BYTE head, const BYTE* lpMsg, int size)
+{
+	UNREFERENCED_PARAMETER(head);
+
+	if (lpMsg == nullptr || size <= 0)
+	{
+		return;
+	}
+
+	BYTE recv[8192];
+
+	switch (lpMsg[PACKET_TYPE_OFFSET])
+	{
+	case PACKET_C1:
+	{
+		const int packetSize = size - 1;
+
+		if (packetSize <= 0 || packetSize > static_cast<int>(sizeof(recv)))
+		{
+			return;
+		}
+
+		PBMSG_HEAD header;
+
+		header.set(
+			lpMsg[C1_PACKET_DATA_OFFSET],
+			packetSize);
+
+		memcpy(recv, &header, sizeof(header));
+
+		memcpy(
+			recv + sizeof(header),
+			lpMsg + C1_PACKET_DATA_OFFSET + 1,
+			packetSize - static_cast<int>(sizeof(header)));
+
+		ExDBServerProtocolCore(index, header.head, recv, packetSize);
+	}
+	break;
+
+	case PACKET_C2:
+	{
+		const int packetSize = size - 1;
+
+		if (packetSize <= 0 || packetSize > static_cast<int>(sizeof(recv)))
+		{
+			return;
+		}
+
+		PWMSG_HEAD header;
+
+		header.set(
+			lpMsg[C2_PACKET_DATA_OFFSET],
+			packetSize);
+
+		memcpy(recv, &header, sizeof(header));
+
+		memcpy(
+			recv + sizeof(header),
+			lpMsg + C2_PACKET_DATA_OFFSET + 1,
+			packetSize - static_cast<int>(sizeof(header)));
+
+		ExDBServerProtocolCore(index, header.head, recv, packetSize);
+	}
+	break;
+	}
+}
+
+void GDCharClose(const SDHP_USERCLOSE* lpMsg,int index)
+{
+	UNREFERENCED_PARAMETER(index);
+
+	SDHP_USERCLOSE pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_CHAR_CLOSE, sizeof(pMsg));
+
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
 
 	pMsg.Type = 0;
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int serverIndex = 0; serverIndex < MAX_SERVER; ++serverIndex)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (!gServerManager[serverIndex].IsOnline())
 		{
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
 		}
+
+		ESDataSend(serverIndex, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
 
-void GDGuildCreateSend(SDHP_GUILDCREATE* lpMsg,int index)
+void GDGuildCreateSend(const SDHP_GUILDCREATE* lpMsg, int index)
 {
-	SDHP_GUILDCREATE_RESULT pMsg;
+	SDHP_GUILDCREATE_RESULT pMsg{};
 
-	pMsg.h.set(0x30,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_GUILD_CREATE, sizeof(pMsg));
 
 	pMsg.Result = 0;
-
 	pMsg.Flag = 1;
-
 	pMsg.GuildNumber = 0;
 
 	pMsg.NumberH = lpMsg->NumberH;
-
 	pMsg.NumberL = lpMsg->NumberL;
+	pMsg.GuildType = lpMsg->GuildType;
 
-	memcpy(pMsg.Master,lpMsg->Master,sizeof(pMsg.Master));
+	memcpy(pMsg.Master, lpMsg->Master, sizeof(pMsg.Master));
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.Mark, lpMsg->Mark, sizeof(pMsg.Mark));
 
-	memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
+	pMsg.Result = gGuildManager.AddGuild(
+		index,
+		lpMsg->GuildName,
+		lpMsg->Master,
+		lpMsg->Mark,
+		lpMsg->GuildType);
 
-	memcpy(pMsg.Mark,lpMsg->Mark,sizeof(pMsg.Mark));
-
-	pMsg.btGuildType = lpMsg->btGuildType;
-
-	if((pMsg.Result=gGuildManager.AddGuild(index,lpMsg->GuildName,lpMsg->Master,lpMsg->Mark,lpMsg->btGuildType)) != 1)
+	if (pMsg.Result != 1)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(lpMsg->GuildName);
+	GUILD_INFO* const lpGuildInfo = gGuildManager.GetGuildInfo(lpMsg->GuildName);
+	GUILD_MEMBER_INFO* const lpGuildMemberInfo = gGuildManager.GetGuildMemberInfo(lpMsg->Master);
 
-	GUILD_MEMBER_INFO* lpGuildMemberInfo = gGuildManager.GetGuildMemberInfo(lpMsg->Master);
-
-	if(lpGuildInfo != 0 && lpGuildMemberInfo != 0)
+	if (lpGuildInfo == nullptr || lpGuildMemberInfo == nullptr)
 	{
-		pMsg.GuildNumber = lpGuildInfo->dwNumber;
+		return;
+	}
 
-		for(int n=0;n < MAX_SERVER;n++)
+	pMsg.GuildNumber = lpGuildInfo->Number;
+
+	for (int serverIndex = 0; serverIndex < MAX_SERVER; ++serverIndex)
+	{
+		if (!gServerManager[serverIndex].IsOnline())
 		{
-			if(gServerManager[n].IsOnline() != 0)
-			{
-				pMsg.Flag = ((n==index)?1:0);
-				ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-			}
+			continue;
 		}
 
-		gGuildManager.ConnectMember(lpMsg->Master,GetServerCodeByName(lpMsg->Master));
+		pMsg.Flag = (serverIndex == index) ? 1 : 0;
 
-		DGGuildMasterListRecv(index,lpGuildInfo->dwNumber);
-
-		DGRelationShipListRecv(index,lpGuildInfo->dwUnionNumber,1);
-
-		DGRelationShipListRecv(index,lpGuildInfo->dwRivalNumber,2);
-
-		DGGuildMemberInfo(index,lpMsg->GuildName,lpMsg->Master,lpGuildMemberInfo->btStatus,lpMsg->btGuildType,(BYTE)lpGuildMemberInfo->btServer);
+		ESDataSend(
+			serverIndex,
+			reinterpret_cast<const BYTE*>(&pMsg),
+			sizeof(pMsg));
 	}
+
+	gGuildManager.ConnectMember(lpMsg->Master, GetServerCodeByName(lpMsg->Master));
+
+	DGGuildMasterListRecv(index, lpGuildInfo->Number);
+
+	DGRelationShipListRecv(index, lpGuildInfo->UnionNumber, 1);
+	DGRelationShipListRecv(index, lpGuildInfo->RivalNumber, 2);
+
+	DGGuildMemberInfo(
+		index,
+		lpMsg->GuildName,
+		lpMsg->Master,
+		lpGuildMemberInfo->Status,
+		lpMsg->GuildType,
+		static_cast<BYTE>(lpGuildMemberInfo->Server));
 }
 
-void GDGuildDestroySend(SDHP_GUILDDESTROY* lpMsg,int index)
+void GDGuildDestroySend(const SDHP_GUILDDESTROY* lpMsg, int index)
 {
-	SDHP_GUILDDESTROY_RESULT pMsg;
+	if (lpMsg == nullptr)
+	{
+		return;
+	}
 
-	pMsg.h.set(0x31,sizeof(pMsg));
+	SDHP_GUILDDESTROY_RESULT pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_GUILD_DESTROY, sizeof(pMsg));
 
 	pMsg.Result = 0;
-
 	pMsg.Flag = 1;
 
 	pMsg.NumberH = lpMsg->NumberH;
-
 	pMsg.NumberL = lpMsg->NumberL;
 
-	memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.Master, lpMsg->Master, sizeof(pMsg.Master));
 
-	memcpy(pMsg.Master,lpMsg->Master,sizeof(pMsg.Master));
+	pMsg.Result = gGuildManager.DelGuild(index, lpMsg->GuildName);
 
-	if((pMsg.Result=gGuildManager.DelGuild(index,lpMsg->GuildName)) != 1)
+	if (pMsg.Result != 1)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int serverIndex = 0; serverIndex < MAX_SERVER; ++serverIndex)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (!gServerManager[serverIndex].IsOnline())
 		{
-			pMsg.Flag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
 		}
+
+		pMsg.Flag = (serverIndex == index) ? 1 : 0;
+
+		ESDataSend(
+			serverIndex,
+			reinterpret_cast<const BYTE*>(&pMsg),
+			sizeof(pMsg));
 	}
 }
 
-void GDGuildMemberAdd(SDHP_GUILDMEMBERADD* lpMsg,int index)
+void GDGuildMemberAdd(const SDHP_GUILDMEMBERADD* lpMsg, int index)
 {
-	SDHP_GUILDMEMBERADD_RESULT pMsg;
+	SDHP_GUILDMEMBERADD_RESULT pMsg{};
 
-	pMsg.h.set(0x32,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_GUILD_MEMBER_ADD, sizeof(pMsg));
 
 	pMsg.Result = 0;
-
 	pMsg.Flag = 1;
 
 	pMsg.NumberH = lpMsg->NumberH;
-
 	pMsg.NumberL = lpMsg->NumberL;
 
-	memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.MemberID, lpMsg->MemberID, sizeof(pMsg.MemberID));
 
-	memcpy(pMsg.MemberID,lpMsg->MemberID,sizeof(pMsg.MemberID));
+	pMsg.Server = GetServerCodeByName(lpMsg->MemberID);
 
-	pMsg.pServer = GetServerCodeByName(lpMsg->MemberID);
+	pMsg.Result = gGuildManager.AddGuildMember(
+		index,
+		lpMsg->GuildName,
+		lpMsg->MemberID,
+		0x00,
+		pMsg.Server);
 
-	if((pMsg.Result=gGuildManager.AddGuildMember(index,lpMsg->GuildName,lpMsg->MemberID,0x00,pMsg.pServer)) != 1)
+	if (pMsg.Result != 1)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int serverIndex = 0; serverIndex < MAX_SERVER; ++serverIndex)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (!gServerManager[serverIndex].IsOnline())
 		{
-			pMsg.Flag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
 		}
+
+		pMsg.Flag = (serverIndex == index) ? 1 : 0;
+
+		ESDataSend(
+			serverIndex,
+			reinterpret_cast<const BYTE*>(&pMsg),
+			sizeof(pMsg));
 	}
 }
 
-void GDGuildMemberDel(SDHP_GUILDMEMBERDEL* lpMsg,int index)
+void GDGuildMemberDel(const SDHP_GUILDMEMBERDEL* lpMsg, int index)
 {
-	SDHP_GUILDMEMBERDEL_RESULT pMsg;
+	SDHP_GUILDMEMBERDEL_RESULT pMsg{};
 
-	pMsg.h.set(0x33,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_GUILD_MEMBER_DEL, sizeof(pMsg));
 
 	pMsg.Result = 0;
-
 	pMsg.Flag = 1;
 
 	pMsg.NumberH = lpMsg->NumberH;
-
 	pMsg.NumberL = lpMsg->NumberL;
 
-	memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.MemberID, lpMsg->MemberID, sizeof(pMsg.MemberID));
 
-	memcpy(pMsg.MemberID,lpMsg->MemberID,sizeof(pMsg.MemberID));
-
-	if((pMsg.Result=gGuildManager.DelGuildMember(index,lpMsg->MemberID)) != 1)
+	if ((pMsg.Result = gGuildManager.DelGuildMember(index, lpMsg->MemberID)) != 1)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (gServerManager[n].IsOnline() == 0)
 		{
-			pMsg.Flag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
 		}
+
+		pMsg.Flag = (n == index);
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
 
-void DGGuildMemberInfoRequest(SDHP_GUILDMEMBER_INFO_REQUEST* lpMsg,int index)
+void DGGuildMemberInfoRequest(const SDHP_GUILDMEMBER_INFO_REQUEST* lpMsg, int index)
 {
 	GUILD_INFO* lpGuildInfo = gGuildManager.GetMemberGuildInfo(lpMsg->MemberID);
-
 	GUILD_MEMBER_INFO* lpGuildMemberInfo = gGuildManager.GetGuildMemberInfo(lpMsg->MemberID);
 
-	if(lpGuildInfo == 0 || lpGuildMemberInfo == 0)
+	if (lpGuildInfo == nullptr || lpGuildMemberInfo == nullptr)
 	{
 		return;
 	}
 
-	gGuildManager.ConnectMember(lpMsg->MemberID,GetServerCodeByName(lpMsg->MemberID));
+	gGuildManager.ConnectMember(lpMsg->MemberID, GetServerCodeByName(lpMsg->MemberID));
 
-	DGGuildMasterListRecv(index,lpGuildInfo->dwNumber);
+	DGGuildMasterListRecv(index, lpGuildInfo->Number);
 
-	DGRelationShipListRecv(index,lpGuildInfo->dwUnionNumber,1);
+	DGRelationShipListRecv(index, lpGuildInfo->UnionNumber, 1);
 
-	DGRelationShipListRecv(index,lpGuildInfo->dwRivalNumber,2);
+	DGRelationShipListRecv(index, lpGuildInfo->RivalNumber, 2);
 
-	DGGuildMemberInfo(index,lpGuildInfo->szName,lpMsg->MemberID,lpGuildMemberInfo->btStatus,lpGuildInfo->btType,(BYTE)lpGuildMemberInfo->btServer);
+	DGGuildMemberInfo(
+		index,
+		lpGuildInfo->Name,
+		lpMsg->MemberID,
+		lpGuildMemberInfo->Status,
+		lpGuildInfo->Type,
+		static_cast<BYTE>(lpGuildMemberInfo->Server));
 }
 
-void DGGuildScoreUpdate(SDHP_GUILDSCOREUPDATE* lpMsg,int index)
+void DGGuildScoreUpdate(const SDHP_GUILDSCOREUPDATE* lpMsg, int index)
 {
-	if(gGuildManager.SetGuildScore(lpMsg->GuildName,lpMsg->Score) != 0)
+	if (gGuildManager.SetGuildScore(lpMsg->GuildName, lpMsg->Score) == 0)
 	{
-		SDHP_GUILDSCOREUPDATE pMsg;
+		return;
+	}
 
-		pMsg.h.set(0x37,sizeof(pMsg));
+	SDHP_GUILDSCOREUPDATE pMsg{};
 
-		memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
+	pMsg.Header.set(EXDB_HEAD_GUILD_SCORE_UPDATE, sizeof(pMsg));
 
-		pMsg.Score = lpMsg->Score;
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
 
-		for(int n=0;n < MAX_SERVER;n++)
+	pMsg.Score = lpMsg->Score;
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
 		{
-			if(gServerManager[n].IsOnline() != 0)
-			{
-				ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-			}
+			continue;
 		}
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
-#if(NEWBOSSGUILD == 1)
-void DGGuildScoreUpdate1(SDHP_GUILDSCOREUPDATE1* lpMsg, int index)
+
+#if (NEWBOSSGUILD == 1)
+
+void DGGuildScoreUpdate1(const SDHP_GUILDSCOREUPDATE1* lpMsg, int index)
 {
-	if (gGuildManager.SetGuildScore1(lpMsg->GuildName, lpMsg->Score1) != 0)
+	if (gGuildManager.SetGuildScore1(lpMsg->GuildName, lpMsg->Score1) == 0)
 	{
-		SDHP_GUILDSCOREUPDATE1 pMsg;
+		return;
+	}
 
-		pMsg.h.set(0x39, sizeof(pMsg));
+	SDHP_GUILDSCOREUPDATE1 pMsg{};
 
-		memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	pMsg.Header.set(EXDB_HEAD_GUILD_SCORE_UPDATE_EX, sizeof(pMsg));
 
-		pMsg.Score1 = lpMsg->Score1;
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
 
-		for (int n = 0; n < MAX_SERVER; n++)
+	pMsg.Score1 = lpMsg->Score1;
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
 		{
-			if (gServerManager[n].IsOnline() != 0)
-			{
-				ESDataSend(n, (BYTE*)&pMsg, sizeof(pMsg));
-			}
+			continue;
 		}
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
+
 #endif
 
-void GDGuildNoticeSave(SDHP_GUILDNOTICE* lpMsg,int index)
+void GDGuildNoticeSave(const SDHP_GUILDNOTICE* lpMsg, int index)
 {
-	if(gGuildManager.SetGuildNotice(lpMsg->GuildName,lpMsg->szGuildNotice) != 0)
+	if (gGuildManager.SetGuildNotice(lpMsg->GuildName, lpMsg->GuildNotice) == 0)
 	{
-		SDHP_GUILDNOTICE pMsg;
-
-		pMsg.h.set(0x38,sizeof(pMsg));
-
-		memcpy(pMsg.GuildName,lpMsg->GuildName,sizeof(pMsg.GuildName));
-
-		memcpy(pMsg.szGuildNotice,lpMsg->szGuildNotice,sizeof(pMsg.szGuildNotice));
-
-		for(int n=0;n < MAX_SERVER;n++)
-		{
-			if(gServerManager[n].IsOnline() != 0)
-			{
-				ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-			}
-		}
-	}
-}
-
-void GDGuildServerGroupChattingSend(EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND* lpMsg,int index)
-{
-	EXSDHP_SERVERGROUP_GUILD_CHATTING_RECV pMsg;
-
-	pMsg.h.set(0x50,sizeof(pMsg));
-
-	pMsg.iGuildNum = lpMsg->iGuildNum;
-
-	memcpy(pMsg.szCharacterName,lpMsg->szCharacterName,sizeof(pMsg.szCharacterName));
-
-	memcpy(pMsg.szChattingMsg,lpMsg->szChattingMsg,sizeof(pMsg.szChattingMsg));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-		}
-	}
-}
-
-void GDUnionServerGroupChattingSend(EXSDHP_SERVERGROUP_UNION_CHATTING_SEND* lpMsg,int index)
-{
-	EXSDHP_SERVERGROUP_UNION_CHATTING_RECV pMsg;
-
-	pMsg.h.set(0x51,sizeof(pMsg));
-
-	pMsg.iUnionNum = lpMsg->iUnionNum;
-
-	memcpy(pMsg.szCharacterName,lpMsg->szCharacterName,sizeof(pMsg.szCharacterName));
-
-	memcpy(pMsg.szChattingMsg,lpMsg->szChattingMsg,sizeof(pMsg.szChattingMsg));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-		}
-	}
-}
-
-void GDGuildReqAssignStatus(EXSDHP_GUILD_ASSIGN_STATUS_REQ* lpMsg,int index)
-{
-	EXSDHP_GUILD_ASSIGN_STATUS_RESULT pMsg;
-
-	pMsg.h.set(0xE1,sizeof(pMsg));
-
-	pMsg.btFlag = 1;
-
-	pMsg.wUserIndex = lpMsg->wUserIndex;
-
-	pMsg.btType = lpMsg->btType;
-
-	pMsg.btResult = gGuildManager.SetGuildMemberStatus(lpMsg->szTargetName,lpMsg->btGuildStatus);
-
-	pMsg.btGuildStatus = lpMsg->btGuildStatus;
-
-	memcpy(pMsg.szGuildName,lpMsg->szGuildName,sizeof(pMsg.szGuildName));
-
-	memcpy(pMsg.szTargetName,lpMsg->szTargetName,sizeof(pMsg.szTargetName));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-		}
-	}
-}
-
-void GDGuildReqAssignType(EXSDHP_GUILD_ASSIGN_TYPE_REQ* lpMsg,int index)
-{
-	EXSDHP_GUILD_ASSIGN_TYPE_RESULT pMsg;
-
-	pMsg.h.set(0xE2,sizeof(pMsg));
-
-	pMsg.btFlag = 1;
-
-	pMsg.wUserIndex = lpMsg->wUserIndex;
-
-	pMsg.btGuildType = lpMsg->btGuildType;
-
-	pMsg.btResult = gGuildManager.SetGuildType(lpMsg->szGuildName,lpMsg->btGuildType);
-
-	memcpy(pMsg.szGuildName,lpMsg->szGuildName,sizeof(pMsg.szGuildName));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-		}
-	}
-}
-
-void GDRelationShipReqJoin(EXSDHP_RELATIONSHIP_JOIN_REQ* lpMsg,int index)
-{
-	EXSDHP_RELATIONSHIP_JOIN_RESULT pMsg;
-
-	pMsg.h.set(0xE5,sizeof(pMsg));
-
-	pMsg.btFlag = 1;
-
-	pMsg.wRequestUserIndex = lpMsg->wRequestUserIndex;
-
-	pMsg.wTargetUserIndex = lpMsg->wTargetUserIndex;
-
-	pMsg.btResult = 0;
-
-	pMsg.btRelationShipType = lpMsg->btRelationShipType;
-
-	pMsg.iRequestGuildNum = lpMsg->iRequestGuildNum;
-
-	pMsg.iTargetGuildNum = lpMsg->iTargetGuildNum;
-
-	GUILD_INFO* lpSourceGuildInfo;
-
-	GUILD_INFO* lpTargetGuildInfo;
-
-	if((lpSourceGuildInfo=gGuildManager.GetGuildInfo(lpMsg->iRequestGuildNum)) == 0 || (lpTargetGuildInfo=gGuildManager.GetGuildInfo(lpMsg->iTargetGuildNum)) == 0)
-	{
-		ESDataSend(index,(BYTE*)&pMsg,pMsg.h.size);
 		return;
 	}
 
-	if((pMsg.btResult=gGuildManager.AddGuildRelationship(index,lpMsg->iRequestGuildNum,lpMsg->iTargetGuildNum,lpMsg->btRelationShipType)) != 1)
+	SDHP_GUILDNOTICE pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_GUILD_NOTICE, sizeof(pMsg));
+
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.GuildNotice, lpMsg->GuildNotice, sizeof(pMsg.GuildNotice));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,pMsg.h.size);
-		return;
-	}
-
-	memcpy(pMsg.szRequestGuildName,lpSourceGuildInfo->szName,sizeof(pMsg.szRequestGuildName));
-
-	memcpy(pMsg.szTargetGuildName,lpTargetGuildInfo->szName,sizeof(pMsg.szTargetGuildName));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (gServerManager[n].IsOnline() == 0)
 		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
 		}
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
 
-void GDUnionBreakOff(EXSDHP_RELATIONSHIP_BREAKOFF_REQ* lpMsg,int index)
+void GDGuildServerGroupChattingSend(const EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND* lpMsg, int index)
 {
-	EXSDHP_RELATIONSHIP_BREAKOFF_RESULT pMsg {};
+	EXSDHP_SERVERGROUP_GUILD_CHATTING_RECV pMsg{};
 
-	pMsg.h.set(0xE6,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_GUILD_CHAT, sizeof(pMsg));
 
-	pMsg.btFlag = 1;
+	pMsg.GuildNum = lpMsg->GuildNum;
 
-	pMsg.wRequestUserIndex = lpMsg->wRequestUserIndex;
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	memcpy(pMsg.ChattingMsg, lpMsg->ChattingMsg, sizeof(pMsg.ChattingMsg));
 
-	pMsg.wTargetUserIndex = lpMsg->wTargetUserIndex;
-
-	pMsg.btResult = 0;
-
-	pMsg.btRelationShipType = lpMsg->btRelationShipType;
-
-	pMsg.iRequestGuildNum = lpMsg->iRequestGuildNum;
-
-	pMsg.iTargetGuildNum = lpMsg->iTargetGuildNum;
-
-	if((pMsg.btResult=gGuildManager.DelGuildRelationship(index,lpMsg->iRequestGuildNum,lpMsg->btRelationShipType)) != 1)
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,pMsg.h.size);
-		return;
-	}
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (gServerManager[n].IsOnline() == 0)
 		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
 		}
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
 
-void GDUnionListSend(EXSDHP_UNION_LIST_REQ* lpMsg,int index)
+void GDUnionServerGroupChattingSend(const EXSDHP_SERVERGROUP_UNION_CHATTING_SEND* lpMsg, int index)
 {
-	BYTE send[2048];
+	EXSDHP_SERVERGROUP_UNION_CHATTING_RECV pMsg{};
 
-	EXSDHP_UNION_LIST_COUNT pMsg {};
+	pMsg.Header.set(EXDB_HEAD_UNION_CHAT, sizeof(pMsg));
 
-	pMsg.h.set(0xE9,0);
+	pMsg.UnionNum = lpMsg->UnionNum;
+
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	memcpy(pMsg.ChattingMsg, lpMsg->ChattingMsg, sizeof(pMsg.ChattingMsg));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
+		{
+			continue;
+		}
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+	}
+}
+
+void GDGuildReqAssignStatus(const EXSDHP_GUILD_ASSIGN_STATUS_REQ* lpMsg, int index)
+{
+	EXSDHP_GUILD_ASSIGN_STATUS_RESULT pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_ASSIGN_STATUS, sizeof(pMsg));
+
+	pMsg.Flag = 1;
+	pMsg.UserIndex = lpMsg->UserIndex;
+	pMsg.Type = lpMsg->Type;
+
+	pMsg.Result = gGuildManager.SetGuildMemberStatus(lpMsg->TargetName, lpMsg->GuildStatus);
+
+	pMsg.GuildStatus = lpMsg->GuildStatus;
+
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.TargetName, lpMsg->TargetName, sizeof(pMsg.TargetName));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
+		{
+			continue;
+		}
+
+		pMsg.Flag = (n == index);
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+	}
+}
+
+void GDGuildReqAssignType(const EXSDHP_GUILD_ASSIGN_TYPE_REQ* lpMsg, int index)
+{
+	EXSDHP_GUILD_ASSIGN_TYPE_RESULT pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_ASSIGN_TYPE, sizeof(pMsg));
+
+	pMsg.Flag = 1;
+	pMsg.UserIndex = lpMsg->UserIndex;
+	pMsg.GuildType = lpMsg->GuildType;
+
+	pMsg.Result = gGuildManager.SetGuildType(lpMsg->GuildName, lpMsg->GuildType);
+
+	memcpy(pMsg.GuildName, lpMsg->GuildName, sizeof(pMsg.GuildName));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
+		{
+			continue;
+		}
+
+		pMsg.Flag = (n == index);
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+	}
+}
+
+void GDRelationShipReqJoin(const EXSDHP_RELATIONSHIP_JOIN_REQ* lpMsg, int index)
+{
+	EXSDHP_RELATIONSHIP_JOIN_RESULT pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_RELATIONSHIP_JOIN, sizeof(pMsg));
+
+	pMsg.Flag = 1;
+
+	pMsg.RequestUserIndex = lpMsg->RequestUserIndex;
+	pMsg.TargetUserIndex = lpMsg->TargetUserIndex;
+
+	pMsg.Result = 0;
+
+	pMsg.RelationShipType = lpMsg->RelationShipType;
+
+	pMsg.RequestGuildNum = lpMsg->RequestGuildNum;
+	pMsg.TargetGuildNum = lpMsg->TargetGuildNum;
+
+	GUILD_INFO* lpSourceGuildInfo = gGuildManager.GetGuildInfo(lpMsg->RequestGuildNum);
+	GUILD_INFO* lpTargetGuildInfo = gGuildManager.GetGuildInfo(lpMsg->TargetGuildNum);
+
+	if (lpSourceGuildInfo == nullptr || lpTargetGuildInfo == nullptr)
+	{
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+		return;
+	}
+
+	if ((pMsg.Result = gGuildManager.AddGuildRelationship(
+		index,
+		lpMsg->RequestGuildNum,
+		lpMsg->TargetGuildNum,
+		lpMsg->RelationShipType)) != 1)
+	{
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+		return;
+	}
+
+	memcpy(pMsg.RequestGuildName, lpSourceGuildInfo->Name, sizeof(pMsg.RequestGuildName));
+	memcpy(pMsg.TargetGuildName, lpTargetGuildInfo->Name, sizeof(pMsg.TargetGuildName));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
+		{
+			continue;
+		}
+
+		pMsg.Flag = (n == index);
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+	}
+}
+
+void GDUnionBreakOff(const EXSDHP_RELATIONSHIP_BREAKOFF_REQ* lpMsg, int index)
+{
+	EXSDHP_RELATIONSHIP_BREAKOFF_RESULT pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_RELATIONSHIP_BREAK, sizeof(pMsg));
+
+	pMsg.Flag = 1;
+
+	pMsg.RequestUserIndex = lpMsg->RequestUserIndex;
+	pMsg.TargetUserIndex = lpMsg->TargetUserIndex;
+
+	pMsg.Result = 0;
+
+	pMsg.RelationShipType = lpMsg->RelationShipType;
+
+	pMsg.RequestGuildNum = lpMsg->RequestGuildNum;
+	pMsg.TargetGuildNum = lpMsg->TargetGuildNum;
+
+	if ((pMsg.Result = gGuildManager.DelGuildRelationship(
+		index,
+		lpMsg->RequestGuildNum,
+		lpMsg->RelationShipType)) != 1)
+	{
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+		return;
+	}
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() == 0)
+		{
+			continue;
+		}
+
+		pMsg.Flag = (n == index);
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+	}
+}
+
+void GDUnionListSend(const EXSDHP_UNION_LIST_REQ* lpMsg, int index)
+{
+	BYTE send[2048]{};
+
+	EXSDHP_UNION_LIST_COUNT pMsg{};
 
 	int size = sizeof(pMsg);
 
-	pMsg.btCount = 0;
+	pMsg.RequestUserIndex = lpMsg->RequestUserIndex;
 
-	pMsg.btResult = 0;
+	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(lpMsg->UnionMasterGuildNumber);
 
-	pMsg.wRequestUserIndex = lpMsg->wRequestUserIndex;
-
-	pMsg.iTimeStamp = 0;
-
-	pMsg.btRivalMemberNum = 0;
-
-	pMsg.btUnionMemberNum = 0;
-
-	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(lpMsg->iUnionMasterGuildNumber);
-
-	if(lpGuildInfo != 0)
+	if (lpGuildInfo != nullptr)
 	{
-		pMsg.btResult = 1;
+		pMsg.Result = 1;
 
-		EXSDHP_UNION_LIST UnionList;
+		EXSDHP_UNION_LIST unionList{};
 
-		DWORD GuildUnionNumber[MAX_GUILD_UNION];
+		std::array<DWORD, MAX_GUILD_UNION> guildUnionNumber{};
+		std::array<DWORD, MAX_GUILD_RIVAL> guildRivalNumber{};
 
-		DWORD GuildRivalNumber[MAX_GUILD_RIVAL];
+		pMsg.UnionMemberNum = static_cast<BYTE>(
+			gGuildManager.GetUnionList(lpGuildInfo->UnionNumber, guildUnionNumber.data()));
 
-		pMsg.btUnionMemberNum = (BYTE)gGuildManager.GetUnionList(lpGuildInfo->dwUnionNumber,GuildUnionNumber);
+		pMsg.RivalMemberNum = static_cast<BYTE>(
+			gGuildManager.GetRivalList(lpGuildInfo->RivalNumber, guildRivalNumber.data()));
 
-		pMsg.btRivalMemberNum = (BYTE)gGuildManager.GetRivalList(lpGuildInfo->dwRivalNumber,GuildRivalNumber);
+		constexpr int UnionListSize = sizeof(EXSDHP_UNION_LIST);
 
-		for(int n=0;n < pMsg.btUnionMemberNum;n++)
+		for (int n = 0; n < pMsg.UnionMemberNum; ++n)
 		{
-			GUILD_INFO* lpGuildList = gGuildManager.GetGuildInfo(GuildUnionNumber[n]);
+			GUILD_INFO* lpGuildList = gGuildManager.GetGuildInfo(guildUnionNumber[n]);
 
-			if(lpGuildList != 0)
+			if (lpGuildList == nullptr)
 			{
-				UnionList.btMemberNum = lpGuildList->GetMemberCount();
-
-				memcpy(UnionList.szGuildName,lpGuildList->szName,sizeof(UnionList.szGuildName));
-
-				memcpy(UnionList.Mark,lpGuildList->arMark,sizeof(UnionList.Mark));
-
-				memcpy(&send[size],&UnionList,sizeof(UnionList));
-
-				size += sizeof(UnionList);
-
-				pMsg.btCount++;
+				continue;
 			}
+
+			if ((size + UnionListSize) > static_cast<int>(sizeof(send)))
+			{
+				break;
+			}
+
+			unionList.MemberNum = lpGuildList->GetMemberCount();
+
+			memcpy(unionList.GuildName, lpGuildList->Name, sizeof(unionList.GuildName));
+			memcpy(unionList.Mark, lpGuildList->Mark, sizeof(unionList.Mark));
+
+			memcpy(send + size, &unionList, UnionListSize);
+
+			size += UnionListSize;
+
+			++pMsg.Count;
 		}
 	}
 
-	pMsg.h.size[0] = SET_NUMBERHB(size);
-	pMsg.h.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.set(EXDB_HEAD_UNION_LIST, size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	memcpy(send, &pMsg, sizeof(pMsg));
 
-	ESDataSend(index,send,size);
+	ESDataSend(index, send, size);
 }
 
-void GDRelationShipReqKickOutUnionMember(EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg,int index)
+void GDRelationShipReqKickOutUnionMember(const EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg, int index)
 {
-	EXSDHP_KICKOUT_UNIONMEMBER_RESULT pMsg {};
+	EXSDHP_KICKOUT_UNIONMEMBER_RESULT pMsg{};
 
-	pMsg.h.set(0xEB,0x01,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_KICKOUT_UNION_MEMBER, EXDB_SUB_HEAD_KICKOUT_UNION_MEMBER, sizeof(pMsg));
 
-	pMsg.btFlag = 1;
+	pMsg.Flag = 1;
 
-	pMsg.wRequestUserIndex = lpMsg->wRequestUserIndex;
+	pMsg.RequestUserIndex = lpMsg->RequestUserIndex;
+	pMsg.RelationShipType = lpMsg->RelationShipType;
 
-	pMsg.btRelationShipType = lpMsg->btRelationShipType;
+	pMsg.Result = 0;
 
-	pMsg.btResult = 0;
+	memcpy(pMsg.UnionMasterGuildName, lpMsg->UnionMasterGuildName, sizeof(pMsg.UnionMasterGuildName));
+	memcpy(pMsg.UnionMemberGuildName, lpMsg->UnionMemberGuildName, sizeof(pMsg.UnionMemberGuildName));
 
-	memcpy(pMsg.szUnionMasterGuildName,lpMsg->szUnionMasterGuildName,sizeof(pMsg.szUnionMasterGuildName));
-
-	memcpy(pMsg.szUnionMemberGuildName,lpMsg->szUnionMemberGuildName,sizeof(pMsg.szUnionMemberGuildName));
-
-	if((pMsg.btResult=gGuildManager.SetGuildRelationship(index,lpMsg->szUnionMemberGuildName,lpMsg->szUnionMasterGuildName)) != 1)
+	if ((pMsg.Result = gGuildManager.SetGuildRelationship(
+		index,
+		lpMsg->UnionMemberGuildName,
+		lpMsg->UnionMasterGuildName)) != 1)
 	{
-		ESDataSend(index,(BYTE*)&pMsg,pMsg.h.size);
+		ESDataSend(index, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (gServerManager[n].IsOnline() == 0)
 		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			continue;
+		}
+
+		pMsg.Flag = (n == index);
+
+		ESDataSend(n, reinterpret_cast<const BYTE*>(&pMsg), sizeof(pMsg));
+	}
+}
+
+void DGGuildMemberInfo(int index, const char* guildName, const char* memberID, BYTE status, BYTE type, BYTE server)
+{
+	SDHP_GUILDMEMBER_INFO pMsg{};
+
+	pMsg.Header.set(EXDB_HEAD_GUILD_MEMBER_INFO, sizeof(pMsg));
+
+	memcpy(pMsg.GuildName, guildName, sizeof(pMsg.GuildName));
+	memcpy(pMsg.MemberID, memberID, sizeof(pMsg.MemberID));
+
+	pMsg.GuildStatus = status;
+	pMsg.GuildType = type;
+	pMsg.Server = server;
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() != 0)
+		{
+			ESDataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		}
 	}
 }
 
-void DGGuildMemberInfo(int index,char* GuildName,char* MemberID,BYTE Status,BYTE Type,BYTE Server)
+void DGGuildMasterListRecv(int index, int guildNumber)
 {
-	SDHP_GUILDMEMBER_INFO pMsg {};
+	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(guildNumber);
 
-	pMsg.h.set(0x35,sizeof(pMsg));
-
-	memcpy(pMsg.GuildName,GuildName,sizeof(pMsg.GuildName));
-
-	memcpy(pMsg.MemberID,MemberID,sizeof(pMsg.MemberID));
-
-	pMsg.btGuildStatus = Status;
-
-	pMsg.btGuildType = Type;
-
-	pMsg.pServer = Server;
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
-		}
-	}
-}
-
-void DGGuildMasterListRecv(int index,int GuildNumber)
-{
-	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(GuildNumber);
-
-	if(lpGuildInfo == 0)
+	if (lpGuildInfo == nullptr)
 	{
 		return;
 	}
 
-	BYTE send[2048];
+	BYTE send[2048]{};
 
-	SDHP_GUILDALL_COUNT pMsg;
-
-	pMsg.h.set(0x36,0);
+	SDHP_GUILDALL_COUNT pMsg{};
 
 	int size = sizeof(pMsg);
 
-	pMsg.Number = lpGuildInfo->dwNumber;
+	pMsg.Number = lpGuildInfo->Number;
 
-	memcpy(pMsg.GuildName,lpGuildInfo->szName,sizeof(pMsg.GuildName));
+	memcpy(pMsg.GuildName, lpGuildInfo->Name, sizeof(pMsg.GuildName));
+	memcpy(pMsg.Master, lpGuildInfo->Master, sizeof(pMsg.Master));
+	memcpy(pMsg.Mark, lpGuildInfo->Mark, sizeof(pMsg.Mark));
 
-	memcpy(pMsg.Master,lpGuildInfo->szMaster,sizeof(pMsg.Master));
+	pMsg.Score = lpGuildInfo->Score;
+	pMsg.GuildType = lpGuildInfo->Type;
+	pMsg.GuildUnion = lpGuildInfo->UnionNumber;
+	pMsg.GuildRival = lpGuildInfo->RivalNumber;
 
-	memcpy(pMsg.Mark,lpGuildInfo->arMark,sizeof(pMsg.Mark));
+	GUILD_INFO* lpRivalInfo = gGuildManager.GetGuildInfo(lpGuildInfo->RivalNumber);
 
-	pMsg.score = lpGuildInfo->dwScore;
-
-	pMsg.btGuildType = lpGuildInfo->btType;
-
-	pMsg.iGuildUnion = lpGuildInfo->dwUnionNumber;
-
-	pMsg.iGuildRival = lpGuildInfo->dwRivalNumber;
-
-	GUILD_INFO* lpRivalInfo = gGuildManager.GetGuildInfo(lpGuildInfo->dwRivalNumber);
-
-	if(lpRivalInfo == 0)
+	if (lpRivalInfo != nullptr)
 	{
-		memset(pMsg.szGuildRivalName,0,sizeof(pMsg.szGuildRivalName));
-	}
-	else
-	{
-		memcpy(pMsg.szGuildRivalName,lpRivalInfo->szName,sizeof(pMsg.szGuildRivalName));
+		memcpy(pMsg.GuildRivalName, lpRivalInfo->Name, sizeof(pMsg.GuildRivalName));
 	}
 
-	pMsg.Count = 0;
+	SDHP_GUILDALL guildList{};
 
-	SDHP_GUILDALL GuildList;
+	constexpr int GuildListSize = sizeof(SDHP_GUILDALL);
 
-	for(int n=0;n < MAX_GUILD_MEMBER;n++)
+	for (int n = 0; n < MAX_GUILD_MEMBER; ++n)
 	{
-		GUILD_MEMBER_INFO* lpGuildMemberInfo = &lpGuildInfo->arGuildMember[n];
+		GUILD_MEMBER_INFO* lpGuildMemberInfo = &lpGuildInfo->GuildMember[n];
 
-		if(lpGuildMemberInfo->IsEmpty() == 0)
+		if (lpGuildMemberInfo->IsEmpty() != 0)
 		{
-			memcpy(GuildList.MemberID,lpGuildMemberInfo->szGuildMember,sizeof(GuildList.MemberID));
-
-			GuildList.btGuildStatus = lpGuildMemberInfo->btStatus;
-
-			GuildList.pServer = lpGuildMemberInfo->btServer;
-
-			memcpy(&send[size],&GuildList,sizeof(GuildList));
-
-			size += sizeof(GuildList);
-
-			pMsg.Count++;
+			continue;
 		}
+
+		if ((size + GuildListSize) > static_cast<int>(sizeof(send)))
+		{
+			break;
+		}
+
+		memcpy(guildList.MemberID, lpGuildMemberInfo->GuildMember, sizeof(guildList.MemberID));
+
+		guildList.GuildStatus = lpGuildMemberInfo->Status;
+		guildList.Server = lpGuildMemberInfo->Server;
+
+		memcpy(send + size, &guildList, GuildListSize);
+
+		size += GuildListSize;
+
+		++pMsg.Count;
 	}
 
-	pMsg.h.size[0] = SET_NUMBERHB(size);
-	pMsg.h.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.set(EXDB_HEAD_GUILD_MASTER_LIST, size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	memcpy(send, &pMsg, sizeof(pMsg));
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (gServerManager[n].IsOnline() != 0)
 		{
-			ESDataSend(n,send,size);
+			ESDataSend(n, send, size);
 		}
 	}
 }
 
-void DGRelationShipListRecv(int index,int GuildNumber,int RelationshipType)
+void DGRelationShipListRecv(int index, int guildNumber, int relationshipType)
 {
-	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(GuildNumber);
+	GUILD_INFO* lpGuildInfo = gGuildManager.GetGuildInfo(guildNumber);
 
-	if(lpGuildInfo == 0)
+	if (lpGuildInfo == nullptr)
 	{
 		return;
 	}
 
-	EXSDHP_UNION_RELATIONSHIP_LIST pMsg {};
+	EXSDHP_UNION_RELATIONSHIP_LIST pMsg{};
 
-	pMsg.h.set(0xE7,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_RELATIONSHIP_LIST, sizeof(pMsg));
 
-	pMsg.btFlag = 1;
+	pMsg.Flag = 1;
+	pMsg.RelationShipType = static_cast<BYTE>(relationshipType);
 
-	pMsg.btRelationShipType = RelationshipType;
-
-	pMsg.btRelationShipMemberCount = 0;
-
-	if(RelationshipType == 1){pMsg.btRelationShipMemberCount = (BYTE)gGuildManager.GetUnionList(lpGuildInfo->dwNumber,(DWORD*)pMsg.iRelationShipMember);}
-
-	if(RelationshipType == 2){pMsg.btRelationShipMemberCount = (BYTE)gGuildManager.GetRivalList(lpGuildInfo->dwNumber,(DWORD*)pMsg.iRelationShipMember);}
-
-	memcpy(pMsg.szUnionMasterGuildName,lpGuildInfo->szName,sizeof(pMsg.szUnionMasterGuildName));
-
-	pMsg.iUnionMasterGuildNumber = lpGuildInfo->dwNumber;
-
-	for(int n=0;n < MAX_SERVER;n++)
+	switch (relationshipType)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+	case 1:
+		pMsg.RelationShipMemberCount = static_cast<BYTE>(
+			gGuildManager.GetUnionList(
+				lpGuildInfo->Number,
+				reinterpret_cast<DWORD*>(pMsg.RelationShipMember)));
+		break;
+
+	case 2:
+		pMsg.RelationShipMemberCount = static_cast<BYTE>(
+			gGuildManager.GetRivalList(
+				lpGuildInfo->Number,
+				reinterpret_cast<DWORD*>(pMsg.RelationShipMember)));
+		break;
+	}
+
+	memcpy(
+		pMsg.UnionMasterGuildName,
+		lpGuildInfo->Name,
+		sizeof(pMsg.UnionMasterGuildName));
+
+	pMsg.UnionMasterGuildNumber = lpGuildInfo->Number;
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() != 0)
 		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			pMsg.Flag = (n == index) ? 1 : 0;
+
+			ESDataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		}
 	}
 }
 
-void DGRelationShipNotificationRecv(int index,int UpdateFlag,int GuildListCount,int* GuildList)
+void DGRelationShipNotificationRecv(int index, int updateFlag, int guildListCount, const int* guildList)
 {
-	EXSDHP_NOTIFICATION_RELATIONSHIP pMsg {};
+	EXSDHP_NOTIFICATION_RELATIONSHIP pMsg{};
 
-	pMsg.h.set(0xE8,sizeof(pMsg));
+	pMsg.Header.set(EXDB_HEAD_RELATIONSHIP_NOTIFICATION, sizeof(pMsg));
 
-	pMsg.btFlag = 1;
+	pMsg.Flag = 1;
+	pMsg.UpdateFlag = static_cast<BYTE>(updateFlag);
 
-	pMsg.btUpdateFlag = UpdateFlag;
+	const int count = (guildListCount > 100) ? 100 : guildListCount;
 
-	pMsg.btGuildListCount = GuildListCount;
+	pMsg.GuildListCount = static_cast<BYTE>(count);
 
-	memcpy(pMsg.iGuildList,GuildList,(GuildListCount*sizeof(int)));
+	memcpy(
+		pMsg.GuildList,
+		guildList,
+		count * sizeof(int));
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (gServerManager[n].IsOnline() != 0)
 		{
-			pMsg.btFlag = ((n==index)?1:0);
-			ESDataSend(n,(BYTE*)&pMsg,sizeof(pMsg));
+			pMsg.Flag = (n == index) ? 1 : 0;
+
+			ESDataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		}
 	}
 }

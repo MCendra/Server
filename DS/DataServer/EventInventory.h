@@ -6,46 +6,41 @@
 
 // GameServer -> DataServer
 
-
 struct SDHP_EVENT_INVENTORY_RECV
 {
-	PSBMSG_HEAD header; // C1:26:00
-	WORD index;
-	char account[11];
-	char name[11];
+	PSBMSG_HEAD Header; // C1:26:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_EVENT_INVENTORY_SAVE_RECV
 {
-	PSWMSG_HEAD header; // C2:26:30
-	WORD index;
-	char account[11];
-	char name[11];
+	PSWMSG_HEAD Header; // C2:26:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE EventInventory[EVENT_INVENTORY_SIZE][16];
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_EVENT_INVENTORY_SEND
 {
-	PSWMSG_HEAD header; // C2:26:00
-	WORD index;
-	char account[11];
-	char name[11];
+	PSWMSG_HEAD Header; // C2:26:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE EventInventory[EVENT_INVENTORY_SIZE][16];
 };
 
-//**********************************************//
-//**********************************************//
 //**********************************************//
 
 class CEventInventory
 {
 public:
-	CEventInventory();
-	virtual ~CEventInventory();
+	CEventInventory() = default;
+	~CEventInventory() = default;
 	void GDEventInventoryRecv(SDHP_EVENT_INVENTORY_RECV* lpMsg,int index);
 	void GDEventInventorySaveRecv(SDHP_EVENT_INVENTORY_SAVE_RECV* lpMsg);
 };

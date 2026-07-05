@@ -207,7 +207,7 @@ void CServerDisplayer::Refresh()
 {
 	if (m_hwnd != nullptr)
 	{
-		InvalidateRect(m_hwnd, nullptr, FALSE);
+		InvalidateRect(m_hwnd, nullptr, false);
 	}
 }
 
@@ -262,8 +262,8 @@ void CServerDisplayer::UpdateLayout()
 			m_serverlistbottom,
 			m_rect.right,
 			m_rect.bottom - m_serverlistbottom,
-			TRUE);
+			true);
 	}
 
-	InvalidateRect(m_hwnd, nullptr, FALSE);
+	InvalidateRect(m_hwnd, nullptr, false);
 }

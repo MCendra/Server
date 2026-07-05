@@ -12,7 +12,7 @@ struct SDHP_PARTY_MATCHING_INSERT_RECV
 	PSBMSG_HEAD header; // C1:29:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	char text[41];
 	char password[5];
 	WORD MinLevel;
@@ -33,7 +33,7 @@ struct SDHP_PARTY_MATCHING_LIST_RECV
 	PSBMSG_HEAD header; // C1:29:01
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD page;
 	WORD Level;
 	WORD Class;
@@ -47,7 +47,7 @@ struct SDHP_PARTY_MATCHING_JOIN_INSERT_RECV
 	PSBMSG_HEAD header; // C1:29:02
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	char LeaderName[11];
 	char password[5];
 	WORD Level;
@@ -62,7 +62,7 @@ struct SDHP_PARTY_MATCHING_JOIN_INFO_RECV
 	PSBMSG_HEAD header; // C1:29:03
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_LIST_RECV
@@ -70,7 +70,7 @@ struct SDHP_PARTY_MATCHING_JOIN_LIST_RECV
 	PSBMSG_HEAD header; // C1:29:04
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV
@@ -78,7 +78,7 @@ struct SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV
 	PSBMSG_HEAD header; // C1:29:05
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	char MemberName[11];
 	BYTE type;
 };
@@ -88,7 +88,7 @@ struct SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV
 	PSBMSG_HEAD header; // C1:29:06
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE type;
 	BYTE flag;
 };
@@ -98,7 +98,7 @@ struct SDHP_PARTY_MATCHING_INSERT_SAVE_RECV
 	PSBMSG_HEAD header; // C1:29:30
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	WORD LeaderLevel;
 	BYTE LeaderClass;
 	BYTE PartyMemberCount;
@@ -114,7 +114,7 @@ struct SDHP_PARTY_MATCHING_INSERT_SEND
 	PSBMSG_HEAD header; // C1:29:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 };
 
@@ -123,7 +123,7 @@ struct SDHP_PARTY_MATCHING_LIST_SEND
 	PSWMSG_HEAD header; // C2:29:01
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 	DWORD CurPage;
 	DWORD MaxPage;
@@ -132,7 +132,7 @@ struct SDHP_PARTY_MATCHING_LIST_SEND
 
 struct SDHP_PARTY_MATCHING_LIST
 {
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	char text[41];
 	WORD MinLevel;
 	WORD MaxLevel;
@@ -152,7 +152,7 @@ struct SDHP_PARTY_MATCHING_JOIN_INSERT_SEND
 	PSBMSG_HEAD header; // C1:29:02
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 };
 
@@ -161,7 +161,7 @@ struct SDHP_PARTY_MATCHING_JOIN_INFO_SEND
 	PSBMSG_HEAD header; // C1:29:03
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 	DWORD LeaderServerCode;
 	char LeaderName[11];
@@ -172,14 +172,14 @@ struct SDHP_PARTY_MATCHING_JOIN_LIST_SEND
 	PSWMSG_HEAD header; // C2:29:04
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 	DWORD count;
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_LIST
 {
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE Class;
 	DWORD Level;
 };
@@ -189,7 +189,7 @@ struct SDHP_PARTY_MATCHING_JOIN_ACCEPT_SEND
 	PSBMSG_HEAD header; // C1:29:05
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 	char MemberName[11];
 	BYTE type;
@@ -201,7 +201,7 @@ struct SDHP_PARTY_MATCHING_JOIN_CANCEL_SEND
 	PSBMSG_HEAD header; // C1:29:06
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 	BYTE type;
 	BYTE flag;
@@ -212,7 +212,7 @@ struct SDHP_PARTY_MATCHING_NOTIFY_SEND
 	PSBMSG_HEAD header; // C1:29:07
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 	char LeaderName[11];
 };
@@ -222,7 +222,7 @@ struct SDHP_PARTY_MATCHING_NOTIFY_LEADER_SEND
 	PSBMSG_HEAD header; // C1:29:08
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD result;
 };
 

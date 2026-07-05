@@ -9,7 +9,7 @@ struct SDHP_PENTAGRAM_JEWEL_INFO_RECV
 	PSBMSG_HEAD header; // C1:23:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE type;
 };
 
@@ -18,7 +18,7 @@ struct SDHP_PENTAGRAM_JEWEL_INFO_SAVE_RECV
 	PSWMSG_HEAD header; // C2:23:30
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE count;
 };
 
@@ -47,7 +47,7 @@ struct SDHP_PENTAGRAM_JEWEL_INSERT_SAVE_RECV
 	PSBMSG_HEAD header; // C1:23:31
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE Type;
 	BYTE Index;
 	BYTE Attribute;
@@ -71,7 +71,7 @@ struct SDHP_PENTAGRAM_JEWEL_DELETE_SAVE_RECV
 	PSBMSG_HEAD header; // C1:23:32
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE Type;
 	BYTE Index;
 };
@@ -85,7 +85,7 @@ struct SDHP_PENTAGRAM_JEWEL_INFO_SEND
 	PSWMSG_HEAD header; // C2:23:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	BYTE type;
 	BYTE count;
 };

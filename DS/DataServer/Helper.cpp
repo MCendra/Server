@@ -19,9 +19,9 @@ void CHelper::GDHelperDataRecv(const SDHP_HELPER_DATA_RECV* lpMsg, int index)
 	pMsg.index = lpMsg->index;
 
 	std::memcpy(pMsg.account, lpMsg->account, sizeof(pMsg.account));
-	std::memcpy(pMsg.name, lpMsg->name, sizeof(pMsg.name));
+	std::memcpy(pMsg.charactername, lpMsg->charactername, sizeof(pMsg.charactername));
 
-	if (!gQueryManager.ExecQuery("SELECT Data FROM HelperData WHERE Name='%s'", lpMsg->name) || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT Data FROM HelperData WHERE Name='%s'", lpMsg->charactername) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -45,18 +45,18 @@ void CHelper::GDHelperDataSaveRecv(const SDHP_HELPER_DATA_SAVE_RECV* lpMsg)
 {
 	#if(DATASERVER_UPDATE>=603)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM HelperData WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Name FROM HelperData WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->data,sizeof(lpMsg->data));
-		gQueryManager.ExecQuery("INSERT INTO HelperData (Name,Data) VALUES ('%s',?)",lpMsg->name);
+		gQueryManager.ExecQuery("INSERT INTO HelperData (Name,Data) VALUES ('%s',?)",lpMsg->charactername);
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->data,sizeof(lpMsg->data));
-		gQueryManager.ExecQuery("UPDATE HelperData SET Data=? WHERE Name='%s'",lpMsg->name);
+		gQueryManager.ExecQuery("UPDATE HelperData SET Data=? WHERE Name='%s'",lpMsg->charactername);
 		gQueryManager.Close();
 	}
 

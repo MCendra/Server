@@ -215,11 +215,17 @@ void CQueryManager::Close()
 {
 	SQLCloseCursor(m_STMT);
 	SQLFreeStmt(m_STMT, SQL_UNBIND);
+	m_RowCount = -1;
+	m_ColCount = -1;
 }
 
 SQLRETURN CQueryManager::Fetch()
 {
-	return SQLFetch(m_STMT);
+	const SQLRETURN result = SQLFetch(m_STMT);
+
+	m_RowCount = (result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO);
+
+	return result;
 }
 
 int CQueryManager::FindIndex(const char* ColName)
@@ -237,49 +243,88 @@ int CQueryManager::FindIndex(const char* ColName)
 
 int CQueryManager::GetResult(int index)
 {
-	return atoi(m_SQLData[index]);
+	if (index < 0 || index >= m_ColCount)
+	{
+		return 0;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0;
+	}
+
+	return std::atoi(m_SQLData[index]);
 }
 
 int CQueryManager::GetAsInteger(const char* ColName)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	return (index == -1) ? index : atoi(m_SQLData[index]);
+	if (index == -1)
+	{
+		return 0;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0;
+	}
+
+	return std::atoi(m_SQLData[index]);
 }
 
 float CQueryManager::GetAsFloat(const char* ColName)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	return (index == -1) ? (float)index : (float)atof(m_SQLData[index]);
+	if (index == -1)
+	{
+		return 0.0f;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0.0f;
+	}
+
+	return static_cast<float>(std::atof(m_SQLData[index]));
 }
 
 __int64 CQueryManager::GetAsInteger64(const char* ColName)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	return (index == -1) ? index : _atoi64(m_SQLData[index]);
+	if (index == -1)
+	{
+		return 0;
+	}
+
+	if (m_SQLData[index] == nullptr)
+	{
+		return 0;
+	}
+
+	return _atoi64(m_SQLData[index]);
 }
 
 void CQueryManager::GetAsString(const char* ColName, char* OutBuffer, int OutBufferSize)
 {
-	int index = FindIndex(ColName);
+	const int index = FindIndex(ColName);
 
-	if (index == -1)
+	if (index == -1 || m_SQLData[index] == nullptr)
 	{
 		memset(OutBuffer, 0, OutBufferSize);
+		return;
 	}
-	else
-	{
-		strncpy_s(OutBuffer, OutBufferSize, m_SQLData[index], _TRUNCATE);
-	}
+
+	strncpy_s(OutBuffer, OutBufferSize,	m_SQLData[index], _TRUNCATE);
 }
 
 void CQueryManager::GetAsBinary(const char* ColName, BYTE* OutBuffer, int OutBufferSize)
 {
 	const int index = FindIndex(ColName);
 
-	if (index == -1)
+	if (index == -1 || m_SQLData[index] == nullptr)
 	{
 		std::memset(OutBuffer, 0, OutBufferSize);
 		return;

@@ -11,7 +11,7 @@ struct SDHP_MASTER_SKILL_TREE_RECV
 	PSBMSG_HEAD header; // C1:0D:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_MASTER_SKILL_TREE_SAVE_RECV
@@ -19,7 +19,7 @@ struct SDHP_MASTER_SKILL_TREE_SAVE_RECV
 	PSWMSG_HEAD header; // C2:0D:30
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD MasterLevel;
 	DWORD MasterPoint;
 	QWORD MasterExperience;
@@ -37,7 +37,7 @@ struct SDHP_MASTER_SKILL_TREE_SEND
 	PSWMSG_HEAD header; // C2:0D:00
 	WORD index;
 	char account[11];
-	char name[11];
+	char charactername[MAX_CHARACTER_NAME];
 	DWORD MasterLevel;
 	DWORD MasterPoint;
 	QWORD MasterExperience;

@@ -4,8 +4,8 @@
 
 struct CHARACTER_INFO
 {
-	char Name[11];
-	char Account[11];
+	char CharacterName[MAX_CHARACTER_NAME];
+	char Account[MAX_ACCOUNT_NAME];
 	WORD UserIndex;
 	WORD GameServerCode;
 };
@@ -13,12 +13,12 @@ struct CHARACTER_INFO
 class CCharacterManager
 {
 public:
-	CCharacterManager();
-	virtual ~CCharacterManager();
+	CCharacterManager() = default;
+	~CCharacterManager() = default;
 	void ClearServerCharacterInfo(WORD ServerCode);
-	bool GetCharacterInfo(CHARACTER_INFO* lpCharacterInfo,char* name);
-	void InsertCharacterInfo(CHARACTER_INFO CharacterInfo);
-	void RemoveCharacterInfo(CHARACTER_INFO CharacterInfo);
+	bool GetCharacterInfo(CHARACTER_INFO* lpCharacterInfo, const char* name);
+	void InsertCharacterInfo(const CHARACTER_INFO& characterInfo);
+	void RemoveCharacterInfo(const CHARACTER_INFO& characterInfo);
 	long GetCharacterCount();
 private:
 	CCriticalSection m_critical;

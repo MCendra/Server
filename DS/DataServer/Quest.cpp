@@ -6,18 +6,6 @@
 
 CQuest gQuest;
 
-// Construction/Destruction
-
-CQuest::CQuest() // OK
-{
-
-}
-
-CQuest::~CQuest() // OK
-{
-
-}
-
 void CQuest::GDQuestKillCountRecv(SDHP_QUEST_KILL_COUNT_RECV* lpMsg,int index) // OK
 {
 	SDHP_QUEST_KILL_COUNT_SEND pMsg;
@@ -28,9 +16,9 @@ void CQuest::GDQuestKillCountRecv(SDHP_QUEST_KILL_COUNT_RECV* lpMsg,int index) /
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
-	if(gQueryManager.ExecQuery("SELECT * FROM QuestKillCount WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT * FROM QuestKillCount WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 

@@ -987,9 +987,8 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 		CServerManager* lpServerManager = &gServerManager[index];
 
-		// AddServer toma internamente m_lock (del servidor) y
-		// gServerArrayLock (para gServerSearchStart); deja los IO contexts
-		// inicializados y listos para WSARecv.
+		// Inicializa el slot del servidor y deja preparados los contextos
+		// de E/S para comenzar el primer WSARecv.
 		lpServerManager->AddServer(index, ipAddress, socket);
 
 		DWORD RecvSize = 0, Flags = 0;

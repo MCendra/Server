@@ -34,7 +34,7 @@ void CPentagramSystem::GDPentagramJewelInfoRecv(SDHP_PENTAGRAM_JEWEL_INFO_RECV* 
 
 	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
 
 	pMsg.type = lpMsg->type;
 
@@ -111,7 +111,7 @@ void CPentagramSystem::GDPentagramJewelInsertSaveRecv(SDHP_PENTAGRAM_JEWEL_INSER
 {
 	#if(DATASERVER_UPDATE>=701)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM PentagramJewel WHERE Name='%s' AND Type=%d AND [Index]=%d",lpMsg->name,lpMsg->Type,lpMsg->Index) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Name FROM PentagramJewel WHERE Name='%s' AND Type=%d AND [Index]=%d",lpMsg->charactername,lpMsg->Type,lpMsg->Index) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 		gQueryManager.ExecQuery("INSERT INTO PentagramJewel (Name,Type,[Index],Attribute,ItemSection,ItemType,ItemLevel,OptionIndexRank1,OptionLevelRank1,OptionIndexRank2,OptionLevelRank2,OptionIndexRank3,OptionLevelRank3,OptionIndexRank4,OptionLevelRank4,OptionIndexRank5,OptionLevelRank5) VALUES ('%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)",lpMsg->name,lpMsg->Type,lpMsg->Index,lpMsg->Attribute,lpMsg->ItemSection,lpMsg->ItemType,lpMsg->ItemLevel,lpMsg->OptionIndexRank1,lpMsg->OptionLevelRank1,lpMsg->OptionIndexRank2,lpMsg->OptionLevelRank2,lpMsg->OptionIndexRank3,lpMsg->OptionLevelRank3,lpMsg->OptionIndexRank4,lpMsg->OptionLevelRank4,lpMsg->OptionIndexRank5,lpMsg->OptionLevelRank5);
@@ -120,7 +120,7 @@ void CPentagramSystem::GDPentagramJewelInsertSaveRecv(SDHP_PENTAGRAM_JEWEL_INSER
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE PentagramJewel SET Attribute=%d,ItemSection=%d,ItemType=%d,ItemLevel=%d,OptionIndexRank1=%d,OptionLevelRank1=%d,OptionIndexRank2=%d,OptionLevelRank2=%d,OptionIndexRank3=%d,OptionLevelRank3=%d,OptionIndexRank4=%d,OptionLevelRank4=%d,OptionIndexRank5=%d,OptionLevelRank5=%d WHERE Name='%s' AND Type=%d AND [Index]=%d",lpMsg->Attribute,lpMsg->ItemSection,lpMsg->ItemType,lpMsg->ItemLevel,lpMsg->OptionIndexRank1,lpMsg->OptionLevelRank1,lpMsg->OptionIndexRank2,lpMsg->OptionLevelRank2,lpMsg->OptionIndexRank3,lpMsg->OptionLevelRank3,lpMsg->OptionIndexRank4,lpMsg->OptionLevelRank4,lpMsg->OptionIndexRank5,lpMsg->OptionLevelRank5,lpMsg->name,lpMsg->Type,lpMsg->Index);
+		gQueryManager.ExecQuery("UPDATE PentagramJewel SET Attribute=%d,ItemSection=%d,ItemType=%d,ItemLevel=%d,OptionIndexRank1=%d,OptionLevelRank1=%d,OptionIndexRank2=%d,OptionLevelRank2=%d,OptionIndexRank3=%d,OptionLevelRank3=%d,OptionIndexRank4=%d,OptionLevelRank4=%d,OptionIndexRank5=%d,OptionLevelRank5=%d WHERE Name='%s' AND Type=%d AND [Index]=%d",lpMsg->Attribute,lpMsg->ItemSection,lpMsg->ItemType,lpMsg->ItemLevel,lpMsg->OptionIndexRank1,lpMsg->OptionLevelRank1,lpMsg->OptionIndexRank2,lpMsg->OptionLevelRank2,lpMsg->OptionIndexRank3,lpMsg->OptionLevelRank3,lpMsg->OptionIndexRank4,lpMsg->OptionLevelRank4,lpMsg->OptionIndexRank5,lpMsg->OptionLevelRank5,lpMsg->charactername,lpMsg->Type,lpMsg->Index);
 		gQueryManager.Close();
 	}
 

@@ -24,29 +24,29 @@ void CGuildManager::Init()
 
 			guildInfo.Clear();
 
-			gQueryManager.GetAsString("G_Name", guildInfo.szName, sizeof(guildInfo.szName));
-			gQueryManager.GetAsBinary("G_Mark", guildInfo.arMark, sizeof(guildInfo.arMark));
+			gQueryManager.GetAsString("G_Name", guildInfo.Name, sizeof(guildInfo.Name));
+			gQueryManager.GetAsBinary("G_Mark", guildInfo.Mark, sizeof(guildInfo.Mark));
 
-			guildInfo.dwScore = gQueryManager.GetAsInteger("G_Score");
+			guildInfo.Score = gQueryManager.GetAsInteger("G_Score");
 
 #if (NEWBOSSGUILD == 1)
-			guildInfo.dwScore1 = gQueryManager.GetAsInteger("G_Score1");
+			guildInfo.Score1 = gQueryManager.GetAsInteger("G_Score1");
 #endif
 
-			gQueryManager.GetAsString("G_Master", guildInfo.szMaster, sizeof(guildInfo.szMaster));
-			gQueryManager.GetAsString("G_Notice", guildInfo.szNotice, sizeof(guildInfo.szNotice));
+			gQueryManager.GetAsString("G_Master", guildInfo.Master, sizeof(guildInfo.Master));
+			gQueryManager.GetAsString("G_Notice", guildInfo.Notice, sizeof(guildInfo.Notice));
 
-			guildInfo.dwNumber = gQueryManager.GetAsInteger("Number");
-			guildInfo.btType = gQueryManager.GetAsInteger("G_Type");
-			guildInfo.dwRivalNumber = gQueryManager.GetAsInteger("G_Rival");
-			guildInfo.dwUnionNumber = gQueryManager.GetAsInteger("G_Union");
+			guildInfo.Number = gQueryManager.GetAsInteger("Number");
+			guildInfo.Type = gQueryManager.GetAsInteger("G_Type");
+			guildInfo.RivalNumber = gQueryManager.GetAsInteger("G_Rival");
+			guildInfo.UnionNumber = gQueryManager.GetAsInteger("G_Union");
 
 			vGuildList.emplace_back(guildInfo);
 
 			GUILD_INFO* guild = &vGuildList.back();
 
-			m_GuildByName.emplace(guild->szName, guild);
-			m_GuildByNumber.emplace(guild->dwNumber, guild);
+			m_GuildByName.emplace(guild->Name, guild);
+			m_GuildByNumber.emplace(guild->Number, guild);
 		}
 	}
 
@@ -61,10 +61,10 @@ void CGuildManager::Init()
 		GUILD_MEMBER_INFO guildMemberInfo;
 		guildMemberInfo.Clear();
 
-		gQueryManager.GetAsString("Name", guildMemberInfo.szGuildMember, sizeof(guildMemberInfo.szGuildMember));
+		gQueryManager.GetAsString("Name", guildMemberInfo.GuildMember, sizeof(guildMemberInfo.GuildMember));
 		gQueryManager.GetAsString("G_Name", guildName, sizeof(guildName));
 
-		guildMemberInfo.btStatus = gQueryManager.GetAsInteger("G_Status");
+		guildMemberInfo.Status = gQueryManager.GetAsInteger("G_Status");
 
 		GUILD_INFO* lpGuildInfo = GetGuildInfo(guildName);
 
@@ -75,19 +75,19 @@ void CGuildManager::Init()
 
 		GUILD_MEMBER_INFO* member = nullptr;
 
-		if (_stricmp(lpGuildInfo->szMaster, guildMemberInfo.szGuildMember) == 0)
+		if (_stricmp(lpGuildInfo->Master, guildMemberInfo.GuildMember) == 0)
 		{
-			lpGuildInfo->arGuildMember[0] = guildMemberInfo;
-			member = &lpGuildInfo->arGuildMember[0];
+			lpGuildInfo->GuildMember[0] = guildMemberInfo;
+			member = &lpGuildInfo->GuildMember[0];
 		}
 		else
 		{
 			for (size_t n = 1; n < MAX_GUILD_MEMBER; ++n)
 			{
-				if (lpGuildInfo->arGuildMember[n].IsEmpty())
+				if (lpGuildInfo->GuildMember[n].IsEmpty())
 				{
-					lpGuildInfo->arGuildMember[n] = guildMemberInfo;
-					member = &lpGuildInfo->arGuildMember[n];
+					lpGuildInfo->GuildMember[n] = guildMemberInfo;
+					member = &lpGuildInfo->GuildMember[n];
 					break;
 				}
 			}
@@ -95,7 +95,7 @@ void CGuildManager::Init()
 
 		if (member != nullptr)
 		{
-			m_GuildMembers.emplace(member->szGuildMember, member);
+			m_GuildMembers.emplace(member->GuildMember, member);
 		}
 	}
 }
@@ -103,16 +103,16 @@ void CGuildManager::Init()
 gQueryManager.Close();
 }
 
-GUILD_INFO* CGuildManager::GetGuildInfo(const char* szName)
+GUILD_INFO* CGuildManager::GetGuildInfo(const char* Name)
 {
-	auto it = m_GuildByName.find(szName);
+	auto it = m_GuildByName.find(Name);
 
 	return (it != m_GuildByName.end()) ? it->second : nullptr;
 }
 
-GUILD_INFO* CGuildManager::GetGuildInfo(DWORD dwNumber)
+GUILD_INFO* CGuildManager::GetGuildInfo(DWORD Number)
 {
-	auto it = m_GuildByNumber.find(dwNumber);
+	auto it = m_GuildByNumber.find(Number);
 
 	return (it != m_GuildByNumber.end()) ? it->second : nullptr;
 }
@@ -128,8 +128,8 @@ GUILD_INFO* CGuildManager::GetMemberGuildInfo(const char* szGuildMember)
 
 	for (auto& guild : vGuildList)
 	{
-		if (lpGuildMemberInfo >= &guild.arGuildMember[0] &&
-			lpGuildMemberInfo <= &guild.arGuildMember[MAX_GUILD_MEMBER - 1])
+		if (lpGuildMemberInfo >= &guild.GuildMember[0] &&
+			lpGuildMemberInfo <= &guild.GuildMember[MAX_GUILD_MEMBER - 1])
 		{
 			return &guild;
 		}
@@ -151,7 +151,7 @@ BOOL CGuildManager::CheckGuildOnCS(const char* szGuildName)
 		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		return FALSE;
+		return false;
 	}
 
 	BOOL result = gQueryManager.GetResult(0);
@@ -165,7 +165,7 @@ void CGuildManager::ConnectMember(const char* szGuildMember, WORD btServer)
 {
 	if (GUILD_MEMBER_INFO* lpGuildMemberInfo = GetGuildMemberInfo(szGuildMember))
 	{
-		lpGuildMemberInfo->btServer = btServer;
+		lpGuildMemberInfo->Server = btServer;
 	}
 }
 
@@ -173,23 +173,23 @@ void CGuildManager::DisconnectMember(const char* szGuildMember)
 {
 	if (GUILD_MEMBER_INFO* lpGuildMemberInfo = GetGuildMemberInfo(szGuildMember))
 	{
-		lpGuildMemberInfo->btServer = 0xFFFF;
+		lpGuildMemberInfo->Server = 0xFFFF;
 	}
 }
 
-BYTE CGuildManager::AddGuild(int index, const char* szGuildName, const char* szMasterName, BYTE* lpMark, BYTE btType)
+BYTE CGuildManager::AddGuild(int index, const char* guildName, const char* masterName, const BYTE* lpMark, BYTE type)
 {
-	if (GetGuildInfo(szGuildName) != nullptr)
+	if (GetGuildInfo(guildName) != nullptr)
 	{
 		return 3;
 	}
 
-	if (gUtil.CheckTextSyntax(szGuildName, strlen(szGuildName)) == 0)
+	if (gUtil.CheckTextSyntax(guildName, strlen(guildName)) == 0)
 	{
 		return 4;
 	}
 
-	if (!gQueryManager.ExecQuery("WZ_GuildCreate '%s','%s'", szGuildName, szMasterName) ||
+	if (!gQueryManager.ExecQuery("WZ_GuildCreate '%s','%s'", guildName, masterName) ||
 		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
@@ -205,41 +205,41 @@ BYTE CGuildManager::AddGuild(int index, const char* szGuildName, const char* szM
 	gQueryManager.Close();
 
 	gQueryManager.BindParameterAsBinary(1, lpMark, 32);
-	gQueryManager.ExecQuery("UPDATE Guild SET G_Mark=?,G_Type=%d WHERE G_Name='%s'", btType, szGuildName);
+	gQueryManager.ExecQuery("UPDATE Guild SET G_Mark=?,G_Type=%d WHERE G_Name='%s'", type, guildName);
 	gQueryManager.Close();
 
-	gQueryManager.ExecQuery("UPDATE GuildMember SET G_Status=%d WHERE Name='%s'", 0x80, szMasterName);
+	gQueryManager.ExecQuery("UPDATE GuildMember SET G_Status=%d WHERE Name='%s'", 0x80, masterName);
 	gQueryManager.Close();
 
 	GUILD_INFO guildInfo;
 	guildInfo.Clear();
 
-	if (gQueryManager.ExecQuery("SELECT Number FROM Guild WHERE G_Name='%s'", szGuildName) && gQueryManager.Fetch() != SQL_NO_DATA)
+	if (gQueryManager.ExecQuery("SELECT Number FROM Guild WHERE G_Name='%s'", guildName) && gQueryManager.Fetch() != SQL_NO_DATA)
 	{
-		guildInfo.dwNumber = gQueryManager.GetAsInteger("Number");
+		guildInfo.Number = gQueryManager.GetAsInteger("Number");
 	}
 
 	gQueryManager.Close();
 
-	memcpy(guildInfo.szName, szGuildName, sizeof(guildInfo.szName));
-	memcpy(guildInfo.szMaster, szMasterName, sizeof(guildInfo.szMaster));
+	memcpy(guildInfo.Name, guildName, sizeof(guildInfo.Name));
+	memcpy(guildInfo.Master, masterName, sizeof(guildInfo.Master));
 
-	guildInfo.btType = btType;
+	guildInfo.Type = type;
 
-	memcpy(guildInfo.arMark, lpMark, sizeof(guildInfo.arMark));
+	memcpy(guildInfo.Mark, lpMark, sizeof(guildInfo.Mark));
 
-	memcpy(guildInfo.arGuildMember[0].szGuildMember, szMasterName, sizeof(guildInfo.arGuildMember[0].szGuildMember));
+	memcpy(guildInfo.GuildMember[0].GuildMember, masterName, sizeof(guildInfo.GuildMember[0].GuildMember));
 
-	guildInfo.arGuildMember[0].btStatus = 0x80;
-	guildInfo.arGuildMember[0].btServer = 0xFFFF;
+	guildInfo.GuildMember[0].Status = 0x80;
+	guildInfo.GuildMember[0].Server = 0xFFFF;
 
 	vGuildList.emplace_back(guildInfo);
 
 	GUILD_INFO* guild = &vGuildList.back();
 
-	m_GuildByName.emplace(guild->szName, guild);
-	m_GuildByNumber.emplace(guild->dwNumber, guild);
-	m_GuildMembers.emplace(guild->arGuildMember[0].szGuildMember, &guild->arGuildMember[0]);
+	m_GuildByName.emplace(guild->Name, guild);
+	m_GuildByNumber.emplace(guild->Number, guild);
+	m_GuildMembers.emplace(guild->GuildMember[0].GuildMember, &guild->GuildMember[0]);
 
 	return 1;
 }
@@ -258,17 +258,17 @@ BYTE CGuildManager::DelGuild(int index, const char* szGuildName)
 		return 2;
 	}
 
-	DelGuildRelationship(index, lpGuildInfo->dwNumber, 1);
-	DelGuildRelationship(index, lpGuildInfo->dwNumber, 2);
+	DelGuildRelationship(index, lpGuildInfo->Number, 1);
+	DelGuildRelationship(index, lpGuildInfo->Number, 2);
 
-	m_GuildByName.erase(lpGuildInfo->szName);
-	m_GuildByNumber.erase(lpGuildInfo->dwNumber);
+	m_GuildByName.erase(lpGuildInfo->Name);
+	m_GuildByNumber.erase(lpGuildInfo->Number);
 
-	for (const auto& member : lpGuildInfo->arGuildMember)
+	for (const auto& member : lpGuildInfo->GuildMember)
 	{
 		if (!member.IsEmpty())
 		{
-			m_GuildMembers.erase(member.szGuildMember);
+			m_GuildMembers.erase(member.GuildMember);
 		}
 	}
 
@@ -312,16 +312,16 @@ BYTE CGuildManager::AddGuildMember(int index, const char* szGuildName, const cha
 
 	for (size_t n = 1; n < MAX_GUILD_MEMBER; ++n)
 	{
-		if (lpGuildInfo->arGuildMember[n].IsEmpty())
+		if (lpGuildInfo->GuildMember[n].IsEmpty())
 		{
-			GUILD_MEMBER_INFO& member = lpGuildInfo->arGuildMember[n];
+			GUILD_MEMBER_INFO& member = lpGuildInfo->GuildMember[n];
 
-			memcpy(member.szGuildMember, szGuildMember, sizeof(member.szGuildMember));
+			memcpy(member.GuildMember, szGuildMember, sizeof(member.GuildMember));
 
-			member.btStatus = btStatus;
-			member.btServer = btServer;
+			member.Status = btStatus;
+			member.Server = btServer;
 
-			m_GuildMembers.emplace(member.szGuildMember, &member);
+			m_GuildMembers.emplace(member.GuildMember, &member);
 
 			return 1;
 		}
@@ -365,12 +365,12 @@ BYTE CGuildManager::AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwT
 		return 0;
 	}
 
-	if(CheckGuildOnCS(lpSourceGuild->szName) != 0)
+	if(CheckGuildOnCS(lpSourceGuild->Name) != 0)
 	{
 		return 16;
 	}
 
-	if(CheckGuildOnCS(lpTargetGuild->szName) != 0)
+	if(CheckGuildOnCS(lpTargetGuild->Name) != 0)
 	{
 		return 16;
 	}
@@ -385,24 +385,24 @@ BYTE CGuildManager::AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwT
 	switch(btRelationType)
 	{
 		case 1:
-			if(lpSourceGuild->dwUnionNumber > 0)
+			if(lpSourceGuild->UnionNumber > 0)
 			{
 				return 0;
 			}
 
-			if(lpSourceGuild->dwRivalNumber > 0)
+			if(lpSourceGuild->RivalNumber > 0)
 			{
 				return 0;
 			}
 
-			unionGuildAmount = GetUnionList(lpTargetGuild->dwNumber, UnionGuildNumber);
+			unionGuildAmount = GetUnionList(lpTargetGuild->Number, UnionGuildNumber);
 
 			if (unionGuildAmount >= MAX_GUILD_UNION)
 			{
 				return 0;
 			}
 
-			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Union=%d WHERE Number=%d",lpTargetGuild->dwNumber,lpTargetGuild->dwNumber))
+			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Union=%d WHERE Number=%d",lpTargetGuild->Number,lpTargetGuild->Number))
 			{
 				gQueryManager.Close();
 				return 0;
@@ -410,10 +410,10 @@ BYTE CGuildManager::AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwT
 			else
 			{
 				gQueryManager.Close();
-				lpTargetGuild->dwUnionNumber = lpTargetGuild->dwNumber;
+				lpTargetGuild->UnionNumber = lpTargetGuild->Number;
 			}
 
-			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Union=%d WHERE Number=%d",lpTargetGuild->dwNumber,lpSourceGuild->dwNumber))
+			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Union=%d WHERE Number=%d",lpTargetGuild->Number,lpSourceGuild->Number))
 			{
 				gQueryManager.Close();
 				return 0;
@@ -421,36 +421,36 @@ BYTE CGuildManager::AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwT
 			else
 			{
 				gQueryManager.Close();
-				lpSourceGuild->dwUnionNumber = lpTargetGuild->dwNumber;
+				lpSourceGuild->UnionNumber = lpTargetGuild->Number;
 			}
 
-			DGRelationShipListRecv(index,lpTargetGuild->dwNumber,1);
+			DGRelationShipListRecv(index,lpTargetGuild->Number,1);
 
 			DGRelationShipNotificationRecv(index,0,unionGuildAmount,(int*)UnionGuildNumber);
 
 			return 1;
 		case 2:
-			if(lpSourceGuild->dwRivalNumber > 0)
+			if(lpSourceGuild->RivalNumber > 0)
 			{
 				return 0;
 			}
 
-			if(lpTargetGuild->dwRivalNumber > 0)
+			if(lpTargetGuild->RivalNumber > 0)
 			{
 				return 0;
 			}
 
-			if(lpSourceGuild->dwUnionNumber > 0 && lpSourceGuild->dwUnionNumber != lpSourceGuild->dwNumber)
+			if(lpSourceGuild->UnionNumber > 0 && lpSourceGuild->UnionNumber != lpSourceGuild->Number)
 			{
 				return 0;
 			}
 
-			if(lpTargetGuild->dwUnionNumber > 0 && lpTargetGuild->dwUnionNumber != lpTargetGuild->dwNumber)
+			if(lpTargetGuild->UnionNumber > 0 && lpTargetGuild->UnionNumber != lpTargetGuild->Number)
 			{
 				return 0;
 			}
 
-			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Rival=%d WHERE Number=%d",lpSourceGuild->dwNumber,lpTargetGuild->dwNumber))
+			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Rival=%d WHERE Number=%d",lpSourceGuild->Number,lpTargetGuild->Number))
 			{
 				gQueryManager.Close();
 				return 0;
@@ -458,10 +458,10 @@ BYTE CGuildManager::AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwT
 			else
 			{
 				gQueryManager.Close();
-				lpTargetGuild->dwRivalNumber = lpSourceGuild->dwNumber;
+				lpTargetGuild->RivalNumber = lpSourceGuild->Number;
 			}
 
-			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Rival=%d WHERE Number=%d",lpTargetGuild->dwNumber,lpSourceGuild->dwNumber))
+			if(!gQueryManager.ExecQuery("UPDATE Guild SET G_Rival=%d WHERE Number=%d",lpTargetGuild->Number,lpSourceGuild->Number))
 			{
 				gQueryManager.Close();
 				return 0;
@@ -469,16 +469,16 @@ BYTE CGuildManager::AddGuildRelationship(int index,DWORD dwSourceGuild,DWORD dwT
 			else
 			{
 				gQueryManager.Close();
-				lpSourceGuild->dwRivalNumber = lpTargetGuild->dwNumber;
+				lpSourceGuild->RivalNumber = lpTargetGuild->Number;
 			}
 
-			DGRelationShipListRecv(index,lpSourceGuild->dwNumber,2);
+			DGRelationShipListRecv(index,lpSourceGuild->Number,2);
 
-			DGRelationShipListRecv(index,lpTargetGuild->dwNumber,2);
+			DGRelationShipListRecv(index,lpTargetGuild->Number,2);
 
-			RivalGuildNumber[rivalGuildAmount++] = lpSourceGuild->dwNumber;
+			RivalGuildNumber[rivalGuildAmount++] = lpSourceGuild->Number;
 
-			RivalGuildNumber[rivalGuildAmount++] = lpTargetGuild->dwNumber;
+			RivalGuildNumber[rivalGuildAmount++] = lpTargetGuild->Number;
 
 			DGRelationShipNotificationRecv(index,0,rivalGuildAmount,(int*)RivalGuildNumber);
 
@@ -510,24 +510,24 @@ BYTE CGuildManager::DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE bt
 	{
 	case 1:
 
-		if (CheckGuildOnCS(lpGuildInfo->szName) != 0)
+		if (CheckGuildOnCS(lpGuildInfo->Name) != 0)
 		{
 			return 16;
 		}
 
-		if (lpGuildInfo->dwNumber == lpGuildInfo->dwUnionNumber)
+		if (lpGuildInfo->Number == lpGuildInfo->UnionNumber)
 		{
 			return 0;
 		}
 
-		lpUnionInfo = GetGuildInfo(lpGuildInfo->dwUnionNumber);
+		lpUnionInfo = GetGuildInfo(lpGuildInfo->UnionNumber);
 
 		if (lpUnionInfo == nullptr)
 		{
 			return 0;
 		}
 
-		unionGuildAmount = GetUnionList(lpUnionInfo->dwNumber, unionGuildNumber);
+		unionGuildAmount = GetUnionList(lpUnionInfo->Number, unionGuildNumber);
 
 		if (unionGuildAmount == 0)
 		{
@@ -546,10 +546,10 @@ BYTE CGuildManager::DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE bt
 
 			gQueryManager.Close();
 
-			lpGuildInfo->dwUnionNumber = 0;
-			lpUnionInfo->dwUnionNumber = 0;
+			lpGuildInfo->UnionNumber = 0;
+			lpUnionInfo->UnionNumber = 0;
 
-			DGRelationShipListRecv(index, lpUnionInfo->dwNumber, 1);
+			DGRelationShipListRecv(index, lpUnionInfo->Number, 1);
 			DGRelationShipNotificationRecv(index, 16, unionGuildAmount, (int*)unionGuildNumber);
 
 			return 1;
@@ -557,7 +557,7 @@ BYTE CGuildManager::DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE bt
 
 		if (!gQueryManager.ExecQuery(
 			"UPDATE Guild SET G_Union=0 WHERE Number=%d",
-			lpGuildInfo->dwNumber))
+			lpGuildInfo->Number))
 		{
 			gQueryManager.Close();
 			return 0;
@@ -565,21 +565,21 @@ BYTE CGuildManager::DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE bt
 
 		gQueryManager.Close();
 
-		lpGuildInfo->dwUnionNumber = 0;
+		lpGuildInfo->UnionNumber = 0;
 
-		DGRelationShipListRecv(index, lpUnionInfo->dwNumber, 1);
+		DGRelationShipListRecv(index, lpUnionInfo->Number, 1);
 		DGRelationShipNotificationRecv(index, 0, unionGuildAmount, (int*)unionGuildNumber);
 
 		return 1;
 
 	case 2:
 
-		if (CheckGuildOnCS(lpGuildInfo->szName) != 0)
+		if (CheckGuildOnCS(lpGuildInfo->Name) != 0)
 		{
 			return 16;
 		}
 
-		lpRivalInfo = GetGuildInfo(lpGuildInfo->dwRivalNumber);
+		lpRivalInfo = GetGuildInfo(lpGuildInfo->RivalNumber);
 
 		if (lpRivalInfo == nullptr)
 		{
@@ -588,7 +588,7 @@ BYTE CGuildManager::DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE bt
 
 		if (!gQueryManager.ExecQuery(
 			"UPDATE Guild SET G_Rival=0 WHERE Number IN (%d,%d)",
-			lpGuildInfo->dwNumber, lpRivalInfo->dwNumber))
+			lpGuildInfo->Number, lpRivalInfo->Number))
 		{
 			gQueryManager.Close();
 			return 0;
@@ -596,14 +596,14 @@ BYTE CGuildManager::DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE bt
 
 		gQueryManager.Close();
 
-		lpGuildInfo->dwRivalNumber = 0;
-		lpRivalInfo->dwRivalNumber = 0;
+		lpGuildInfo->RivalNumber = 0;
+		lpRivalInfo->RivalNumber = 0;
 
-		DGRelationShipListRecv(index, lpGuildInfo->dwNumber, 2);
-		DGRelationShipListRecv(index, lpRivalInfo->dwNumber, 2);
+		DGRelationShipListRecv(index, lpGuildInfo->Number, 2);
+		DGRelationShipListRecv(index, lpRivalInfo->Number, 2);
 
-		rivalGuildNumber[rivalGuildAmount++] = lpGuildInfo->dwNumber;
-		rivalGuildNumber[rivalGuildAmount++] = lpRivalInfo->dwNumber;
+		rivalGuildNumber[rivalGuildAmount++] = lpGuildInfo->Number;
+		rivalGuildNumber[rivalGuildAmount++] = lpRivalInfo->Number;
 
 		DGRelationShipNotificationRecv(index, 0, rivalGuildAmount, (int*)rivalGuildNumber);
 
@@ -623,36 +623,36 @@ BYTE CGuildManager::SetGuildRelationship(int index, const char* szGuildMember, c
 		return 0;
 	}
 
-	if (lpSourceGuild->dwUnionNumber != lpTargetGuild->dwNumber)
+	if (lpSourceGuild->UnionNumber != lpTargetGuild->Number)
 	{
 		return 0;
 	}
 
-	if (lpTargetGuild->dwUnionNumber != lpTargetGuild->dwNumber)
+	if (lpTargetGuild->UnionNumber != lpTargetGuild->Number)
 	{
 		return 0;
 	}
 
-	if (CheckGuildOnCS(lpSourceGuild->szName) != 0)
+	if (CheckGuildOnCS(lpSourceGuild->Name) != 0)
 	{
 		return 16;
 	}
 
-	if (CheckGuildOnCS(lpTargetGuild->szName) != 0)
+	if (CheckGuildOnCS(lpTargetGuild->Name) != 0)
 	{
 		return 16;
 	}
 
 	DWORD unionGuildNumber[MAX_GUILD_UNION];
 
-	DWORD unionGuildAmount = GetUnionList(lpTargetGuild->dwNumber, unionGuildNumber);
+	DWORD unionGuildAmount = GetUnionList(lpTargetGuild->Number, unionGuildNumber);
 
 	if (unionGuildAmount == 2)
 	{
 		if (!gQueryManager.ExecQuery(
 			"UPDATE Guild SET G_Union=0 WHERE Number IN (%d,%d)",
-			lpSourceGuild->dwNumber,
-			lpTargetGuild->dwNumber))
+			lpSourceGuild->Number,
+			lpTargetGuild->Number))
 		{
 			gQueryManager.Close();
 			return 0;
@@ -660,10 +660,10 @@ BYTE CGuildManager::SetGuildRelationship(int index, const char* szGuildMember, c
 
 		gQueryManager.Close();
 
-		lpSourceGuild->dwUnionNumber = 0;
-		lpTargetGuild->dwUnionNumber = 0;
+		lpSourceGuild->UnionNumber = 0;
+		lpTargetGuild->UnionNumber = 0;
 
-		DGRelationShipListRecv(index, lpTargetGuild->dwNumber, 1);
+		DGRelationShipListRecv(index, lpTargetGuild->Number, 1);
 		DGRelationShipNotificationRecv(index, 16, unionGuildAmount, (int*)unionGuildNumber);
 
 		return 1;
@@ -671,7 +671,7 @@ BYTE CGuildManager::SetGuildRelationship(int index, const char* szGuildMember, c
 
 	if (!gQueryManager.ExecQuery(
 		"UPDATE Guild SET G_Union=0 WHERE Number=%d",
-		lpSourceGuild->dwNumber))
+		lpSourceGuild->Number))
 	{
 		gQueryManager.Close();
 		return 0;
@@ -679,15 +679,15 @@ BYTE CGuildManager::SetGuildRelationship(int index, const char* szGuildMember, c
 
 	gQueryManager.Close();
 
-	lpSourceGuild->dwUnionNumber = 0;
+	lpSourceGuild->UnionNumber = 0;
 
-	DGRelationShipListRecv(index, lpTargetGuild->dwNumber, 1);
+	DGRelationShipListRecv(index, lpTargetGuild->Number, 1);
 	DGRelationShipNotificationRecv(index, 0, unionGuildAmount, (int*)unionGuildNumber);
 
 	return 1;
 }
 
-BYTE CGuildManager::SetGuildScore(const char* szGuildName, DWORD dwScore)
+BYTE CGuildManager::SetGuildScore(const char* szGuildName, DWORD Score)
 {
 	GUILD_INFO* lpGuildInfo = GetGuildInfo(szGuildName);
 
@@ -698,7 +698,7 @@ BYTE CGuildManager::SetGuildScore(const char* szGuildName, DWORD dwScore)
 
 	if (!gQueryManager.ExecQuery(
 		"UPDATE Guild SET G_Score=%d WHERE G_Name='%s'",
-		dwScore,
+		Score,
 		szGuildName))
 	{
 		gQueryManager.Close();
@@ -707,13 +707,13 @@ BYTE CGuildManager::SetGuildScore(const char* szGuildName, DWORD dwScore)
 
 	gQueryManager.Close();
 
-	lpGuildInfo->dwScore = dwScore;
+	lpGuildInfo->Score = Score;
 
 	return 1;
 }
 
 #if (NEWBOSSGUILD == 1)
-BYTE CGuildManager::SetGuildScore1(const char* szGuildName, DWORD dwScore1)
+BYTE CGuildManager::SetGuildScore1(const char* szGuildName, DWORD Score1)
 {
 	GUILD_INFO* lpGuildInfo = GetGuildInfo(szGuildName);
 
@@ -724,7 +724,7 @@ BYTE CGuildManager::SetGuildScore1(const char* szGuildName, DWORD dwScore1)
 
 	if (!gQueryManager.ExecQuery(
 		"UPDATE Guild SET G_Score1=%d WHERE G_Name='%s'",
-		dwScore1,
+		Score1,
 		szGuildName))
 	{
 		gQueryManager.Close();
@@ -733,7 +733,7 @@ BYTE CGuildManager::SetGuildScore1(const char* szGuildName, DWORD dwScore1)
 
 	gQueryManager.Close();
 
-	lpGuildInfo->dwScore1 = dwScore1;
+	lpGuildInfo->Score1 = Score1;
 
 	return 1;
 }
@@ -748,7 +748,7 @@ BYTE CGuildManager::SetGuildNotice(const char* szGuildName, const char* szNotice
 		return 0;
 	}
 
-	gQueryManager.BindParameterAsString(1, (void*)szNotice, sizeof(lpGuildInfo->szNotice));
+	gQueryManager.BindParameterAsString(1, (void*)szNotice, sizeof(lpGuildInfo->Notice));
 
 	if (!gQueryManager.ExecQuery(
 		"UPDATE Guild SET G_Notice=? WHERE G_Name='%s'",
@@ -761,8 +761,8 @@ BYTE CGuildManager::SetGuildNotice(const char* szGuildName, const char* szNotice
 	gQueryManager.Close();
 
 	strncpy_s(
-		lpGuildInfo->szNotice,
-		sizeof(lpGuildInfo->szNotice),
+		lpGuildInfo->Notice,
+		sizeof(lpGuildInfo->Notice),
 		szNotice,
 		_TRUNCATE);
 
@@ -789,7 +789,7 @@ BYTE CGuildManager::SetGuildType(const char* szGuildName, BYTE btType)
 
 	gQueryManager.Close();
 
-	lpGuildInfo->btType = btType;
+	lpGuildInfo->Type = btType;
 
 	return 1;
 }
@@ -814,30 +814,30 @@ BYTE CGuildManager::SetGuildMemberStatus(const char* szGuildMember, BYTE btStatu
 
 	gQueryManager.Close();
 
-	lpGuildMemberInfo->btStatus = btStatus;
+	lpGuildMemberInfo->Status = btStatus;
 
 	return 1;
 }
 
-long CGuildManager::GetUnionList(DWORD dwUnionNumber, DWORD* lpUnionList)
+long CGuildManager::GetUnionList(DWORD UnionNumber, DWORD* lpUnionList)
 {
-	GUILD_INFO* lpGuildInfo = GetGuildInfo(dwUnionNumber);
+	GUILD_INFO* lpGuildInfo = GetGuildInfo(UnionNumber);
 
-	if (lpGuildInfo == nullptr || lpGuildInfo->dwUnionNumber == 0)
+	if (lpGuildInfo == nullptr || lpGuildInfo->UnionNumber == 0)
 	{
 		return 0;
 	}
 
 	long count = 0;
 
-	lpUnionList[count++] = lpGuildInfo->dwNumber;
+	lpUnionList[count++] = lpGuildInfo->Number;
 
 	for (const auto& guild : vGuildList)
 	{
-		if (guild.dwNumber != lpGuildInfo->dwNumber &&
-			guild.dwUnionNumber == lpGuildInfo->dwNumber)
+		if (guild.Number != lpGuildInfo->Number &&
+			guild.UnionNumber == lpGuildInfo->Number)
 		{
-			lpUnionList[count++] = guild.dwNumber;
+			lpUnionList[count++] = guild.Number;
 
 			if (count >= MAX_GUILD_UNION)
 			{
@@ -849,16 +849,16 @@ long CGuildManager::GetUnionList(DWORD dwUnionNumber, DWORD* lpUnionList)
 	return count;
 }
 
-long CGuildManager::GetRivalList(DWORD dwRivalNumber, DWORD* lpRivalList)
+long CGuildManager::GetRivalList(DWORD RivalNumber, DWORD* lpRivalList)
 {
-	GUILD_INFO* lpGuildInfo = GetGuildInfo(dwRivalNumber);
+	GUILD_INFO* lpGuildInfo = GetGuildInfo(RivalNumber);
 
-	if (lpGuildInfo == nullptr || lpGuildInfo->dwRivalNumber == 0)
+	if (lpGuildInfo == nullptr || lpGuildInfo->RivalNumber == 0)
 	{
 		return 0;
 	}
 
-	lpRivalList[0] = lpGuildInfo->dwRivalNumber;
+	lpRivalList[0] = lpGuildInfo->RivalNumber;
 
 	return 1;
 }

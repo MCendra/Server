@@ -6,7 +6,7 @@
 
 struct BAD_SYNTAX_INFO
 {
-	std::string syntax;
+	std::string Syntax;
 };
 
 class CBadSyntax

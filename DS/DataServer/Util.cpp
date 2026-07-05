@@ -6,7 +6,6 @@
 //#include "CharacterManager.h"
 //#include "ServerManager.h"
 
-int gServerCount = 0;
 
 // Instancia global
 CUtil gUtil;
@@ -15,7 +14,6 @@ char* WorkingPath = nullptr;                 // Path del ejecutable declarado en
 
 constexpr char ERROR_TITLE[] = "Error";
 
-//int gServerCount = 0;
 
 void CUtil::GetExecutablePath()
 {
@@ -103,6 +101,22 @@ bool CUtil::CheckTextSyntax(const char* text, int size)
 	return 1;
 }
 
+static std::string NormalizeToLower(const char* text)
+{
+	std::string key(text);
+
+	std::transform(
+		key.begin(),
+		key.end(),
+		key.begin(),
+		[](unsigned char c)
+		{
+			return static_cast<char>(std::tolower(c));
+		});
+
+	return key;
+}
+
 bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot) // OK
 {
 	for(int n=0;n < 5;n++)
@@ -117,11 +131,11 @@ bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot) // OK
 	return 0;
 }
 
-WORD GetServerCodeByName(char* name) // OK
+WORD GetServerCodeByName(const char* name)
 {
 	CHARACTER_INFO CharacterInfo;
 
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,name) == 0)
+	if(gCharacterManager.GetCharacterInfo(&CharacterInfo, name) == 0)
 	{
 		return 0xFFFF;
 	}

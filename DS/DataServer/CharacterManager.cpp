@@ -6,108 +6,67 @@
 
 CCharacterManager gCharacterManager;
 
-// Construction/Destruction
-
-CCharacterManager::CCharacterManager() // OK
+void CCharacterManager::ClearServerCharacterInfo(WORD ServerCode)
 {
+	CCriticalSection::CLock lock(m_critical);
 
-}
-
-CCharacterManager::~CCharacterManager() // OK
-{
-
-}
-
-void CCharacterManager::ClearServerCharacterInfo(WORD ServerCode) // OK
-{
-	this->m_critical.lock();
-
-	for(std::map<std::string,CHARACTER_INFO>::iterator it=this->m_CharacterInfo.begin();it != this->m_CharacterInfo.end();)
+	for (auto it = m_CharacterInfo.begin(); it != m_CharacterInfo.end();)
 	{
-		if(it->second.GameServerCode != ServerCode)
+		if (it->second.GameServerCode != ServerCode)
 		{
-			it++;
+			++it;
 			continue;
 		}
 
-		it = this->m_CharacterInfo.erase(it);
+		it = m_CharacterInfo.erase(it);
 	}
-
-	this->m_critical.unlock();
 }
 
-bool CCharacterManager::GetCharacterInfo(CHARACTER_INFO* lpCharacterInfo,char* name) // OK
+bool CCharacterManager::GetCharacterInfo(CHARACTER_INFO* lpCharacterInfo, const char* name)
 {
-	this->m_critical.lock();
-
-	std::string nme(name);
-
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,CHARACTER_INFO>::iterator it = this->m_CharacterInfo.find(nme);
-
-	if(it != this->m_CharacterInfo.end())
+	if (lpCharacterInfo == nullptr || name == nullptr)
 	{
-		(*lpCharacterInfo) = it->second;
-		this->m_critical.unlock();
-		return 1;
+		return false;
 	}
 
-	this->m_critical.unlock();
-	return 0;
+	CCriticalSection::CLock lock(m_critical);
+
+	const auto it = m_CharacterInfo.find(NormalizeToLower(name));
+
+	if (it == m_CharacterInfo.end())
+	{
+		return false;
+	}
+
+	*lpCharacterInfo = it->second;
+
+	return true;
 }
 
-void CCharacterManager::InsertCharacterInfo(CHARACTER_INFO CharacterInfo) // OK
+void CCharacterManager::InsertCharacterInfo(const CHARACTER_INFO& characterInfo)
 {
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	std::string nme(CharacterInfo.Name);
-
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
-
-	std::map<std::string,CHARACTER_INFO>::iterator it = this->m_CharacterInfo.find(nme);
-
-	if(it == this->m_CharacterInfo.end())
-	{
-		this->m_CharacterInfo.insert(std::pair<std::string,CHARACTER_INFO>(nme,CharacterInfo));
-	}
-	else
-	{
-		it->second = CharacterInfo;
-	}
-
-	this->m_critical.unlock();
+	m_CharacterInfo[NormalizeToLower(characterInfo.CharacterName)] = characterInfo;
 }
 
-void CCharacterManager::RemoveCharacterInfo(CHARACTER_INFO CharacterInfo) // OK
+void CCharacterManager::RemoveCharacterInfo(const CHARACTER_INFO& characterInfo)
 {
-	this->m_critical.lock();
+	CCriticalSection::CLock lock(m_critical);
 
-	std::string nme(CharacterInfo.Name);
+	const auto key = NormalizeToLower(characterInfo.CharacterName);
 
-	std::transform(nme.begin(),nme.end(),nme.begin(),tolower);
+	auto it = m_CharacterInfo.find(key);
 
-	std::map<std::string,CHARACTER_INFO>::iterator it = this->m_CharacterInfo.find(nme);
-
-	if(it != this->m_CharacterInfo.end())
+	if (it != m_CharacterInfo.end())
 	{
-		this->m_CharacterInfo.erase(it);
-		this->m_critical.unlock();
-		return;
+		m_CharacterInfo.erase(it);
 	}
-
-	this->m_critical.unlock();
 }
 
-long CCharacterManager::GetCharacterCount() // OK
+long CCharacterManager::GetCharacterCount()
 {
-	long CharacterCount = 0;
+	CCriticalSection::CLock lock(m_critical);
 
-	this->m_critical.lock();
-
-	CharacterCount = this->m_CharacterInfo.size();
-
-	this->m_critical.unlock();
-
-	return CharacterCount;
+	return static_cast<long>(m_CharacterInfo.size());
 }

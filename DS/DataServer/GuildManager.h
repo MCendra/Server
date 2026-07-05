@@ -11,43 +11,43 @@ struct GUILD_MEMBER_INFO
 {
 	void Clear()
 	{
-		szGuildMember[0] = '\0';
-		btStatus = 0;
-		btServer = 0xFFFF;
+		GuildMember[0] = '\0';
+		Status = 0;
+		Server = 0xFFFF;
 	}
 
 	bool IsEmpty() const
 	{
-		return (szGuildMember[0] == '\0');
+		return (GuildMember[0] == '\0');
 	}
 
-	char szGuildMember[11];
-	BYTE btStatus;
-	WORD btServer;
+	char GuildMember[11];
+	BYTE Status;
+	WORD Server;
 };
 
 struct GUILD_INFO
 {
 	void Clear()
 	{
-		dwNumber = 0;
-		dwUnionNumber = 0;
-		dwRivalNumber = 0;
-		dwScore = 0;
+		Number = 0;
+		UnionNumber = 0;
+		RivalNumber = 0;
+		Score = 0;
 
 #if (NEWBOSSGUILD == 1)
-		dwScore1 = 0;
+		Score1 = 0;
 #endif
 
-		btType = 0;
+		Type = 0;
 
-		szName[0] = '\0';
-		szMaster[0] = '\0';
-		szNotice[0] = '\0';
+		Name[0] = '\0';
+		Master[0] = '\0';
+		Notice[0] = '\0';
 
-		memset(arMark, 0, sizeof(arMark));
+		memset(Mark, 0, sizeof(Mark));
 
-		for (auto& member : arGuildMember)
+		for (auto& member : GuildMember)
 		{
 			member.Clear();
 		}
@@ -57,7 +57,7 @@ struct GUILD_INFO
 	{
 		BYTE count = 0;
 
-		for (const auto& member : arGuildMember)
+		for (const auto& member : GuildMember)
 		{
 			if (!member.IsEmpty())
 			{
@@ -68,21 +68,21 @@ struct GUILD_INFO
 		return count;
 	}
 
-	DWORD dwNumber;
-	DWORD dwUnionNumber;
-	DWORD dwRivalNumber;
-	DWORD dwScore;
+	DWORD Number;
+	DWORD UnionNumber;
+	DWORD RivalNumber;
+	DWORD Score;
 
 #if (NEWBOSSGUILD == 1)
-	DWORD dwScore1;
+	DWORD Score1;
 #endif
 
-	BYTE btType;
-	char szName[9];
-	char szMaster[11];
-	char szNotice[60];
-	BYTE arMark[32];
-	GUILD_MEMBER_INFO arGuildMember[MAX_GUILD_MEMBER];
+	BYTE Type;
+	char Name[9];
+	char Master[11];
+	char Notice[60];
+	BYTE Mark[32];
+	GUILD_MEMBER_INFO GuildMember[MAX_GUILD_MEMBER];
 };
 
 class CGuildManager
@@ -93,39 +93,39 @@ public:
 
 	void Init();
 
-	GUILD_INFO* GetGuildInfo(const char* szName);
-	GUILD_INFO* GetGuildInfo(DWORD dwNumber);
-	GUILD_INFO* GetMemberGuildInfo(const char* szGuildMember);
-	GUILD_MEMBER_INFO* GetGuildMemberInfo(const char* szGuildMember);
+	GUILD_INFO* GetGuildInfo(const char* name);
+	GUILD_INFO* GetGuildInfo(DWORD number);
+	GUILD_INFO* GetMemberGuildInfo(const char* guildMember);
+	GUILD_MEMBER_INFO* GetGuildMemberInfo(const char* guildMember);
 
-	BOOL CheckGuildOnCS(const char* szGuildName);
+	BOOL CheckGuildOnCS(const char* guildName);
 
-	void ConnectMember(const char* szGuildMember, WORD btServer);
-	void DisconnectMember(const char* szGuildMember);
+	void ConnectMember(const char* guildMember, WORD server);
+	void DisconnectMember(const char* guildMember);
 
-	BYTE AddGuild(int index, const char* szGuildName, const char* szMasterName, BYTE* lpMark, BYTE btType);
-	BYTE DelGuild(int index, const char* szGuildName);
+	BYTE AddGuild(int index, const char* guildName, const char* masterName, const BYTE* lpMark, BYTE type);
+	BYTE DelGuild(int index, const char* guildName);
 
-	BYTE AddGuildMember(int index, const char* szGuildName, const char* szGuildMember, BYTE btStatus, WORD btServer);
-	BYTE DelGuildMember(int index, const char* szGuildMember);
+	BYTE AddGuildMember(int index, const char* guildName, const char* guildMember, BYTE status, WORD server);
+	BYTE DelGuildMember(int index, const char* guildMember);
 
-	BYTE AddGuildRelationship(int index, DWORD dwSourceGuild, DWORD dwTargetGuild, BYTE btRelationType);
-	BYTE DelGuildRelationship(int index, DWORD dwSourceGuild, BYTE btRelationType);
+	BYTE AddGuildRelationship(int index, DWORD sourceGuild, DWORD targetGuild, BYTE relationType);
+	BYTE DelGuildRelationship(int index, DWORD sourceGuild, BYTE relationType);
 
-	BYTE SetGuildRelationship(int index, const char* szGuildMember, const char* szGuildMaster);
+	BYTE SetGuildRelationship(int index, const char* guildMember, const char* guildMaster);
 
-	BYTE SetGuildScore(const char* szGuildName, DWORD dwScore);
+	BYTE SetGuildScore(const char* guildName, DWORD score);
 
 #if (NEWBOSSGUILD == 1)
-	BYTE SetGuildScore1(const char* szGuildName, DWORD dwScore1);
+	BYTE SetGuildScore1(const char* guildName, DWORD score1);
 #endif
 
-	BYTE SetGuildNotice(const char* szGuildName, const char* szNotice);
-	BYTE SetGuildType(const char* szGuildName, BYTE btType);
-	BYTE SetGuildMemberStatus(const char* szGuildMember, BYTE btStatus);
+	BYTE SetGuildNotice(const char* guildName, const char* notice);
+	BYTE SetGuildType(const char* guildName, BYTE btType);
+	BYTE SetGuildMemberStatus(const char* guildMember, BYTE status);
 
-	long GetUnionList(DWORD dwUnionNumber, DWORD* lpUnionList);
-	long GetRivalList(DWORD dwRivalNumber, DWORD* lpRivalList);
+	long GetUnionList(DWORD unionNumber, DWORD* lpunionList);
+	long GetRivalList(DWORD rivalNumber, DWORD* lprivalList);
 
 private:
 	std::deque<GUILD_INFO> vGuildList;
