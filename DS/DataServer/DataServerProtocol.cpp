@@ -768,28 +768,28 @@ void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 				case SUB_CASTLE_REG_GUILD_MARK:
 					DS_GDReqRegGuildMark(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_GUILD_MARK_RESET:
+				case SUB_CASTLE_GUILD_MARK_RESET:
 					DS_GDReqGuildMarkReset(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_GUILD_GIVEUP:
+				case SUB_CASTLE_GUILD_GIVEUP:
 					DS_GDReqGuildSetGiveUp(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_NPC_REMOVE:
+				case SUB_CASTLE_NPC_REMOVE:
 					DS_GDReqCastleNpcRemove(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_STATE_SYNC:
+				case SUB_CASTLE_STATE_SYNC:
 					DS_GDReqCastleStateSync(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_TRIBUTE_MONEY:
+				case SUB_CASTLE_TRIBUTE_MONEY:
 					DS_GDReqCastleTributeMoney(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_RESET_TAX_INFO:
+				case SUB_CASTLE_RESET_TAX_INFO:
 					DS_GDReqResetCastleTaxInfo(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_RESET_SIEGE_GUILD:
+				case SUB_CASTLE_RESET_SIEGE_GUILD:
 					DS_GDReqResetSiegeGuildInfo(lpMsg,index);
 					break;
-				case DS_SUB_CASTLE_RESET_REG_INFO:
+				case SUB_CASTLE_RESET_REG_INFO:
 					DS_GDReqResetRegSiegeInfo(lpMsg,index);
 					break;
 			}
@@ -2854,23 +2854,19 @@ void DS_GDReqRegGuildMark(BYTE *lpRecv, int aIndex)
 
 void DS_GDReqGuildMarkReset(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
 
     CSP_REQ_GUILDRESETMARK* lpMsg = (CSP_REQ_GUILDRESETMARK*)lpRecv;
 	CSP_ANS_GUILDRESETMARK pMsg {};
     
-	pMsg.Header.set(HEAD_CASTLE_SIEGE, 0x11, sizeof(CSP_ANS_GUILDRESETMARK));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_GUILD_MARK_RESET, sizeof(CSP_ANS_GUILDRESETMARK));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
 	
 	char szGuildName[9] = {'\0'};
-	memcpy(szGuildName, lpMsg->szGuildName, 8);
+	memcpy(szGuildName, lpMsg->GuildName, 8);
 
-	if (!gCastleDBSet.DSDB_QueryGuildMarkReset(lpMsg->wMapSvrNum, szGuildName, &pMsg))
+	if (!gCastleDBSet.DSDB_QueryGuildMarkReset(lpMsg->MapSvrNum, szGuildName, &pMsg))
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 	}
 
 	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_GUILDRESETMARK));		
@@ -2878,24 +2874,19 @@ void DS_GDReqGuildMarkReset(BYTE *lpRecv, int aIndex)
 
 void DS_GDReqGuildSetGiveUp(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-    
 	CSP_REQ_GUILDSETGIVEUP* lpMsg = (CSP_REQ_GUILDSETGIVEUP*)lpRecv;
 	CSP_ANS_GUILDSETGIVEUP pMsg {};
     
-	pMsg.Header.set(HEAD_CASTLE_SIEGE, 0x12, sizeof(CSP_ANS_GUILDSETGIVEUP));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
-	pMsg.iIndex = lpMsg->iIndex;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_GUILD_GIVEUP, sizeof(CSP_ANS_GUILDSETGIVEUP));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
 	
 	char szGuildName[9] = {'\0'};
-	memcpy(szGuildName, lpMsg->szGuildName, 8);
+	memcpy(szGuildName, lpMsg->GuildName, 8);
     
-	if (!gCastleDBSet.DSDB_QueryGuildSetGiveUp(lpMsg->wMapSvrNum, szGuildName, lpMsg->bIsGiveUp, &pMsg))
+	if (!gCastleDBSet.DSDB_QueryGuildSetGiveUp(lpMsg->MapSvrNum, szGuildName, lpMsg->IsGiveUp, &pMsg))
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 	}
 
 	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_GUILDSETGIVEUP));	
@@ -2903,28 +2894,23 @@ void DS_GDReqGuildSetGiveUp(BYTE *lpRecv, int aIndex)
 
 void DS_GDReqCastleNpcRemove(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_NPCREMOVE* lpMsg = (CSP_REQ_NPCREMOVE*)lpRecv;
 	CSP_ANS_NPCREMOVE pMsg {};
     
-	pMsg.Header.set(0x80, 0x16, sizeof(CSP_ANS_NPCREMOVE));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsg.iNpcNumber = lpMsg->iNpcNumber;
-	pMsg.iNpcIndex = lpMsg->iNpcIndex;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_NPC_REMOVE, sizeof(CSP_ANS_NPCREMOVE));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
+    pMsg.NpcNumber = lpMsg->NpcNumber;
+	pMsg.NpcIndex = lpMsg->NpcIndex;
 	
 	int iQueryResult = 0;
     
-	if (!gCastleDBSet.DSDB_QueryCastleNpcRemove(lpMsg->wMapSvrNum, lpMsg, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryCastleNpcRemove(lpMsg->MapSvrNum, lpMsg, &iQueryResult))
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 	}
     else
 	{
-		pMsg.iResult = iQueryResult;	
+		pMsg.Result = iQueryResult;	
 	}
 
 	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_NPCREMOVE));		
@@ -2932,21 +2918,16 @@ void DS_GDReqCastleNpcRemove(BYTE *lpRecv, int aIndex)
 
 void DS_GDReqCastleStateSync(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_CASTLESTATESYNC* lpMsg = (CSP_REQ_CASTLESTATESYNC*)lpRecv;
 	CSP_ANS_CASTLESTATESYNC pMsg {};
     
-	pMsg.Header.set(0x80, 0x17, sizeof(CSP_ANS_CASTLESTATESYNC));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsg.iCastleState = lpMsg->iCastleState;
-    pMsg.iTaxRateChaos = lpMsg->iTaxRateChaos;
-    pMsg.iTaxRateStore = lpMsg->iTaxRateStore;
-    pMsg.iTaxHuntZone = lpMsg->iTaxHuntZone;
-    memcpy(pMsg.szOwnerGuildName, lpMsg->szOwnerGuildName, 8);
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_STATE_SYNC, sizeof(CSP_ANS_CASTLESTATESYNC));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
+    pMsg.CastleState = lpMsg->CastleState;
+    pMsg.TaxRateChaos = lpMsg->TaxRateChaos;
+    pMsg.TaxRateStore = lpMsg->TaxRateStore;
+    pMsg.TaxHuntZone = lpMsg->TaxHuntZone;
+    memcpy(pMsg.OwnerGuildName, lpMsg->OwnerGuildName, 8);
     
 	for(int n=0;n < MAX_SERVER;n++)
 	{
@@ -2959,34 +2940,29 @@ void DS_GDReqCastleStateSync(BYTE *lpRecv, int aIndex)
 
 void DS_GDReqCastleTributeMoney(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_CASTLETRIBUTEMONEY* lpMsg = (CSP_REQ_CASTLETRIBUTEMONEY*)lpRecv;
 	CSP_ANS_CASTLETRIBUTEMONEY pMsg {};
     
-	pMsg.Header.set(0x80, 0x18, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_TRIBUTE_MONEY, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
     
 	int iQueryResult = 0;
 	__int64 i64MoneyResult = 0;
 	
 	if (lpMsg->iCastleTributeMoney < 0)
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 	}
 	else
 	{
-		if(!gCastleDBSet.DSDB_QueryCastleMoneyChange(lpMsg->wMapSvrNum, lpMsg->iCastleTributeMoney, &i64MoneyResult, &iQueryResult))
+		if(!gCastleDBSet.DSDB_QueryCastleMoneyChange(lpMsg->MapSvrNum, lpMsg->iCastleTributeMoney, &i64MoneyResult, &iQueryResult))
 		{
-			pMsg.iResult = 0;
+			pMsg.Result = 0;
 			gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
 			return;
 		}
 
-		pMsg.iResult = iQueryResult;
+		pMsg.Result = iQueryResult;
 	}
 
 	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
@@ -2994,92 +2970,73 @@ void DS_GDReqCastleTributeMoney(BYTE *lpRecv, int aIndex)
 
 void DS_GDReqResetCastleTaxInfo(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_RESETCASTLETAXINFO* lpMsg = (CSP_REQ_RESETCASTLETAXINFO*)lpRecv;
 	CSP_ANS_RESETCASTLETAXINFO pMsg {};
     
-	pMsg.Header.set(0x80, 0x19, sizeof(CSP_ANS_RESETCASTLETAXINFO));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_RESET_TAX_INFO, sizeof(CSP_ANS_RESETCASTLETAXINFO));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
 	
 	int iQueryResult = 0;
     
-	if (!gCastleDBSet.DSDB_QueryResetCastleTaxInfo(lpMsg->wMapSvrNum, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryResetCastleTaxInfo(lpMsg->MapSvrNum, &iQueryResult))
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETCASTLETAXINFO));
 	}
     else
 	{
-		pMsg.iResult = iQueryResult;
+		pMsg.Result = iQueryResult;
 		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETCASTLETAXINFO));
 	}
 }
 
 void DS_GDReqResetSiegeGuildInfo(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_RESETSIEGEGUILDINFO* lpMsg = (CSP_REQ_RESETSIEGEGUILDINFO*)lpRecv;
 	CSP_ANS_RESETSIEGEGUILDINFO pMsg {};
     
-	pMsg.Header.set(0x80, 0x1A, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_RESET_SIEGE_GUILD, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
 	
 	int iQueryResult = 0;
     
-	if (!gCastleDBSet.DSDB_QueryResetSiegeGuildInfo(lpMsg->wMapSvrNum, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryResetSiegeGuildInfo(lpMsg->MapSvrNum, &iQueryResult))
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
     else
 	{
-		pMsg.iResult = iQueryResult;
+		pMsg.Result = iQueryResult;
 		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
 }
 
 void DS_GDReqResetRegSiegeInfo(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
 
     CSP_REQ_RESETSIEGEGUILDINFO* lpMsg = (CSP_REQ_RESETSIEGEGUILDINFO*)lpRecv;
 	CSP_ANS_RESETSIEGEGUILDINFO pMsg {};
     
-	pMsg.Header.set(0x80, 0x1B, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
-    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_RESET_REG_INFO, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
 	
 	int iQueryResult = 0;
     
-	if (!gCastleDBSet.DSDB_QueryResetRegSiegeInfo(lpMsg->wMapSvrNum, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryResetRegSiegeInfo(lpMsg->MapSvrNum, &iQueryResult))
 	{
-		pMsg.iResult = 0;
+		pMsg.Result = 0;
 		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
     else
 	{
-		pMsg.iResult = iQueryResult;
+		pMsg.Result = iQueryResult;
 		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
 }
 
 void DS_GDReqCastleInitData(BYTE* lpRecv, int aIndex)
 {
-	if (lpRecv == nullptr)
-	{
-		return;
-	}
-
 	CSP_REQ_CSINITDATA* lpMsg = (CSP_REQ_CSINITDATA*)lpRecv;
 	CASTLE_DATA pCastleData;
 
@@ -3088,50 +3045,50 @@ void DS_GDReqCastleInitData(BYTE* lpRecv, int aIndex)
 	CSP_ANS_CSINITDATA* lpMsgSend = (CSP_ANS_CSINITDATA*)cBUFFER;
 	CSP_NPCDATA* lpMsgSendBody = (CSP_NPCDATA*)&cBUFFER[64];
 
-	lpMsgSend->wMapSvrNum = lpMsg->wMapSvrNum;
-	lpMsgSend->iCount = 0;
+	lpMsgSend->MapSvrNum = lpMsg->MapSvrNum;
+	lpMsgSend->Count = 0;
 
 	int iDataCount = 200;
 
-	if (!gCastleDBSet.DSDB_QueryCastleTotalInfo(lpMsg->wMapSvrNum, lpMsg->iCastleEventCycle, &pCastleData))
+	if (!gCastleDBSet.DSDB_QueryCastleTotalInfo(lpMsg->MapSvrNum, lpMsg->CastleEventCycle, &pCastleData))
 	{
-		lpMsgSend->iResult = 0;
-		lpMsgSend->h.set(0x81, (sizeof(CSP_NPCDATA) * lpMsgSend->iCount) + sizeof(CSP_ANS_CSINITDATA));
-		gSocketManager.DataSend(aIndex, (BYTE*)lpMsgSend, (sizeof(CSP_NPCDATA) * lpMsgSend->iCount) + sizeof(CSP_ANS_CSINITDATA));
+		lpMsgSend->Result = 0;
+		lpMsgSend->Header.set(0x81, (sizeof(CSP_NPCDATA) * lpMsgSend->Count) + sizeof(CSP_ANS_CSINITDATA));
+		gSocketManager.DataSend(aIndex, (BYTE*)lpMsgSend, (sizeof(CSP_NPCDATA) * lpMsgSend->Count) + sizeof(CSP_ANS_CSINITDATA));
 		return;
 	}
 
-	lpMsgSend->iResult = 0;
-	lpMsgSend->wStartYear = pCastleData.wStartYear;
-	lpMsgSend->btStartMonth = pCastleData.btStartMonth;
-	lpMsgSend->btStartDay = pCastleData.btStartDay;
-	lpMsgSend->wEndYear = pCastleData.wEndYear;
-	lpMsgSend->btEndMonth = pCastleData.btEndMonth;
-	lpMsgSend->btEndDay = pCastleData.btEndDay;
-	lpMsgSend->btIsSiegeGuildList = pCastleData.btIsSiegeGuildList;
-	lpMsgSend->btIsSiegeEnded = pCastleData.btIsSiegeEnded;
-	lpMsgSend->btIsCastleOccupied = pCastleData.btIsCastleOccupied;
-	lpMsgSend->i64CastleMoney = pCastleData.i64CastleMoney;
-	lpMsgSend->iTaxRateChaos = pCastleData.iTaxRateChaos;
-	lpMsgSend->iTaxRateStore = pCastleData.iTaxRateStore;
-	lpMsgSend->iTaxHuntZone = pCastleData.iTaxHuntZone;
-	lpMsgSend->iFirstCreate = pCastleData.iFirstCreate;
+	lpMsgSend->Result = 0;
+	lpMsgSend->StartYear = pCastleData.StartYear;
+	lpMsgSend->StartMonth = pCastleData.StartMonth;
+	lpMsgSend->StartDay = pCastleData.StartDay;
+	lpMsgSend->EndYear = pCastleData.EndYear;
+	lpMsgSend->EndMonth = pCastleData.EndMonth;
+	lpMsgSend->EndDay = pCastleData.EndDay;
+	lpMsgSend->IsSiegeGuildList = pCastleData.IsSiegeGuildList;
+	lpMsgSend->IsSiegeEnded = pCastleData.IsSiegeEnded;
+	lpMsgSend->IsCastleOccupied = pCastleData.IsCastleOccupied;
+	lpMsgSend->CastleMoney = pCastleData.CastleMoney;
+	lpMsgSend->TaxRateChaos = pCastleData.TaxRateChaos;
+	lpMsgSend->TaxRateStore = pCastleData.TaxRateStore;
+	lpMsgSend->TaxHuntZone = pCastleData.TaxHuntZone;
+	lpMsgSend->FirstCreate = pCastleData.FirstCreate;
 
-	memset(lpMsgSend->szCastleOwnGuild, 0, sizeof(lpMsgSend->szCastleOwnGuild));
-	memcpy(lpMsgSend->szCastleOwnGuild, pCastleData.szCastleOwnGuild, sizeof(lpMsgSend->szCastleOwnGuild));
+	memset(lpMsgSend->CastleOwnGuild, 0, sizeof(lpMsgSend->CastleOwnGuild));
+	memcpy(lpMsgSend->CastleOwnGuild, pCastleData.CastleOwnGuild, sizeof(lpMsgSend->CastleOwnGuild));
 
-	if (!gCastleDBSet.DSDB_QueryCastleNpcInfo(lpMsg->wMapSvrNum, lpMsgSendBody, &iDataCount))
+	if (!gCastleDBSet.DSDB_QueryCastleNpcInfo(lpMsg->MapSvrNum, lpMsgSendBody, &iDataCount))
 	{
-		lpMsgSend->iResult = 0;
+		lpMsgSend->Result = 0;
 	}
 	else
 	{
-		lpMsgSend->iResult = 1;
-		lpMsgSend->iCount = iDataCount;
+		lpMsgSend->Result = 1;
+		lpMsgSend->Count = iDataCount;
 	}
 
-	lpMsgSend->h.set(0x81, (sizeof(CSP_NPCDATA) * lpMsgSend->iCount) + sizeof(CSP_ANS_CSINITDATA));
-	gSocketManager.DataSend(aIndex, (BYTE*)lpMsgSend, (sizeof(CSP_NPCDATA) * lpMsgSend->iCount) + sizeof(CSP_ANS_CSINITDATA));
+	lpMsgSend->Header.set(0x81, (sizeof(CSP_NPCDATA) * lpMsgSend->Count) + sizeof(CSP_ANS_CSINITDATA));
+	gSocketManager.DataSend(aIndex, (BYTE*)lpMsgSend, (sizeof(CSP_NPCDATA) * lpMsgSend->Count) + sizeof(CSP_ANS_CSINITDATA));
 }
 
 void DS_GDReqCastleNpcInfo(BYTE *lpRecv, int aIndex)
