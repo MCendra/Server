@@ -6,68 +6,91 @@
 
 CMuunSystem gMuunSystem;
 
-// Construction/Destruction
-
-CMuunSystem::CMuunSystem() // OK
+void CMuunSystem::GDMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg, int index)
 {
+#if (DATASERVER_UPDATE >= 803)
 
-}
-
-CMuunSystem::~CMuunSystem() // OK
-{
-
-}
-
-void CMuunSystem::GDMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=803)
-
-	SDHP_MUUN_INVENTORY_SEND pMsg;
-
-	pMsg.header.set(0x27,0x00,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
-
-	if(gQueryManager.ExecQuery("SELECT Items FROM MuunInventory WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (lpMsg == nullptr)
 	{
-		gQueryManager.Close();
+		return;
+	}
 
-		memset(pMsg.MuunInventory,0xFF,sizeof(pMsg.MuunInventory));
+	SDHP_MUUN_INVENTORY_SEND pMsg{};
+
+	pMsg.Header.set(DS_HEAD_MUUN_SYSTEM, DS_SUB_MUUN_INVENTORY, sizeof(pMsg));
+
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+
+	if (gQueryManager.ExecQuery(
+		"SELECT Items FROM MuunInventory WHERE Name='%s'",
+		lpMsg->CharacterName))
+	{
+		const auto sqlRet = gQueryManager.Fetch();
+
+		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
+		{
+			std::memset(pMsg.MuunInventory, 0xFF, sizeof(pMsg.MuunInventory));
+		}
+		else
+		{
+			gQueryManager.GetAsBinary(
+				"Items",
+				pMsg.MuunInventory[0],
+				sizeof(pMsg.MuunInventory));
+		}
 	}
 	else
 	{
-		gQueryManager.GetAsBinary("Items",pMsg.MuunInventory[0],sizeof(pMsg.MuunInventory));
-
-		gQueryManager.Close();
+		std::memset(pMsg.MuunInventory, 0xFF, sizeof(pMsg.MuunInventory));
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+	gQueryManager.Close();
 
-	#endif
+	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+
+#endif
 }
 
-void CMuunSystem::GDMuunInventorySaveRecv(SDHP_MUUN_INVENTORY_SAVE_RECV* lpMsg) // OK
+void CMuunSystem::GDMuunInventorySaveRecv(SDHP_MUUN_INVENTORY_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=803)
+#if (DATASERVER_UPDATE >= 803)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM MuunInventory WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (lpMsg == nullptr)
 	{
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->MuunInventory[0],sizeof(lpMsg->MuunInventory));
-		gQueryManager.ExecQuery("INSERT INTO MuunInventory (Name,Items) VALUES ('%s',?)",lpMsg->name);
-		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->MuunInventory[0],sizeof(lpMsg->MuunInventory));
-		gQueryManager.ExecQuery("UPDATE MuunInventory SET Items=? WHERE Name='%s'",lpMsg->name);
-		gQueryManager.Close();
+		return;
 	}
 
-	#endif
+	if (gQueryManager.ExecQuery(
+		"SELECT Name FROM MuunInventory WHERE Name='%s'",
+		lpMsg->CharacterName))
+	{
+		const auto sqlRet = gQueryManager.Fetch();
+
+		gQueryManager.Close();
+
+		gQueryManager.BindParameterAsBinary(
+			1,
+			lpMsg->MuunInventory[0],
+			sizeof(lpMsg->MuunInventory));
+
+		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
+		{
+			gQueryManager.ExecQuery(
+				"INSERT INTO MuunInventory (Name,Items) VALUES ('%s',?)",
+				lpMsg->CharacterName);
+		}
+		else
+		{
+			gQueryManager.ExecQuery(
+				"UPDATE MuunInventory SET Items=? WHERE Name='%s'",
+				lpMsg->CharacterName);
+		}
+
+		gQueryManager.Close();
+	}
+
+#endif
 }

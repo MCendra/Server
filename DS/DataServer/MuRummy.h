@@ -8,108 +8,108 @@ struct _tagMuRummyCardInfoDS
 {
 	_tagMuRummyCardInfoDS()
 	{
-		this->btColor = -1;
-		this->btNumber = -1;
-		this->btSlotNum = -1;
-		this->btSeq = -1;
-		this->btStatus = -1;
+		this->Color = -1;
+		this->Number = -1;
+		this->SlotNum = -1;
+		this->Seq = -1;
+		this->Status = -1;
 	};
 
-	BYTE btColor;
-	BYTE btNumber;
-	BYTE btSlotNum;
-	BYTE btSeq;
-	BYTE btStatus;
+	BYTE Color;
+	BYTE Number;
+	BYTE SlotNum;
+	BYTE Seq;
+	BYTE Status;
 };
 
 struct _tagMuRummyCardUpdateDS
 {
 	_tagMuRummyCardUpdateDS()
 	{
-		this->btSlotNum = -1;
-		this->btSeq = -1;
-		this->btStatus = -1;
+		this->SlotNum = -1;
+		this->Seq = -1;
+		this->Status = -1;
 	};
 
-	BYTE btSlotNum;
-	BYTE btSeq;
-	BYTE btStatus;
+	BYTE SlotNum;
+	BYTE Seq;
+	BYTE Status;
 };
 
 struct _tagPMSG_REQ_MURUMMY_SELECT_DS
 {
-	PSBMSG_HEAD h; // C1:12:00
+	PSBMSG_HEAD Header; // C1:12:00
 	char AccountID[11];
-	char Name[11];
-	WORD aIndex;
+	char CharacterName[MAX_CHARACTER_NAME];
+	WORD Index;
 };
 
 struct _tagPMSG_ANS_MURUMMY_SELECT_DS
 {
-	PSBMSG_HEAD h; // C1:12:00
-	WORD aIndex;
-	WORD wScore;
-	BYTE btResult;
+	PSBMSG_HEAD Header; // C1:12:00
+	WORD Index;
+	WORD Score;
+	BYTE Result;
 	_tagMuRummyCardInfoDS stMuRummyCardInfoDS[MURUMMY_MAX_CARD];
 };
 
 struct _tagPMSG_REQ_MURUMMY_INSERT_DS
 {
-	PSBMSG_HEAD h; // C1:12:30
+	PSBMSG_HEAD Header; // C1:12:30
 	char AccountID[11];
-	char Name[11];
-	WORD aIndex;
+	char CharacterName[MAX_CHARACTER_NAME];
+	WORD Index;
 	_tagMuRummyCardInfoDS stMuRummyCardInfoDS[MURUMMY_MAX_CARD];
 };
 
 struct _tagPMSG_REQ_MURUMMY_UPDATE_DS 
 {
-	PSBMSG_HEAD h; // C1:12:31
+	PSBMSG_HEAD Header; // C1:12:31
 	char AccountID[11];
-	char Name[11];
-	BYTE btSlotNum;
-	BYTE btStatus;
-	BYTE btSequence;
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE SlotNum;
+	BYTE Status;
+	BYTE Sequence;
 };
 
 struct _tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS
 {
-	PSBMSG_HEAD h; // C1:12:32
+	PSBMSG_HEAD Header; // C1:12:32
 	char AccountID[11];
-	char Name[11];
-	WORD wScore;
+	char CharacterName[MAX_CHARACTER_NAME];
+	WORD Score;
 	_tagMuRummyCardUpdateDS stCardUpdateDS[3];
 };
 
 struct _tagPMSG_REQ_MURUMMY_DELETE_DS
 {
-	PSBMSG_HEAD h; // C1:12:33
+	PSBMSG_HEAD Header; // C1:12:33
 	char AccountID[11];
-	char Name[11];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct _tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS
 {
-	PSBMSG_HEAD h; // C1:12:34
+	PSBMSG_HEAD Header; // C1:12:34
 	char AccountID[11];
-	char Name[11];
+	char CharacterName[MAX_CHARACTER_NAME];
 	_tagMuRummyCardUpdateDS stCardUpdateDS;
 };
 
 struct _tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS
 {
-	PSBMSG_HEAD h; // C1:12:35
+	PSBMSG_HEAD Header; // C1:12:35
 	char AccountID[11];
-	char Name[11];
-	WORD wScore;
+	char CharacterName[MAX_CHARACTER_NAME];
+	WORD Score;
 	_tagMuRummyCardUpdateDS stMuRummyCardUpdateDS[MURUMMY_MAX_CARD];
 };
 
 class CMuRummy
 {
 public:
-	CMuRummy();
-	virtual ~CMuRummy();
+	CMuRummy() = default;
+	~CMuRummy() = default;
 	void GDReqCardInfo(_tagPMSG_REQ_MURUMMY_SELECT_DS* lpMsg,int index);
 	void GDReqCardInfoInsert(_tagPMSG_REQ_MURUMMY_INSERT_DS* lpMsg);
 	void GDReqCardInfoUpdate(_tagPMSG_REQ_MURUMMY_UPDATE_DS* lpMsg);

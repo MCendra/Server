@@ -6,60 +6,56 @@
 
 struct SDHP_LUCKY_ITEM_RECV
 {
-	PSWMSG_HEAD header; // C2:22:00
-	WORD index;
-	char account[11];
-	BYTE count;
+	PSWMSG_HEAD Header; // C2:22:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	BYTE Count;
 };
 
 struct SDHP_LUCKY_ITEM1
 {
-	BYTE slot;
-	DWORD serial;
+	BYTE Slot;
+	DWORD Serial;
 };
 
 struct SDHP_LUCKY_ITEM_SAVE_RECV
 {
-	PSWMSG_HEAD header; // C2:22:30
-	WORD index;
-	char account[11];
-	BYTE count;
+	PSWMSG_HEAD Header; // C2:22:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	BYTE Count;
 };
 
 struct SDHP_LUCKY_ITEM_SAVE
 {
-	DWORD serial;
+	DWORD Serial;
 	DWORD DurabilitySmall;
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_LUCKY_ITEM_SEND
 {
-	PSWMSG_HEAD header; // C2:22:00
-	WORD index;
-	char account[11];
-	BYTE count;
+	PSWMSG_HEAD Header; // C2:22:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	BYTE Count;
 };
 
 struct SDHP_LUCKY_ITEM2
 {
-	BYTE slot;
-	DWORD serial;
+	BYTE Slot;
+	DWORD Serial;
 	DWORD DurabilitySmall;
 };
 
-//**********************************************//
-//**********************************************//
 //**********************************************//
 
 class CLuckyItem
 {
 public:
-	CLuckyItem();
-	virtual ~CLuckyItem();
+	CLuckyItem() = default;
+	~CLuckyItem() = default;
 	void GDLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg,int index);
 	void GDLuckyItemSaveRecv(SDHP_LUCKY_ITEM_SAVE_RECV* lpMsg);
 };

@@ -13,7 +13,7 @@ BOOL CCastleDBSet::DSDB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventC
 		return false;
 	}
 
-	if (gQueryManager.ExecQuery("EXEC WZ_CS_GetCastleTotalInfo %d, %d", iMapSvrGroup, iCastleEventCycle) == false)
+	if (!gQueryManager.ExecQuery("EXEC WZ_CS_GetCastleTotalInfo %d, %d", iMapSvrGroup, iCastleEventCycle))
 	{
 		gQueryManager.Close();
 		return false;
@@ -53,7 +53,7 @@ BOOL CCastleDBSet::DSDB_QueryOwnerGuildMaster(int iMapSvrGroup, CSP_ANS_OWNERGUI
 		return false;
 	}
 
-	if (gQueryManager.ExecQuery("EXEC WZ_CS_GetOwnerGuildMaster %d", iMapSvrGroup) == false)
+	if (!gQueryManager.ExecQuery("EXEC WZ_CS_GetOwnerGuildMaster %d", iMapSvrGroup))
 	{
 		gQueryManager.Close();
 		return false;

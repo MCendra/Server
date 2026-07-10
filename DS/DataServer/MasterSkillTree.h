@@ -8,18 +8,18 @@
 
 struct SDHP_MASTER_SKILL_TREE_RECV
 {
-	PSBMSG_HEAD header; // C1:0D:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:0D:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_MASTER_SKILL_TREE_SAVE_RECV
 {
-	PSWMSG_HEAD header; // C2:0D:30
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSWMSG_HEAD Header; // C2:0D:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD MasterLevel;
 	DWORD MasterPoint;
 	QWORD MasterExperience;
@@ -28,16 +28,14 @@ struct SDHP_MASTER_SKILL_TREE_SAVE_RECV
 	#endif
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_MASTER_SKILL_TREE_SEND
 {
-	PSWMSG_HEAD header; // C2:0D:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSWMSG_HEAD Header; // C2:0D:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD MasterLevel;
 	DWORD MasterPoint;
 	QWORD MasterExperience;
@@ -46,15 +44,13 @@ struct SDHP_MASTER_SKILL_TREE_SEND
 	#endif
 };
 
-//**********************************************//
-//**********************************************//
 //**********************************************//
 
 class CMasterSkillTree
 {
 public:
-	CMasterSkillTree();
-	virtual ~CMasterSkillTree();
+	CMasterSkillTree() = default;
+	~CMasterSkillTree() = default;
 	void GDMasterSkillTreeRecv(SDHP_MASTER_SKILL_TREE_RECV* lpMsg,int index);
 	void GDMasterSkillTreeSaveRecv(SDHP_MASTER_SKILL_TREE_SAVE_RECV* lpMsg);
 };

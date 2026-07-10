@@ -5,123 +5,172 @@
 #include "SocketManager.h"
 
 CPersonalShop gPersonalShop;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CPersonalShop::CPersonalShop() // OK
+void CPersonalShop::GDPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg, int index)
 {
-
-}
-
-CPersonalShop::~CPersonalShop() // OK
-{
-
-}
-
-void CPersonalShop::GDPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=802)
+#if (DATASERVER_UPDATE >= 802)
 
 	BYTE send[1024];
 
-	SDHP_PSHOP_ITEM_VALUE_SEND pMsg;
+	SDHP_PSHOP_ITEM_VALUE_SEND pMsg{};
 
-	pMsg.header.set(0x25,0x00,0);
+	pMsg.Header.set(DS_HEAD_PERSONAL_SHOP, DS_SUB_PSHOP_ITEM_VALUE, 0);
 
-	int size = sizeof(pMsg);
+	int size = sizeof(SDHP_PSHOP_ITEM_VALUE_SEND);
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	pMsg.Count = 0;
 
-	pMsg.count = 0;
-
-	SDHP_PSHOP_ITEM_VALUE info;
-
-	if(gQueryManager.ExecQuery("SELECT * FROM PShopItemValue WHERE Name='%s'",lpMsg->name) != 0)
+	if (gQueryManager.ExecQuery("SELECT * FROM PShopItemValue WHERE Name='%s'", lpMsg->CharacterName) != false)
 	{
-		while(gQueryManager.Fetch() != SQL_NO_DATA)
+		SDHP_PSHOP_ITEM_VALUE info{};
+
+		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
-			info.slot = gQueryManager.GetAsInteger("Slot");
-			info.serial = gQueryManager.GetAsInteger("Serial");
-			info.value = gQueryManager.GetAsInteger("Value");
+			info.Slot = gQueryManager.GetAsInteger("Slot");
+			info.Serial = gQueryManager.GetAsInteger("Serial");
+			info.Value = gQueryManager.GetAsInteger("Value");
 			info.JoBValue = gQueryManager.GetAsInteger("JoBValue");
 			info.JoSValue = gQueryManager.GetAsInteger("JoSValue");
 			info.JoCValue = gQueryManager.GetAsInteger("JoCValue");
 
-			memcpy(&send[size],&info,sizeof(info));
+			memcpy(&send[size], &info, sizeof(info));
 			size += sizeof(info);
 
-			pMsg.count++;
+			++pMsg.Count;
 		}
 	}
 
 	gQueryManager.Close();
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index,send,size);
+	gSocketManager.DataSend(index, send, size);
 
-	#endif
+#endif
 }
 
-void CPersonalShop::GDPShopItemValueSaveRecv(SDHP_PSHOP_ITEM_VALUE_SAVE_RECV* lpMsg) // OK
+void CPersonalShop::GDPShopItemValueSaveRecv(SDHP_PSHOP_ITEM_VALUE_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=802)
+#if (DATASERVER_UPDATE >= 802)
 
-	for(int n=0;n < lpMsg->count;n++)
+	for (int n = 0; n < lpMsg->Count; ++n)
 	{
-		SDHP_PSHOP_ITEM_VALUE_SAVE* lpInfo = (SDHP_PSHOP_ITEM_VALUE_SAVE*)(((BYTE*)lpMsg)+sizeof(SDHP_PSHOP_ITEM_VALUE_SAVE_RECV)+(sizeof(SDHP_PSHOP_ITEM_VALUE_SAVE)*n));
+		auto* lpInfo = reinterpret_cast<SDHP_PSHOP_ITEM_VALUE_SAVE*>(
+			reinterpret_cast<BYTE*>(lpMsg) +
+			sizeof(SDHP_PSHOP_ITEM_VALUE_SAVE_RECV) +
+			(sizeof(SDHP_PSHOP_ITEM_VALUE_SAVE) * n));
 
-		if(gQueryManager.ExecQuery("SELECT Name FROM PShopItemValue WHERE Name='%s' AND Slot=%d",lpMsg->name,lpInfo->slot) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if (gQueryManager.ExecQuery(
+			"SELECT Name FROM PShopItemValue WHERE Name='%s' AND Slot=%d",
+			lpMsg->CharacterName,
+			lpInfo->Slot) == false ||
+			gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
-			gQueryManager.ExecQuery("INSERT INTO PShopItemValue (Name,Slot,Serial,Value,JoBValue,JoSValue,JoCValue) VALUES ('%s',%d,%d,%d,%d,%d,%d)",lpMsg->name,lpInfo->slot,lpInfo->serial,lpInfo->value,lpInfo->JoBValue,lpInfo->JoSValue,lpInfo->JoCValue);
+
+			gQueryManager.ExecQuery(
+				"INSERT INTO PShopItemValue "
+				"(Name,Slot,Serial,Value,JoBValue,JoSValue,JoCValue) "
+				"VALUES ('%s',%d,%d,%d,%d,%d,%d)",
+				lpMsg->CharacterName,
+				lpInfo->Slot,
+				lpInfo->Serial,
+				lpInfo->Value,
+				lpInfo->JoBValue,
+				lpInfo->JoSValue,
+				lpInfo->JoCValue);
+
 			gQueryManager.Close();
 		}
 		else
 		{
 			gQueryManager.Close();
-			gQueryManager.ExecQuery("UPDATE PShopItemValue SET Serial=%d,Value=%d,JoBValue=%d,JoSValue=%d,JoCValue=%d WHERE Name='%s' AND Slot=%d",lpInfo->serial,lpInfo->value,lpInfo->JoBValue,lpInfo->JoSValue,lpInfo->JoCValue,lpMsg->name,lpInfo->slot);
+
+			gQueryManager.ExecQuery(
+				"UPDATE PShopItemValue SET "
+				"Serial=%d,Value=%d,JoBValue=%d,JoSValue=%d,JoCValue=%d "
+				"WHERE Name='%s' AND Slot=%d",
+				lpInfo->Serial,
+				lpInfo->Value,
+				lpInfo->JoBValue,
+				lpInfo->JoSValue,
+				lpInfo->JoCValue,
+				lpMsg->CharacterName,
+				lpInfo->Slot);
+
 			gQueryManager.Close();
 		}
 	}
 
-	#endif
+#endif
 }
 
-void CPersonalShop::GDPShopItemValueInsertSaveRecv(SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV* lpMsg) // OK
+void CPersonalShop::GDPShopItemValueInsertSaveRecv(SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=802)
+#if (DATASERVER_UPDATE >= 802)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM PShopItemValue WHERE Name='%s' AND Slot=%d",lpMsg->name,lpMsg->slot) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (gQueryManager.ExecQuery(
+		"SELECT Name FROM PShopItemValue WHERE Name='%s' AND Slot=%d",
+		lpMsg->CharacterName,
+		lpMsg->Slot) == false ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO PShopItemValue (Name,Slot,Serial,Value,JoBValue,JoSValue,JoCValue) VALUES ('%s',%d,%d,%d,%d,%d,%d)",lpMsg->name,lpMsg->slot,lpMsg->serial,lpMsg->value,lpMsg->JoBValue,lpMsg->JoSValue,lpMsg->JoCValue);
+
+		gQueryManager.ExecQuery(
+			"INSERT INTO PShopItemValue "
+			"(Name,Slot,Serial,Value,JoBValue,JoSValue,JoCValue) "
+			"VALUES ('%s',%d,%d,%d,%d,%d,%d)",
+			lpMsg->CharacterName,
+			lpMsg->Slot,
+			lpMsg->Serial,
+			lpMsg->Value,
+			lpMsg->JoBValue,
+			lpMsg->JoSValue,
+			lpMsg->JoCValue);
+
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE PShopItemValue SET Serial=%d,Value=%d,JoBValue=%d,JoSValue=%d,JoCValue=%d WHERE Name='%s' AND Slot=%d",lpMsg->serial,lpMsg->value,lpMsg->JoBValue,lpMsg->JoSValue,lpMsg->JoCValue,lpMsg->name,lpMsg->slot);
+
+		gQueryManager.ExecQuery(
+			"UPDATE PShopItemValue SET "
+			"Serial=%d,Value=%d,JoBValue=%d,JoSValue=%d,JoCValue=%d "
+			"WHERE Name='%s' AND Slot=%d",
+			lpMsg->Serial,
+			lpMsg->Value,
+			lpMsg->JoBValue,
+			lpMsg->JoSValue,
+			lpMsg->JoCValue,
+			lpMsg->CharacterName,
+			lpMsg->Slot);
+
 		gQueryManager.Close();
 	}
 
-	#endif
+#endif
 }
 
-void CPersonalShop::GDPShopItemValueDeleteSaveRecv(SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV* lpMsg) // OK
+void CPersonalShop::GDPShopItemValueDeleteSaveRecv(SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=802)
+#if (DATASERVER_UPDATE >= 802)
 
-	gQueryManager.ExecQuery("DELETE FROM PShopItemValue WHERE Name='%s' AND Slot=%d",lpMsg->name,lpMsg->slot);
+	gQueryManager.ExecQuery(
+		"DELETE FROM PShopItemValue WHERE Name='%s' AND Slot=%d",
+		lpMsg->CharacterName,
+		lpMsg->Slot);
+
 	gQueryManager.Close();
 
-	#endif
+#endif
 }

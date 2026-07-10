@@ -94,14 +94,14 @@ bool CUtil::CheckTextSyntax(const char* text, int size)
 	{
 		if (text[n] == 0x20 || text[n] == 0x22 || text[n] == 0x27)
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	return 1;
+	return true;
 }
 
-static std::string NormalizeToLower(const char* text)
+std::string NormalizeToLower(const char* text)
 {
 	std::string key(text);
 
@@ -117,25 +117,25 @@ static std::string NormalizeToLower(const char* text)
 	return key;
 }
 
-bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot) // OK
+bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot)
 {
 	for(int n=0;n < 5;n++)
 	{
 		if(_stricmp(CharacterName[n],name) == 0)
 		{
-			(*slot) = n;
-			return 1;
+			*slot = static_cast<BYTE>(n);
+			return true;
 		}
 	}
 
-	return 0;
+	return false;
 }
 
 WORD GetServerCodeByName(const char* name)
 {
-	CHARACTER_INFO CharacterInfo;
+	CHARACTER_INFO CharacterInfo{};
 
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo, name) == 0)
+	if (!gCharacterManager.GetCharacterInfo(&CharacterInfo, name)) 
 	{
 		return 0xFFFF;
 	}

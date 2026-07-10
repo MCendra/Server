@@ -167,43 +167,43 @@ struct PSWMSG_HEAD
 
 struct SDHP_CHARACTER_LIST_RECV
 {
-	PBMSG_HEAD header; // C1:01
-	WORD index;
-	char account[11];
+	PBMSG_HEAD Header; // C1:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 };
 
 struct SDHP_CHARACTER_CREATE_RECV
 {
-	PBMSG_HEAD header; // C1:02
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:02
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Class;
 };
 
 struct SDHP_CHARACTER_DELETE_RECV
 {
-	PBMSG_HEAD header; // C1:03
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:03
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE guild;
 	char GuildName[9];
 };
 
 struct SDHP_CHARACTER_INFO_RECV
 {
-	PBMSG_HEAD header; // C1:04
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:04
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_CREATE_ITEM_RECV
 {
-	PBMSG_HEAD header; // C1:07
-	WORD index;
-	char account[11];
+	PBMSG_HEAD Header; // C1:07
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE X;
 	BYTE Y;
 	BYTE Map;
@@ -225,47 +225,47 @@ struct SDHP_CREATE_ITEM_RECV
 
 struct SDHP_OPTION_DATA_RECV
 {
-	PBMSG_HEAD header; // C1:08
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:08
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PET_ITEM_INFO_RECV
 {
-	PWMSG_HEAD header; // C2:09
-	WORD index;
-	char account[11];
+	PWMSG_HEAD Header; // C2:09
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE type;
 	BYTE count;
 };
 
 struct SDHP_PET_ITEM_INFO1
 {
-	BYTE slot;
-	DWORD serial;
+	BYTE Slot;
+	DWORD Serial;
 };
 
 struct SDHP_CHARACTER_NAME_CHECK_RECV
 {
-	PBMSG_HEAD header; // C1:0A
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:0A
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_CHARACTER_NAME_CHANGE_RECV
 {
-	PBMSG_HEAD header; // C1:0B
-	WORD index;
-	char account[11];
+	PBMSG_HEAD Header; // C1:0B
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	char OldName[11];
 	char NewName[11];
 };
 
 struct SDHP_CRYWOLF_SYNC_RECV
 {
-	PBMSG_HEAD header; // C1:1E
+	PBMSG_HEAD Header; // C1:1E
 	WORD MapServerGroup;
 	DWORD CrywolfState;
 	DWORD OccupationState;
@@ -273,22 +273,22 @@ struct SDHP_CRYWOLF_SYNC_RECV
 
 struct SDHP_CRYWOLF_INFO_RECV
 {
-	PBMSG_HEAD header; // C1:1F
+	PBMSG_HEAD Header; // C1:1F
 	WORD MapServerGroup;
 };
 
 struct SDHP_GLOBAL_POST_RECV
 {
-	PBMSG_HEAD header; // C1:20
+	PBMSG_HEAD Header; // C1:20
 	WORD MapServerGroup;
 	BYTE type;
-	char charactername[MAX_CHARACTER_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char message[60];
 };
 
 struct SDHP_POST_ITEM_RECV
 {
-	PBMSG_HEAD header;	//C1:78
+	PBMSG_HEAD Header;	//C1:78
 	WORD MapServerGroup;
 	BYTE type;
 	char chatid[10];
@@ -298,16 +298,16 @@ struct SDHP_POST_ITEM_RECV
 
 struct SDHP_GLOBAL_ITEM_POST_RECV
 {
-	PBMSG_HEAD header; // C1:78
+	PBMSG_HEAD Header; // C1:78
 	WORD MapServerGroup;
-	char charactername[MAX_CHARACTER_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char message[60];
 	char item_data[107];
 };
 
 struct SDHP_GLOBAL_NOTICE_RECV
 {
-	PBMSG_HEAD header; // C1:21
+	PBMSG_HEAD Header; // C1:21
 	WORD MapServerGroup;
 	BYTE type;
 	BYTE count;
@@ -320,18 +320,18 @@ struct SDHP_GLOBAL_NOTICE_RECV
 
 struct SDHP_SNS_DATA_RECV
 {
-	PBMSG_HEAD header; // C1:24
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:24
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_CHARACTER_INFO_SAVE_RECV
 {
-	PWMSG_HEAD header; // C2:30
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PWMSG_HEAD Header; // C2:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	WORD Level;
 	BYTE Class;
 	DWORD LevelUpPoint;
@@ -415,19 +415,19 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 
 struct SDHP_INVENTORY_ITEM_SAVE_RECV
 {
-	PWMSG_HEAD header; // C2:31
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PWMSG_HEAD Header; // C2:31
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Inventory[INVENTORY_SIZE][16];
 };
 
 struct SDHP_OPTION_DATA_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:33
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:33
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE SkillKey[20];
 	BYTE GameOption;
 	BYTE QKey;
@@ -443,9 +443,9 @@ struct SDHP_OPTION_DATA_SAVE_RECV
 
 struct SDHP_PET_ITEM_INFO_SAVE_RECV
 {
-	PWMSG_HEAD header; // C2:34
-	WORD index;
-	char account[11];
+	PWMSG_HEAD Header; // C2:34
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE count;
 };
 
@@ -458,10 +458,10 @@ struct SDHP_PET_ITEM_INFO_SAVE
 
 struct SDHP_RESET_INFO_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:39
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:39
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	UINT Reset;
 	UINT ResetDay;
 	UINT ResetWek;
@@ -470,10 +470,10 @@ struct SDHP_RESET_INFO_SAVE_RECV
 
 struct SDHP_MASTER_RESET_INFO_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:3A
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:3A
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	UINT Reset;
 	UINT MasterReset;
 	UINT MasterResetDay;
@@ -483,61 +483,61 @@ struct SDHP_MASTER_RESET_INFO_SAVE_RECV
 
 struct SDHP_RANKING_DUEL_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:3C
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:3C
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD WinScore;
 	DWORD LoseScore;
 };
 
 struct SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:3D
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:3D
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD score;
 };
 
 struct SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:3E
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:3E
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD score;
 };
 
 struct SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:3F
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:3F
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD score;
 };
 
 struct SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:40
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:40
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD score;
 };
 
 struct SDHP_CREATION_CARD_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:42
-	WORD index;
-	char account[11];
+	PBMSG_HEAD Header; // C1:42
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE ExtClass;
 };
 
 struct SDHP_CRYWOLF_INFO_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:49
+	PBMSG_HEAD Header; // C1:49
 	WORD MapServerGroup;
 	DWORD CrywolfState;
 	DWORD OccupationState;
@@ -545,19 +545,19 @@ struct SDHP_CRYWOLF_INFO_SAVE_RECV
 
 struct SDHP_SNS_DATA_SAVE_RECV
 {
-	PWMSG_HEAD header; // C1:4E
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PWMSG_HEAD Header; // C1:4E
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE data[256];
 };
 
 struct SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:52
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:52
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD MonsterClass;
 	DWORD MapNumber;
 	DWORD RewardValue1;
@@ -568,10 +568,10 @@ struct SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV
 
 struct SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:55
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:55
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD number;
 	DWORD score;
 	DWORD rank;
@@ -579,33 +579,33 @@ struct SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV
 
 struct SDHP_CONNECT_CHARACTER_RECV
 {
-	PBMSG_HEAD header; // C1:70
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:70
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_DISCONNECT_CHARACTER_RECV
 {
-	PBMSG_HEAD header; // C1:71
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:71
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_GLOBAL_WHISPER_RECV
 {
-	PBMSG_HEAD header; // C1:72
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:72
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char TargetName[11];
 	char message[60];
 };
 
 struct SDHP_SERVER_INFO_RECV
 {
-	PBMSG_HEAD header; // C1:00
+	PBMSG_HEAD Header; // C1:00
 	BYTE type;
 	WORD ServerPort;
 	char ServerName[50];
@@ -614,9 +614,9 @@ struct SDHP_SERVER_INFO_RECV
 
 struct SDHP_MARRY_INFO_SAVE_RECV
 {
-    PBMSG_HEAD header; // C1:F0
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PBMSG_HEAD Header; // C1:F0
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
     char marryname[11];
     char mode[11];
 };
@@ -624,26 +624,26 @@ struct SDHP_MARRY_INFO_SAVE_RECV
 #if(HIDE_VT)
 struct SDHP_CUSTOMQUEST_RECV
 {
-	PBMSG_HEAD header; // C1:F1
-	WORD index;
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:F1
+	WORD Index;
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_CUSTOMQUEST_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:F2
-	WORD index;
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:F2
+	WORD Index;
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD quest;
 };
 #endif
 
 struct SDHP_SETCOIN_RECV
 {
-    PBMSG_HEAD header; // C1:F3
-    WORD index;
-    char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+    PBMSG_HEAD Header; // C1:F3
+    WORD Index;
+    char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD value1;
 	DWORD value2;
 	DWORD value3;
@@ -652,8 +652,8 @@ struct SDHP_SETCOIN_RECV
 #if(RANKINGGOC == 1)
 struct SDHP_CUSTOM_RANKING_RECV
 {
-	PBMSG_HEAD header; // C1:F4
-	WORD index;
+	PBMSG_HEAD Header; // C1:F4
+	WORD Index;
 	WORD type;
 };
 #endif
@@ -670,7 +670,7 @@ struct GDTop
 
 struct CharTop
 {
-	char Name[11];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Class;
 	int level;
 	int Reset;
@@ -691,16 +691,16 @@ struct DGCharTop
 
 struct SDHP_CARESUME_RECV
 {
-    PBMSG_HEAD header; // C1:F5
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PBMSG_HEAD Header; // C1:F5
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_CARESUME_SAVE_RECV
 {
-    PBMSG_HEAD header; // C1:F6
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PBMSG_HEAD Header; // C1:F6
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
 	WORD active;
 	WORD skill;
 	WORD map;
@@ -718,36 +718,36 @@ struct SDHP_CARESUME_SAVE_RECV
 
 struct SDHP_RANKING_TVT_EVENT_SAVE_RECV
 {
-	PBMSG_HEAD header; // C1:55
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:55
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD killcount;
 	DWORD deathcount;
 };
 
 struct SDHP_CUSTOMNPCQUEST_RECV
 {
-    PSBMSG_HEAD header; // C1:F1
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PSBMSG_HEAD Header; // C1:F1
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
     WORD quest;
 	WORD indexnpc;
 };
 
 struct SDHP_CUSTOMNPCQUEST_SAVE_RECV
 {
-    PSBMSG_HEAD header; // C1:F2
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PSBMSG_HEAD Header; // C1:F2
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
 	WORD quest;
 };
 
 struct SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV
 {
-    PSBMSG_HEAD header; // C1:F1
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PSBMSG_HEAD Header; // C1:F1
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
     WORD quest;
 	DWORD monsterqtd;
 };
@@ -756,29 +756,29 @@ struct SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV
 
 struct SDHP_SERVER_INFO_SEND
 {
-	PBMSG_HEAD header; // C1:00
-	BYTE result;
+	PBMSG_HEAD Header; // C1:00
+	BYTE Result;
 	DWORD ItemCount;
 };
 
 struct SDHP_CHARACTER_LIST_SEND
 {
-	PWMSG_HEAD header; // C2:01
-	WORD index;
-	char account[11];
+	PWMSG_HEAD Header; // C2:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE MoveCnt;
 	BYTE ExtClass;
 	#if(DATASERVER_UPDATE>=602)
 	BYTE ExtWarehouse;
 	#endif
-	BYTE count;
+	BYTE Count;
 };
 
 struct SDHP_CHARACTER_LIST
 {
-	BYTE slot;
-	char charactername[MAX_CHARACTER_NAME];
-	WORD level;
+	BYTE Slot;
+	char CharacterName[MAX_CHARACTER_NAME];
+	WORD Level;
 	BYTE Class;
 	BYTE CtlCode;
 	BYTE Inventory[60];
@@ -789,11 +789,11 @@ struct SDHP_CHARACTER_LIST
 
 struct SDHP_CHARACTER_CREATE_SEND
 {
-	PBMSG_HEAD header; // C1:02
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE result;
+	PBMSG_HEAD Header; // C1:02
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Result;
 	BYTE slot;
 	BYTE Class;
 	BYTE equipment[24];
@@ -802,19 +802,19 @@ struct SDHP_CHARACTER_CREATE_SEND
 
 struct SDHP_CHARACTER_DELETE_SEND
 {
-	PBMSG_HEAD header; // C1:03
-	WORD index;
-	char account[11];
-	BYTE result;
+	PBMSG_HEAD Header; // C1:03
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	BYTE Result;
 };
 
 struct SDHP_CHARACTER_INFO_SEND
 {
-	PWMSG_HEAD header; // C2:04
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE result;
+	PWMSG_HEAD Header; // C2:04
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Result;
 	BYTE Class;
 	WORD Level;
 	DWORD LevelUpPoint;
@@ -905,9 +905,9 @@ struct SDHP_CHARACTER_INFO_SEND
 
 struct SDHP_CREATE_ITEM_SEND
 {
-	PBMSG_HEAD header; // C1:07
-	WORD index;
-	char account[11];
+	PBMSG_HEAD Header; // C1:07
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE X;
 	BYTE Y;
 	BYTE Map;
@@ -932,10 +932,10 @@ struct SDHP_CREATE_ITEM_SEND
 
 struct SDHP_OPTION_DATA_SEND
 {
-	PBMSG_HEAD header; // C1:08
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:08
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE SkillKey[20];
 	BYTE GameOption;
 	BYTE QKey;
@@ -951,43 +951,43 @@ struct SDHP_OPTION_DATA_SEND
 
 struct SDHP_PET_ITEM_INFO_SEND
 {
-	PWMSG_HEAD header; // C2:09
-	WORD index;
-	char account[11];
+	PWMSG_HEAD Header; // C2:09
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE type;
 	BYTE count;
 };
 
 struct SDHP_PET_ITEM_INFO2
 {
-	BYTE slot;
-	DWORD serial;
-	BYTE level;
-	DWORD experience;
+	BYTE Slot;
+	DWORD Serial;
+	BYTE Level;
+	DWORD Experience;
 };
 
 struct SDHP_CHARACTER_NAME_CHECK_SEND
 {
-	PBMSG_HEAD header; // C1:0A
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE result;
+	PBMSG_HEAD Header; // C1:0A
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Result;
 };
 
 struct SDHP_CHARACTER_NAME_CHANGE_SEND
 {
-	PBMSG_HEAD header; // C1:0B
-	WORD index;
-	char account[11];
+	PBMSG_HEAD Header; // C1:0B
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	char OldName[11];
 	char NewName[11];
-	BYTE result;
+	BYTE Result;
 };
 
 struct SDHP_CRYWOLF_SYNC_SEND
 {
-	PBMSG_HEAD header; // C1:1E
+	PBMSG_HEAD Header; // C1:1E
 	WORD MapServerGroup;
 	DWORD CrywolfState;
 	DWORD OccupationState;
@@ -995,7 +995,7 @@ struct SDHP_CRYWOLF_SYNC_SEND
 
 struct SDHP_CRYWOLF_INFO_SEND
 {
-	PBMSG_HEAD header; // C1:1F
+	PBMSG_HEAD Header; // C1:1F
 	WORD MapServerGroup;
 	DWORD CrywolfState;
 	DWORD OccupationState;
@@ -1003,16 +1003,16 @@ struct SDHP_CRYWOLF_INFO_SEND
 
 struct SDHP_GLOBAL_POST_SEND
 {
-	PBMSG_HEAD header; // C1:20
+	PBMSG_HEAD Header; // C1:20
 	WORD MapServerGroup;
 	BYTE type;
-	char charactername[MAX_CHARACTER_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char message[60];
 };
 
 struct SDHP_POST_ITEM_SEND
 {
-	PBMSG_HEAD header; 
+	PBMSG_HEAD Header; 
 	WORD MapServerGroup;
 	BYTE type;
 	char chatid[10];
@@ -1022,16 +1022,16 @@ struct SDHP_POST_ITEM_SEND
 
 struct SDHP_GLOBAL_ITEM_POST_SEND
 {
-	PBMSG_HEAD header; // C1:78
+	PBMSG_HEAD Header; // C1:78
 	WORD MapServerGroup;
-	char charactername[MAX_CHARACTER_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char message[60];
 	char item_data[107];
 };
 
 struct SDHP_GLOBAL_NOTICE_SEND
 {
-	PBMSG_HEAD header; // C1:21
+	PBMSG_HEAD Header; // C1:21
 	WORD MapServerGroup;
 	BYTE type;
 	BYTE count;
@@ -1044,31 +1044,31 @@ struct SDHP_GLOBAL_NOTICE_SEND
 
 struct SDHP_SNS_DATA_SEND
 {
-	PWMSG_HEAD header; // C1:24
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE result;
+	PWMSG_HEAD Header; // C1:24
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Result;
 	BYTE data[256];
 };
 
 struct SDHP_GLOBAL_WHISPER_SEND
 {
-	PBMSG_HEAD header; // C1:72
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE result;
+	PBMSG_HEAD Header; // C1:72
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Result;
 	char TargetName[11];
 	char message[60];
 };
 
 struct SDHP_GLOBAL_WHISPER_ECHO_SEND
 {
-	PBMSG_HEAD header; // C1:73
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PBMSG_HEAD Header; // C1:73
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char SourceName[11];
 	char message[60];
 };
@@ -1076,32 +1076,32 @@ struct SDHP_GLOBAL_WHISPER_ECHO_SEND
 #if (GHRS_TOP1_NEW)
 struct SDHP_CUSTOM_GHRS_RECV
 {
-	PBMSG_HEAD header; // C1:F0:09
+	PBMSG_HEAD Header; // C1:F0:09
 	int time;
 };
 #endif
 //====================================================
 struct SDHP_CUSTOMQUEST_SEND
 {
-    PBMSG_HEAD header; // C1:F1
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PBMSG_HEAD Header; // C1:F1
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
 	DWORD quest;
 };
 
 struct PMSG_CUSTOM_RANKING_SEND
 {
-	PWMSG_HEAD header; 
-	int index;
+	PWMSG_HEAD Header; 
+	int Index;
 	int type;
 	int count;
 };
 
 struct SDHP_CARESUME_SEND
 {
-    PBMSG_HEAD header; // C1:F5
-    WORD index;
-    char charactername[MAX_CHARACTER_NAME];
+    PBMSG_HEAD Header; // C1:F5
+    WORD Index;
+    char CharacterName[MAX_CHARACTER_NAME];
 	WORD active;
 	WORD skill;
 	WORD map;
@@ -1119,8 +1119,8 @@ struct SDHP_CARESUME_SEND
 
 struct SDHP_CUSTOMNPCQUEST_SEND
 {
-    PSBMSG_HEAD header; // C1:F1
-    WORD index;
+    PSBMSG_HEAD Header; // C1:F1
+    WORD Index;
     WORD quest;
 	WORD indexnpc;
 	DWORD questcount;
@@ -1131,7 +1131,7 @@ struct SDHP_CUSTOMNPCQUEST_SEND
 
 struct THEGIFT_GD_SAVE_DATA
 {
-	PSBMSG_HEAD header;
+	PSBMSG_HEAD Header;
 	WORD	index;
 	char	Name[11];
 	BYTE	TheGift;
@@ -1140,7 +1140,7 @@ struct THEGIFT_GD_SAVE_DATA
 #if (GHRS_TOP1_NEW)
 struct PMSG_CUSTOM_GHRS_SEND
 {
-	PWMSG_HEAD header;
+	PWMSG_HEAD Header;
 	int time;
 	int resets;
 	int Grand;
@@ -1151,14 +1151,14 @@ struct PMSG_CUSTOM_GHRS_SEND
 struct MOCNAP_GD_REQ_DATA
 {
 	PSBMSG_HEAD	header;
-	WORD index;
-	char charactername[MAX_CHARACTER_NAME];
+	WORD Index;
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 //
 struct MOCNAP_DG_GET_DATA
 {
-	PSBMSG_HEAD header;
-	WORD	index;
+	PSBMSG_HEAD Header;
+	WORD	Index;
 	int		MOCNAP1;
 	int		MOCNAP2;
 	int		MOCNAP3;
@@ -1176,7 +1176,7 @@ struct MOCNAP_DG_GET_DATA
 //
 struct MOCNAP_GD_SAVE_DATA
 {
-	PSBMSG_HEAD header;
+	PSBMSG_HEAD Header;
 	// ----
 	WORD	index;
 	char	Name[11];
@@ -1199,8 +1199,8 @@ struct MOCNAP_GD_SAVE_DATA
 #if(BOT_STATUE == 1)
 struct SDHP_BOT_INFO_GET
 {
-	PBMSG_HEAD header; // C1:04
-	WORD index;
+	PBMSG_HEAD Header; // C1:04
+	WORD Index;
 	WORD Rank;
 	WORD TypeTop;
 };
@@ -1211,10 +1211,10 @@ struct SDHP_BOT_INFO_GET
 
 struct SDHP_BOT_INFO_SEND
 {
-	PWMSG_HEAD header; // C2:04
-	WORD index;
-	BYTE result;
-	char charactername[MAX_CHARACTER_NAME];
+	PWMSG_HEAD Header; // C2:04
+	WORD Index;
+	BYTE Result;
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Class;
 	WORD Level;
 	DWORD LevelUpPoint;
@@ -1257,24 +1257,24 @@ struct SDHP_BOT_INFO_SEND
 
 struct SDHP_CUSTOM_JEWELBANK_RECV
 {
-	PSBMSG_HEAD header;
-	WORD index;
-	char account[11];
+	PSBMSG_HEAD Header;
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	WORD type;
 	DWORD count;
 };
 
 struct SDHP_CUSTOM_JEWELBANK_INFO_RECV
 {
-	PSBMSG_HEAD header; // C1:F5
-	WORD index;
-	char account[11];
+	PSBMSG_HEAD Header; // C1:F5
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 };
 
 struct SDHP_CUSTOM_JEWELBANK_INFO_SEND
 {
-	PSBMSG_HEAD header; // C1:F5
-	WORD index;
+	PSBMSG_HEAD Header; // C1:F5
+	WORD Index;
 	int Bless;
 	int Soul;
 	int Life;
@@ -1401,27 +1401,27 @@ void DS_GDReqCastleNpcUpdate(BYTE *lpRecv, int aIndex);
 
 //==Change Pass
 #pragma pack(push, 1)
-struct CSENDGS_DOIMK_INFOSAVE
+struct SDHP_CHANGE_PASSWORD_RECV
 {
-	PSBMSG_HEAD header;
-	int  gIndex;
-	char ACCOUNT[11];
-	char PASS_OLD[11];
-	char PASS_NEW[11];
+	PSBMSG_HEAD Header;
+	int  Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char OldPassword[11];
+	char NewPassword[11];
 
 };
 #pragma pack(pop)
-void GDDOIMK_SAVEDB(CSENDGS_DOIMK_INFOSAVE* lpMsg, int aIndex);
-struct DSGS_DOIMK_KQ
+void GDChangePasswordRecv(SDHP_CHANGE_PASSWORD_RECV* lpMsg, int aIndex);
+struct SDHP_CHANGE_PASSWORD_SEND
 {
-	PSBMSG_HEAD h;
-	int  gIndex;
-	BYTE result;
+	PSBMSG_HEAD Header;
+	int  Index;
+	BYTE Result;
 };
 
 struct GSSENDDS_GETLISTISBUYSKIN
 {
-	PSBMSG_HEAD header;
+	PSBMSG_HEAD Header;
 	char AccountID[11];
 	int aIndex;
 };
@@ -1434,7 +1434,7 @@ struct BCUSTOM_SKINMODEL_DATA
 //=======Xai CHung All Count
 struct CBCUSTOM_LOAD_COUNT
 {
-	PSWMSG_HEAD header;
+	PSWMSG_HEAD Header;
 
 	int aIndex;
 	int count;
@@ -1448,13 +1448,13 @@ void GDSaveSkinBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index);
 struct SACHTHUOCTINH_GD_REQ_DATA
 {
 	PSBMSG_HEAD	header;
-	WORD index;
-	char charactername[MAX_CHARACTER_NAME];
+	WORD Index;
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 struct SACHTHUOCTINH_DG_GET_DATA
 {
-	PSBMSG_HEAD header;
-	WORD	index;
+	PSBMSG_HEAD Header;
+	WORD Index;
 	int SACHTHUOCTINH_01;
 	int SACHTHUOCTINH_02;
 	int SACHTHUOCTINH_03;
@@ -1465,7 +1465,7 @@ struct SACHTHUOCTINH_DG_GET_DATA
 };
 struct SACHTHUOCTINH_GD_SAVE_DATA
 {
-	PSBMSG_HEAD header;
+	PSBMSG_HEAD Header;
 	WORD	index;
 	char	Name[11];
 	int SACHTHUOCTINH_01;
@@ -1485,13 +1485,13 @@ void GDCharacterSachThuocTinhSaveRecv(SACHTHUOCTINH_GD_SAVE_DATA* lpMsg);
 //===================================================================================
 struct BUFFPHE_REQUESTDS
 {
-	PSBMSG_HEAD header;
+	PSBMSG_HEAD Header;
 	int aIndex;
-	char Name[11];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 struct BUFFPHE_REQUESTDS_SETINFO
 {
-	PSWMSG_HEAD header; // C2:04
+	PSWMSG_HEAD Header; // C2:04
 	int  mDT_TongPoint;
 	char mDT_Top1Name[11];
 	int  mDT_Top1Point;
@@ -1505,10 +1505,10 @@ void GetInfoCharTopBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index);
 
 struct INFOCHAR_BUFFPHE
 {
-	PSWMSG_HEAD header; // C2:04
-	WORD index;
-	BYTE result;
-	char charactername[MAX_CHARACTER_NAME];
+	PSWMSG_HEAD Header; // C2:04
+	WORD Index;
+	BYTE Result;
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Class;
 	WORD Level;
 	BYTE Inventory[INVENTORY_SIZE][16];

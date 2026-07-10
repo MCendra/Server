@@ -6,18 +6,18 @@
 
 struct SDHP_HELPER_DATA_RECV
 {
-	PSBMSG_HEAD header; // C1:17:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:17:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_HELPER_DATA_SAVE_RECV
 {
-	PSWMSG_HEAD header; // C1:17:30
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSWMSG_HEAD Header; // C1:17:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE data[256];
 };
 
@@ -25,11 +25,11 @@ struct SDHP_HELPER_DATA_SAVE_RECV
 
 struct SDHP_HELPER_DATA_SEND
 {
-	PSWMSG_HEAD header; // C1:17:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE result;
+	PSWMSG_HEAD Header; // C1:17:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Result;
 	BYTE data[256];
 };
 

@@ -7,46 +7,42 @@
 
 CReiDoMU gReiDoMU;
 
-// Construction/Destruction
-
-CReiDoMU::CReiDoMU() // OK
+void CReiDoMU::GDRankingKingGuildSaveRecv(SDHP_RANKING_KING_GUILD_SAVE_RECV* lpMsg)
 {
-
-}
-
-CReiDoMU::~CReiDoMU() // OK
-{
-
-}
-
-void CReiDoMU::GDRankingKingGuildSaveRecv(SDHP_RANKING_KING_GUILD_SAVE_RECV* lpMsg) // OK
-{
-	if(gQueryManager.ExecQuery("SELECT Name FROM RankingKingGuild WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT Name FROM RankingKingGuild WHERE Name='%s'", lpMsg->GuildName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO RankingKingGuild (Name,Score,Score_semanal) VALUES ('%s',%d,%d)",lpMsg->name,lpMsg->score,lpMsg->score);
+
+		gQueryManager.ExecQuery("INSERT INTO RankingKingGuild (Name,Score,Score_semanal) VALUES ('%s',%d,%d)", lpMsg->GuildName, lpMsg->Score, lpMsg->Score);
+
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE RankingKingGuild SET Score=Score+%d,Score_semanal=Score_semanal+%d WHERE Name='%s'",lpMsg->score,lpMsg->score,lpMsg->name);
+
+		gQueryManager.ExecQuery("UPDATE RankingKingGuild SET Score=Score+%d,Score_semanal=Score_semanal+%d WHERE Name='%s'", lpMsg->Score, lpMsg->Score, lpMsg->GuildName);
+
 		gQueryManager.Close();
 	}
 }
 
-void CReiDoMU::GDRankingKingPlayerSaveRecv(SDHP_RANKING_KING_PLAYER_SAVE_RECV* lpMsg) // OK
+void CReiDoMU::GDRankingKingPlayerSaveRecv(SDHP_RANKING_KING_PLAYER_SAVE_RECV* lpMsg)
 {
-	if(gQueryManager.ExecQuery("SELECT Name FROM RankingKingPlayer WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT Name FROM RankingKingPlayer WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO RankingKingPlayer (Name,Score,Score_semanal) VALUES ('%s',%d,%d)",lpMsg->charactername,lpMsg->score,lpMsg->score);
+
+		gQueryManager.ExecQuery("INSERT INTO RankingKingPlayer (Name,Score,Score_semanal) VALUES ('%s',%d,%d)", lpMsg->CharacterName, lpMsg->Score, lpMsg->Score);
+
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE RankingKingPlayer SET Score=Score+%d,Score_semanal=Score_semanal+%d WHERE Name='%s'",lpMsg->score,lpMsg->score,lpMsg->charactername);
+
+		gQueryManager.ExecQuery("UPDATE RankingKingPlayer SET Score=Score+%d,Score_semanal=Score_semanal+%d WHERE Name='%s'", lpMsg->Score, lpMsg->Score, lpMsg->CharacterName);
+
 		gQueryManager.Close();
 	}
 }

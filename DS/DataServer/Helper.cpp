@@ -14,23 +14,23 @@ void CHelper::GDHelperDataRecv(const SDHP_HELPER_DATA_RECV* lpMsg, int index)
 
 	SDHP_HELPER_DATA_SEND pMsg;
 
-	pMsg.header.set(0x17,0x00,sizeof(pMsg));
+	pMsg.Header.set(0x17,0x00,sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	std::memcpy(pMsg.account, lpMsg->account, sizeof(pMsg.account));
-	std::memcpy(pMsg.charactername, lpMsg->charactername, sizeof(pMsg.charactername));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	if (!gQueryManager.ExecQuery("SELECT Data FROM HelperData WHERE Name='%s'", lpMsg->charactername) || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT Data FROM HelperData WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 1;
+		pMsg.Result = 1;
 		std::memset(pMsg.data, 0xFF, sizeof(pMsg.data));
 	}
 	else
 	{
-		pMsg.result = 0;
+		pMsg.Result = 0;
 
 		gQueryManager.GetAsBinary("Data", pMsg.data, sizeof(pMsg.data));
 		gQueryManager.Close();
@@ -45,18 +45,18 @@ void CHelper::GDHelperDataSaveRecv(const SDHP_HELPER_DATA_SAVE_RECV* lpMsg)
 {
 	#if(DATASERVER_UPDATE>=603)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM HelperData WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(gQueryManager.ExecQuery("SELECT Name FROM HelperData WHERE Name='%s'",lpMsg->CharacterName) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->data,sizeof(lpMsg->data));
-		gQueryManager.ExecQuery("INSERT INTO HelperData (Name,Data) VALUES ('%s',?)",lpMsg->charactername);
+		gQueryManager.ExecQuery("INSERT INTO HelperData (Name,Data) VALUES ('%s',?)",lpMsg->CharacterName);
 		gQueryManager.Close();
 	}
 	else
 	{
 		gQueryManager.Close();
 		gQueryManager.BindParameterAsBinary(1,lpMsg->data,sizeof(lpMsg->data));
-		gQueryManager.ExecQuery("UPDATE HelperData SET Data=? WHERE Name='%s'",lpMsg->charactername);
+		gQueryManager.ExecQuery("UPDATE HelperData SET Data=? WHERE Name='%s'",lpMsg->CharacterName);
 		gQueryManager.Close();
 	}
 

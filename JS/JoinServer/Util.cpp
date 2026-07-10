@@ -90,11 +90,11 @@ bool CUtil::CheckTextSyntax(const char* text,int size)
 	{
 		if(text[n] == 0x20 || text[n] == 0x22 || text[n] == 0x27)
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	return 1;
+	return true;
 }
 
 

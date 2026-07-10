@@ -98,3 +98,6 @@ Fix 1.0.0.8
 - QueryManager.cpp cambio de algoritmo en ConvertStringToBinary / fix varios
 - SocketManager.cpp refactorizacion ServerQueueThread
 - AccountManager.cpp refactorizacion completa y correcciones
+
+Fix 1.0.0.9
+- Refactorizacion DataServer

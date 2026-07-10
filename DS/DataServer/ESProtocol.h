@@ -359,21 +359,21 @@ struct EXSDHP_KICKOUT_UNIONMEMBER_RESULT
 	void GDGuildDestroySend(const SDHP_GUILDDESTROY* lpMsg, int index);
 	void GDGuildMemberAdd(const SDHP_GUILDMEMBERADD* lpMsg, int index);
 	void GDGuildMemberDel(const SDHP_GUILDMEMBERDEL* lpMsg, int index);
-	void DGGuildMemberInfoRequest(SDHP_GUILDMEMBER_INFO_REQUEST* lpMsg, int index);
-	void DGGuildScoreUpdate(SDHP_GUILDSCOREUPDATE* lpMsg, int index);
+	void DGGuildMemberInfoRequest(const SDHP_GUILDMEMBER_INFO_REQUEST* lpMsg, int index);
+	void DGGuildScoreUpdate(const SDHP_GUILDSCOREUPDATE* lpMsg, int index);
 	#if(NEWBOSSGUILD == 1)
-	void DGGuildScoreUpdate1(SDHP_GUILDSCOREUPDATE1* lpMsg, int index);
+	void DGGuildScoreUpdate1(const SDHP_GUILDSCOREUPDATE1* lpMsg, int index);
 	#endif
-	void GDGuildNoticeSave(SDHP_GUILDNOTICE* lpMsg, int index);
-	void GDGuildServerGroupChattingSend(EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND* lpMsg, int index);
-	void GDUnionServerGroupChattingSend(EXSDHP_SERVERGROUP_UNION_CHATTING_SEND* lpMsg, int index);
-	void GDGuildReqAssignStatus(EXSDHP_GUILD_ASSIGN_STATUS_REQ* lpMsg, int index);
-	void GDGuildReqAssignType(EXSDHP_GUILD_ASSIGN_TYPE_REQ* lpMsg, int index);
-	void GDRelationShipReqJoin(EXSDHP_RELATIONSHIP_JOIN_REQ* lpMsg, int index);
-	void GDUnionBreakOff(EXSDHP_RELATIONSHIP_BREAKOFF_REQ* lpMsg, int index);
-	void GDUnionListSend(EXSDHP_UNION_LIST_REQ* lpMsg, int index);
-	void GDRelationShipReqKickOutUnionMember(EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg, int index);
+	void GDGuildNoticeSave(const SDHP_GUILDNOTICE* lpMsg, int index);
+	void GDGuildServerGroupChattingSend(const EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND* lpMsg, int index);
+	void GDUnionServerGroupChattingSend(const EXSDHP_SERVERGROUP_UNION_CHATTING_SEND* lpMsg, int index);
+	void GDGuildReqAssignStatus(const EXSDHP_GUILD_ASSIGN_STATUS_REQ* lpMsg, int index);
+	void GDGuildReqAssignType(const EXSDHP_GUILD_ASSIGN_TYPE_REQ* lpMsg, int index);
+	void GDRelationShipReqJoin(const EXSDHP_RELATIONSHIP_JOIN_REQ* lpMsg, int index);
+	void GDUnionBreakOff(const EXSDHP_RELATIONSHIP_BREAKOFF_REQ* lpMsg, int index);
+	void GDUnionListSend(const EXSDHP_UNION_LIST_REQ* lpMsg, int index);
+	void GDRelationShipReqKickOutUnionMember(const EXSDHP_KICKOUT_UNIONMEMBER_REQ* lpMsg, int index);
 	void DGGuildMemberInfo(int index, const char* guildName, const char* memberID, BYTE status, BYTE type, BYTE server);
 	void DGGuildMasterListRecv(int index, int guildNumber);
 	void DGRelationShipListRecv(int index, int guildNumber, int relationshipType);
-	void DGRelationShipNotificationRecv(int index, int updateFlag, int guildListCount, int* guildList);
+	void DGRelationShipNotificationRecv(int index, int updateFlag, int guildListCount, const int* guildList);

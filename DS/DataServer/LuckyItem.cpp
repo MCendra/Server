@@ -6,98 +6,126 @@
 
 CLuckyItem gLuckyItem;
 
-// Construction/Destruction
-
-CLuckyItem::CLuckyItem() // OK
+void CLuckyItem::GDLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg, int index)
 {
+#if (DATASERVER_UPDATE >= 602)
 
-}
-
-CLuckyItem::~CLuckyItem() // OK
-{
-
-}
-
-void CLuckyItem::GDLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=602)
-
-	BYTE send[4096];
-
-	SDHP_LUCKY_ITEM_SEND pMsg;
-
-	pMsg.header.set(0x22,0x00,0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	pMsg.count = 0;
-
-	SDHP_LUCKY_ITEM2 info;
-
-	for(int n=0;n < lpMsg->count;n++)
+	if (lpMsg == nullptr)
 	{
-		SDHP_LUCKY_ITEM1* lpInfo = (SDHP_LUCKY_ITEM1*)(((BYTE*)lpMsg)+sizeof(SDHP_LUCKY_ITEM_RECV)+(sizeof(SDHP_LUCKY_ITEM1)*n));
+		return;
+	}
 
-		if(gQueryManager.ExecQuery("SELECT DurabilitySmall FROM LuckyItem WHERE ItemSerial=%d",lpInfo->serial) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	BYTE send[4096]{};
+
+	SDHP_LUCKY_ITEM_SEND pMsg{};
+
+	pMsg.Header.set(DS_HEAD_LUCKY_ITEM, DS_SUB_LUCKY_ITEM_LOAD, 0);
+
+	int size = sizeof(SDHP_LUCKY_ITEM_SEND);
+
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+
+	pMsg.Count = 0;
+
+	constexpr int maxCount =
+		(sizeof(send) - sizeof(SDHP_LUCKY_ITEM_SEND)) / sizeof(SDHP_LUCKY_ITEM2);
+
+	for (int n = 0; n < lpMsg->Count && pMsg.Count < maxCount; n++)
+	{
+		auto* lpInfo = reinterpret_cast<SDHP_LUCKY_ITEM1*>(
+			reinterpret_cast<BYTE*>(lpMsg) +
+			sizeof(SDHP_LUCKY_ITEM_RECV) +
+			(sizeof(SDHP_LUCKY_ITEM1) * n));
+
+		SDHP_LUCKY_ITEM2 info{};
+
+		info.Slot = lpInfo->Slot;
+		info.Serial = lpInfo->Serial;
+		info.DurabilitySmall = 0;
+
+		if (gQueryManager.ExecQuery(
+			"SELECT DurabilitySmall FROM LuckyItem WHERE ItemSerial=%u",
+			lpInfo->Serial))
 		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("INSERT INTO LuckyItem (ItemSerial,DurabilitySmall) VALUES (%d,%d)",lpInfo->serial,0);
-			gQueryManager.Close();
+			const auto sqlRet = gQueryManager.Fetch();
 
-			info.slot = lpInfo->slot;
-			info.serial = lpInfo->serial;
-			info.DurabilitySmall = 0;
+			if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
+			{
+				info.DurabilitySmall = gQueryManager.GetAsInteger("DurabilitySmall");
+			}
+			else
+			{
+				gQueryManager.Close();
+
+				gQueryManager.ExecQuery(
+					"INSERT INTO LuckyItem (ItemSerial,DurabilitySmall) VALUES (%u,0)",
+					lpInfo->Serial);
+			}
 		}
-		else
-		{
-			info.slot = lpInfo->slot;
-			info.serial = lpInfo->serial;
-			info.DurabilitySmall = gQueryManager.GetAsInteger("DurabilitySmall");
 
-			gQueryManager.Close();
-		}
+		gQueryManager.Close();
 
-		memcpy(&send[size],&info,sizeof(info));
+		std::memcpy(&send[size], &info, sizeof(info));
+
 		size += sizeof(info);
 
-		pMsg.count++;
+		++pMsg.Count;
 	}
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index,send,size);
+	gSocketManager.DataSend(index, send, size);
 
-	#endif
+#endif
 }
 
-void CLuckyItem::GDLuckyItemSaveRecv(SDHP_LUCKY_ITEM_SAVE_RECV* lpMsg) // OK
+void CLuckyItem::GDLuckyItemSaveRecv(SDHP_LUCKY_ITEM_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=602)
+#if (DATASERVER_UPDATE >= 602)
 
-	for(int n=0;n < lpMsg->count;n++)
+	if (lpMsg == nullptr)
 	{
-		SDHP_LUCKY_ITEM_SAVE* lpInfo = (SDHP_LUCKY_ITEM_SAVE*)(((BYTE*)lpMsg)+sizeof(SDHP_LUCKY_ITEM_SAVE_RECV)+(sizeof(SDHP_LUCKY_ITEM_SAVE)*n));
-
-		if(gQueryManager.ExecQuery("SELECT ItemSerial FROM LuckyItem WHERE ItemSerial=%d",lpInfo->serial) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("INSERT INTO LuckyItem (ItemSerial,DurabilitySmall) VALUES (%d,%d)",lpInfo->serial,lpInfo->DurabilitySmall);
-			gQueryManager.Close();
-		}
-		else
-		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("UPDATE LuckyItem SET DurabilitySmall=%d WHERE ItemSerial=%d",lpInfo->DurabilitySmall,lpInfo->serial);
-			gQueryManager.Close();
-		}
+		return;
 	}
 
-	#endif
+	for (int n = 0; n < lpMsg->Count; n++)
+	{
+		auto* lpInfo = reinterpret_cast<SDHP_LUCKY_ITEM_SAVE*>(
+			reinterpret_cast<BYTE*>(lpMsg) +
+			sizeof(SDHP_LUCKY_ITEM_SAVE_RECV) +
+			(sizeof(SDHP_LUCKY_ITEM_SAVE) * n));
+
+		if (gQueryManager.ExecQuery(
+			"SELECT 1 FROM LuckyItem WHERE ItemSerial=%u",
+			lpInfo->Serial))
+		{
+			const auto sqlRet = gQueryManager.Fetch();
+
+			gQueryManager.Close();
+
+			if (sqlRet == SQL_NO_DATA)
+			{
+				gQueryManager.ExecQuery(
+					"INSERT INTO LuckyItem (ItemSerial,DurabilitySmall) VALUES (%u,%d)",
+					lpInfo->Serial,
+					lpInfo->DurabilitySmall);
+			}
+			else
+			{
+				gQueryManager.ExecQuery(
+					"UPDATE LuckyItem SET DurabilitySmall=%d WHERE ItemSerial=%u",
+					lpInfo->DurabilitySmall,
+					lpInfo->Serial);
+			}
+		}
+
+		gQueryManager.Close();
+	}
+
+#endif
 }

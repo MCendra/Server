@@ -12,7 +12,7 @@ CQueryManager::CQueryManager()
 	: m_SQLEnvironment(SQL_NULL_HANDLE),
 	m_SQLConnection(SQL_NULL_HANDLE),
 	m_STMT(SQL_NULL_HANDLE),
-	m_RowCount(-1),
+	m_HasRow(false),
 	m_ColCount(-1)
 {
 	// Inicialización a cero de todos los buffers de texto y credenciales
@@ -204,8 +204,14 @@ bool CQueryManager::ExecQuery(const char* query, ...)
 
 	for (SQLSMALLINT n = 0; n < m_ColCount; n++)
 	{
-		SQLDescribeCol(m_STMT, (n + 1), m_SQLColName[n], sizeof(m_SQLColName[n]), nullptr, nullptr, nullptr, nullptr, nullptr);
-		SQLBindCol(m_STMT, (n + 1), SQL_C_CHAR, m_SQLData[n], sizeof(m_SQLData[n]), &m_SQLDataLen[n]);
+		if (!SQL_SUCCEEDED(SQLDescribeCol(m_STMT, (n + 1), m_SQLColName[n], sizeof(m_SQLColName[n]), nullptr, nullptr, nullptr, nullptr, nullptr)))
+		{
+			return false;
+		}
+		if (!SQL_SUCCEEDED(SQLBindCol(m_STMT, (n + 1), SQL_C_CHAR, m_SQLData[n], sizeof(m_SQLData[n]), &m_SQLDataLen[n])))
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -215,7 +221,7 @@ void CQueryManager::Close()
 {
 	SQLCloseCursor(m_STMT);
 	SQLFreeStmt(m_STMT, SQL_UNBIND);
-	m_RowCount = -1;
+	m_HasRow = false;
 	m_ColCount = -1;
 }
 
@@ -223,7 +229,7 @@ SQLRETURN CQueryManager::Fetch()
 {
 	const SQLRETURN result = SQLFetch(m_STMT);
 
-	m_RowCount = (result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO);
+	m_HasRow = SQL_SUCCEEDED(result);
 
 	return result;
 }
@@ -248,7 +254,7 @@ int CQueryManager::GetResult(int index)
 		return 0;
 	}
 
-	if (m_SQLData[index] == nullptr)
+	if (m_SQLDataLen[index] == SQL_NULL_DATA)
 	{
 		return 0;
 	}
@@ -265,7 +271,7 @@ int CQueryManager::GetAsInteger(const char* ColName)
 		return 0;
 	}
 
-	if (m_SQLData[index] == nullptr)
+	if (m_SQLDataLen[index] == SQL_NULL_DATA)
 	{
 		return 0;
 	}
@@ -282,7 +288,7 @@ float CQueryManager::GetAsFloat(const char* ColName)
 		return 0.0f;
 	}
 
-	if (m_SQLData[index] == nullptr)
+	if (m_SQLDataLen[index] == SQL_NULL_DATA)
 	{
 		return 0.0f;
 	}
@@ -299,7 +305,7 @@ __int64 CQueryManager::GetAsInteger64(const char* ColName)
 		return 0;
 	}
 
-	if (m_SQLData[index] == nullptr)
+	if (m_SQLDataLen[index] == SQL_NULL_DATA)
 	{
 		return 0;
 	}

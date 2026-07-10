@@ -2,6 +2,9 @@
 #pragma once
 #include "CriticalSection.h"
 
+constexpr BYTE MAX_CHARACTER_SLOT = 5;
+constexpr BYTE CHARACTER_LIST_EQUIPMENT_COUNT = 12;
+
 struct CHARACTER_INFO
 {
 	char CharacterName[MAX_CHARACTER_NAME];

@@ -2,17 +2,16 @@
 #include "DataServerProtocol.h"
 #include "ServerManager.h"
 #include "Log.h"
-#include "BadSyntax.h"
+#include "ESProtocol.h"
+#include "CSProtocol.h"
 #include "Helper.h"
+#include "BadSyntax.h"
 #include "CashShop.h"
 #include "CastleDBSet.h"
 #include "CharacterManager.h"
 #include "CommandManager.h"
 #include "EventInventory.h"
-#include "ESProtocol.h"
 #include "GuildManager.h"
-#include "CSProtocol.h"
-//#include "DataServer.h"
 #include "GensSystem.h"
 #include "GuildMatching.h"
 #include "LuckyCoin.h"
@@ -39,932 +38,912 @@ void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size)
 
 	if (AdvancedLog != 0)
 	{
-		if ((head != 0x00) && (head != 0x07))
+		if ((head != HEAD_SERVER_INFO) && (head != HEAD_CREATE_ITEM))
 		{
 			Log.ToFile(LogType::GENERAL,"DSPROTOCOL: Head: %x, 1: %x, 2: %x, 3: %x, 4: %x, 5: %x",head,lpMsg[1],lpMsg[2],lpMsg[3],lpMsg[4],lpMsg[5]);
 		}
 	}
 
-	const BYTE packetHeader = lpMsg[0];
-	const BYTE subHead = (packetHeader == PACKET_HEADER_C1) ? lpMsg[3] : lpMsg[4];
+	const BYTE packetHeader = lpMsg[PACKET_TYPE_OFFSET];
+	const BYTE subHead =
+		(packetHeader == PACKET_C1 || packetHeader == PACKET_C3)
+		? lpMsg[C1_PACKET_DATA_OFFSET]
+		: lpMsg[C2_PACKET_DATA_OFFSET];
 
 	switch(head)
 	{
-		case 0x00:
+		case HEAD_SERVER_INFO:
 			GDServerInfoRecv((SDHP_SERVER_INFO_RECV*)lpMsg,index);
 			break;
-		case 0x01:
+		case HEAD_CHARACTER_LIST:
 			GDCharacterListRecv((SDHP_CHARACTER_LIST_RECV*)lpMsg,index);
 			break;
-		case 0x02:
+		case HEAD_CHARACTER_CREATE:
 			GDCharacterCreateRecv((SDHP_CHARACTER_CREATE_RECV*)lpMsg,index);
 			break;
-		case 0x03:
+		case HEAD_CHARACTER_DELETE:
 			GDCharacterDeleteRecv((SDHP_CHARACTER_DELETE_RECV*)lpMsg,index);
 			break;
-		case 0x04:
+		case HEAD_CHARACTER_INFO:
 			GDCharacterInfoRecv((SDHP_CHARACTER_INFO_RECV*)lpMsg,index);
 			break;
-		case 0x05:
+		case DS_HEAD_WAREHOUSE:
 			switch (subHead)
 			{
-			case 0x00:
+			case DS_SUB_WAREHOUSE_PERSONAL_LOAD:
 				gWarehouse.GDWarehouseItemRecv((SDHP_WAREHOUSE_ITEM_RECV*)lpMsg, index);
 				break;
-			case 0x30:
+			case DS_SUB_WAREHOUSE_PERSONAL_SAVE:
 				gWarehouse.GDWarehouseItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
 				break;
-			case 0x70:
+			case DS_SUB_WAREHOUSE_GUILD_LOAD:
 				gWarehouse.GDWarehouseGuildItemRecv((SDHP_WAREHOUSE_ITEM_RECV*)lpMsg, index);
 				break;
-			case 0x75:
+			case DS_SUB_WAREHOUSE_GUILD_SAVE:
 				gWarehouse.GDWarehouseGuildItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
 				break;
-			case 0x76:
+			case DS_SUB_WAREHOUSE_GUILD_STATUS:
 				gWarehouse.GDWarehouseGuildConsult((SDHP_WAREHOUSE_GUILD_STATUS_RECV*)lpMsg, index);
 				break;
-			case 0x77:
+			case DS_SUB_WAREHOUSE_GUILD_UPDATE:
 				gWarehouse.GDWarehouseGuildUpdate((SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV*)lpMsg);
 				break;
 			}
 			break;
-		case 0x07:
+		case HEAD_CREATE_ITEM:
 			GDCreateItemRecv((SDHP_CREATE_ITEM_RECV*)lpMsg, index);
 			break;
-		case 0x08:
+		case HEAD_OPTION_DATA:
 			GDOptionDataRecv((SDHP_OPTION_DATA_RECV*)lpMsg, index);
 			break;
-		case 0x09:
+		case HEAD_PET_ITEM:
 			GDPetItemInfoRecv((SDHP_PET_ITEM_INFO_RECV*)lpMsg, index);
 			break;
-		case 0x0A:
-#if(DATASERVER_UPDATE>=401)
+		case HEAD_CHARACTER_NAME_CHECK:
+			#if(DATASERVER_UPDATE>=401)
 			GDCharacterNameCheckRecv((SDHP_CHARACTER_NAME_CHECK_RECV*)lpMsg, index);
-#endif
+			#endif
 			break;
-		case 0x0B:
-#if(DATASERVER_UPDATE>=401)
+		case HEAD_CHARACTER_RENAME:
+			#if(DATASERVER_UPDATE>=401)
 			GDCharacterNameChangeRecv((SDHP_CHARACTER_NAME_CHANGE_RECV*)lpMsg, index);
-#endif
+			#endif
 			break;
-		case 0x0C:
+		case DS_HEAD_QUEST:
 			switch (subHead)
 			{
-#if(HIDE_VT)
-			case 0x00:
+			#if(HIDE_VT)
+			case DS_SUB_QUEST_KILLCOUNT_LOAD:
 				gQuest.GDQuestKillCountRecv((SDHP_QUEST_KILL_COUNT_RECV*)lpMsg, index);
 				break;
-			case 0x30:
+			case DS_SUB_QUEST_KILLCOUNT_SAVE:
 				gQuest.GDQuestKillCountSaveRecv((SDHP_QUEST_KILL_COUNT_SAVE_RECV*)lpMsg);
 				break;
-#endif
+			#endif
 			}
 			break;
-		case 0x0D:
+		case DS_HEAD_MASTER_SKILL:
 			switch (subHead)
 			{
-			case 0x00:
-#if(DATASERVER_UPDATE>=401)
+			case DS_SUB_MASTER_SKILL_LOAD:
+			#if(DATASERVER_UPDATE>=401)
 				gMasterSkillTree.GDMasterSkillTreeRecv((SDHP_MASTER_SKILL_TREE_RECV*)lpMsg, index);
-#endif
+			#endif
 				break;
-			case 0x30:
-#if(DATASERVER_UPDATE>=401)
+			case DS_SUB_MASTER_SKILL_SAVE:
+			#if(DATASERVER_UPDATE>=401)
 				gMasterSkillTree.GDMasterSkillTreeSaveRecv((SDHP_MASTER_SKILL_TREE_SAVE_RECV*)lpMsg);
-#endif
+			#endif
 				break;
 			}
 			break;
-		case 0x0E:
+		case DS_HEAD_NPC:
 			switch (subHead)
 			{
-			case 0x00:
-#if(DATASERVER_UPDATE>=202)
+			case DS_SUB_NPC_LEO_LOAD:
+				#if(DATASERVER_UPDATE>=202)
 				gNpcTalk.GDNpcLeoTheHelperRecv((SDHP_NPC_LEO_THE_HELPER_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x01:
-#if(DATASERVER_UPDATE>=401)
+			case DS_SUB_NPC_SANTA_LOAD:
+				#if(DATASERVER_UPDATE>=401)
 				gNpcTalk.GDNpcSantaClausRecv((SDHP_NPC_SANTA_CLAUS_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x30:
-#if(DATASERVER_UPDATE>=202)
+			case DS_SUB_NPC_LEO_SAVE:
+				#if(DATASERVER_UPDATE>=202)
 				gNpcTalk.GDNpcLeoTheHelperSaveRecv((SDHP_NPC_LEO_THE_HELPER_SAVE_RECV*)lpMsg);
-#endif
+				#endif
 				break;
-			case 0x31:
-#if(DATASERVER_UPDATE>=401)
+			case DS_SUB_NPC_SANTA_SAVE:
+				#if(DATASERVER_UPDATE>=401)
 				gNpcTalk.GDNpcSantaClausSaveRecv((SDHP_NPC_SANTA_CLAUS_SAVE_RECV*)lpMsg);
-#endif
+				#endif
 				break;
 			}
 			break;
-		case 0x0F:
+		case DS_HEAD_COMMAND:
 			switch (subHead)
 			{
-			case 0x00:
+			case DS_SUB_COMMAND_RESET:
 				gCommandManager.GDCommandResetRecv((SDHP_COMMAND_RESET_RECV*)lpMsg, index);
 				break;
-			case 0x01:
+			case DS_SUB_COMMAND_MASTER_RESET:
 				gCommandManager.GDCommandMasterResetRecv((SDHP_COMMAND_MASTER_RESET_RECV*)lpMsg, index);
 				break;
-			case 0x02:
+			case DS_SUB_COMMAND_MARRY:
 				gCommandManager.GDCommandMarryRecv((SDHP_COMMAND_MARRY_RECV*)lpMsg, index);
 				break;
-			case 0x03:
+			case DS_SUB_COMMAND_REWARD:
 				gCommandManager.GDCommandRewardRecv((SDHP_COMMAND_REWARD_RECV*)lpMsg, index);
 				break;
-			case 0x04:
+			case DS_SUB_COMMAND_REWARD_ALL:
 				gCommandManager.GDCommandRewardAllRecv((SDHP_COMMAND_REWARDALL_RECV*)lpMsg, index);
 				break;
-			case 0x05:
+			case DS_SUB_COMMAND_RENAME:
 				gCommandManager.GDCommandRenameRecv((SDHP_COMMAND_RENAME_RECV*)lpMsg, index);
 				break;
-			case 0x06:
+			case DS_SUB_COMMAND_BLOCK_ACCOUNT:
 				gCommandManager.GDCommandBlocAccRecv((SDHP_COMMAND_BLOC_RECV*)lpMsg, index);
 				break;
-			case 0x07:
+			case DS_SUB_COMMAND_BLOCK_CHARACTER:
 				gCommandManager.GDCommandBlocCharRecv((SDHP_COMMAND_BLOC_RECV*)lpMsg, index);
 				break;
-			case 0x08:
+			case DS_SUB_COMMAND_GIFT:
 				gCommandManager.GDCommandGiftRecv((SDHP_GIFT_RECV*)lpMsg, index);
 				break;
-			case 0x09:
+			case DS_SUB_COMMAND_TOP:
 				gCommandManager.GDCommandTopRecv((SDHP_TOP_RECV*)lpMsg, index);
 				break;
 			}
 			break;
-		case 0x10:
+		case DS_HEAD_QUEST_WORLD:
 			switch (subHead)
 			{
-#if(HIDE_VT)
-			case 0x00:
-#if(DATASERVER_UPDATE>=501)
+			#if(HIDE_VT)
+			case DS_SUB_QUEST_WORLD_LOAD:
+				#if(DATASERVER_UPDATE>=501)
 				gQuestWorld.GDQuestWorldRecv((SDHP_QUEST_WORLD_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x30:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_QUEST_WORLD_SAVE:
+				#if(DATASERVER_UPDATE>=501)
 				gQuestWorld.GDQuestWorldSaveRecv((SDHP_QUEST_WORLD_SAVE_RECV*)lpMsg);
-#endif
+				#endif
 				break;
-#endif
+			#endif
 			}
 			break;
-		case 0x11:
+		case DS_HEAD_GENS_SYSTEM:
 			switch (subHead)
 			{
-			case 0x00:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_GENS_SYSTEM_INSERT:
+				#if(DATASERVER_UPDATE>=501)
 				gGensSystem.GDGensSystemInsertRecv((SDHP_GENS_SYSTEM_INSERT_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x01:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_GENS_SYSTEM_DELETE:
+				#if(DATASERVER_UPDATE>=501)
 				gGensSystem.GDGensSystemDeleteRecv((SDHP_GENS_SYSTEM_DELETE_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x02:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_GENS_SYSTEM_MEMBER:
+				#if(DATASERVER_UPDATE>=501)
 				gGensSystem.GDGensSystemMemberRecv((SDHP_GENS_SYSTEM_MEMBER_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x03:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_GENS_SYSTEM_UPDATE:
+				#if(DATASERVER_UPDATE>=501)
 				gGensSystem.GDGensSystemUpdateRecv((SDHP_GENS_SYSTEM_UPDATE_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x04:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_GENS_SYSTEM_REWARD:
+				#if(DATASERVER_UPDATE>=501)
 				gGensSystem.GDGensSystemRewardRecv((SDHP_GENS_SYSTEM_REWARD_RECV*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x30:
-#if(DATASERVER_UPDATE>=501)
+			case DS_SUB_GENS_SYSTEM_REWARD_SAVE:
+				#if(DATASERVER_UPDATE>=501)
 				gGensSystem.GDGensSystemRewardSaveRecv((SDHP_GENS_SYSTEM_REWARD_SAVE_RECV*)lpMsg);
-#endif
+				#endif
 				break;
 			}
 			break;
-		case 0x12:
+		case DS_HEAD_MURUMMY:
 			switch (subHead)
 			{
-			case 0x00:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_LOAD:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqCardInfo((_tagPMSG_REQ_MURUMMY_SELECT_DS*)lpMsg, index);
-#endif
+				#endif
 				break;
-			case 0x30:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_INSERT:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqCardInfoInsert((_tagPMSG_REQ_MURUMMY_INSERT_DS*)lpMsg);
-#endif
+				#endif
 				break;
-			case 0x31:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_UPDATE:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqCardInfoUpdate((_tagPMSG_REQ_MURUMMY_UPDATE_DS*)lpMsg);
-#endif
+				#endif
 				break;
-			case 0x32:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_SCORE_UPDATE:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqScoreUpdate((_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS*)lpMsg);
-#endif
+				#endif
 				break;
-			case 0x33:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_DELETE:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqScoreDelete((_tagPMSG_REQ_MURUMMY_DELETE_DS*)lpMsg);
-#endif
+				#endif
 				break;
-			case 0x34:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_SLOT_UPDATE:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqSlotInfoUpdate((_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS*)lpMsg);
-#endif
+				#endif
 				break;
-			case 0x35:
-#if(DATASERVER_UPDATE>=802)
+			case DS_SUB_MURUMMY_INFO_UPDATE:
+				#if(DATASERVER_UPDATE>=802)
 				gMuRummy.GDReqMuRummyInfoUpdate((_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS*)lpMsg);
-#endif
+				#endif
 				break;
 			}
 			break;
-
-		case 0x78:
-			GDGlobalItemPostRecv((SDHP_GLOBAL_ITEM_POST_RECV*)lpMsg, index);
-			break;
-		case 0xB0:
+		case DS_HEAD_HELPER:
 			switch (subHead)
 			{
-#if (SACHTHUOCTINH_NEW)
-			case 0x03:
-				GDCharacterSachThuocTinhRecv((SACHTHUOCTINH_GD_REQ_DATA*)lpMsg, index);
+			case DS_SUB_HELPER_LOAD:
+				#if(DATASERVER_UPDATE>=603)
+				gHelper.GDHelperDataRecv((SDHP_HELPER_DATA_RECV*)lpMsg, index);
+				#endif
 				break;
-			case 0x04:
-				GDCharacterSachThuocTinhSaveRecv((SACHTHUOCTINH_GD_SAVE_DATA*)lpMsg);
+			case DS_SUB_HELPER_SAVE:
+				#if(DATASERVER_UPDATE>=603)
+				gHelper.GDHelperDataSaveRecv((SDHP_HELPER_DATA_SAVE_RECV*)lpMsg);
+				#endif
 				break;
-#endif
-
-			#if (MOCNAP == 1)
-					case 0x13:
-						GDCharacterMocNapRecv((MOCNAP_GD_REQ_DATA*)lpMsg, index);
-					break;
-					case 0x14:
-						GDCharacterMocNapSaveRecv((MOCNAP_GD_SAVE_DATA*)lpMsg);
-					break;
-				#endif	
-
 			}
 			break;
-
-
-		case 0x17:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_CASHSHOP:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=603)
-					gHelper.GDHelperDataRecv((SDHP_HELPER_DATA_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=603)
-					gHelper.GDHelperDataSaveRecv((SDHP_HELPER_DATA_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_CASHSHOP_POINT:
+				gCashShop.GDCashShopPointRecv((SDHP_CASH_SHOP_POINT_RECV*)lpMsg, index);
+				break;
+			case DS_SUB_CASHSHOP_ITEM_BUY:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopItemBuyRecv((SDHP_CASH_SHOP_ITEM_BUY_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_ITEM_GIFT:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopItemGifRecv((SDHP_CASH_SHOP_ITEM_GIF_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_ITEM_LIST:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopItemNumRecv((SDHP_CASH_SHOP_ITEM_NUM_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_ITEM_USE:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopItemUseRecv((SDHP_CASH_SHOP_ITEM_USE_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_PERIODIC_ITEM:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopPeriodicItemRecv((SDHP_CASH_SHOP_PERIODIC_ITEM_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_RECIEVE_POINT:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopRecievePointRecv((SDHP_CASH_SHOP_RECIEVE_POINT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_ADD_POINT_SAVE:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopAddPointSaveRecv((SDHP_CASH_SHOP_ADD_POINT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_SUB_POINT_SAVE:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopSubPointSaveRecv((SDHP_CASH_SHOP_SUB_POINT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_INSERT_ITEM_SAVE:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopInsertItemSaveRecv((SDHP_CASH_SHOP_INSERT_ITEM_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_DELETE_ITEM_SAVE:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopDeleteItemSaveRecv((SDHP_CASH_SHOP_DELETE_ITEM_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_CASHSHOP_PERIODIC_ITEM_SAVE:
+				#if(DATASERVER_UPDATE>=501)
+				gCashShop.GDCashShopPeriodicItemSaveRecv((SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x18:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_PCPOINT:
+			switch (subHead)
 			{
-				case 0x00:
-					gCashShop.GDCashShopPointRecv((SDHP_CASH_SHOP_POINT_RECV*)lpMsg,index);
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopItemBuyRecv((SDHP_CASH_SHOP_ITEM_BUY_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x02:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopItemGifRecv((SDHP_CASH_SHOP_ITEM_GIF_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x03:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopItemNumRecv((SDHP_CASH_SHOP_ITEM_NUM_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x04:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopItemUseRecv((SDHP_CASH_SHOP_ITEM_USE_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x05:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopPeriodicItemRecv((SDHP_CASH_SHOP_PERIODIC_ITEM_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x06:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopRecievePointRecv((SDHP_CASH_SHOP_RECIEVE_POINT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopAddPointSaveRecv((SDHP_CASH_SHOP_ADD_POINT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopSubPointSaveRecv((SDHP_CASH_SHOP_SUB_POINT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x32:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopInsertItemSaveRecv((SDHP_CASH_SHOP_INSERT_ITEM_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x33:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopDeleteItemSaveRecv((SDHP_CASH_SHOP_DELETE_ITEM_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x34:
-					#if(DATASERVER_UPDATE>=501)
-					gCashShop.GDCashShopPeriodicItemSaveRecv((SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_PCPOINT_POINT:
+				#if(DATASERVER_UPDATE<=402)
+				gPcPoint.GDPcPointPointRecv((SDHP_PC_POINT_POINT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PCPOINT_ITEM_BUY:
+				#if(DATASERVER_UPDATE<=402)
+				gPcPoint.GDPcPointItemBuyRecv((SDHP_PC_POINT_ITEM_BUY_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PCPOINT_RECIEVE_POINT:
+				#if(DATASERVER_UPDATE<=402)
+				gPcPoint.GDPcPointRecievePointRecv((SDHP_PC_POINT_RECIEVE_POINT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PCPOINT_ADD_POINT_SAVE:
+				#if(DATASERVER_UPDATE<=402)
+				gPcPoint.GDPcPointAddPointSaveRecv((SDHP_PC_POINT_ADD_POINT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_PCPOINT_SUB_POINT_SAVE:
+				#if(DATASERVER_UPDATE<=402)
+				gPcPoint.GDPcPointSubPointSaveRecv((SDHP_PC_POINT_SUB_POINT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x19:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_LUCKY_COIN:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE<=402)
-					gPcPoint.GDPcPointPointRecv((SDHP_PC_POINT_POINT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE<=402)
-					gPcPoint.GDPcPointItemBuyRecv((SDHP_PC_POINT_ITEM_BUY_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x02:
-					#if(DATASERVER_UPDATE<=402)
-					gPcPoint.GDPcPointRecievePointRecv((SDHP_PC_POINT_RECIEVE_POINT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE<=402)
-					gPcPoint.GDPcPointAddPointSaveRecv((SDHP_PC_POINT_ADD_POINT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE<=402)
-					gPcPoint.GDPcPointSubPointSaveRecv((SDHP_PC_POINT_SUB_POINT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_LUCKY_COIN_COUNT:
+				#if(DATASERVER_UPDATE>=402)
+				gLuckyCoin.GDLuckyCoinCountRecv((SDHP_LUCKY_COIN_COUNT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_LUCKY_COIN_REGISTER:
+				#if(DATASERVER_UPDATE>=402)
+				gLuckyCoin.GDLuckyCoinRegisterRecv((SDHP_LUCKY_COIN_REGISTER_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_LUCKY_COIN_EXCHANGE:
+				#if(DATASERVER_UPDATE>=402)
+				gLuckyCoin.GDLuckyCoinExchangeRecv((SDHP_LUCKY_COIN_EXCHANGE_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_LUCKY_COIN_ADD_COUNT_SAVE:
+				#if(DATASERVER_UPDATE>=402)
+				gLuckyCoin.GDLuckyCoinAddCountSaveRecv((SDHP_LUCKY_COIN_ADD_COUNT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_LUCKY_COIN_SUB_COUNT_SAVE:
+				#if(DATASERVER_UPDATE>=402)
+				gLuckyCoin.GDLuckyCoinSubCountSaveRecv((SDHP_LUCKY_COIN_SUB_COUNT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x1A:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_RESERVED_1B:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=402)
-					gLuckyCoin.GDLuckyCoinCountRecv((SDHP_LUCKY_COIN_COUNT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE>=402)
-					gLuckyCoin.GDLuckyCoinRegisterRecv((SDHP_LUCKY_COIN_REGISTER_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x02:
-					#if(DATASERVER_UPDATE>=402)
-					gLuckyCoin.GDLuckyCoinExchangeRecv((SDHP_LUCKY_COIN_EXCHANGE_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=402)
-					gLuckyCoin.GDLuckyCoinAddCountSaveRecv((SDHP_LUCKY_COIN_ADD_COUNT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE>=402)
-					gLuckyCoin.GDLuckyCoinSubCountSaveRecv((SDHP_LUCKY_COIN_SUB_COUNT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_RESERVED_1B:
+				break;
 			}
 			break;
-		case 0x1B:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case HEAD_CRYWOLF_SYNC:
+			GDCrywolfSyncRecv((SDHP_CRYWOLF_SYNC_RECV*)lpMsg, index);
+			break;
+		case HEAD_CRYWOLF_INFO:
+			GDCrywolfInfoRecv((SDHP_CRYWOLF_INFO_RECV*)lpMsg, index);
+			break;
+		case HEAD_GLOBAL_POST:
+			GDGlobalPostRecv((SDHP_GLOBAL_POST_RECV*)lpMsg, index);
+			break;
+		case HEAD_GLOBAL_NOTICE:
+			GDGlobalNoticeRecv((SDHP_GLOBAL_NOTICE_RECV*)lpMsg, index);
+			break;
+		case DS_HEAD_LUCKY_ITEM:
+			switch (subHead)
 			{
-				case 0x00:
-					break;
+			case DS_SUB_LUCKY_ITEM_LOAD:
+				#if(DATASERVER_UPDATE>=602)
+				gLuckyItem.GDLuckyItemRecv((SDHP_LUCKY_ITEM_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_LUCKY_ITEM_SAVE:
+				#if(DATASERVER_UPDATE>=602)
+				gLuckyItem.GDLuckyItemSaveRecv((SDHP_LUCKY_ITEM_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x1E:
-			GDCrywolfSyncRecv((SDHP_CRYWOLF_SYNC_RECV*)lpMsg,index);
-			break;
-		case 0x1F:
-			GDCrywolfInfoRecv((SDHP_CRYWOLF_INFO_RECV*)lpMsg,index);
-			break;
-		case 0x20:
-			GDGlobalPostRecv((SDHP_GLOBAL_POST_RECV*)lpMsg,index);
-			break;
-		case 0x21:
-			GDGlobalNoticeRecv((SDHP_GLOBAL_NOTICE_RECV*)lpMsg,index);
-			break;
-		case 0x22:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_PENTAGRAM_SYSTEM:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=602)
-					gLuckyItem.GDLuckyItemRecv((SDHP_LUCKY_ITEM_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x4A:
-					#if(DATASERVER_UPDATE>=602)
-					gLuckyItem.GDLuckyItemSaveRecv((SDHP_LUCKY_ITEM_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_PENTAGRAM_JEWEL_INFO:
+				#if(DATASERVER_UPDATE>=701)
+				gPentagramSystem.GDPentagramJewelInfoRecv((SDHP_PENTAGRAM_JEWEL_INFO_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PENTAGRAM_JEWEL_INFO_SAVE:
+				#if(DATASERVER_UPDATE>=701)
+				gPentagramSystem.GDPentagramJewelInfoSaveRecv((SDHP_PENTAGRAM_JEWEL_INFO_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_PENTAGRAM_JEWEL_INSERT_SAVE:
+				#if(DATASERVER_UPDATE>=701)
+				gPentagramSystem.GDPentagramJewelInsertSaveRecv((SDHP_PENTAGRAM_JEWEL_INSERT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_PENTAGRAM_JEWEL_DELETE_SAVE:
+				#if(DATASERVER_UPDATE>=701)
+				gPentagramSystem.GDPentagramJewelDeleteSaveRecv((SDHP_PENTAGRAM_JEWEL_DELETE_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x23:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
-			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=701)
-					gPentagramSystem.GDPentagramJewelInfoRecv((SDHP_PENTAGRAM_JEWEL_INFO_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=701)
-					gPentagramSystem.GDPentagramJewelInfoSaveRecv((SDHP_PENTAGRAM_JEWEL_INFO_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE>=701)
-					gPentagramSystem.GDPentagramJewelInsertSaveRecv((SDHP_PENTAGRAM_JEWEL_INSERT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x32:
-					#if(DATASERVER_UPDATE>=701)
-					gPentagramSystem.GDPentagramJewelDeleteSaveRecv((SDHP_PENTAGRAM_JEWEL_DELETE_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-			}
-			break;
-		case 0x24:
+		case HEAD_SNS_DATA:
 			#if(DATASERVER_UPDATE>=801)
-			GDSNSDataRecv((SDHP_SNS_DATA_RECV*)lpMsg,index);
+			GDSNSDataRecv((SDHP_SNS_DATA_RECV*)lpMsg, index);
 			#endif
 			break;
-		case 0x25:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_PERSONAL_SHOP:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=802)
-					gPersonalShop.GDPShopItemValueRecv((SDHP_PSHOP_ITEM_VALUE_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=802)
-					gPersonalShop.GDPShopItemValueSaveRecv((SDHP_PSHOP_ITEM_VALUE_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x31:
-					#if(DATASERVER_UPDATE>=802)
-					gPersonalShop.GDPShopItemValueInsertSaveRecv((SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
-				case 0x32:
-					#if(DATASERVER_UPDATE>=802)
-					gPersonalShop.GDPShopItemValueDeleteSaveRecv((SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_PSHOP_ITEM_VALUE:
+				#if(DATASERVER_UPDATE>=802)
+				gPersonalShop.GDPShopItemValueRecv((SDHP_PSHOP_ITEM_VALUE_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PSHOP_ITEM_VALUE_SAVE:
+				#if(DATASERVER_UPDATE>=802)
+				gPersonalShop.GDPShopItemValueSaveRecv((SDHP_PSHOP_ITEM_VALUE_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_PSHOP_ITEM_VALUE_INSERT:
+				#if(DATASERVER_UPDATE>=802)
+				gPersonalShop.GDPShopItemValueInsertSaveRecv((SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
+			case DS_SUB_PSHOP_ITEM_VALUE_DELETE:
+				#if(DATASERVER_UPDATE>=802)
+				gPersonalShop.GDPShopItemValueDeleteSaveRecv((SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x26:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_EVENT_INVENTORY:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=802)
-					gEventInventory.GDEventInventoryRecv((SDHP_EVENT_INVENTORY_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=802)
-					gEventInventory.GDEventInventorySaveRecv((SDHP_EVENT_INVENTORY_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_EVENT_INVENTORY:
+				#if(DATASERVER_UPDATE>=802)
+				gEventInventory.GDEventInventoryRecv((SDHP_EVENT_INVENTORY_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_EVENT_INVENTORY_SAVE:
+				#if(DATASERVER_UPDATE>=802)
+				gEventInventory.GDEventInventorySaveRecv((SDHP_EVENT_INVENTORY_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x27:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_MUUN_SYSTEM:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=803)
-					gMuunSystem.GDMuunInventoryRecv((SDHP_MUUN_INVENTORY_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=803)
-					gMuunSystem.GDMuunInventorySaveRecv((SDHP_MUUN_INVENTORY_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_MUUN_INVENTORY:
+				#if(DATASERVER_UPDATE>=803)
+				gMuunSystem.GDMuunInventoryRecv((SDHP_MUUN_INVENTORY_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_MUUN_INVENTORY_SAVE:
+				#if(DATASERVER_UPDATE>=803)
+				gMuunSystem.GDMuunInventorySaveRecv((SDHP_MUUN_INVENTORY_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x28:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_GUILD_MATCHING:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingListRecv((SDHP_GUILD_MATCHING_LIST_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingListSearchRecv((SDHP_GUILD_MATCHING_LIST_SEARCH_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x02:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingInsertRecv((SDHP_GUILD_MATCHING_INSERT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x03:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingCancelRecv((SDHP_GUILD_MATCHING_CANCEL_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x04:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingJoinInsertRecv((SDHP_GUILD_MATCHING_JOIN_INSERT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x05:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingJoinCancelRecv((SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x06:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingJoinAcceptRecv((SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x07:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingJoinListRecv((SDHP_GUILD_MATCHING_JOIN_LIST_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x08:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingJoinInfoRecv((SDHP_GUILD_MATCHING_JOIN_INFO_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=801)
-					gGuildMatching.GDGuildMatchingInsertSaveRecv((SDHP_GUILD_MATCHING_INSERT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_GUILD_MATCHING_LIST:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingListRecv((SDHP_GUILD_MATCHING_LIST_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_LIST_SEARCH:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingListSearchRecv((SDHP_GUILD_MATCHING_LIST_SEARCH_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_INSERT:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingInsertRecv((SDHP_GUILD_MATCHING_INSERT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_CANCEL:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingCancelRecv((SDHP_GUILD_MATCHING_CANCEL_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_JOIN_INSERT:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingJoinInsertRecv((SDHP_GUILD_MATCHING_JOIN_INSERT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_JOIN_CANCEL:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingJoinCancelRecv((SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_JOIN_ACCEPT:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingJoinAcceptRecv((SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_JOIN_LIST:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingJoinListRecv((SDHP_GUILD_MATCHING_JOIN_LIST_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_JOIN_INFO:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingJoinInfoRecv((SDHP_GUILD_MATCHING_JOIN_INFO_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_GUILD_MATCHING_INSERT_SAVE:
+				#if(DATASERVER_UPDATE>=801)
+				gGuildMatching.GDGuildMatchingInsertSaveRecv((SDHP_GUILD_MATCHING_INSERT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x29:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case DS_HEAD_PARTY_MATCHING:
+			switch (subHead)
 			{
-				case 0x00:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingInsertRecv((SDHP_PARTY_MATCHING_INSERT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x01:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingListRecv((SDHP_PARTY_MATCHING_LIST_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x02:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingJoinInsertRecv((SDHP_PARTY_MATCHING_JOIN_INSERT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x03:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingJoinInfoRecv((SDHP_PARTY_MATCHING_JOIN_INFO_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x04:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingJoinListRecv((SDHP_PARTY_MATCHING_JOIN_LIST_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x05:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingJoinAcceptRecv((SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x06:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingJoinCancelRecv((SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV*)lpMsg,index);
-					#endif
-					break;
-				case 0x30:
-					#if(DATASERVER_UPDATE>=801)
-					gPartyMatching.GDPartyMatchingInsertSaveRecv((SDHP_PARTY_MATCHING_INSERT_SAVE_RECV*)lpMsg);
-					#endif
-					break;
+			case DS_SUB_PARTY_MATCHING_INSERT:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingInsertRecv((SDHP_PARTY_MATCHING_INSERT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_LIST:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingListRecv((SDHP_PARTY_MATCHING_LIST_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_JOIN_INSERT:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingJoinInsertRecv((SDHP_PARTY_MATCHING_JOIN_INSERT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_JOIN_INFO:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingJoinInfoRecv((SDHP_PARTY_MATCHING_JOIN_INFO_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_JOIN_LIST:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingJoinListRecv((SDHP_PARTY_MATCHING_JOIN_LIST_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_JOIN_ACCEPT:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingJoinAcceptRecv((SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_JOIN_CANCEL:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingJoinCancelRecv((SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV*)lpMsg, index);
+				#endif
+				break;
+			case DS_SUB_PARTY_MATCHING_INSERT_SAVE:
+				#if(DATASERVER_UPDATE>=801)
+				gPartyMatching.GDPartyMatchingInsertSaveRecv((SDHP_PARTY_MATCHING_INSERT_SAVE_RECV*)lpMsg);
+				#endif
+				break;
 			}
 			break;
-		case 0x30:
+		case DS_HEAD_CHARACTER_INFO_SAVE:
 			GDCharacterInfoSaveRecv((SDHP_CHARACTER_INFO_SAVE_RECV*)lpMsg);
 			break;
-		case 0x31:
+		case DS_HEAD_INVENTORY_ITEM_SAVE:
 			GDInventoryItemSaveRecv((SDHP_INVENTORY_ITEM_SAVE_RECV*)lpMsg);
 			break;
-		case 0x33:
+		case DS_HEAD_OPTION_DATA_SAVE:
 			GDOptionDataSaveRecv((SDHP_OPTION_DATA_SAVE_RECV*)lpMsg);
 			break;
-		case 0x34:
+		case DS_HEAD_PET_ITEM_INFO_SAVE:
 			GDPetItemInfoSaveRecv((SDHP_PET_ITEM_INFO_SAVE_RECV*)lpMsg);
 			break;
-		case 0x39:
+		case DS_HEAD_RESET_INFO_SAVE:
 			GDResetInfoSaveRecv((SDHP_RESET_INFO_SAVE_RECV*)lpMsg);
 			break;
-		case 0x3A:
+		case DS_HEAD_MASTER_RESET_INFO_SAVE:
 			GDMasterResetInfoSaveRecv((SDHP_MASTER_RESET_INFO_SAVE_RECV*)lpMsg);
 			break;
-		case 0x3C:
+		case DS_HEAD_RANKING_DUEL_SAVE:
 			GDRankingDuelSaveRecv((SDHP_RANKING_DUEL_SAVE_RECV*)lpMsg);
 			break;
-		case 0x3D:
+		case DS_HEAD_RANKING_BLOOD_CASTLE_SAVE:
 			GDRankingBloodCastleSaveRecv((SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV*)lpMsg);
 			break;
-		case 0x3E:
+		case DS_HEAD_RANKING_CHAOS_CASTLE_SAVE:
 			GDRankingChaosCastleSaveRecv((SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV*)lpMsg);
 			break;
-		case 0x3F:
+		case DS_HEAD_RANKING_DEVIL_SQUARE_SAVE:
 			GDRankingDevilSquareSaveRecv((SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV*)lpMsg);
 			break;
-		case 0x40:
+		case DS_HEAD_RANKING_ILLUSION_TEMPLE_SAVE:
 			GDRankingIllusionTempleSaveRecv((SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV*)lpMsg);
 			break;
-		case 0x42:
+		case DS_HEAD_CREATION_CARD_SAVE:
 			GDCreationCardSaveRecv((SDHP_CREATION_CARD_SAVE_RECV*)lpMsg);
 			break;
-		case 0x49:
+		case DS_HEAD_CRYWOLF_INFO_SAVE:
 			GDCrywolfInfoSaveRecv((SDHP_CRYWOLF_INFO_SAVE_RECV*)lpMsg);
 			break;
-		case 0x4E:
+		case DS_HEAD_SNS_DATA_SAVE:
 			#if(DATASERVER_UPDATE>=801)
 			GDSNSDataSaveRecv((SDHP_SNS_DATA_SAVE_RECV*)lpMsg);
 			#endif
 			break;
-		case 0x52:
+		case DS_HEAD_CUSTOM_MONSTER_REWARD_SAVE:
 			GDCustomMonsterRewardSaveRecv((SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV*)lpMsg);
 			break;
-		case 0x55:
+		case DS_HEAD_RANKING_CUSTOM_ARENA_SAVE:
 			GDRankingCustomArenaSaveRecv((SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV*)lpMsg);
 			break;
-		case 0x56:
+		case DS_HEAD_RANKING_TVT_EVENT_SAVE:
 			GDRankingTvTEventSaveRecv((SDHP_RANKING_TVT_EVENT_SAVE_RECV*)lpMsg);
 			break;
-		case 0x70:
-			GDConnectCharacterRecv((SDHP_CONNECT_CHARACTER_RECV*)lpMsg,index);
+		case DS_HEAD_CONNECT_CHARACTER:
+			GDConnectCharacterRecv((SDHP_CONNECT_CHARACTER_RECV*)lpMsg, index);
 			break;
-		case 0x71:
-			GDDisconnectCharacterRecv((SDHP_DISCONNECT_CHARACTER_RECV*)lpMsg,index);
+		case DS_HEAD_DISCONNECT_CHARACTER:
+			GDDisconnectCharacterRecv((SDHP_DISCONNECT_CHARACTER_RECV*)lpMsg, index);
 			break;
-		case 0x72:
-			GDGlobalWhisperRecv((SDHP_GLOBAL_WHISPER_RECV*)lpMsg,index);
+		case HEAD_GLOBAL_WHISPER:
+			GDGlobalWhisperRecv((SDHP_GLOBAL_WHISPER_RECV*)lpMsg, index);
 			break;
-		case 0x74:
+		case DS_HEAD_RANKING_KING_GUILD_SAVE:
 			gReiDoMU.GDRankingKingGuildSaveRecv((SDHP_RANKING_KING_GUILD_SAVE_RECV*)lpMsg);
 			break;
-		case 0x75:
+		case DS_HEAD_RANKING_KING_PLAYER_SAVE:
 			gReiDoMU.GDRankingKingPlayerSaveRecv((SDHP_RANKING_KING_PLAYER_SAVE_RECV*)lpMsg);
 			break;
-		case 0x80:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		case HEAD_GLOBAL_ITEM_POST:
+			GDGlobalItemPostRecv((SDHP_GLOBAL_ITEM_POST_RECV*)lpMsg, index);
+			break;
+		case HEAD_CASTLE_SIEGE:
+			switch(subHead)
 			{
-				case 0x00:
+				case SUB_CASTLE_TOTAL_INFO:
 					DS_GDReqCastleTotalInfo(lpMsg,index);
 					break;
-				case 0x01:
+				case SUB_CASTLE_OWNER_GUILD_MASTER:
 					DS_GDReqOwnerGuildMaster(lpMsg,index);
 					break;
-				case 0x03:
+				case SUB_CASTLE_NPC_BUY:
 					DS_GDReqCastleNpcBuy(lpMsg,index);
 					break;
-				case 0x04:
+				case SUB_CASTLE_NPC_REPAIR:
 					DS_GDReqCastleNpcRepair(lpMsg,index);
 					break;
-				case 0x05:
+				case SUB_CASTLE_NPC_UPGRADE:
 					DS_GDReqCastleNpcUpgrade(lpMsg,index);
 					break;
-				case 0x06:
+				case SUB_CASTLE_TAX_INFO:
 					DS_GDReqTaxInfo(lpMsg,index);
 					break;
-				case 0x07:
+				case SUB_CASTLE_TAX_RATE_CHANGE:
 					DS_GDReqTaxRateChange(lpMsg,index);
 					break;
-				case 0x08:
+				case SUB_CASTLE_MONEY_CHANGE:
 					DS_GDReqCastleMoneyChange(lpMsg,index);
 					break;
-				case 0x09:
+				case SUB_CASTLE_SIEGE_DATE_CHANGE:
 					DS_GDReqSiegeDateChange(lpMsg,index);
 					break;
-				case 0x0A:
+				case SUB_CASTLE_GUILD_MARK_INFO:
 					DS_GDReqGuildMarkRegInfo(lpMsg,index);
 					break;
-				case 0x0B:
+				case SUB_CASTLE_SIEGE_ENDED_CHANGE:
 					DS_GDReqSiegeEndedChange(lpMsg,index);
 					break;
-				case 0x0C:
+				case SUB_CASTLE_OWNER_CHANGE:
 					DS_GDReqCastleOwnerChange(lpMsg,index);
 					break;
-				case 0x0D:
+				case SUB_CASTLE_REG_ATTACK_GUILD:
 					DS_GDReqRegAttackGuild(lpMsg,index);
 					break;
-				case 0x0E:
+				case SUB_CASTLE_RESTART_STATE:
 					DS_GDReqRestartCastleState(lpMsg,index);
 					break;
-				case 0x0F:
+				case SUB_CASTLE_MAPSVR_MULTICAST:
 					DS_GDReqMapSvrMsgMultiCast(lpMsg,index);
 					break;
-				case 0x10:
+				case SUB_CASTLE_REG_GUILD_MARK:
 					DS_GDReqRegGuildMark(lpMsg,index);
 					break;
-				case 0x11:
+				case DS_SUB_CASTLE_GUILD_MARK_RESET:
 					DS_GDReqGuildMarkReset(lpMsg,index);
 					break;
-				case 0x12:
+				case DS_SUB_CASTLE_GUILD_GIVEUP:
 					DS_GDReqGuildSetGiveUp(lpMsg,index);
 					break;
-				case 0x16:
+				case DS_SUB_CASTLE_NPC_REMOVE:
 					DS_GDReqCastleNpcRemove(lpMsg,index);
 					break;
-				case 0x17:
+				case DS_SUB_CASTLE_STATE_SYNC:
 					DS_GDReqCastleStateSync(lpMsg,index);
 					break;
-				case 0x18:
+				case DS_SUB_CASTLE_TRIBUTE_MONEY:
 					DS_GDReqCastleTributeMoney(lpMsg,index);
 					break;
-				case 0x19:
+				case DS_SUB_CASTLE_RESET_TAX_INFO:
 					DS_GDReqResetCastleTaxInfo(lpMsg,index);
 					break;
-				case 0x1A:
+				case DS_SUB_CASTLE_RESET_SIEGE_GUILD:
 					DS_GDReqResetSiegeGuildInfo(lpMsg,index);
 					break;
-				case 0x1B:
+				case DS_SUB_CASTLE_RESET_REG_INFO:
 					DS_GDReqResetRegSiegeInfo(lpMsg,index);
 					break;
 			}
 			break;
-		case 0x81:
+		case DS_HEAD_CASTLE_INIT_DATA:
 			DS_GDReqCastleInitData(lpMsg,index);
 			break;
-		case 0x82:
+		case DS_HEAD_CASTLE_NPC_INFO:
 			DS_GDReqCastleNpcInfo(lpMsg,index);
 			break;
-		case 0x83:
+		case DS_HEAD_CASTLE_ALL_GUILD_MARK:
 			DS_GDReqAllGuildMarkRegInfo(lpMsg,index);
 			break;
-		case 0x84:
+		case DS_HEAD_CASTLE_FIRST_CREATE_NPC:
 			DS_GDReqFirstCreateNPC(lpMsg,index);
 			break;
-		case 0x85:
+		case DS_HEAD_CASTLE_CALC_REG_GUILD:
 			DS_GDReqCalcRegGuildList(lpMsg,index);
 			break;
-		case 0x86:
+		case DS_HEAD_CASTLE_GUILD_UNION_INFO:
 			DS_GDReqCsGuildUnionInfo(lpMsg,index);
 			break;
-		case 0x87:
+		case DS_HEAD_CASTLE_SAVE_GUILD_INFO:
 			DS_GDReqCsSaveTotalGuildInfo(lpMsg,index);
 			break;
-		case 0x88:
+		case DS_HEAD_CASTLE_LOAD_GUILD_INFO:
 			DS_GDReqCsLoadTotalGuildInfo(lpMsg,index);
 			break;
-		case 0x89:
+		case DS_HEAD_CASTLE_NPC_UPDATE:
 			DS_GDReqCastleNpcUpdate(lpMsg,index);
 			break;
-		case 0xE0:
+		case DS_HEAD_CUSTOM_PROTOCOL:
+			switch (subHead)
+			{
+			#if (SACHTHUOCTINH_NEW)
+			case DS_SUB_SACH_THUOC_TINH_LOAD:
+				GDCharacterSachThuocTinhRecv((SACHTHUOCTINH_GD_REQ_DATA*)lpMsg, index);
+				break;
+			case DS_SUB_SACH_THUOC_TINH_SAVE:
+				GDCharacterSachThuocTinhSaveRecv((SACHTHUOCTINH_GD_SAVE_DATA*)lpMsg);
+				break;
+			#endif
+			#if (MOCNAP == 1)
+			case DS_SUB_MOCNAP_LOAD:
+				GDCharacterMocNapRecv((MOCNAP_GD_REQ_DATA*)lpMsg, index);
+				break;
+			case DS_SUB_MOCNAP_SAVE:
+				GDCharacterMocNapSaveRecv((MOCNAP_GD_SAVE_DATA*)lpMsg);
+				break;
+			#endif	
+			}
+			break;
+		case DS_HEAD_EXDB_PROTOCOL:
 			ESDataRecv(index, head, lpMsg,size);
 			break;
-		case 0xE1:
+		case DS_HEAD_CONNECT_SERVER:
 			CSDataRecv(index,head,lpMsg,size);
 			break;
-        case 0xF0:
+        case DS_HEAD_MARRY_INFO_SAVE:
             GDMarryInfoSaveRecv((SDHP_MARRY_INFO_SAVE_RECV*)lpMsg);
             break;
-#if(HIDE_VT)
-		case 0xF1:
+			#if(HIDE_VT)
+		case DS_HEAD_CUSTOM_QUEST:
 			GDCustomQuestRecv((SDHP_CUSTOMQUEST_RECV*)lpMsg, index);
 			break;
-		case 0xF2:
+		case DS_HEAD_CUSTOM_QUEST_SAVE:
 			GDCustomQuestSaveRecv((SDHP_CUSTOMQUEST_SAVE_RECV*)lpMsg);
 			break;
-#endif
-        case 0xF3:
+			#endif
+        case DS_HEAD_SET_COIN:
             GDSetCoinRecv((SDHP_SETCOIN_RECV*)lpMsg);
             break;
-#if(RANKINGGOC == 1)
-		case 0xF4:
+			#if(RANKINGGOC == 1)
+		case DS_HEAD_CUSTOM_RANKING:
 			GDCustomRankingRecv((SDHP_CUSTOM_RANKING_RECV*)lpMsg, index);
 			break;
-#endif
-        case 0xF5:
+			#endif
+        case DS_HEAD_ATTACK_RESUME:
             GDCustomAttackResumeRecv((SDHP_CARESUME_RECV*)lpMsg,index);
             break;
-        case 0xF6:
+        case DS_HEAD_ATTACK_RESUME_SAVE:
             GDCustomAttackSaveRecv((SDHP_CARESUME_SAVE_RECV*)lpMsg);
             break;
-        case 0xF7:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+        case DS_HEAD_CUSTOM_NPC_QUEST:
+			switch(subHead)
 			{
-			case 0x04:
+			case DS_SUB_CUSTOM_NPC_QUEST_INFO:
+				GDCustomNpcQuestRecv((SDHP_CUSTOMNPCQUEST_RECV*)lpMsg, index);
+				break;
+			case DS_SUB_CUSTOM_NPC_QUEST_SAVE:
+				GDCustomNpcQuestSaveRecv((SDHP_CUSTOMNPCQUEST_SAVE_RECV*)lpMsg);
+				break;
+			case DS_SUB_CUSTOM_NPC_QUEST_MONSTER_COUNT_SAVE:
+				GDCustomNpcQuestMonsterCountSaveRecv((SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV*)lpMsg);
+				break;
+			case DS_SUB_CUSTOM_JEWEL_BANK:
 				GDCustomJewelBankRecv((SDHP_CUSTOM_JEWELBANK_RECV*)lpMsg);
 				break;
-			case 0x05:
+			case DS_SUB_CUSTOM_JEWEL_BANK_INFO:
 				GDCustomJewelBankInfoRecv((SDHP_CUSTOM_JEWELBANK_INFO_RECV*)lpMsg, index);
 				break;
-
-
-				case 0x00:
-					GDCustomNpcQuestRecv((SDHP_CUSTOMNPCQUEST_RECV*)lpMsg,index);
-					break;
-				case 0x01:
-					GDCustomNpcQuestSaveRecv((SDHP_CUSTOMNPCQUEST_SAVE_RECV*)lpMsg);
-					break;
-				case 0x02:
-					GDCustomNpcQuestMonsterCountSaveRecv((SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV*)lpMsg);
-					break;
 			}
             break;
-
-#if (GHRS_TOP1_NEW)
-		case 0xF8:
+		#if (GHRS_TOP1_NEW)
+		case DS_HEAD_CUSTOM_GHRS:
 			GDCustomGHRSRecv((SDHP_CUSTOM_GHRS_RECV*)lpMsg, index);
 			break;
-#endif
+		#endif
 
-#if (BOT_STATUE == 1)
-		case 0xF9:
+		#if (BOT_STATUE == 1)
+		case DS_HEAD_BOT_INFO:
 			GDBotInfoRecv((SDHP_BOT_INFO_GET*)lpMsg, index);
 			break;
-#endif
-
-
-
-
-		case 0xD9:
-			switch(((lpMsg[0]==0xC1)?lpMsg[3]:lpMsg[4]))
+		#endif
+		case DS_HEAD_CUSTOM_EXTENSIONS:
+			switch(subHead)
 			{
-			case 0x01:
-				GDGetSkinIsBuy((GSSENDDS_GETLISTISBUYSKIN*)lpMsg, index); // OK
+			case DS_SUB_SKIN_GET_LIST:
+				GDGetSkinIsBuy((GSSENDDS_GETLISTISBUYSKIN*)lpMsg, index);
 				break;
 				//==Save Skin Da MUa
-			case 0x02:
-				GDSaveSkinBuy((GSSENDDS_GETLISTISBUYSKIN*)lpMsg, index); // OK
+			case DS_SUB_SKIN_SAVE:
+				GDSaveSkinBuy((GSSENDDS_GETLISTISBUYSKIN*)lpMsg, index);
 				break;
-			case 0x07:
-				GDSaveTheGiftRecv((THEGIFT_GD_SAVE_DATA*)lpMsg); // Only add in the case 0xD9
+			case DS_SUB_THE_GIFT_SAVE:
+				GDSaveTheGiftRecv((THEGIFT_GD_SAVE_DATA*)lpMsg);
 				break;
-			case 0x09:
-				GDDOIMK_SAVEDB((CSENDGS_DOIMK_INFOSAVE*)lpMsg, index); // Only add in the case 0xD9
+			case DS_SUB_CHANGE_PASSWORD_SAVE:
+				GDChangePasswordRecv((SDHP_CHANGE_PASSWORD_RECV*)lpMsg, index);
 				break;
-#if(RANKING_NEW == 1)
-			case 0x17:
+			#if(RANKING_NEW == 1)
+			case DS_SUB_CHARACTER_RANKING:
 				CharacterRanking((GDTop*)lpMsg, index);
 				break;
-#endif
-			case 0x18:
+			#endif
+			case DS_SUB_BUFFPHE_LOAD:
 				GetDBBuffPhe((BUFFPHE_REQUESTDS*)lpMsg, index);
 				break;
-			case 0x19:
+			case DS_SUB_BUFFPHE_TOP_INFO:
 				GetInfoCharTopBuffPhe((BUFFPHE_REQUESTDS*)lpMsg, index);
 				break;
 			}
 			break;
-
-
 	}
 }
 
-void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg) // OK
+void GDServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg, int index)
 {
-	gQueryManager.ExecQuery("UPDATE Character SET TheGift = %d WHERE Name = '%s'",lpMsg->TheGift, lpMsg->Name);
-	gQueryManager.Close();
-}
-
-void GDServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index) // OK
-{
-	SDHP_SERVER_INFO_SEND pMsg {};
-
-	pMsg.header.set(0x00,sizeof(pMsg));
-
-	pMsg.result = 1;
-
+	SDHP_SERVER_INFO_SEND pMsg{};
+	pMsg.Header.set(HEAD_SERVER_INFO, sizeof(pMsg));
+	pMsg.Result = 1;
 	pMsg.ItemCount = 0;
 
-	if(gQueryManager.ExecQuery("SELECT ItemCount FROM GameServerInfo WHERE Number=0") == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT ItemCount FROM GameServerInfo WHERE Number=0") || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 		gQueryManager.ExecQuery("INSERT INTO GameServerInfo (Number,ItemCount,ZenCount,AceItemCount) VALUES (0,0,0,0)");
@@ -977,442 +956,414 @@ void GDServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index) // OK
 		gQueryManager.Close();
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
-	gServerManager[index].SetServerInfo(lpMsg->ServerName,lpMsg->ServerPort,lpMsg->ServerCode);
+	gServerManager[index].SetServerInfo(lpMsg->ServerName, lpMsg->ServerPort, lpMsg->ServerCode);
 }
 
-void GDDOIMK_SAVEDB(CSENDGS_DOIMK_INFOSAVE* lpMsg, int aIndex) // OK
+void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg, int aIndex)
 {
-	DSGS_DOIMK_KQ pMsg {};
-	pMsg.h.set(0xFB, 0x02, sizeof(pMsg));
-	pMsg.gIndex = lpMsg->gIndex;
-	//== Lay MK hien Tai
-	if (gQueryManager.ExecQuery("SELECT memb__pwd FROM MEMB_INFO WHERE memb___id='%s' COLLATE Latin1_General_BIN", lpMsg->ACCOUNT) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	SDHP_CHARACTER_LIST_SEND pMsg{};
+	pMsg.Header.set(HEAD_CHARACTER_LIST, 0);
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	pMsg.Count = 0;
+
+	const size_t maxPacketSize =
+		sizeof(SDHP_CHARACTER_LIST_SEND) +
+		(static_cast<size_t>(MAX_CHARACTER_SLOT) * sizeof(SDHP_CHARACTER_LIST));
+
+	std::vector<BYTE> sendBuffer(maxPacketSize);
+
+	size_t bufferOffset{ sizeof(SDHP_CHARACTER_LIST_SEND) };
+
+	bool accountExists =
+		gQueryManager.ExecQuery("SELECT Id FROM AccountCharacter WHERE Id='%s'", lpMsg->Account) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
+
+	gQueryManager.Close();
+
+	if (!accountExists)
+	{
+		gQueryManager.ExecQuery("INSERT INTO AccountCharacter (Id) VALUES ('%s')", lpMsg->Account);
+
+		gQueryManager.Close();
+	}
+
+	std::array<std::array<char, MAX_CHARACTER_NAME>, MAX_CHARACTER_SLOT> characterNames{};
+
+	if (!gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'", lpMsg->Account) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		pMsg.result = 1; //== Khong Ton Tai TK
-		gSocketManager.DataSend(aIndex, (BYTE*)& pMsg, pMsg.h.size);
+		return;
+	}
+
+	pMsg.MoveCnt = static_cast<BYTE>(gQueryManager.GetAsInteger("MoveCnt"));
+	pMsg.ExtClass = static_cast<BYTE>(gQueryManager.GetAsInteger("ExtClass"));
+
+#if (DATASERVER_UPDATE >= 602)
+	pMsg.ExtWarehouse = static_cast<BYTE>(gQueryManager.GetAsInteger("ExtWarehouse"));
+#endif
+
+	gQueryManager.GetAsString("GameID1", characterNames[0].data(), characterNames[0].size());
+	gQueryManager.GetAsString("GameID2", characterNames[1].data(), characterNames[1].size());
+	gQueryManager.GetAsString("GameID3", characterNames[2].data(), characterNames[2].size());
+	gQueryManager.GetAsString("GameID4", characterNames[3].data(), characterNames[3].size());
+	gQueryManager.GetAsString("GameID5", characterNames[4].data(), characterNames[4].size());
+
+	gQueryManager.Close();
+
+	for (BYTE slot = 0; slot < MAX_CHARACTER_SLOT; ++slot)
+	{
+		if (characterNames[slot][0] == '\0')
+		{
+			continue;
+		}
+
+		const bool characterFound =
+			gQueryManager.ExecQuery(
+				"SELECT cLevel,Class,Inventory,CtlCode,ResetCount,MasterResetCount FROM Character WHERE AccountID='%s' AND Name='%s'",
+				lpMsg->Account,
+				characterNames[slot].data()) &&
+			gQueryManager.Fetch() != SQL_NO_DATA;
+
+		if (!characterFound)
+		{
+			gQueryManager.Close();
+			continue;
+		}
+
+		SDHP_CHARACTER_LIST info{};
+		info.Slot = slot;
+		std::memcpy(info.CharacterName, characterNames[slot].data(), sizeof(info.CharacterName));
+		info.Level = static_cast<WORD>(gQueryManager.GetAsInteger("cLevel"));
+		info.Class = static_cast<BYTE>(gQueryManager.GetAsInteger("Class"));
+		info.CtlCode = static_cast<BYTE>(gQueryManager.GetAsInteger("CtlCode"));
+		info.Reset = static_cast<DWORD>(gQueryManager.GetAsInteger("ResetCount"));
+		info.MasterReset = static_cast<DWORD>(gQueryManager.GetAsInteger("MasterResetCount"));
+
+		std::fill(std::begin(info.Inventory), std::end(info.Inventory), 0xFF);
+		std::array<std::array<BYTE, 16>, 12> inventory{};
+		gQueryManager.GetAsBinary("Inventory", inventory[0].data(), sizeof(inventory));
+		gQueryManager.Close();
+
+		for (size_t i = 0; i < inventory.size(); ++i)
+		{
+			const size_t inventoryOffset = i * 5;
+
+			if (inventory[i][0] == 0xFF &&
+				(inventory[i][7] & 0x80) == 0x80 &&
+				(inventory[i][9] & 0xF0) == 0xF0)
+			{
+				continue;
+			}
+
+			info.Inventory[inventoryOffset + 0] = inventory[i][0];
+			info.Inventory[inventoryOffset + 1] = inventory[i][1];
+			info.Inventory[inventoryOffset + 2] = inventory[i][7];
+			info.Inventory[inventoryOffset + 3] = inventory[i][8];
+			info.Inventory[inventoryOffset + 4] = inventory[i][9];
+		}
+
+		const bool guildFound =
+			gQueryManager.ExecQuery("SELECT G_Status FROM GuildMember WHERE Name='%s'", characterNames[slot].data()) &&
+			gQueryManager.Fetch() != SQL_NO_DATA;
+
+		info.GuildStatus = guildFound ? static_cast<BYTE>(gQueryManager.GetAsInteger("G_Status")) : 0xFF;
+
+		gQueryManager.Close();
+
+		std::memcpy(sendBuffer.data() + bufferOffset, &info, sizeof(info));
+
+		bufferOffset += sizeof(info);
+
+		++pMsg.Count;
+	}
+
+	constexpr size_t MaxPacketSize = 0xFFFF;
+
+	if (bufferOffset > MaxPacketSize)
+	{
+		return;
+	}
+
+	const auto packetLength = static_cast<WORD>(bufferOffset);
+
+	pMsg.Header.size[0] = SET_NUMBERHB(packetLength);
+	pMsg.Header.size[1] = SET_NUMBERLB(packetLength);
+
+	std::memcpy(sendBuffer.data(), &pMsg, sizeof(pMsg));
+
+	gSocketManager.DataSend(aIndex, sendBuffer.data(), packetLength);
+}
+
+void GDCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg, int index)
+{
+	SDHP_CHARACTER_CREATE_SEND pMsg{};
+	pMsg.Header.set(HEAD_CHARACTER_CREATE, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+
+	pMsg.Result = (gUtil.CheckTextSyntax(lpMsg->CharacterName, sizeof(lpMsg->CharacterName)) != 0 && gBadSyntax.CheckSyntax(lpMsg->CharacterName) != 0);
+
+	pMsg.slot = 0;
+	pMsg.Class = lpMsg->Class;
+	pMsg.level = 1;
+
+	std::memset(pMsg.equipment, 0xFF, sizeof(pMsg.equipment));
+
+	do
+	{
+		if (pMsg.Result == 0)
+		{
+			break;
+		}
+
+		char characterName[5][MAX_CHARACTER_NAME]{};
+
+		if (!gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'", lpMsg->Account) ||
+			gQueryManager.Fetch() == SQL_NO_DATA)
+		{
+			gQueryManager.Close();
+			pMsg.Result = 0;
+			break;
+		}
+
+		gQueryManager.GetAsString("GameID1", characterName[0], sizeof(characterName[0]));
+		gQueryManager.GetAsString("GameID2", characterName[1], sizeof(characterName[1]));
+		gQueryManager.GetAsString("GameID3", characterName[2], sizeof(characterName[2]));
+		gQueryManager.GetAsString("GameID4", characterName[3], sizeof(characterName[3]));
+		gQueryManager.GetAsString("GameID5", characterName[4], sizeof(characterName[4]));
+
+		gQueryManager.Close();
+
+		if (GetCharacterSlot(characterName, "", &pMsg.slot) == 0)
+		{
+			pMsg.Result = 2;
+			break;
+		}
+
+		if (!gQueryManager.ExecQuery(
+			"EXEC WZ_CreateCharacter '%s','%s','%d'",
+			lpMsg->Account,
+			lpMsg->CharacterName,
+			lpMsg->Class) ||
+			gQueryManager.Fetch() == SQL_NO_DATA)
+		{
+			gQueryManager.Close();
+			pMsg.Result = 0;
+			break;
+		}
+
+		pMsg.Result = gQueryManager.GetResult(0);
+
+		gQueryManager.Close();
+
+		if (pMsg.Result == 1)
+		{
+			gQueryManager.ExecQuery(
+				"UPDATE AccountCharacter SET GameID%d='%s' WHERE Id='%s'",
+				pMsg.slot + 1,
+				lpMsg->CharacterName,
+				lpMsg->Account);
+
+			gQueryManager.Close();
+		}
+
+	} while (false);
+
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+}
+
+void GDCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg, int aIndex)
+{
+	SDHP_CHARACTER_DELETE_SEND pMsg{};
+	pMsg.Header.set(HEAD_CHARACTER_DELETE, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+
+	pMsg.Result = (gUtil.CheckTextSyntax(lpMsg->CharacterName, sizeof(lpMsg->CharacterName)) != 0);
+
+	do
+	{
+		if (pMsg.Result == 0)
+		{
+			break;
+		}
+
+		if (!gQueryManager.ExecQuery("EXEC WZ_DeleteCharacter '%s','%s'", lpMsg->Account, lpMsg->CharacterName) ||
+			gQueryManager.Fetch() == SQL_NO_DATA)
+		{
+			gQueryManager.Close();
+
+			pMsg.Result = 0;
+			break;
+		}
+
+		pMsg.Result = gQueryManager.GetResult(0);
+
+		gQueryManager.Close();
+
+		if (pMsg.Result != 1)
+		{
+			break;
+		}
+
+		char characterName[5][MAX_CHARACTER_NAME]{};
+
+		if (!gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'", lpMsg->Account) ||
+			gQueryManager.Fetch() == SQL_NO_DATA)
+		{
+			gQueryManager.Close();
+			break;
+		}
+
+		gQueryManager.GetAsString("GameID1", characterName[0], sizeof(characterName[0]));
+		gQueryManager.GetAsString("GameID2", characterName[1], sizeof(characterName[1]));
+		gQueryManager.GetAsString("GameID3", characterName[2], sizeof(characterName[2]));
+		gQueryManager.GetAsString("GameID4", characterName[3], sizeof(characterName[3]));
+		gQueryManager.GetAsString("GameID5", characterName[4], sizeof(characterName[4]));
+
+		gQueryManager.Close();
+
+		BYTE slot = 0;
+
+		if (GetCharacterSlot(characterName, lpMsg->CharacterName, &slot) != 0)
+		{
+			gQueryManager.ExecQuery(
+				"UPDATE AccountCharacter SET GameID%d=NULL WHERE Id='%s'",
+				slot + 1,
+				lpMsg->Account);
+
+			gQueryManager.Close();
+		}
+
+	} while (false);
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+}
+
+void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg)
+{
+	gQueryManager.ExecQuery("UPDATE Character SET TheGift=%d WHERE Name='%s'", lpMsg->TheGift, lpMsg->Name);
+
+	gQueryManager.Close();
+}
+
+void GDChangePasswordRecv(SDHP_CHANGE_PASSWORD_RECV* lpMsg, int aIndex)
+{
+	SDHP_CHANGE_PASSWORD_SEND pMsg {};
+	pMsg.Header.set(GS_HEAD_CUSTOM_EXTENSIONS, GS_SUB_CHANGE_PASSWORD_RESULT, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
+	
+	if (!gQueryManager.ExecQuery("SELECT memb__pwd FROM MEMB_INFO WHERE memb___id='%s' COLLATE Latin1_General_BIN", lpMsg->Account) || gQueryManager.Fetch() == SQL_NO_DATA)
+	{
+		gQueryManager.Close();
+		pMsg.Result = 1;
+		gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 	char password[11] = { 0 };
 
 	gQueryManager.GetAsString("memb__pwd", password, sizeof(password));
 
-	if (strcmp(lpMsg->PASS_OLD, password) != 0) //== Pass CU Khong dung
+	if (strcmp(lpMsg->OldPassword, password) != 0)
 	{
 		gQueryManager.Close();
-		pMsg.result = 2; //== Sai MK
-		gSocketManager.DataSend(aIndex, (BYTE*)& pMsg, pMsg.h.size);
+		pMsg.Result = 2;
+		gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 		return;
 	}
 
 	gQueryManager.Close();
 
-	//=== DOi MK MOi
-	gQueryManager.ExecQuery("UPDATE MEMB_INFO SET memb__pwd = '%s' WHERE memb___id = '%s'", lpMsg->PASS_NEW, lpMsg->ACCOUNT);
-	pMsg.result = 3; //== Doi MK THanh Cong
-	gSocketManager.DataSend(aIndex, (BYTE*)& pMsg, pMsg.h.size);
-	Log.ToDisp(LOG_RED, "[ChangePass] [%s] Doi MK [%s] -> [%s]", lpMsg->ACCOUNT, lpMsg->PASS_OLD, lpMsg->PASS_NEW);
+	gQueryManager.ExecQuery("UPDATE MEMB_INFO SET memb__pwd = '%s' WHERE memb___id = '%s'", lpMsg->NewPassword, lpMsg->Account);
+	pMsg.Result = 3;
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+	Log.ToDisp(LOG_RED, "[DataServerProtocol - GDChangePasswordRecv] Cambio de password correcto. (Cuenta: %s)", lpMsg->Account);
 	gQueryManager.Close();
 }
 
-void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg,int index) // OK
-{
-	BYTE send[2048];
-
-	SDHP_CHARACTER_LIST_SEND pMsg {};
-
-	pMsg.header.set(0x01,0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	if(gQueryManager.ExecQuery("SELECT Id FROM AccountCharacter WHERE Id='%s'",lpMsg->account) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO AccountCharacter (Id) VALUES ('%s')",lpMsg->account);
-		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-	}
-
-	char CharacterName[5][11];
-
-	memset(CharacterName,0,sizeof(CharacterName));
-
-	gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'",lpMsg->account);
-
-	gQueryManager.Fetch();
-
-	pMsg.MoveCnt = (BYTE)gQueryManager.GetAsInteger("MoveCnt");
-
-	pMsg.ExtClass = (BYTE)gQueryManager.GetAsInteger("ExtClass");
-
-	#if(DATASERVER_UPDATE>=602)
-
-	pMsg.ExtWarehouse = (BYTE)gQueryManager.GetAsInteger("ExtWarehouse");
-
-	#endif
-
-	gQueryManager.GetAsString("GameID1",CharacterName[0],sizeof(CharacterName[0]));
-
-	gQueryManager.GetAsString("GameID2",CharacterName[1],sizeof(CharacterName[1]));
-
-	gQueryManager.GetAsString("GameID3",CharacterName[2],sizeof(CharacterName[2]));
-
-	gQueryManager.GetAsString("GameID4",CharacterName[3],sizeof(CharacterName[3]));
-
-	gQueryManager.GetAsString("GameID5",CharacterName[4],sizeof(CharacterName[4]));
-
-	gQueryManager.Close();
-
-	pMsg.count = 0;
-
-	SDHP_CHARACTER_LIST info;
-
-	for(int n=0;n < 5;n++)
-	{
-		if(CharacterName[n][0] == 0)
-		{
-			continue;
-		}
-
-		if(gQueryManager.ExecQuery("SELECT cLevel,Class,Inventory,CtlCode,ResetCount,MasterResetCount FROM Character WHERE AccountID='%s' AND Name='%s'",lpMsg->account,CharacterName[n]) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
-		}
-		else
-		{
-			info.slot = n;
-
-			memcpy(info.name,CharacterName[n],sizeof(info.name));
-
-			info.level = (WORD)gQueryManager.GetAsInteger("cLevel");
-
-			info.Class = (BYTE)gQueryManager.GetAsInteger("Class");
-
-			BYTE Inventory[12][16];
-
-			gQueryManager.GetAsBinary("Inventory",Inventory[0],sizeof(Inventory));
-
-			info.CtlCode = (BYTE)gQueryManager.GetAsInteger("CtlCode");
-
-			info.Reset = (DWORD)gQueryManager.GetAsInteger("ResetCount");
-
-			info.MasterReset = (DWORD)gQueryManager.GetAsInteger("MasterResetCount");
-
-			gQueryManager.Close();
-
-			memset(info.Inventory,0xFF,sizeof(info.Inventory));
-
-			for(int i=0;i < 12;i++)
-			{
-				if(Inventory[i][0] == 0xFF && (Inventory[i][7] & 0x80) == 0x80 && (Inventory[i][9] & 0xF0) == 0xF0)
-				{
-					info.Inventory[0+(i*5)] = 0xFF;
-					info.Inventory[1+(i*5)] = 0xFF;
-					info.Inventory[2+(i*5)] = 0xFF;
-					info.Inventory[3+(i*5)] = 0xFF;
-					info.Inventory[4+(i*5)] = 0xFF;
-				}
-				else
-				{
-					info.Inventory[0+(i*5)] = Inventory[i][0];
-					info.Inventory[1+(i*5)] = Inventory[i][1];
-					info.Inventory[2+(i*5)] = Inventory[i][7];
-					info.Inventory[3+(i*5)] = Inventory[i][8];
-					info.Inventory[4+(i*5)] = Inventory[i][9];
-				}
-			}
-
-			if(gQueryManager.ExecQuery("SELECT G_Status FROM GuildMember WHERE Name='%s'",CharacterName[n]) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-			{
-				gQueryManager.Close();
-
-				info.GuildStatus = 0xFF;
-			}
-			else
-			{
-				info.GuildStatus = (BYTE)gQueryManager.GetAsInteger("G_Status");
-
-				gQueryManager.Close();
-			}
-
-			memcpy(&send[size],&info,sizeof(info));
-			size += sizeof(info);
-
-			pMsg.count++;
-		}
-	}
-
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
-
-	memcpy(send,&pMsg,sizeof(pMsg));
-
-	gSocketManager.DataSend(index,send,size);
-}
-
-void GDCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg,int index) // OK
-{
-	SDHP_CHARACTER_CREATE_SEND pMsg {};
-
-	pMsg.header.set(0x02,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	if(gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0 || gBadSyntax.CheckSyntax(lpMsg->name) == 0)
-	{
-		pMsg.result = 0;
-	}
-	else
-	{
-		pMsg.result = 1;
-	}
-
-	pMsg.slot = 0;
-
-	pMsg.Class = lpMsg->Class;
-
-	memset(pMsg.equipment,0xFF,sizeof(pMsg.equipment));
-
-	pMsg.level = 1;
-
-	char CharacterName[5][11] = {0};
-
-	if(pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'",lpMsg->account) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-
-		pMsg.result = 0;
-	}
-	else
-	{
-		gQueryManager.GetAsString("GameID1",CharacterName[0],sizeof(CharacterName[0]));
-		gQueryManager.GetAsString("GameID2",CharacterName[1],sizeof(CharacterName[1]));
-		gQueryManager.GetAsString("GameID3",CharacterName[2],sizeof(CharacterName[2]));
-		gQueryManager.GetAsString("GameID4",CharacterName[3],sizeof(CharacterName[3]));
-		gQueryManager.GetAsString("GameID5",CharacterName[4],sizeof(CharacterName[4]));
-		gQueryManager.Close();
-
-		if(GetCharacterSlot(CharacterName,"",&pMsg.slot) == 0)
-		{
-			pMsg.result = 2;
-		}
-		else
-		{
-			if(gQueryManager.ExecQuery("EXEC WZ_CreateCharacter '%s','%s','%d'",lpMsg->account,lpMsg->name,lpMsg->Class) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-			{
-				gQueryManager.Close();
-
-				pMsg.result = 0;
-			}
-			else
-			{
-				pMsg.result = gQueryManager.GetResult(0);
-
-				gQueryManager.Close();
-			}
-
-			if(pMsg.result == 1)
-			{
-				gQueryManager.ExecQuery("UPDATE AccountCharacter SET GameID%d='%s' WHERE Id='%s'",(pMsg.slot+1),lpMsg->name,lpMsg->account);
-				gQueryManager.Close();
-			}
-		}
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-}
-
-void GDCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg,int index) // OK
-{
-	SDHP_CHARACTER_DELETE_SEND pMsg {};
-
-	pMsg.header.set(0x03,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	if(gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0)
-	{
-		pMsg.result = 0;
-	}
-	else
-	{
-		pMsg.result = 1;
-	}
-
-	if(pMsg.result == 0 || gQueryManager.ExecQuery("EXEC WZ_DeleteCharacter '%s','%s'",lpMsg->account,lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-
-		pMsg.result = 0;
-	}
-	else
-	{
-		pMsg.result = gQueryManager.GetResult(0);
-
-		gQueryManager.Close();
-
-		if(pMsg.result == 1)
-		{
-			char CharacterName[5][11] = {0};
-
-			if(gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'",lpMsg->account) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-			{
-				gQueryManager.Close();
-
-				pMsg.result = 1;
-			}
-			else
-			{
-				gQueryManager.GetAsString("GameID1",CharacterName[0],sizeof(CharacterName[0]));
-				gQueryManager.GetAsString("GameID2",CharacterName[1],sizeof(CharacterName[1]));
-				gQueryManager.GetAsString("GameID3",CharacterName[2],sizeof(CharacterName[2]));
-				gQueryManager.GetAsString("GameID4",CharacterName[3],sizeof(CharacterName[3]));
-				gQueryManager.GetAsString("GameID5",CharacterName[4],sizeof(CharacterName[4]));
-				gQueryManager.Close();
-
-				BYTE slot;
-
-				if(GetCharacterSlot(CharacterName,lpMsg->name,&slot) != 0)
-				{
-					gQueryManager.ExecQuery("UPDATE AccountCharacter SET GameID%d=NULL WHERE Id='%s'",(slot+1),lpMsg->account);
-					gQueryManager.Close();
-				}
-			}
-		}
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-}
-
-void GDCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg,int index) // OK
+void GDCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg,int index)
 {
 	SDHP_CHARACTER_INFO_SEND pMsg {};
+	pMsg.Header.set(HEAD_CHARACTER_INFO,sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
 
-	pMsg.header.set(0x04,sizeof(pMsg));
+	std::memcpy(pMsg.Account,lpMsg->Account,sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName,lpMsg->CharacterName,sizeof(pMsg.CharacterName));
 
-	pMsg.index = lpMsg->index;
+	// Comprobación de sintaxis y determinación del resultado
+	pMsg.Result = ((gUtil.CheckTextSyntax(lpMsg->CharacterName,sizeof(lpMsg->CharacterName))==0)?0:1);
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	pMsg.result = ((gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name))==0)?0:1);
-
-	if(pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM Character WHERE AccountID='%s' AND Name='%s'",lpMsg->account,lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	// Consulta principal de personaje
+	if(pMsg.Result == 0 || !gQueryManager.ExecQuery("SELECT * FROM Character WHERE AccountID='%s' AND Name='%s'",lpMsg->Account,lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 0;
+		pMsg.Result = 0;
 	}
 	else
 	{
-		pMsg.Level = (WORD)gQueryManager.GetAsInteger("cLevel");
-
-		pMsg.Class = (BYTE)gQueryManager.GetAsInteger("Class");
-
+		// --- Estadísticas Principales y Nivel ---
+		pMsg.Level = static_cast<WORD>(gQueryManager.GetAsInteger("cLevel"));
+		pMsg.Class = static_cast<BYTE>(gQueryManager.GetAsInteger("Class"));
 		pMsg.LevelUpPoint = gQueryManager.GetAsInteger("LevelUpPoint");
-
 		pMsg.Experience = gQueryManager.GetAsInteger("Experience");
-
 		pMsg.Strength = gQueryManager.GetAsInteger("Strength");
-
 		pMsg.Dexterity = gQueryManager.GetAsInteger("Dexterity");
-
 		pMsg.Vitality = gQueryManager.GetAsInteger("Vitality");
-
 		pMsg.Energy = gQueryManager.GetAsInteger("Energy");
-
 		pMsg.Leadership = gQueryManager.GetAsInteger("Leadership");
-
-		gQueryManager.GetAsBinary("Inventory",pMsg.Inventory[0],sizeof(pMsg.Inventory));
-
-		gQueryManager.GetAsBinary("MagicList",pMsg.Skill[0],sizeof(pMsg.Skill));
-
 		pMsg.Money = gQueryManager.GetAsInteger("Money");
-
-		pMsg.Life = (DWORD)gQueryManager.GetAsFloat("Life");
-
-		pMsg.MaxLife = (DWORD)gQueryManager.GetAsFloat("MaxLife");
-
-		pMsg.Mana = (DWORD)gQueryManager.GetAsFloat("Mana");
-
-		pMsg.MaxMana = (DWORD)gQueryManager.GetAsFloat("MaxMana");
-
-		pMsg.BP = (DWORD)gQueryManager.GetAsFloat("BP");
-
-		pMsg.MaxBP = (DWORD)gQueryManager.GetAsFloat("MaxBP");
-
-		pMsg.Shield = (DWORD)gQueryManager.GetAsFloat("Shield");
-
-		pMsg.MaxShield = (DWORD)gQueryManager.GetAsFloat("MaxShield");
-
-		pMsg.Map = (BYTE)gQueryManager.GetAsInteger("MapNumber");
-
-		pMsg.X = (BYTE)gQueryManager.GetAsInteger("MapPosX");
-
-		pMsg.Y = (BYTE)gQueryManager.GetAsInteger("MapPosY");
-
-		pMsg.Dir = (BYTE)gQueryManager.GetAsInteger("MapDir");
-
 		pMsg.PKCount = gQueryManager.GetAsInteger("PkCount");
-
 		pMsg.PKLevel = gQueryManager.GetAsInteger("PkLevel");
-
 		pMsg.PKTime = gQueryManager.GetAsInteger("PkTime");
+		pMsg.CtlCode = static_cast<BYTE>(gQueryManager.GetAsInteger("CtlCode"));
+		pMsg.FruitAddPoint = static_cast<WORD>(gQueryManager.GetAsInteger("FruitAddPoint"));
+		pMsg.FruitSubPoint = static_cast<WORD>(gQueryManager.GetAsInteger("FruitSubPoint"));
+		pMsg.Kills = static_cast<DWORD>(gQueryManager.GetAsInteger("Kills"));
+		pMsg.Deads = static_cast<DWORD>(gQueryManager.GetAsInteger("Deads"));
+		pMsg.TheGift = gQueryManager.GetAsInteger("TheGift");
+		pMsg.CTCTime = static_cast<DWORD>(gQueryManager.GetAsInteger("CTCTime"));
+		pMsg.CTCRegDay = static_cast<DWORD>(gQueryManager.GetAsInteger("CTCRegDay"));
 
-		pMsg.CtlCode = (BYTE)gQueryManager.GetAsInteger("CtlCode");
+		// --- Vida, Mana, Shield (Float -> DWORD) ---
+		pMsg.Life = static_cast<DWORD>(gQueryManager.GetAsFloat("Life"));
+		pMsg.MaxLife = static_cast<DWORD>(gQueryManager.GetAsFloat("MaxLife"));
+		pMsg.Mana = static_cast<DWORD>(gQueryManager.GetAsFloat("Mana"));
+		pMsg.MaxMana = static_cast<DWORD>(gQueryManager.GetAsFloat("MaxMana"));
+		pMsg.BP = static_cast<DWORD>(gQueryManager.GetAsFloat("BP"));
+		pMsg.MaxBP = static_cast<DWORD>(gQueryManager.GetAsFloat("MaxBP"));
+		pMsg.Shield = static_cast<DWORD>(gQueryManager.GetAsFloat("Shield"));
+		pMsg.MaxShield = static_cast<DWORD>(gQueryManager.GetAsFloat("MaxShield"));
 
-		gQueryManager.GetAsBinary("Quest",pMsg.Quest,sizeof(pMsg.Quest));
+		// --- Posición en el Mapa ---
+		pMsg.Map = static_cast<BYTE>(gQueryManager.GetAsInteger("MapNumber"));
+		pMsg.X = static_cast<BYTE>(gQueryManager.GetAsInteger("MapPosX"));
+		pMsg.Y = static_cast<BYTE>(gQueryManager.GetAsInteger("MapPosY"));
+		pMsg.Dir = static_cast<BYTE>(gQueryManager.GetAsInteger("MapDir"));
 
-		gQueryManager.GetAsBinary("EffectList",pMsg.Effect[0],sizeof(pMsg.Effect));
+		// --- Datos Binarios ---
+		gQueryManager.GetAsBinary("Inventory", pMsg.Inventory[0], sizeof(pMsg.Inventory));
+		gQueryManager.GetAsBinary("MagicList", pMsg.Skill[0], sizeof(pMsg.Skill));
+		gQueryManager.GetAsBinary("Quest", pMsg.Quest, sizeof(pMsg.Quest));
+		gQueryManager.GetAsBinary("EffectList", pMsg.Effect[0], sizeof(pMsg.Effect));
 
-		pMsg.FruitAddPoint = (WORD)gQueryManager.GetAsInteger("FruitAddPoint");
-
-		pMsg.FruitSubPoint = (WORD)gQueryManager.GetAsInteger("FruitSubPoint");
-
-		pMsg.Kills = (DWORD)gQueryManager.GetAsInteger("Kills");
-
-		pMsg.Deads = (DWORD)gQueryManager.GetAsInteger("Deads");
-
-		pMsg.TheGift	= gQueryManager.GetAsInteger("TheGift"); // only add in is void
-
-		pMsg.CTCTime = (DWORD)gQueryManager.GetAsInteger("CTCTime");
-
-		pMsg.CTCRegDay = (DWORD)gQueryManager.GetAsInteger("CTCRegDay");
-
-		#if(DATASERVER_UPDATE>=602)
-
+#if(DATASERVER_UPDATE>=602)
 		pMsg.ExtInventory = (BYTE)gQueryManager.GetAsInteger("ExtInventory");
-
-		#endif
+#endif
 
 #if(FLAG_SKIN)
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("SELECT * FROM Character WHERE AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
-		gQueryManager.Fetch();
-
-		pMsg.Flag = gQueryManager.GetAsInteger("FLag");
+		pMsg.Flag = gQueryManager.GetAsInteger("Flag");
 #endif
 
 #if(DANHHIEU_NEW)
-
-		gQueryManager.ExecQuery("SELECT * FROM Character WHERE AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
-		gQueryManager.Fetch();
 		pMsg.rDanhHieu = gQueryManager.GetAsInteger("rDanhHieu");
 		pMsg.DHSatThuong = gQueryManager.GetAsInteger("DHSatThuong");
 		pMsg.DHSatThuongX2 = gQueryManager.GetAsInteger("DHSatThuongX2");
@@ -1420,203 +1371,180 @@ void GDCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg,int index) // OK
 		pMsg.DHHP = gQueryManager.GetAsInteger("DHHP");
 		pMsg.DHSD = gQueryManager.GetAsInteger("DHSD");
 		pMsg.DHGST = gQueryManager.GetAsInteger("DHGST");
-		gQueryManager.Close();
-
 #endif
 
 #if(TULUYEN_NEW)
 		pMsg.rTuLuyen = gQueryManager.GetAsInteger("rTuLuyen");
 #endif
 
+		gQueryManager.Close(); // Cierra el SELECT principal
 
-		gQueryManager.Close();
+		// --- Consultas Adicionales Individualizadas ---
+		// Patrón limpio: ExecQuery -> Fetch -> Extract -> Close
 
-
-		//==========Select Custom CB
-		gQueryManager.ExecQuery("SELECT UserSkinPick from Character where AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
-
+		gQueryManager.ExecQuery("SELECT UserSkinPick from Character where AccountID='%s' AND Name='%s'", lpMsg->Account, lpMsg->CharacterName);
 		gQueryManager.Fetch();
-
-		pMsg.mUserSkinPick = (DWORD)gQueryManager.GetAsInteger("UserSkinPick");
-
+		pMsg.mUserSkinPick = static_cast<DWORD>(gQueryManager.GetAsInteger("UserSkinPick"));
 		gQueryManager.Close();
 
 #if(CHONPHEDOILAP)
-		gQueryManager.ExecQuery("SELECT PheHanhTau from Character where AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
-
+		gQueryManager.ExecQuery("SELECT PheHanhTau from Character where AccountID='%s' AND Name='%s'", lpMsg->Account, lpMsg->CharacterName);
 		gQueryManager.Fetch();
-
-		pMsg.ChonPheHanhTau = (BYTE)gQueryManager.GetAsInteger("PheHanhTau");
-
+		pMsg.ChonPheHanhTau = static_cast<BYTE>(gQueryManager.GetAsInteger("PheHanhTau"));
 		gQueryManager.Close();
 #endif
 
 #if(B_HON_HOAN)
-		gQueryManager.ExecQuery("SELECT HonHoan,PointUsePhe from Character where AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
-
+		gQueryManager.ExecQuery("SELECT HonHoan,PointUsePhe from Character where AccountID='%s' AND Name='%s'", lpMsg->Account, lpMsg->CharacterName);
 		gQueryManager.Fetch();
-
-		pMsg.CapDoHonHoan = (BYTE)gQueryManager.GetAsInteger("HonHoan");
-		pMsg.PointUsePhe = (DWORD)gQueryManager.GetAsInteger("PointUsePhe");
-
+		pMsg.CapDoHonHoan = static_cast<BYTE>(gQueryManager.GetAsInteger("HonHoan"));
+		pMsg.PointUsePhe = static_cast<DWORD>(gQueryManager.GetAsInteger("PointUsePhe"));
 		gQueryManager.Close();
 #endif
 #if(EVENT_END_LESS)
-		//==========Select Custom CB
-		gQueryManager.ExecQuery("SELECT LuotDiEndLess from Character where AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
+		gQueryManager.ExecQuery("SELECT LuotDiEndLess from Character where AccountID='%s' AND Name='%s'", lpMsg->Account, lpMsg->CharacterName);
 		gQueryManager.Fetch();
-		pMsg.mLuotDiEndLess = (WORD)gQueryManager.GetAsInteger("LuotDiEndLess");
+		pMsg.mLuotDiEndLess = static_cast<WORD>(gQueryManager.GetAsInteger("LuotDiEndLess"));
 		gQueryManager.Close();
 #endif
 
-		#if(MOCNAP == 1)
-		gQueryManager.ExecQuery("SELECT MOCNAPCOIN from Character where AccountID='%s' AND Name='%s'", lpMsg->account, lpMsg->name);
+#if(MOCNAP == 1)
+		gQueryManager.ExecQuery("SELECT MOCNAPCOIN from Character where AccountID='%s' AND Name='%s'", lpMsg->Account, lpMsg->CharacterName);
 		gQueryManager.Fetch();
-		pMsg.MOCNAPCOIN = (DWORD)gQueryManager.GetAsInteger("MOCNAPCOIN");
+		pMsg.MOCNAPCOIN = static_cast<DWORD>(gQueryManager.GetAsInteger("MOCNAPCOIN"));
 		gQueryManager.Close();
-		#endif
-
-		#if(DATASERVER_UPDATE>=602)
-
-		gQueryManager.ExecQuery("SELECT ExtWarehouse FROM AccountCharacter WHERE Id='%s'",lpMsg->account);
-
+#endif
+#if(DATASERVER_UPDATE>=602)
+		gQueryManager.ExecQuery("SELECT ExtWarehouse FROM AccountCharacter WHERE Id='%s'",lpMsg->Account);
 		gQueryManager.Fetch();
-
-		pMsg.ExtWarehouse = (BYTE)gQueryManager.GetAsInteger("ExtWarehouse");
-
+		pMsg.ExtWarehouse = static_cast<BYTE>(gQueryManager.GetAsInteger("ExtWarehouse"));
 		gQueryManager.Close();
+#endif
 
-		#endif
-
-		gQueryManager.ExecQuery("EXEC WZ_GetResetInfo '%s','%s'",lpMsg->account,lpMsg->name);
-
+		// --- Llamadas a Stored Procedures (Resets) ---
+		gQueryManager.ExecQuery("EXEC WZ_GetResetInfo '%s','%s'",lpMsg->Account,lpMsg->CharacterName);
 		gQueryManager.Fetch();
-
 		pMsg.Reset = gQueryManager.GetAsInteger("Reset");
-
 		gQueryManager.Close();
-
-		gQueryManager.ExecQuery("EXEC WZ_GetMasterResetInfo '%s','%s'",lpMsg->account,lpMsg->name);
-
+		gQueryManager.ExecQuery("EXEC WZ_GetMasterResetInfo '%s','%s'",lpMsg->Account,lpMsg->CharacterName);
 		gQueryManager.Fetch();
-
 		pMsg.MasterReset = gQueryManager.GetAsInteger("MasterReset");
-
 		gQueryManager.Close();
 
-		#if(DATASERVER_UPDATE>=801)
-
+		// --- Guild Matching System ---
+#if(DATASERVER_UPDATE>=801)
 		GUILD_MATCHING_INFO GuildMatchingInfo;
-
 		GUILD_MATCHING_JOIN_INFO GuildMatchingJoinInfo;
-
-		GUILD_INFO* lpGuildInfo = gGuildManager.GetMemberGuildInfo(lpMsg->name);
-
-		pMsg.UseGuildMatching = ((lpGuildInfo==0)?0:gGuildMatching.GetGuildMatchingInfo(&GuildMatchingInfo,lpGuildInfo->szName));
-
-		pMsg.UseGuildMatchingJoin = ((lpGuildInfo!=0)?0:gGuildMatching.GetGuildMatchingJoinInfo(&GuildMatchingJoinInfo,lpMsg->name));
-
-		#endif
-
-		gQueryManager.ExecQuery("UPDATE AccountCharacter SET GameIDC='%s' WHERE Id='%s'",lpMsg->name,lpMsg->account);
-
+		GUILD_INFO* lpGuildInfo = gGuildManager.GetMemberGuildInfo(lpMsg->CharacterName);
+		pMsg.UseGuildMatching = ((lpGuildInfo==0)?0:gGuildMatching.GetGuildMatchingInfo(&GuildMatchingInfo,lpGuildInfo->Name));
+		pMsg.UseGuildMatchingJoin = ((lpGuildInfo!=0)?0:gGuildMatching.GetGuildMatchingJoinInfo(&GuildMatchingJoinInfo,lpMsg->CharacterName));
+#endif
+		// --- Actualización de personaje en uso ---
+		gQueryManager.ExecQuery("UPDATE AccountCharacter SET GameIDC='%s' WHERE Id='%s'",lpMsg->CharacterName,lpMsg->Account);
 		gQueryManager.Close();
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void GDCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg,int index) // OK
+void GDCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg, int aIndex)
 {
-	SDHP_CREATE_ITEM_SEND pMsg {};
+	SDHP_CREATE_ITEM_SEND pMsg{};
+	pMsg.Header.set(HEAD_CREATE_ITEM, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
 
-	pMsg.header.set(0x07,sizeof(pMsg));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
+	// Posición del item en el mapa
 	pMsg.X = lpMsg->X;
-
 	pMsg.Y = lpMsg->Y;
-
 	pMsg.Map = lpMsg->Map;
 
-	if(gQueryManager.ExecQuery("EXEC WZ_GetItemSerial") == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	// Obtener Serial del Item
+	if (!gQueryManager.ExecQuery("EXEC WZ_GetItemSerial") || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
-		gQueryManager.Close();
-
 		pMsg.Serial = 0;
 	}
 	else
 	{
 		pMsg.Serial = gQueryManager.GetResult(0);
+	}
+	gQueryManager.Close(); // Cerramos el cursor del Stored Procedure
 
+	// Verificación e inserción de Mascotas (Pet Items)
+	// Nota: 0x1A04 y 0x1A05 son típicamente ítems tipo Pet Dark Raven/Spirit
+	if (lpMsg->ItemIndex == 0x1A04 || lpMsg->ItemIndex == 0x1A05)
+	{
+		// Comprobar si el serial ya existe en la tabla de mascotas
+		if (!gQueryManager.ExecQuery("SELECT ItemSerial FROM T_PetItem_Info WHERE ItemSerial=%d", pMsg.Serial) || gQueryManager.Fetch() == SQL_NO_DATA)
+		{
+			gQueryManager.Close();
+
+			// Si no existe, insertar el nuevo registro
+			gQueryManager.ExecQuery("INSERT INTO T_PetItem_Info (ItemSerial,Pet_Level,Pet_Exp) VALUES (%d,%d,%d)", pMsg.Serial, 1, 0);
+
+		}
 		gQueryManager.Close();
 	}
 
-	if(lpMsg->ItemIndex == 0x1A04 || lpMsg->ItemIndex == 0x1A05)
-	{
-		if(gQueryManager.ExecQuery("SELECT ItemSerial FROM T_PetItem_Info WHERE ItemSerial=%d",pMsg.Serial) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("INSERT INTO T_PetItem_Info (ItemSerial,Pet_Level,Pet_Exp) VALUES (%d,%d,%d)",pMsg.Serial,1,0);
-			gQueryManager.Close();
-		}
-		else
-		{
-			gQueryManager.Close();
-		}
-	}
-
+	// Asignación de propiedades del Item
 	pMsg.ItemIndex = lpMsg->ItemIndex;
-
 	pMsg.Level = lpMsg->Level;
-
 	pMsg.Dur = lpMsg->Dur;
-
 	pMsg.Option1 = lpMsg->Option1;
-
 	pMsg.Option2 = lpMsg->Option2;
-
 	pMsg.Option3 = lpMsg->Option3;
-
 	pMsg.NewOption = lpMsg->NewOption;
-
 	pMsg.LootIndex = lpMsg->LootIndex;
-
 	pMsg.SetOption = lpMsg->SetOption;
-
 	pMsg.JewelOfHarmonyOption = lpMsg->JewelOfHarmonyOption;
-
 	pMsg.ItemOptionEx = lpMsg->ItemOptionEx;
 
-	memcpy(pMsg.SocketOption,lpMsg->SocketOption,sizeof(pMsg.SocketOption));
+	std::memcpy(pMsg.SocketOption, lpMsg->SocketOption, sizeof(pMsg.SocketOption));
 
 	pMsg.SocketOptionBonus = lpMsg->SocketOptionBonus;
-
 	pMsg.Duration = lpMsg->Duration;
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void GDOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg,int index) // OK
+void GDOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg, int aIndex)
 {
-	SDHP_OPTION_DATA_SEND pMsg {};
+	SDHP_OPTION_DATA_SEND pMsg{};
+	pMsg.Header.set(HEAD_OPTION_DATA, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
 
-	pMsg.header.set(0x08,sizeof(pMsg));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	pMsg.index = lpMsg->index;
+	const bool dataFound = gQueryManager.ExecQuery("SELECT * FROM OptionData WHERE Name='%s'", lpMsg->CharacterName) && gQueryManager.Fetch() != SQL_NO_DATA;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	if(gQueryManager.ExecQuery("SELECT * FROM OptionData WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	// Intentamos obtener los datos de la DB
+	if (dataFound)
 	{
-		gQueryManager.Close();
+		// Leemos los datos binarios y enteros de la consulta
+		gQueryManager.GetAsBinary("SkillKey", pMsg.SkillKey, sizeof(pMsg.SkillKey));
 
-		memset(pMsg.SkillKey,0xFF,sizeof(pMsg.SkillKey));
+		pMsg.GameOption = static_cast<BYTE>(gQueryManager.GetAsInteger("GameOption"));
+		pMsg.QKey = static_cast<BYTE>(gQueryManager.GetAsInteger("Qkey"));
+		pMsg.WKey = static_cast<BYTE>(gQueryManager.GetAsInteger("Wkey"));
+		pMsg.EKey = static_cast<BYTE>(gQueryManager.GetAsInteger("Ekey"));
+		pMsg.ChatWindow = static_cast<BYTE>(gQueryManager.GetAsInteger("ChatWindow"));
+		pMsg.RKey = static_cast<BYTE>(gQueryManager.GetAsInteger("Rkey"));
+		pMsg.QWERLevel = gQueryManager.GetAsInteger("QWERLevel");
+
+#if(DATASERVER_UPDATE >= 701)
+		pMsg.ChangeSkin = static_cast<BYTE>(gQueryManager.GetAsInteger("ChangeSkin"));
+#endif
+	}
+
+	// Cerramos el cursor de la consulta SIEMPRE en un solo lugar (evita fugas de ODBC)
+	gQueryManager.Close();
+
+	// Si no se encontraron datos, establecemos los valores por defecto (0xFF)
+	if (!dataFound)
+	{
+		std::memset(pMsg.SkillKey, 0xFF, sizeof(pMsg.SkillKey));
 
 		pMsg.GameOption = 0xFF;
 		pMsg.QKey = 0xFF;
@@ -1625,1175 +1553,1303 @@ void GDOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg,int index) // OK
 		pMsg.ChatWindow = 0xFF;
 		pMsg.RKey = 0xFF;
 		pMsg.QWERLevel = 0xFFFFFFFF;
-		#if(DATASERVER_UPDATE>=701)
-		pMsg.ChangeSkin = 0;
-		#endif
-	}
-	else
-	{
-		gQueryManager.GetAsBinary("SkillKey",pMsg.SkillKey,sizeof(pMsg.SkillKey));
 
-		pMsg.GameOption = (BYTE)gQueryManager.GetAsInteger("GameOption");
-		pMsg.QKey = (BYTE)gQueryManager.GetAsInteger("Qkey");
-		pMsg.WKey = (BYTE)gQueryManager.GetAsInteger("Wkey");
-		pMsg.EKey = (BYTE)gQueryManager.GetAsInteger("Ekey");
-		pMsg.ChatWindow = (BYTE)gQueryManager.GetAsInteger("ChatWindow");
-		pMsg.RKey = (BYTE)gQueryManager.GetAsInteger("Rkey");
-		pMsg.QWERLevel = gQueryManager.GetAsInteger("QWERLevel");
-		#if(DATASERVER_UPDATE>=701)
-		pMsg.ChangeSkin = (BYTE)gQueryManager.GetAsInteger("ChangeSkin");
-		#endif
-
-		gQueryManager.Close();
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-}
-
-void GDPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg,int index) // OK
-{
-	BYTE send[4096];
-
-	SDHP_PET_ITEM_INFO_SEND pMsg {};
-
-	pMsg.header.set(0x09,0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	pMsg.type = lpMsg->type;
-
-	pMsg.count = 0;
-
-	SDHP_PET_ITEM_INFO2 info;
-
-	for(int n=0;n < lpMsg->count;n++)
-	{
-		SDHP_PET_ITEM_INFO1* lpInfo = (SDHP_PET_ITEM_INFO1*)(((BYTE*)lpMsg)+sizeof(SDHP_PET_ITEM_INFO_RECV)+(sizeof(SDHP_PET_ITEM_INFO1)*n));
-
-		if(gQueryManager.ExecQuery("SELECT Pet_Level,Pet_Exp FROM T_PetItem_Info WHERE ItemSerial=%d",lpInfo->serial) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("INSERT INTO T_PetItem_Info (ItemSerial,Pet_Level,Pet_Exp) VALUES (%d,%d,%d)",lpInfo->serial,1,0);
-			gQueryManager.Close();
-
-			info.slot = lpInfo->slot;
-			info.serial = lpInfo->serial;
-			info.level = 1;
-			info.experience = 0;
-		}
-		else
-		{
-			info.slot = lpInfo->slot;
-			info.serial = lpInfo->serial;
-			info.level = gQueryManager.GetAsInteger("Pet_Level");
-			info.experience = gQueryManager.GetAsInteger("Pet_Exp");
-
-			gQueryManager.Close();
-		}
-
-		memcpy(&send[size],&info,sizeof(info));
-		size += sizeof(info);
-
-		pMsg.count++;
-	}
-
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
-
-	memcpy(send,&pMsg,sizeof(pMsg));
-
-	gSocketManager.DataSend(index,send,size);
-}
-
-void GDCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=401)
-
-	SDHP_CHARACTER_NAME_CHECK_SEND pMsg {};
-
-	pMsg.header.set(0x0A,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	if(gUtil.CheckTextSyntax(lpMsg->name,sizeof(lpMsg->name)) == 0 || gBadSyntax.CheckSyntax(lpMsg->name) == 0)
-	{
-		pMsg.result = 1;
-	}
-	else
-	{
-		pMsg.result = 0;
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-
-	#endif
-}
-
-void GDCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=401)
-
-	SDHP_CHARACTER_NAME_CHANGE_SEND pMsg {};
-
-	pMsg.header.set(0x0B,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.OldName,lpMsg->OldName,sizeof(pMsg.OldName));
-
-	memcpy(pMsg.NewName,lpMsg->NewName,sizeof(pMsg.NewName));
-
-	if(gUtil.CheckTextSyntax(lpMsg->NewName,sizeof(lpMsg->NewName)) == 0 || gBadSyntax.CheckSyntax(lpMsg->NewName) == 0)
-	{
-		pMsg.result = 1;
-	}
-	else
-	{
-		pMsg.result = 0;
-	}
-
-	if(pMsg.result == 0)
-	{
-		if(gQueryManager.ExecQuery("EXEC WZ_RenameCharacter '%s','%s','%s'",lpMsg->account,lpMsg->OldName,lpMsg->NewName) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
-
-			pMsg.result = 1;
-		}
-		else
-		{
-			pMsg.result = gQueryManager.GetResult(0);
-
-			gQueryManager.Close();
-		}
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
-
-	#endif
-}
-
-void GDCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg,int index) // OK
-{
-	SDHP_CRYWOLF_SYNC_SEND pMsg {};
-
-	pMsg.header.set(0x1E,sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-
-	pMsg.CrywolfState = lpMsg->CrywolfState;
-
-	pMsg.OccupationState = lpMsg->OccupationState;
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
-		}
-	}
-}
-
-void GDCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg,int index) // OK
-{
-	SDHP_CRYWOLF_INFO_SEND pMsg {};
-
-	pMsg.header.set(0x1F,sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-
-	if(gQueryManager.ExecQuery("EXEC WZ_CW_InfoLoad '%d'",lpMsg->MapServerGroup) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-
-		pMsg.CrywolfState = 0;
-
-		pMsg.OccupationState = 0;
-	}
-	else
-	{
-		pMsg.CrywolfState = gQueryManager.GetAsInteger("CRYWOLF_STATE");
-
-		pMsg.OccupationState = gQueryManager.GetAsInteger("CRYWOLF_OCCUFY");
-
-		gQueryManager.Close();
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
-}
-
-void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg,int index) // OK
-{
-	SDHP_GLOBAL_POST_SEND pMsg {};
-
-	pMsg.header.set(0x20,sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-
-	pMsg.type = lpMsg->type;
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	memcpy(pMsg.message,lpMsg->message,sizeof(pMsg.message));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
-		}
-	}
-}
-
-void GDGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg, int index) // OK
-{
-	SDHP_GLOBAL_ITEM_POST_SEND pMsg {};
-
-	pMsg.header.set(0x78, sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-
-	memcpy(pMsg.name, lpMsg->name, sizeof(pMsg.name));
-
-	memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
-
-	memcpy(pMsg.item_data, lpMsg->item_data, sizeof(pMsg.item_data));
-
-	for (int n = 0; n < MAX_SERVER; n++)
-	{
-		if (gServerManager[n].IsOnline() != 0)
-		{
-			gSocketManager.DataSend(n, (BYTE*)&pMsg, pMsg.header.size);
-		}
-	}
-}
-
-void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg,int index) // OK
-{
-	SDHP_GLOBAL_NOTICE_SEND pMsg {};
-
-	pMsg.header.set(0x21,sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-
-	pMsg.type = lpMsg->type;
-
-	pMsg.count = lpMsg->count;
-
-	pMsg.opacity = lpMsg->opacity;
-
-	pMsg.delay = lpMsg->delay;
-
-	pMsg.color = lpMsg->color;
-
-	pMsg.speed = lpMsg->speed;
-
-	memcpy(pMsg.message,lpMsg->message,sizeof(pMsg.message));
-
-	for(int n=0;n < MAX_SERVER;n++)
-	{
-		if(gServerManager[n].IsOnline() != 0)
-		{
-			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
-		}
-	}
-}
-
-void GDSNSDataRecv(SDHP_SNS_DATA_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=801)
-
-	SDHP_SNS_DATA_SEND pMsg {};
-
-	pMsg.header.set(0x24,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	if(gQueryManager.ExecQuery("SELECT Data FROM SNSData WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-
-		pMsg.result = 1;
-
-		memset(pMsg.data,0xFF,sizeof(pMsg.data));
-	}
-	else
-	{
-		pMsg.result = 0;
-
-		gQueryManager.GetAsBinary("Data",pMsg.data,sizeof(pMsg.data));
-
-		gQueryManager.Close();
-	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,sizeof(pMsg));
-
-	#endif
-}
-
-void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg) // OK
-{
-	#if(DATASERVER_UPDATE>=602)
-
-	gQueryManager.BindParameterAsBinary(1,lpMsg->Inventory[0],sizeof(lpMsg->Inventory));
-	gQueryManager.BindParameterAsBinary(2,lpMsg->Skill[0],sizeof(lpMsg->Skill));
-	gQueryManager.BindParameterAsBinary(3,lpMsg->Quest,sizeof(lpMsg->Quest));
-	gQueryManager.BindParameterAsBinary(4,lpMsg->Effect[0],sizeof(lpMsg->Effect));
-	gQueryManager.ExecQuery("UPDATE Character SET cLevel=%d,Class=%d,LevelUpPoint=%d,Experience=%d,Strength=%d,Dexterity=%d,Vitality=%d,Energy=%d,Leadership=%d,Inventory=?,MagicList=?,Money=%d,Life=%f,MaxLife=%f,Mana=%f,MaxMana=%f,BP=%f,MaxBP=%f,Shield=%f,MaxShield=%f,MapNumber=%d,MapPosX=%d,MapPosY=%d,MapDir=%d,PkCount=%d,PkLevel=%d,PkTime=%d,Quest=?,EffectList=?,FruitAddPoint=%d,FruitSubPoint=%d,ExtInventory=%d WHERE AccountID='%s' AND Name='%s'",lpMsg->Level,lpMsg->Class,lpMsg->LevelUpPoint,lpMsg->Experience,lpMsg->Strength,lpMsg->Dexterity,lpMsg->Vitality,lpMsg->Energy,lpMsg->Leadership,lpMsg->Money,(float)lpMsg->Life,(float)lpMsg->MaxLife,(float)lpMsg->Mana,(float)lpMsg->MaxMana,(float)lpMsg->BP,(float)lpMsg->MaxBP,(float)lpMsg->Shield,(float)lpMsg->MaxShield,lpMsg->Map,lpMsg->X,lpMsg->Y,lpMsg->Dir,lpMsg->PKCount,lpMsg->PKLevel,lpMsg->PKTime,lpMsg->FruitAddPoint,lpMsg->FruitSubPoint,lpMsg->ExtInventory,lpMsg->account,lpMsg->name);
-	gQueryManager.Close();
-
-	////==Chien Truong Co
-	//gQueryManager.ExecQuery("UPDATE Character SET CTCTime=%d, CTCRegDay=%d  WHERE AccountID='%s' WHERE Name='%s'", lpMsg->CTCTime, lpMsg->CTCRegDay, lpMsg->account, lpMsg->name);
-	//LogAdd(LOG_BLUE, "UPDATE Character SET CTCTime=%d, CTCRegDay=%d  WHERE AccountID='%s' AND Name='%s'", lpMsg->CTCTime, lpMsg->CTCRegDay, lpMsg->account, lpMsg->name);
-	//gQueryManager.Close();
-
-	//==CB Custom New
-	gQueryManager.ExecQuery("UPDATE Character SET UserSkinPick='%d' WHERE AccountID='%s' AND Name='%s'", lpMsg->mUserSkinPick, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-
-#if(CHONPHEDOILAP)
-
-	gQueryManager.ExecQuery("UPDATE Character SET PheHanhTau='%d' WHERE AccountID='%s' AND Name='%s'", lpMsg->ChonPheHanhTau, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-
+#if(DATASERVER_UPDATE >= 701)
+		pMsg.ChangeSkin = 0; // Por defecto 0 (sin skin)
 #endif
-#if(EVENT_END_LESS)
-	//==CB Custom New
-	gQueryManager.ExecQuery("UPDATE Character SET LuotDiEndLess='%d' WHERE AccountID='%s' AND Name='%s'", lpMsg->mLuotDiEndLess, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-#endif
-#if(B_HON_HOAN)
-
-	gQueryManager.ExecQuery("UPDATE Character SET HonHoan='%d',PointUsePhe='%d' WHERE AccountID='%s' AND Name='%s'", lpMsg->CapDoHonHoan,lpMsg->PointUsePhe, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-
-#endif
-
-#if(DANHHIEU_NEW)
-	gQueryManager.ExecQuery("UPDATE Character SET rDanhHieu=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->rDanhHieu, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-	gQueryManager.ExecQuery("UPDATE Character SET DHSatThuong=%d,DHSatThuongX2=%d,DHPhongThu=%d,DHHP=%d,DHSD=%d,DHGST=%d WHERE AccountID='%s' AND Name='%s'",
-	lpMsg->DHSatThuong, lpMsg->DHSatThuongX2, lpMsg->DHPhongThu, lpMsg->DHHP, lpMsg->DHSD, lpMsg->DHGST, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-#endif
-
-#if(TULUYEN_NEW)
-	gQueryManager.ExecQuery("UPDATE Character SET rTuLuyen=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->rTuLuyen, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-	Log.ToDisp(LOG_BLACK, "UPDATE Character SET rTuLuyen=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->rTuLuyen, lpMsg->account, lpMsg->name);
-
-#endif
-
-	gQueryManager.ExecQuery("Update Character SET CTCRegDay='0', CTCTime='%d'", (RSTimeCTC * 60));
-	gQueryManager.Close();
-
-#if (CHIENTRUONGCO == 1)
-	gQueryManager.ExecQuery("UPDATE Character SET CTCTime=%d, CTCRegDay=%d  WHERE AccountID='%s' AND Name='%s'", lpMsg->CTCTime, lpMsg->CTCRegDay, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-#endif
-
-	#if(MOCNAP == 1)
-	gQueryManager.ExecQuery("UPDATE Character SET MOCNAPCOIN=%d WHERE Name='%s'", lpMsg->MOCNAPCOIN, lpMsg->name);
-	gQueryManager.Close();
-	#endif
-
-	#else
-
-	gQueryManager.BindParameterAsBinary(1,lpMsg->Inventory[0],sizeof(lpMsg->Inventory));
-	gQueryManager.BindParameterAsBinary(2,lpMsg->Skill[0],sizeof(lpMsg->Skill));
-	gQueryManager.BindParameterAsBinary(3,lpMsg->Quest,sizeof(lpMsg->Quest));
-	gQueryManager.BindParameterAsBinary(4,lpMsg->Effect[0],sizeof(lpMsg->Effect));
-	gQueryManager.ExecQuery("UPDATE Character SET cLevel=%d,Class=%d,LevelUpPoint=%d,Experience=%d,Strength=%d,Dexterity=%d,Vitality=%d,Energy=%d,Leadership=%d,Inventory=?,MagicList=?,Money=%d,Life=%f,MaxLife=%f,Mana=%f,MaxMana=%f,BP=%f,MaxBP=%f,Shield=%f,MaxShield=%f,MapNumber=%d,MapPosX=%d,MapPosY=%d,MapDir=%d,PkCount=%d,PkLevel=%d,PkTime=%d,Quest=?,EffectList=?,FruitAddPoint=%d,FruitSubPoint=%d WHERE AccountID='%s' AND Name='%s'",lpMsg->Level,lpMsg->Class,lpMsg->LevelUpPoint,lpMsg->Experience,lpMsg->Strength,lpMsg->Dexterity,lpMsg->Vitality,lpMsg->Energy,lpMsg->Leadership,lpMsg->Money,(float)lpMsg->Life,(float)lpMsg->MaxLife,(float)lpMsg->Mana,(float)lpMsg->MaxMana,(float)lpMsg->BP,(float)lpMsg->MaxBP,(float)lpMsg->Shield,(float)lpMsg->MaxShield,lpMsg->Map,lpMsg->X,lpMsg->Y,lpMsg->Dir,lpMsg->PKCount,lpMsg->PKLevel,lpMsg->PKTime,lpMsg->FruitAddPoint,lpMsg->FruitSubPoint,lpMsg->account,lpMsg->name);
-	gQueryManager.Close();
-
-	#endif
-
-	#if(DATASERVER_UPDATE>=602)
-
-	gQueryManager.ExecQuery("UPDATE AccountCharacter SET ExtWarehouse=%d WHERE Id='%s'",lpMsg->ExtWarehouse,lpMsg->account);
-	gQueryManager.Close();
-
-	#endif
-
-	gQueryManager.ExecQuery("UPDATE Character SET Kills=%d, Deads=%d WHERE Name='%s'",lpMsg->Kills,lpMsg->Deads,lpMsg->name);
-	gQueryManager.Close();
-
-#if(FLAG_SKIN)
-	//Flagrong
-	gQueryManager.ExecQuery("UPDATE Character SET Kills=%d, Deads=%d WHERE Name='%s'", lpMsg->Kills, lpMsg->Deads, lpMsg->name);
-	gQueryManager.Close();
-	gQueryManager.ExecQuery("UPDATE Character SET Flag=%d WHERE AccountID='%s' AND Name='%s'", lpMsg->Flag, lpMsg->account, lpMsg->name);
-	gQueryManager.Close();
-	//Flagrong
-#endif
-
-
-}
-
-void GDInventoryItemSaveRecv(SDHP_INVENTORY_ITEM_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.BindParameterAsBinary(1,lpMsg->Inventory[0],sizeof(lpMsg->Inventory));
-	gQueryManager.ExecQuery("UPDATE Character SET Inventory=? WHERE AccountID='%s' AND Name='%s'",lpMsg->account,lpMsg->name);
-	gQueryManager.Close();
-}
-
-void GDOptionDataSaveRecv(SDHP_OPTION_DATA_SAVE_RECV* lpMsg) // OK
-{
-	if(gQueryManager.ExecQuery("SELECT Name FROM OptionData WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		#if(DATASERVER_UPDATE>=701)
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
-		gQueryManager.ExecQuery("INSERT INTO OptionData (Name,SkillKey,GameOption,Qkey,Wkey,Ekey,ChatWindow,Rkey,QWERLevel,ChangeSkin) VALUES ('%s',?,%d,%d,%d,%d,%d,%d,%d,%d)",lpMsg->name,lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel,lpMsg->ChangeSkin);
-		gQueryManager.Close();
-		#else
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
-		gQueryManager.ExecQuery("INSERT INTO OptionData (Name,SkillKey,GameOption,Qkey,Wkey,Ekey,ChatWindow,Rkey,QWERLevel) VALUES ('%s',?,%d,%d,%d,%d,%d,%d,%d)",lpMsg->name,lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel);
-		gQueryManager.Close();
-		#endif
-	}
-	else
-	{
-		#if(DATASERVER_UPDATE>=701)
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
-		gQueryManager.ExecQuery("UPDATE OptionData SET SkillKey=?,GameOption=%d,Qkey=%d,Wkey=%d,Ekey=%d,ChatWindow=%d,Rkey=%d,QWERLevel=%d,ChangeSkin=%d WHERE Name='%s'",lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel,lpMsg->ChangeSkin,lpMsg->name);
-		gQueryManager.Close();
-		#else
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
-		gQueryManager.ExecQuery("UPDATE OptionData SET SkillKey=?,GameOption=%d,Qkey=%d,Wkey=%d,Ekey=%d,ChatWindow=%d,Rkey=%d,QWERLevel=%d WHERE Name='%s'",lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel,lpMsg->name);
-		gQueryManager.Close();
-		#endif
-	}
-}
-
-void GDPetItemInfoSaveRecv(SDHP_PET_ITEM_INFO_SAVE_RECV* lpMsg) // OK
-{
-	for(int n=0;n < lpMsg->count;n++)
-	{
-		SDHP_PET_ITEM_INFO_SAVE* lpInfo = (SDHP_PET_ITEM_INFO_SAVE*)(((BYTE*)lpMsg)+sizeof(SDHP_PET_ITEM_INFO_SAVE_RECV)+(sizeof(SDHP_PET_ITEM_INFO_SAVE)*n));
-
-		if(gQueryManager.ExecQuery("SELECT ItemSerial FROM T_PetItem_Info WHERE ItemSerial=%d",lpInfo->serial) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("INSERT INTO T_PetItem_Info (ItemSerial,Pet_Level,Pet_Exp) VALUES (%d,%d,%d)",lpInfo->serial,lpInfo->level,lpInfo->experience);
-			gQueryManager.Close();
-		}
-		else
-		{
-			gQueryManager.Close();
-			gQueryManager.ExecQuery("UPDATE T_PetItem_Info SET Pet_Level=%d,Pet_Exp=%d WHERE ItemSerial=%d",lpInfo->level,lpInfo->experience,lpInfo->serial);
-			gQueryManager.Close();
-		}
-	}
-}
-
-void GDResetInfoSaveRecv(SDHP_RESET_INFO_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_SetResetInfo '%s','%s','%d','%d','%d','%d'",lpMsg->account,lpMsg->name,lpMsg->Reset,lpMsg->ResetDay,lpMsg->ResetWek,lpMsg->ResetMon);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDMasterResetInfoSaveRecv(SDHP_MASTER_RESET_INFO_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_SetMasterResetInfo '%s','%s','%d','%d','%d','%d','%d'",lpMsg->account,lpMsg->name,lpMsg->Reset,lpMsg->MasterReset,lpMsg->MasterResetDay,lpMsg->MasterResetWek,lpMsg->MasterResetMon);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDRankingDuelSaveRecv(SDHP_RANKING_DUEL_SAVE_RECV* lpMsg) // OK
-{
-	if(gQueryManager.ExecQuery("SELECT Name FROM RankingDuel WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO RankingDuel (Name,WinScore,LoseScore,WinScore_semanal) VALUES ('%s',%d,%d,%d)",lpMsg->name,lpMsg->WinScore,lpMsg->LoseScore,lpMsg->WinScore);
-		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE RankingDuel SET WinScore=WinScore+%d,WinScore_semanal=WinScore_semanal+%d,LoseScore=LoseScore+%d WHERE Name='%s'",lpMsg->WinScore,lpMsg->WinScore,lpMsg->LoseScore,lpMsg->name);
-		gQueryManager.Close();
-	}
-}
-
-void GDRankingBloodCastleSaveRecv(SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_RankingBloodCastle '%s','%s','%d'",lpMsg->account,lpMsg->name,lpMsg->score);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDRankingChaosCastleSaveRecv(SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_RankingChaosCastle '%s','%s','%d'",lpMsg->account,lpMsg->name,lpMsg->score);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDRankingDevilSquareSaveRecv(SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_RankingDevilSquare '%s','%s','%d'",lpMsg->account,lpMsg->name,lpMsg->score);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDRankingIllusionTempleSaveRecv(SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_RankingIllusionTemple '%s','%s','%d'",lpMsg->account,lpMsg->name,lpMsg->score);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDCreationCardSaveRecv(SDHP_CREATION_CARD_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("UPDATE AccountCharacter SET ExtClass=%d WHERE Id='%s'",lpMsg->ExtClass,lpMsg->account);
-	gQueryManager.Close();
-}
-
-void GDCrywolfInfoSaveRecv(SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_CW_InfoSave '%d','%d','%d'",lpMsg->MapServerGroup,lpMsg->CrywolfState,lpMsg->OccupationState);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDSNSDataSaveRecv(SDHP_SNS_DATA_SAVE_RECV* lpMsg) // OK
-{
-	#if(DATASERVER_UPDATE>=801)
-
-	if(gQueryManager.ExecQuery("SELECT Name FROM SNSData WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->data,sizeof(lpMsg->data));
-		gQueryManager.ExecQuery("INSERT INTO SNSData (Name,Data) VALUES ('%s',?)",lpMsg->name);
-		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-		gQueryManager.BindParameterAsBinary(1,lpMsg->data,sizeof(lpMsg->data));
-		gQueryManager.ExecQuery("UPDATE SNSData SET Data=? WHERE Name='%s'",lpMsg->name);
-		gQueryManager.Close();
 	}
 
-	#endif
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void GDCustomMonsterRewardSaveRecv(SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV* lpMsg) // OK
+void GDPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg, int aIndex)
 {
-	gQueryManager.ExecQuery("EXEC WZ_CustomMonsterReward '%s','%s','%d','%d','%d','%d','%d','%d'",lpMsg->account,lpMsg->name, lpMsg->MonsterClass, lpMsg->MapNumber, lpMsg->RewardValue1, lpMsg->RewardValue2, lpMsg->RewardValue3, lpMsg->RewardValue4);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
+	// Reconstruimos el tamaño real del paquete recibido desde la cabecera (2 bytes -> WORD)
+	const auto receivedSize = static_cast<WORD>(MAKE_NUMBERW(lpMsg->Header.size[0], lpMsg->Header.size[1]));
 
-void GDRankingCustomArenaSaveRecv(SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_CustomArenaRanking '%s','%s','%d','%d','%d'",lpMsg->account,lpMsg->name,lpMsg->number,lpMsg->score,lpMsg->rank);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
+	// Calculamos el tamaño mínimo esperado: cabecera + (cantidad de items * tamaño de cada item entrante)
+	const auto expectedSize = static_cast<WORD>(sizeof(SDHP_PET_ITEM_INFO_RECV) + (static_cast<size_t>(lpMsg->count) * sizeof(SDHP_PET_ITEM_INFO1)));
 
-void GDRankingTvTEventSaveRecv(SDHP_RANKING_TVT_EVENT_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("EXEC WZ_TvTRanking '%s','%s','%d','%d'",lpMsg->account,lpMsg->name,lpMsg->killcount,lpMsg->deathcount);
-	gQueryManager.Fetch();
-	gQueryManager.Close();
-}
-
-void GDConnectCharacterRecv(SDHP_CONNECT_CHARACTER_RECV* lpMsg,int index) // OK
-{
-	CHARACTER_INFO CharacterInfo;
-
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,lpMsg->name) != 0)
+	// Si el paquete es más pequeño de lo que dice ser, lo descartamos para evitar
+	// leer memoria no asignada (Buffer Over-read) y crashear el DataServer.
+	if (receivedSize < expectedSize)
 	{
 		return;
 	}
 
-	strcpy_s(CharacterInfo.Name,lpMsg->name);
+	// --- PREPARACIÓN DEL PAQUETE DE RESPUESTA
+	SDHP_PET_ITEM_INFO_SEND pMsg{};
+	pMsg.Header.set(HEAD_PET_ITEM, 0); // El tamaño real se calculará al final
+	pMsg.Index = lpMsg->Index;
 
-	strcpy_s(CharacterInfo.Account,lpMsg->account);
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 
-	CharacterInfo.UserIndex = lpMsg->index;
+	pMsg.type = lpMsg->type;
+	pMsg.count = 0;
 
+	// Calculamos el tamaño total exacto que ocupará la respuesta dinámica.
+	const size_t packetSize = sizeof(SDHP_PET_ITEM_INFO_SEND) + (static_cast<size_t>(lpMsg->count) * sizeof(SDHP_PET_ITEM_INFO2));
+
+	std::vector<BYTE> sendBuffer(packetSize);
+	
+	// El offset indica dónde empezar a escribir los datos variables en el búfer,
+    // dejando espacio libre al principio para la cabecera fija.
+	size_t offset{ sizeof(SDHP_PET_ITEM_INFO_SEND) };
+
+	const auto* itemList = reinterpret_cast<const SDHP_PET_ITEM_INFO1*>(
+		reinterpret_cast<const BYTE*>(lpMsg) + sizeof(SDHP_PET_ITEM_INFO_RECV));
+
+	for (BYTE n = 0; n < lpMsg->count; ++n)
+	{
+		const auto& item = itemList[n];
+
+		// Inicializamos la estructura de respuesta con los valores por defecto
+		// (Nivel 1, Experiencia 0) en caso de que la mascota no exista en la DB.
+		SDHP_PET_ITEM_INFO2 info
+		{
+			item.Slot,
+			item.Serial,
+			1,
+			0
+		};
+
+		// Consulta a la base de datos: buscamos si el serial de la mascota ya existe.
+		// Se usa evaluación de cortocircuto (&&): Fetch solo se llama si ExecQuery tuvo éxito.
+		const bool dataFound =
+			gQueryManager.ExecQuery(
+				"SELECT Pet_Level,Pet_Exp FROM T_PetItem_Info WHERE ItemSerial=%d",
+				item.Serial) &&
+			gQueryManager.Fetch() != SQL_NO_DATA;
+
+		// Si la mascota existe en la DB, sobreescribimos los valores por defecto
+		if (dataFound)
+		{
+			info.Level = gQueryManager.GetAsInteger("Pet_Level");
+			info.Experience = gQueryManager.GetAsInteger("Pet_Exp");
+		}
+
+		gQueryManager.Close();
+
+		// Si no existe, la insertamos en la DB con los valores por defecto iniciales
+		if (!dataFound)
+		{
+			gQueryManager.ExecQuery(
+				"INSERT INTO T_PetItem_Info (ItemSerial,Pet_Level,Pet_Exp) VALUES (%d,%d,%d)",
+				item.Serial,
+				1,
+				0);
+
+			gQueryManager.Close();
+		}
+
+		// Copiamos la estructura de la mascota procesada al búfer dinámico de respuesta
+		std::memcpy(sendBuffer.data() + offset, &info, sizeof(info));
+
+		offset += sizeof(info);
+
+		++pMsg.count;
+	}
+
+	// El tamaño final del paquete es el offset alcanzado tras escribir todas las mascotas
+	const auto packetLength = static_cast<WORD>(offset);
+
+	// Codificamos el tamaño final calculado en la cabecera usando las macros del protocolo Mu
+	pMsg.Header.size[0] = SET_NUMBERHB(packetLength);
+	pMsg.Header.size[1] = SET_NUMBERLB(packetLength);
+
+	// Sobreescribimos el inicio del búfer con la cabecera que ya tiene el tamaño correcto
+	std::memcpy(sendBuffer.data(), &pMsg, sizeof(pMsg));
+
+	// Enviamos el paquete construido de vuelta al GameServer
+	gSocketManager.DataSend(aIndex, sendBuffer.data(), packetLength);
+}
+
+void GDCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg, int index)
+{
+#if(DATASERVER_UPDATE >= 401)
+
+	SDHP_CHARACTER_NAME_CHECK_SEND pMsg{};
+
+	pMsg.Header.set(HEAD_CHARACTER_NAME_CHECK, sizeof(pMsg)); 
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+
+	// Lógica simplificada: 
+	// CheckTextSyntax y CheckSyntax devuelven 0 si el texto es inválido.
+	// El operador '!' invierte el resultado: 0 se vuelve true(1), y no-0 se vuelve false(0).
+	// Por lo tanto, si la sintaxis es inválida o contiene palabras prohibidas, Result será 1.
+	pMsg.Result = static_cast<BYTE>(
+		!gUtil.CheckTextSyntax(lpMsg->CharacterName, sizeof(lpMsg->CharacterName)) ||
+		!gBadSyntax.CheckSyntax(lpMsg->CharacterName)
+		);
+
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
+
+#endif
+}
+
+void GDCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg, int aIndex)
+{
+#if (DATASERVER_UPDATE >= 401)
+
+	SDHP_CHARACTER_NAME_CHANGE_SEND pMsg{};
+
+	pMsg.Header.set(HEAD_CHARACTER_RENAME, sizeof(pMsg));
+
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.OldName, lpMsg->OldName, sizeof(pMsg.OldName));
+	std::memcpy(pMsg.NewName, lpMsg->NewName, sizeof(pMsg.NewName));
+
+	pMsg.Result = (
+		gUtil.CheckTextSyntax(lpMsg->NewName, sizeof(lpMsg->NewName)) == 0 ||
+		gBadSyntax.CheckSyntax(lpMsg->NewName) == 0
+		) ? 1 : 0;
+
+	if (pMsg.Result == 0)
+	{
+		const bool renamed =
+			gQueryManager.ExecQuery(
+				"EXEC WZ_RenameCharacter '%s','%s','%s'",
+				lpMsg->Account,
+				lpMsg->OldName,
+				lpMsg->NewName) &&
+			gQueryManager.Fetch() != SQL_NO_DATA;
+
+		if (renamed)
+		{
+			pMsg.Result = gQueryManager.GetResult(0);
+		}
+		else
+		{
+			pMsg.Result = 1;
+		}
+
+		gQueryManager.Close();
+	}
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+
+#endif
+}
+
+void GDCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg, int aIndex)
+{
+	SDHP_CRYWOLF_SYNC_SEND pMsg{};
+	pMsg.Header.set(HEAD_CRYWOLF_SYNC, sizeof(pMsg));
+
+	pMsg.MapServerGroup = lpMsg->MapServerGroup;
+	pMsg.CrywolfState = lpMsg->CrywolfState;
+	pMsg.OccupationState = lpMsg->OccupationState;
+
+	// Iteramos sobre todos los servidores y enviamos el paquete a los que estén online
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		// IsOnline() devuelve un valor distinto de 0 si está conectado (evalúa como true)
+		if (gServerManager[n].IsOnline() != 0)
+		{
+			gSocketManager.DataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+		}
+	}
+}
+
+void GDCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg, int aIndex)
+{
+	SDHP_CRYWOLF_INFO_SEND pMsg{};
+	pMsg.Header.set(HEAD_CRYWOLF_INFO, sizeof(pMsg));
+	pMsg.MapServerGroup = lpMsg->MapServerGroup;
+
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"EXEC WZ_CW_InfoLoad '%d'",
+			lpMsg->MapServerGroup) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
+
+	if (dataFound)
+	{
+		pMsg.CrywolfState = static_cast<BYTE>(gQueryManager.GetAsInteger("CRYWOLF_STATE"));
+		pMsg.OccupationState = static_cast<BYTE>(gQueryManager.GetAsInteger("CRYWOLF_OCCUFY"));
+	}
+	else
+	{
+		// Valores por defecto en caso de que la DB falle o no tenga datos
+		pMsg.CrywolfState = 0;
+		pMsg.OccupationState = 0;
+	}
+
+	gQueryManager.Close();
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+}
+
+void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg, int aIndex)
+{
+	SDHP_GLOBAL_POST_SEND pMsg{};
+	pMsg.Header.set(HEAD_GLOBAL_POST, sizeof(pMsg));
+
+	pMsg.MapServerGroup = lpMsg->MapServerGroup;
+	pMsg.type = lpMsg->type;
+
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() != 0)
+		{
+			gSocketManager.DataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+		}
+	}
+}
+
+void GDGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg, int aIndex)
+{
+	SDHP_GLOBAL_ITEM_POST_SEND pMsg{};
+	pMsg.Header.set(HEAD_GLOBAL_ITEM_POST, sizeof(pMsg));
+	pMsg.MapServerGroup = lpMsg->MapServerGroup;
+
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
+	std::memcpy(pMsg.item_data, lpMsg->item_data, sizeof(pMsg.item_data));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() != 0)
+		{
+			gSocketManager.DataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+		}
+	}
+}
+
+void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg, int aIndex)
+{
+	SDHP_GLOBAL_NOTICE_SEND pMsg{};
+	pMsg.Header.set(HEAD_GLOBAL_NOTICE, sizeof(pMsg));
+
+	pMsg.MapServerGroup = lpMsg->MapServerGroup;
+	pMsg.type = lpMsg->type;
+	pMsg.count = lpMsg->count;
+	pMsg.opacity = lpMsg->opacity;
+	pMsg.delay = lpMsg->delay;
+	pMsg.color = lpMsg->color;
+	pMsg.speed = lpMsg->speed;
+
+	std::memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
+
+	for (int n = 0; n < MAX_SERVER; ++n)
+	{
+		if (gServerManager[n].IsOnline() != 0)
+		{
+			gSocketManager.DataSend(n, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+		}
+	}
+}
+
+void GDSNSDataRecv(SDHP_SNS_DATA_RECV* lpMsg, int aIndex)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	SDHP_SNS_DATA_SEND pMsg{};
+	pMsg.Header.set(HEAD_SNS_DATA, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"SELECT Data FROM SNSData WHERE Name='%s'",
+			lpMsg->CharacterName) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
+
+	if (dataFound)
+	{
+		pMsg.Result = 0;
+		gQueryManager.GetAsBinary("Data", pMsg.data, sizeof(pMsg.data));
+	}
+	else
+	{
+		pMsg.Result = 1;
+		std::memset(pMsg.data, 0xFF, sizeof(pMsg.data));
+	}
+
+	gQueryManager.Close();
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+
+#endif
+}
+
+void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg)
+{
+	// --- 1. CONSULTA PRINCIPAL CON PARÁMETROS BINARIOS ---
+	gQueryManager.BindParameterAsBinary(1, lpMsg->Inventory[0], sizeof(lpMsg->Inventory));
+	gQueryManager.BindParameterAsBinary(2, lpMsg->Skill[0], sizeof(lpMsg->Skill));
+	gQueryManager.BindParameterAsBinary(3, lpMsg->Quest, sizeof(lpMsg->Quest));
+	gQueryManager.BindParameterAsBinary(4, lpMsg->Effect[0], sizeof(lpMsg->Effect));
+
+	////==Chien Truong Co
+	//gQueryManager.ExecQuery("UPDATE Character SET CTCTime=%d, CTCRegDay=%d  WHERE AccountID='%s' WHERE Name='%s'", lpMsg->CTCTime, lpMsg->CTCRegDay, lpMsg->Account, lpMsg->CharacterName);
+	//LogAdd(LOG_BLUE, "UPDATE Character SET CTCTime=%d, CTCRegDay=%d  WHERE AccountID='%s' AND Name='%s'", lpMsg->CTCTime, lpMsg->CTCRegDay, lpMsg->Account, lpMsg->CharacterName);
+	//gQueryManager.Close();
+
+#if(DATASERVER_UPDATE >= 602)
+	if (!gQueryManager.ExecQuery(
+		"UPDATE Character SET "
+		"cLevel=%d, Class=%d, LevelUpPoint=%d, Experience=%d, "
+		"Strength=%d, Dexterity=%d, Vitality=%d, Energy=%d, Leadership=%d, "
+		"Inventory=?, MagicList=?, Money=%d, "
+		"Life=%f, MaxLife=%f, Mana=%f, MaxMana=%f, "
+		"BP=%f, MaxBP=%f, Shield=%f, MaxShield=%f, "
+		"MapNumber=%d, MapPosX=%d, MapPosY=%d, MapDir=%d, "
+		"PkCount=%d, PkLevel=%d, PkTime=%d, "
+		"Quest=?, EffectList=?, "
+		"FruitAddPoint=%d, FruitSubPoint=%d, ExtInventory=%d "
+		"WHERE AccountID='%s' AND Name='%s'",
+		lpMsg->Level, lpMsg->Class, lpMsg->LevelUpPoint, lpMsg->Experience,
+		lpMsg->Strength, lpMsg->Dexterity, lpMsg->Vitality, lpMsg->Energy, lpMsg->Leadership,
+		lpMsg->Money,
+		static_cast<float>(lpMsg->Life), static_cast<float>(lpMsg->MaxLife),
+		static_cast<float>(lpMsg->Mana), static_cast<float>(lpMsg->MaxMana),
+		static_cast<float>(lpMsg->BP), static_cast<float>(lpMsg->MaxBP),
+		static_cast<float>(lpMsg->Shield), static_cast<float>(lpMsg->MaxShield),
+		lpMsg->Map, lpMsg->X, lpMsg->Y, lpMsg->Dir,
+		lpMsg->PKCount, lpMsg->PKLevel, lpMsg->PKTime,
+		lpMsg->FruitAddPoint, lpMsg->FruitSubPoint, lpMsg->ExtInventory,
+		lpMsg->Account, lpMsg->CharacterName))
+	{
+		gQueryManager.Close();
+		return;
+	}
+#else
+	if (!gQueryManager.ExecQuery(
+		"UPDATE Character SET "
+		"cLevel=%d, Class=%d, LevelUpPoint=%d, Experience=%d, "
+		"Strength=%d, Dexterity=%d, Vitality=%d, Energy=%d, Leadership=%d, "
+		"Inventory=?, MagicList=?, Money=%d, "
+		"Life=%f, MaxLife=%f, Mana=%f, MaxMana=%f, "
+		"BP=%f, MaxBP=%f, Shield=%f, MaxShield=%f, "
+		"MapNumber=%d, MapPosX=%d, MapPosY=%d, MapDir=%d, "
+		"PkCount=%d, PkLevel=%d, PkTime=%d, "
+		"Quest=?, EffectList=?, "
+		"FruitAddPoint=%d, FruitSubPoint=%d "
+		"WHERE AccountID='%s' AND Name='%s'",
+		lpMsg->Level, lpMsg->Class, lpMsg->LevelUpPoint, lpMsg->Experience,
+		lpMsg->Strength, lpMsg->Dexterity, lpMsg->Vitality, lpMsg->Energy, lpMsg->Leadership,
+		lpMsg->Money,
+		static_cast<float>(lpMsg->Life), static_cast<float>(lpMsg->MaxLife),
+		static_cast<float>(lpMsg->Mana), static_cast<float>(lpMsg->MaxMana),
+		static_cast<float>(lpMsg->BP), static_cast<float>(lpMsg->MaxBP),
+		static_cast<float>(lpMsg->Shield), static_cast<float>(lpMsg->MaxShield),
+		lpMsg->Map, lpMsg->X, lpMsg->Y, lpMsg->Dir,
+		lpMsg->PKCount, lpMsg->PKLevel, lpMsg->PKTime,
+		lpMsg->FruitAddPoint, lpMsg->FruitSubPoint,
+		lpMsg->Account, lpMsg->CharacterName))
+	{
+		gQueryManager.Close();
+		return;
+	}
+#endif
+	gQueryManager.Close();
+
+	// --- 2. CONSULTA AGRUPADA DE SISTEMAS CUSTOM (SQL FIJO) ---
+	// Los #if se aplican tanto al literal de cadena como a los argumentos,
+	// garantizando un alineamiento 1:1 en tiempo de compilación.
+	if (!gQueryManager.ExecQuery(
+		"UPDATE Character SET "
+		"UserSkinPick=%d, Kills=%d, Deads=%d"
+#if (CHONPHEDOILAP)
+		", PheHanhTau=%d"
+#endif
+#if (EVENT_END_LESS)
+		", LuotDiEndLess=%d"
+#endif
+#if (B_HON_HOAN)
+		", HonHoan=%d, PointUsePhe=%d"
+#endif
+#if (DANHHIEU_NEW)
+		", rDanhHieu=%d, DHSatThuong=%d, DHSatThuongX2=%d, DHPhongThu=%d, DHHP=%d, DHSD=%d, DHGST=%d"
+#endif
+#if (TULUYEN_NEW)
+		", rTuLuyen=%d"
+#endif
+#if (MOCNAP == 1)
+		", MOCNAPCOIN=%d"
+#endif
+		// Lógica de CTC unificada en un solo lugar y con WHERE seguro
+#if (CHIENTRUONGCO == 1)
+		", CTCTime=%d, CTCRegDay=%d"
+#else
+		", CTCTime=%d, CTCRegDay=0" // Bug original corregido: Agregado WHERE abajo, y CTCRegDay=0
+#endif
+#if (FLAG_SKIN)
+		", Flag=%d"
+#endif
+		" WHERE AccountID='%s' AND Name='%s'",
+
+		// Argumentos (mismo orden exacto que los bloques #if de arriba)
+		lpMsg->mUserSkinPick, lpMsg->Kills, lpMsg->Deads,
+#if (CHONPHEDOILAP)
+		lpMsg->ChonPheHanhTau,
+#endif
+#if (EVENT_END_LESS)
+		lpMsg->mLuotDiEndLess,
+#endif
+#if (B_HON_HOAN)
+		lpMsg->CapDoHonHoan, lpMsg->PointUsePhe,
+#endif
+#if (DANHHIEU_NEW)
+		lpMsg->rDanhHieu, lpMsg->DHSatThuong, lpMsg->DHSatThuongX2, lpMsg->DHPhongThu, lpMsg->DHHP, lpMsg->DHSD, lpMsg->DHGST,
+#endif
+#if (TULUYEN_NEW)
+		lpMsg->rTuLuyen,
+#endif
+#if (MOCNAP == 1)
+		lpMsg->MOCNAPCOIN,
+#endif
+#if (CHIENTRUONGCO == 1)
+		lpMsg->CTCTime, lpMsg->CTCRegDay,
+#else
+		static_cast<int>(RSTimeCTC * 60), // El valor para CTCTime si el sistema está desactivado
+#endif
+#if (FLAG_SKIN)
+		lpMsg->Flag,
+#endif
+		lpMsg->Account, lpMsg->CharacterName))
+	{
+		gQueryManager.Close();
+		return;
+	}
+	gQueryManager.Close();
+
+	// --- 3. ACTUALIZACIÓN DE TABLA AccountCharacter ---
+#if (DATASERVER_UPDATE >= 602)
+	if (!gQueryManager.ExecQuery("UPDATE AccountCharacter SET ExtWarehouse=%d WHERE Id='%s'", lpMsg->ExtWarehouse, lpMsg->Account))
+	{
+		gQueryManager.Close();
+		return;
+	}
+	gQueryManager.Close();
+#endif
+}
+
+void GDInventoryItemSaveRecv(SDHP_INVENTORY_ITEM_SAVE_RECV* lpMsg)
+{
+	gQueryManager.BindParameterAsBinary(1,lpMsg->Inventory[0],sizeof(lpMsg->Inventory));
+	gQueryManager.ExecQuery("UPDATE Character SET Inventory=? WHERE AccountID='%s' AND Name='%s'",lpMsg->Account,lpMsg->CharacterName);
+	gQueryManager.Close();
+}
+
+void GDOptionDataSaveRecv(SDHP_OPTION_DATA_SAVE_RECV* lpMsg)
+{
+	if(!gQueryManager.ExecQuery("SELECT Name FROM OptionData WHERE Name='%s'",lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
+	{
+		#if(DATASERVER_UPDATE>=701)
+		gQueryManager.Close();
+		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
+		gQueryManager.ExecQuery("INSERT INTO OptionData (Name,SkillKey,GameOption,Qkey,Wkey,Ekey,ChatWindow,Rkey,QWERLevel,ChangeSkin) VALUES ('%s',?,%d,%d,%d,%d,%d,%d,%d,%d)",lpMsg->CharacterName,lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel,lpMsg->ChangeSkin);
+		gQueryManager.Close();
+		#else
+		gQueryManager.Close();
+		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
+		gQueryManager.ExecQuery("INSERT INTO OptionData (Name,SkillKey,GameOption,Qkey,Wkey,Ekey,ChatWindow,Rkey,QWERLevel) VALUES ('%s',?,%d,%d,%d,%d,%d,%d,%d)",lpMsg->CharacterName,lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel);
+		gQueryManager.Close();
+		#endif
+	}
+	else
+	{
+		#if(DATASERVER_UPDATE>=701)
+		gQueryManager.Close();
+		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
+		gQueryManager.ExecQuery("UPDATE OptionData SET SkillKey=?,GameOption=%d,Qkey=%d,Wkey=%d,Ekey=%d,ChatWindow=%d,Rkey=%d,QWERLevel=%d,ChangeSkin=%d WHERE Name='%s'",lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel,lpMsg->ChangeSkin,lpMsg->CharacterName);
+		gQueryManager.Close();
+		#else
+		gQueryManager.Close();
+		gQueryManager.BindParameterAsBinary(1,lpMsg->SkillKey,sizeof(lpMsg->SkillKey));
+		gQueryManager.ExecQuery("UPDATE OptionData SET SkillKey=?,GameOption=%d,Qkey=%d,Wkey=%d,Ekey=%d,ChatWindow=%d,Rkey=%d,QWERLevel=%d WHERE Name='%s'",lpMsg->GameOption,lpMsg->QKey,lpMsg->WKey,lpMsg->EKey,lpMsg->ChatWindow,lpMsg->RKey,lpMsg->QWERLevel,lpMsg->CharacterName);
+		gQueryManager.Close();
+		#endif
+	}
+}
+
+void GDPetItemInfoSaveRecv(SDHP_PET_ITEM_INFO_SAVE_RECV* lpMsg)
+{
+	for (int n = 0; n < lpMsg->count; ++n)
+	{
+		auto* lpInfo = reinterpret_cast<SDHP_PET_ITEM_INFO_SAVE*>(
+			reinterpret_cast<BYTE*>(lpMsg) +
+			sizeof(SDHP_PET_ITEM_INFO_SAVE_RECV) +
+			(sizeof(SDHP_PET_ITEM_INFO_SAVE) * n));
+
+		const bool exists =
+			gQueryManager.ExecQuery(
+				"SELECT ItemSerial FROM T_PetItem_Info WHERE ItemSerial=%d",
+				lpInfo->serial) &&
+			(gQueryManager.Fetch() != SQL_NO_DATA);
+
+		gQueryManager.Close();
+
+		if (exists)
+		{
+			gQueryManager.ExecQuery(
+				"UPDATE T_PetItem_Info SET Pet_Level=%d,Pet_Exp=%d WHERE ItemSerial=%d",
+				lpInfo->level,
+				lpInfo->experience,
+				lpInfo->serial);
+		}
+		else
+		{
+			gQueryManager.ExecQuery(
+				"INSERT INTO T_PetItem_Info (ItemSerial,Pet_Level,Pet_Exp) VALUES (%d,%d,%d)",
+				lpInfo->serial,
+				lpInfo->level,
+				lpInfo->experience);
+		}
+
+		gQueryManager.Close();
+	}
+}
+
+void GDResetInfoSaveRecv(SDHP_RESET_INFO_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_SetResetInfo '%s','%s','%d','%d','%d','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->Reset,
+		lpMsg->ResetDay,
+		lpMsg->ResetWek,
+		lpMsg->ResetMon))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDMasterResetInfoSaveRecv(SDHP_MASTER_RESET_INFO_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_SetMasterResetInfo '%s','%s','%d','%d','%d','%d','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->Reset,
+		lpMsg->MasterReset,
+		lpMsg->MasterResetDay,
+		lpMsg->MasterResetWek,
+		lpMsg->MasterResetMon))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingDuelSaveRecv(SDHP_RANKING_DUEL_SAVE_RECV* lpMsg)
+{
+	const bool exists =
+		gQueryManager.ExecQuery(
+			"SELECT Name FROM RankingDuel WHERE Name='%s'",
+			lpMsg->CharacterName) &&
+		(gQueryManager.Fetch() != SQL_NO_DATA);
+
+	gQueryManager.Close();
+
+	if (exists)
+	{
+		gQueryManager.ExecQuery(
+			"UPDATE RankingDuel SET "
+			"WinScore=WinScore+%d,"
+			"WinScore_semanal=WinScore_semanal+%d,"
+			"LoseScore=LoseScore+%d "
+			"WHERE Name='%s'",
+			lpMsg->WinScore,
+			lpMsg->WinScore,
+			lpMsg->LoseScore,
+			lpMsg->CharacterName);
+	}
+	else
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO RankingDuel "
+			"(Name,WinScore,LoseScore,WinScore_semanal) "
+			"VALUES ('%s',%d,%d,%d)",
+			lpMsg->CharacterName,
+			lpMsg->WinScore,
+			lpMsg->LoseScore,
+			lpMsg->WinScore);
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingBloodCastleSaveRecv(SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_RankingBloodCastle '%s','%s','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->score))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingChaosCastleSaveRecv(SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_RankingChaosCastle '%s','%s','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->score))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingDevilSquareSaveRecv(SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_RankingDevilSquare '%s','%s','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->score))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingIllusionTempleSaveRecv(SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_RankingIllusionTemple '%s','%s','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->score))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDCreationCardSaveRecv(SDHP_CREATION_CARD_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"UPDATE AccountCharacter SET ExtClass=%d WHERE Id='%s'",
+		lpMsg->ExtClass,
+		lpMsg->Account))
+	{
+		// Opcional:
+		// const SQLLEN affectedRows = gQueryManager.GetAffectedRows();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDCrywolfInfoSaveRecv(SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_CW_InfoSave '%d','%d','%d'",
+		lpMsg->MapServerGroup,
+		lpMsg->CrywolfState,
+		lpMsg->OccupationState))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDSNSDataSaveRecv(SDHP_SNS_DATA_SAVE_RECV* lpMsg)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	const bool exists =
+		gQueryManager.ExecQuery(
+			"SELECT Name FROM SNSData WHERE Name='%s'",
+			lpMsg->CharacterName) &&
+		(gQueryManager.Fetch() != SQL_NO_DATA);
+
+	gQueryManager.Close();
+
+	gQueryManager.BindParameterAsBinary(1, lpMsg->data, sizeof(lpMsg->data));
+
+	if (exists)
+	{
+		gQueryManager.ExecQuery(
+			"UPDATE SNSData SET Data=? WHERE Name='%s'",
+			lpMsg->CharacterName);
+	}
+	else
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO SNSData (Name,Data) VALUES ('%s',?)",
+			lpMsg->CharacterName);
+	}
+
+	gQueryManager.Close();
+
+#endif
+}
+
+void GDCustomMonsterRewardSaveRecv(SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_CustomMonsterReward '%s','%s','%d','%d','%d','%d','%d','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->MonsterClass,
+		lpMsg->MapNumber,
+		lpMsg->RewardValue1,
+		lpMsg->RewardValue2,
+		lpMsg->RewardValue3,
+		lpMsg->RewardValue4))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingCustomArenaSaveRecv(SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_CustomArenaRanking '%s','%s','%d','%d','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->number,
+		lpMsg->score,
+		lpMsg->rank))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDRankingTvTEventSaveRecv(SDHP_RANKING_TVT_EVENT_SAVE_RECV* lpMsg)
+{
+	if (gQueryManager.ExecQuery(
+		"EXEC WZ_TvTRanking '%s','%s','%d','%d'",
+		lpMsg->Account,
+		lpMsg->CharacterName,
+		lpMsg->killcount,
+		lpMsg->deathcount))
+	{
+		gQueryManager.Fetch();
+	}
+
+	gQueryManager.Close();
+}
+
+void GDConnectCharacterRecv(SDHP_CONNECT_CHARACTER_RECV* lpMsg, int index)
+{
+	CHARACTER_INFO CharacterInfo{};
+
+	if (gCharacterManager.GetCharacterInfo(&CharacterInfo, lpMsg->CharacterName) != 0)
+	{
+		return;
+	}
+
+	strcpy_s(CharacterInfo.CharacterName, lpMsg->CharacterName);
+	strcpy_s(CharacterInfo.Account, lpMsg->Account);
+
+	CharacterInfo.UserIndex = lpMsg->Index;
 	CharacterInfo.GameServerCode = gServerManager[index].m_ServerCode;
 
 	gCharacterManager.InsertCharacterInfo(CharacterInfo);
 
-	FriendStateRecv(lpMsg->name,0);
+	FriendStateRecv(lpMsg->CharacterName, 0);
 }
 
-void GDDisconnectCharacterRecv(SDHP_DISCONNECT_CHARACTER_RECV* lpMsg,int index) // OK
+void GDDisconnectCharacterRecv(SDHP_DISCONNECT_CHARACTER_RECV* lpMsg, int index)
 {
-	CHARACTER_INFO CharacterInfo;
+	CHARACTER_INFO CharacterInfo{};
 
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,lpMsg->name) == 0)
+	if (gCharacterManager.GetCharacterInfo(&CharacterInfo, lpMsg->CharacterName) == 0)
 	{
 		return;
 	}
 
-	if(CharacterInfo.UserIndex != lpMsg->index)
+	if (CharacterInfo.UserIndex != lpMsg->Index)
 	{
 		return;
 	}
 
-	if(CharacterInfo.GameServerCode != gServerManager[index].m_ServerCode)
+	if (CharacterInfo.GameServerCode != gServerManager[index].m_ServerCode)
 	{
 		return;
 	}
 
 	gCharacterManager.RemoveCharacterInfo(CharacterInfo);
 
-	FriendStateRecv(lpMsg->name,1);
+	FriendStateRecv(lpMsg->CharacterName, 1);
 }
 
-void GDGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg,int index) // OK
+void GDGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg, int index)
 {
-	SDHP_GLOBAL_WHISPER_SEND pMsg {};
+	SDHP_GLOBAL_WHISPER_SEND pMsg{};
+	pMsg.Header.set(HEAD_GLOBAL_WHISPER, sizeof(pMsg));
+	pMsg.Index = lpMsg->Index;
 
-	pMsg.header.set(0x72,sizeof(pMsg));
+	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	pMsg.index = lpMsg->index;
+	CHARACTER_INFO CharacterInfo{};
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
-
-	CHARACTER_INFO CharacterInfo;
-
-	if(gCharacterManager.GetCharacterInfo(&CharacterInfo,lpMsg->TargetName) == 0)
+	if (gCharacterManager.GetCharacterInfo(&CharacterInfo, lpMsg->TargetName) == 0)
 	{
-		pMsg.result = 0;
+		pMsg.Result = 0;
 	}
 	else
 	{
-		pMsg.result = 1;
-		DGGlobalWhisperEchoSend(CharacterInfo.GameServerCode,CharacterInfo.UserIndex,CharacterInfo.Account,CharacterInfo.Name,lpMsg->name,lpMsg->message);
+		pMsg.Result = 1;
+
+		DGGlobalWhisperEchoSend(
+			CharacterInfo.GameServerCode,
+			CharacterInfo.UserIndex,
+			CharacterInfo.Account,
+			CharacterInfo.CharacterName,
+			lpMsg->CharacterName,
+			lpMsg->message);
 	}
 
-	memcpy(pMsg.TargetName,lpMsg->TargetName,sizeof(pMsg.TargetName));
+	memcpy(pMsg.TargetName, lpMsg->TargetName, sizeof(pMsg.TargetName));
+	memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
 
-	memcpy(pMsg.message,lpMsg->message,sizeof(pMsg.message));
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DGGlobalWhisperEchoSend(WORD ServerCode,WORD index,char* account,char* name,char* SourceName,char* message) // OK
+void DGGlobalWhisperEchoSend(WORD ServerCode,WORD index,char* account,char* name,char* SourceName,char* message)
 {
 	SDHP_GLOBAL_WHISPER_ECHO_SEND pMsg {};
+	pMsg.Header.set(HEAD_GLOBAL_WHISPER_ECHO,sizeof(pMsg));
+	pMsg.Index = index;
 
-	pMsg.header.set(0x73,sizeof(pMsg));
-
-	pMsg.index = index;
-
-	memcpy(pMsg.account,account,sizeof(pMsg.account));
-
-	memcpy(pMsg.name,name,sizeof(pMsg.name));
-
+	memcpy(pMsg.Account,account,sizeof(pMsg.Account));
+	memcpy(pMsg.CharacterName,name,sizeof(pMsg.CharacterName));
 	memcpy(pMsg.SourceName,SourceName,sizeof(pMsg.SourceName));
-
 	memcpy(pMsg.message,message,sizeof(pMsg.message));
 
 	CServerManager* lpServerManager = FindServerByCode(ServerCode);
 
 	if(lpServerManager != 0)
 	{
-		gSocketManager.DataSend(lpServerManager->m_index,(BYTE*)&pMsg,pMsg.header.size);
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 	}
 }
 
-//**************************************************************************//
-// RAW FUNCTIONS ***********************************************************//
-//**************************************************************************//
+// RAW FUNCTIONS
 
-void DS_GDReqCastleTotalInfo(BYTE *lpRecv, int aIndex)
+void DS_GDReqCastleTotalInfo(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == NULL)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_CASTLEDATA*>(lpRecv);
+
+	CASTLE_DATA CastleData{};
+	CSP_ANS_CASTLEDATA pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_TOTAL_INFO, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+
+	if (!gCastleDBSet.DSDB_QueryCastleTotalInfo(lpMsg->MapSvrNum, lpMsg->CastleEventCycle, &CastleData))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = 1;
+		pMsg.StartYear = CastleData.StartYear;
+		pMsg.StartMonth = CastleData.StartMonth;
+		pMsg.StartDay = CastleData.StartDay;
+		pMsg.EndYear = CastleData.EndYear;
+		pMsg.EndMonth = CastleData.EndMonth;
+		pMsg.EndDay = CastleData.EndDay;
+		pMsg.IsSiegeGuildList = CastleData.IsSiegeGuildList;
+		pMsg.IsSiegeEnded = CastleData.IsSiegeEnded;
+		pMsg.IsCastleOccupied = CastleData.IsCastleOccupied;
+		pMsg.CastleMoney = CastleData.CastleMoney;
+		pMsg.TaxRateChaos = CastleData.TaxRateChaos;
+		pMsg.TaxRateStore = CastleData.TaxRateStore;
+		pMsg.TaxHuntZone = CastleData.TaxHuntZone;
+		pMsg.FirstCreate = CastleData.FirstCreate;
+
+		memcpy(pMsg.CastleOwnGuild, CastleData.CastleOwnGuild, sizeof(pMsg.CastleOwnGuild));
 	}
 
-	CSP_REQ_CASTLEDATA* lpMsg = (CSP_REQ_CASTLEDATA*)lpRecv;
-	CASTLE_DATA pCastleData;
-	CSP_ANS_CASTLEDATA pMsgSend {};
-
-    pMsgSend.h.set(0x80, 0x00, sizeof(CSP_ANS_CASTLEDATA));
-    
-	pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-	
-	if (!gCastleDBSet.DSDB_QueryCastleTotalInfo(lpMsg->wMapSvrNum, lpMsg->iCastleEventCycle, &pCastleData))
-	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLEDATA));
-    }
-    else
-    {
-		pMsgSend.iResult = 1;
-		pMsgSend.wStartYear = pCastleData.wStartYear;
-		pMsgSend.btStartMonth = pCastleData.btStartMonth;
-		pMsgSend.btStartDay = pCastleData.btStartDay;
-		pMsgSend.wEndYear = pCastleData.wEndYear;
-		pMsgSend.btEndMonth = pCastleData.btEndMonth;
-		pMsgSend.btEndDay = pCastleData.btEndDay;
-		pMsgSend.btIsSiegeGuildList = pCastleData.btIsSiegeGuildList;
-		pMsgSend.btIsSiegeEnded = pCastleData.btIsSiegeEnded;
-		pMsgSend.btIsCastleOccupied = pCastleData.btIsCastleOccupied;
-		pMsgSend.i64CastleMoney = pCastleData.i64CastleMoney;
-		pMsgSend.iTaxRateChaos = pCastleData.iTaxRateChaos;
-		pMsgSend.iTaxRateStore = pCastleData.iTaxRateStore;
-		pMsgSend.iTaxHuntZone = pCastleData.iTaxHuntZone;
-		pMsgSend.iFirstCreate = pCastleData.iFirstCreate;
-		
-		memset(pMsgSend.szCastleOwnGuild, 0, 8);
-		memcpy(pMsgSend.szCastleOwnGuild, pCastleData.szCastleOwnGuild, 8);
-		
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLEDATA));
-	}
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
 void DS_GDReqOwnerGuildMaster(BYTE* lpRecv, int aIndex)
 {
-	if (lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_OWNERGUILDMASTER*>(lpRecv);
+
+	CSP_ANS_OWNERGUILDMASTER pMsg{};
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_OWNER_GUILD_MASTER, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+
+	if (!gCastleDBSet.DSDB_QueryOwnerGuildMaster(lpMsg->MapSvrNum, &pMsg))
 	{
-		return;
+		pMsg.Result = 0;
 	}
 
-	CSP_REQ_OWNERGUILDMASTER* lpMsg = (CSP_REQ_OWNERGUILDMASTER*)lpRecv;
-	CSP_ANS_OWNERGUILDMASTER pMsgSend{};
-
-	pMsgSend.h.set(0x80, 0x01, sizeof(CSP_ANS_OWNERGUILDMASTER));
-
-	pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-	pMsgSend.iIndex = lpMsg->iIndex;
-
-	if (!gCastleDBSet.DSDB_QueryOwnerGuildMaster(lpMsg->wMapSvrNum, &pMsgSend))
-	{
-		pMsgSend.iResult = 0;
-	}
-
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_OWNERGUILDMASTER));
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqCastleNpcBuy(BYTE *lpRecv, int aIndex)
+void DS_GDReqCastleNpcBuy(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_NPCBUY*>(lpRecv);
+
+	CSP_ANS_NPCBUY pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_NPC_BUY, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+	pMsg.NpcNumber = lpMsg->NpcNumber;
+	pMsg.NpcIndex = lpMsg->NpcIndex;
+	pMsg.BuyCost = lpMsg->BuyCost;
+
+	int QueryResult = 0;
+
+	if (!gCastleDBSet.DSDB_QueryCastleNpcBuy(lpMsg->MapSvrNum, lpMsg, &QueryResult))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = QueryResult;
 	}
 
-    CSP_REQ_NPCBUY* lpMsg = (CSP_REQ_NPCBUY*)lpRecv;
-	CSP_ANS_NPCBUY pMsgSend {};
-    
-	pMsgSend.h.set(0x80, 0x03, sizeof(CSP_ANS_NPCBUY));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    
-	pMsgSend.iIndex = lpMsg->iIndex;
-    pMsgSend.iNpcNumber = lpMsg->iNpcNumber;
-    pMsgSend.iNpcIndex = lpMsg->iNpcIndex;
-    pMsgSend.iBuyCost = lpMsg->iBuyCost;
-    
-	int iQueryResult = 0;
-    
-	if (!gCastleDBSet.DSDB_QueryCastleNpcBuy(lpMsg->wMapSvrNum, lpMsg, &iQueryResult))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = iQueryResult;
-	}
-
-    gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCBUY));
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqCastleNpcRepair(BYTE *lpRecv, int aIndex)
+void DS_GDReqCastleNpcRepair(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_NPCREPAIR*>(lpRecv);
+
+	CSP_ANS_NPCREPAIR pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_NPC_REPAIR, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+	pMsg.NpcNumber = lpMsg->NpcNumber;
+	pMsg.NpcIndex = lpMsg->NpcIndex;
+	pMsg.RepairCost = lpMsg->RepairCost;
+
+	int QueryResult = 0;
+
+	if (!gCastleDBSet.DSDB_QueryCastleNpcRepair(lpMsg->MapSvrNum, lpMsg, &pMsg, &QueryResult))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = QueryResult;
 	}
 
-    CSP_REQ_NPCREPAIR* lpMsg = (CSP_REQ_NPCREPAIR*)lpRecv;
-	CSP_ANS_NPCREPAIR pMsgSend {};
-    
-	pMsgSend.h.set(0x80, 0x04, sizeof(CSP_ANS_NPCREPAIR));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
-    pMsgSend.iNpcNumber = lpMsg->iNpcNumber;
-    pMsgSend.iNpcIndex = lpMsg->iNpcIndex;
-    pMsgSend.iRepairCost = lpMsg->iRepairCost;
-    
-	int iQueryResult = 0;
-    
-	if (!gCastleDBSet.DSDB_QueryCastleNpcRepair(lpMsg->wMapSvrNum, lpMsg, &pMsgSend, &iQueryResult))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = iQueryResult;
-	}
-
-    gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCREPAIR));	
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqCastleNpcUpgrade(BYTE *lpRecv, int aIndex)
+void DS_GDReqCastleNpcUpgrade(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
+	auto* lpMsg = reinterpret_cast<CSP_REQ_NPCUPGRADE*>(lpRecv);
 
-    CSP_REQ_NPCUPGRADE* lpMsg = (CSP_REQ_NPCUPGRADE*)lpRecv;
-	CSP_ANS_NPCUPGRADE pMsgSend {};
-    
-	pMsgSend.h.set(0x80, 0x05, sizeof(CSP_ANS_NPCUPGRADE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
-    pMsgSend.iNpcNumber = lpMsg->iNpcNumber;
-    pMsgSend.iNpcIndex = lpMsg->iNpcIndex;
-    pMsgSend.iNpcUpType = lpMsg->iNpcUpType;
-    pMsgSend.iNpcUpValue = lpMsg->iNpcUpValue;
-    pMsgSend.iNpcUpIndex = lpMsg->iNpcUpIndex;
+	CSP_ANS_NPCUPGRADE pMsg{};
 
-	if (!gCastleDBSet.DSDB_QueryCastleNpcUpgrade(lpMsg->wMapSvrNum, lpMsg))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = 1;
-	}
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_NPC_UPGRADE, sizeof(pMsg));
 
-    gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCUPGRADE));		
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+	pMsg.NpcNumber = lpMsg->NpcNumber;
+	pMsg.NpcIndex = lpMsg->NpcIndex;
+	pMsg.NpcUpType = lpMsg->NpcUpType;
+	pMsg.NpcUpValue = lpMsg->NpcUpValue;
+	pMsg.NpcUpIndex = lpMsg->NpcUpIndex;
+
+	pMsg.Result = gCastleDBSet.DSDB_QueryCastleNpcUpgrade(lpMsg->MapSvrNum, lpMsg) ? 1 : 0;
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqTaxInfo(BYTE *lpRecv, int aIndex)
+void DS_GDReqTaxInfo(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-    CSP_REQ_TAXINFO* lpMsg = (CSP_REQ_TAXINFO*)lpRecv;
-	CSP_ANS_TAXINFO pMsgSend {};
-    pMsgSend.h.set(0x80, 0x06, sizeof(CSP_ANS_TAXINFO));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
+	auto* lpMsg = reinterpret_cast<CSP_REQ_TAXINFO*>(lpRecv);
 
-	if (!gCastleDBSet.DSDB_QueryTaxInfo(lpMsg->wMapSvrNum, &pMsgSend))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = 1;
-	}
+	CSP_ANS_TAXINFO pMsg{};
 
-    gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_TAXINFO));		
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_TAX_INFO, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+
+	pMsg.Result = gCastleDBSet.DSDB_QueryTaxInfo(lpMsg->MapSvrNum, &pMsg) ? 1 : 0;
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqTaxRateChange(BYTE *lpRecv, int aIndex)
+void DS_GDReqTaxRateChange(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-    
-	CSP_REQ_TAXRATECHANGE* lpMsg = (CSP_REQ_TAXRATECHANGE*)lpRecv;
-	CSP_ANS_TAXRATECHANGE pMsgSend {};
-    pMsgSend.h.set(0x80, 0x07, sizeof(CSP_ANS_TAXRATECHANGE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
-    
-	int iQueryResult = 0;
+	auto* lpMsg = reinterpret_cast<CSP_REQ_TAXRATECHANGE*>(lpRecv);
 
-	if (!gCastleDBSet.DSDB_QueryTaxRateChange(lpMsg->wMapSvrNum, lpMsg->iTaxKind, lpMsg->iTaxRate, &pMsgSend, &iQueryResult))
+	CSP_ANS_TAXRATECHANGE pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_TAX_RATE_CHANGE, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+
+	int QueryResult = 0;
+
+	if (!gCastleDBSet.DSDB_QueryTaxRateChange(lpMsg->MapSvrNum, lpMsg->TaxKind, lpMsg->TaxRate, &pMsg, &QueryResult))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.Result = 0;
 	}
-    else
+	else
 	{
-		pMsgSend.iResult = iQueryResult;
+		pMsg.Result = QueryResult;
 	}
 
-    gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_TAXRATECHANGE));		
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqCastleMoneyChange(BYTE *lpRecv, int aIndex)
+void DS_GDReqCastleMoneyChange(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_MONEYCHANGE*>(lpRecv);
+
+	CSP_ANS_MONEYCHANGE pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_MONEY_CHANGE, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+	pMsg.MoneyChanged = lpMsg->MoneyChanged;
+
+	int QueryResult = 0;
+	__int64 MoneyResult = 0;
+
+	if (!gCastleDBSet.DSDB_QueryCastleMoneyChange(lpMsg->MapSvrNum, lpMsg->MoneyChanged, &MoneyResult, &QueryResult))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = QueryResult;
+		pMsg.CastleMoney = MoneyResult;
 	}
 
-    CSP_REQ_MONEYCHANGE* lpMsg = (CSP_REQ_MONEYCHANGE*)lpRecv;
-	CSP_ANS_MONEYCHANGE pMsgSend {};
-    
-	pMsgSend.h.set(0x80, 0x08, sizeof(CSP_ANS_MONEYCHANGE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
-	pMsgSend.iMoneyChanged = lpMsg->iMoneyChanged;
-
-    int iQueryResult = 0;
-	__int64 i64MoneyResult = 0;
-    
-	if (!gCastleDBSet.DSDB_QueryCastleMoneyChange(lpMsg->wMapSvrNum, lpMsg->iMoneyChanged, &i64MoneyResult, &iQueryResult))
-	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_MONEYCHANGE));	
-	}
-    else
-	{
-		pMsgSend.iResult = iQueryResult;
-		pMsgSend.i64CastleMoney = i64MoneyResult;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_MONEYCHANGE));	
-	}
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqSiegeDateChange(BYTE *lpRecv, int aIndex)
+void DS_GDReqSiegeDateChange(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-    CSP_REQ_SDEDCHANGE* lpMsg = (CSP_REQ_SDEDCHANGE*)lpRecv;
-	CSP_ANS_SDEDCHANGE pMsgSend {};
-    pMsgSend.h.set(0x80, 0x09, sizeof(CSP_ANS_SDEDCHANGE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
+	auto* lpMsg = reinterpret_cast<CSP_REQ_SDEDCHANGE*>(lpRecv);
 
-    int iQueryResult = 0;
-    
-	if (!gCastleDBSet.DSDB_QuerySiegeDateChange(lpMsg->wMapSvrNum, lpMsg, &iQueryResult))
+	CSP_ANS_SDEDCHANGE pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_SIEGE_DATE_CHANGE, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+
+	int QueryResult = 0;
+
+	if (!gCastleDBSet.DSDB_QuerySiegeDateChange(lpMsg->MapSvrNum, lpMsg, &QueryResult))
 	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_SDEDCHANGE));	
+		pMsg.Result = 0;
 	}
-    else
+	else
 	{
-		pMsgSend.iResult = iQueryResult;
-		pMsgSend.wStartYear = lpMsg->wStartYear;
-		pMsgSend.btStartMonth = lpMsg->btStartMonth;
-		pMsgSend.btStartDay = lpMsg->btStartDay;
-		pMsgSend.wEndYear = lpMsg->wEndYear;
-		pMsgSend.btEndMonth = lpMsg->btEndMonth;
-		pMsgSend.btEndDay = lpMsg->btEndDay;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_SDEDCHANGE));	
-	}	
+		pMsg.Result = QueryResult;
+		pMsg.StartYear = lpMsg->StartYear;
+		pMsg.StartMonth = lpMsg->StartMonth;
+		pMsg.StartDay = lpMsg->StartDay;
+		pMsg.EndYear = lpMsg->EndYear;
+		pMsg.EndMonth = lpMsg->EndMonth;
+		pMsg.EndDay = lpMsg->EndDay;
+	}
+
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqGuildMarkRegInfo(BYTE *lpRecv, int aIndex)
+void DS_GDReqGuildMarkRegInfo(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_GUILDREGINFO*>(lpRecv);
+
+	CSP_ANS_GUILDREGINFO pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_GUILD_MARK_INFO, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
+
+	int QueryResult = 0;
+
+	char GuildName[9]{};
+	memcpy(GuildName, lpMsg->GuildName, sizeof(lpMsg->GuildName));
+
+	if (!gCastleDBSet.DSDB_QueryGuildMarkRegInfo(lpMsg->MapSvrNum, GuildName, &pMsg, &QueryResult))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = QueryResult;
 	}
 
-    CSP_REQ_GUILDREGINFO* lpMsg = (CSP_REQ_GUILDREGINFO*)lpRecv;
-
-	int iQueryResult = 0;
-	
-	CSP_ANS_GUILDREGINFO pMsgSend {};
-    
-	pMsgSend.h.set(0x80, 0xA, sizeof(CSP_ANS_GUILDREGINFO));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
-	
-	char szGuildName[9] = {'\0'};
-	memcpy(szGuildName, lpMsg->szGuildName, 8);
-    
-	if (!gCastleDBSet.DSDB_QueryGuildMarkRegInfo(lpMsg->wMapSvrNum, szGuildName, &pMsgSend, &iQueryResult))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = iQueryResult;	
-	}
-
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_GUILDREGINFO));	
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqSiegeEndedChange(BYTE *lpRecv, int aIndex)
+void DS_GDReqSiegeEndedChange(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_SIEGEENDCHANGE*>(lpRecv);
+
+	CSP_ANS_SIEGEENDCHANGE pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_SIEGE_ENDED_CHANGE, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+
+	int QueryResult = 0;
+
+	if (!gCastleDBSet.DSDB_QuerySiegeEndedChange(lpMsg->MapSvrNum, lpMsg->IsSiegeEnded, &QueryResult))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = QueryResult;
 	}
 
-    CSP_REQ_SIEGEENDCHANGE* lpMsg = (CSP_REQ_SIEGEENDCHANGE*)lpRecv;
-	CSP_ANS_SIEGEENDCHANGE pMsgSend {};
-
-    pMsgSend.h.set(0x80, 0x0B, sizeof(CSP_ANS_SIEGEENDCHANGE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    
-	int iQueryResult = 0;
-    
-	if (!gCastleDBSet.DSDB_QuerySiegeEndedChange(lpMsg->wMapSvrNum, lpMsg->bIsSiegeEnded, &iQueryResult))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = iQueryResult;	
-	}
-	
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_SIEGEENDCHANGE));	
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void DS_GDReqCastleOwnerChange(BYTE *lpRecv, int aIndex)
+void DS_GDReqCastleOwnerChange(BYTE* lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
+	auto* lpMsg = reinterpret_cast<CSP_REQ_CASTLEOWNERCHANGE*>(lpRecv);
+
+	CSP_ANS_CASTLEOWNERCHANGE pMsg{};
+
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_OWNER_CHANGE, sizeof(pMsg));
+
+	pMsg.MapSvrNum = lpMsg->MapSvrNum;
+
+	int QueryResult = 0;
+
+	if (!gCastleDBSet.DSDB_QueryCastleOwnerChange(lpMsg->MapSvrNum, lpMsg, &pMsg, &QueryResult))
 	{
-		return;
+		pMsg.Result = 0;
+	}
+	else
+	{
+		pMsg.Result = QueryResult;
 	}
 
-    CSP_REQ_CASTLEOWNERCHANGE* lpMsg = (CSP_REQ_CASTLEOWNERCHANGE*)lpRecv;
-	CSP_ANS_CASTLEOWNERCHANGE pMsgSend {};
-    
-	pMsgSend.h.set(0x80, 0x0C, sizeof(CSP_ANS_CASTLEOWNERCHANGE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    
-	int iQueryResult = 0;
-    
-	if (!gCastleDBSet.DSDB_QueryCastleOwnerChange(lpMsg->wMapSvrNum, lpMsg, &pMsgSend, &iQueryResult))
-	{
-		pMsgSend.iResult = 0;
-	}
-    else
-	{
-		pMsgSend.iResult = iQueryResult;	
-	}
-
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLEOWNERCHANGE));	
+	gSocketManager.DataSend(aIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
 void DS_GDReqRegAttackGuild(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_REGATTACKGUILD* lpMsg = (CSP_REQ_REGATTACKGUILD*)lpRecv;
-	CSP_ANS_REGATTACKGUILD pMsgSend {};
+	CSP_ANS_REGATTACKGUILD pMsg {};
     
-	pMsgSend.h.set(0x80, 0x0D, sizeof(CSP_ANS_REGATTACKGUILD));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-	pMsgSend.iIndex = lpMsg->iIndex;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_REG_ATTACK_GUILD, sizeof(CSP_ANS_REGATTACKGUILD));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
+	pMsg.Index = lpMsg->Index;
     
 	int iQueryResult = 0;
     
-	if (!gCastleDBSet.DSDB_QueryRegAttackGuild(lpMsg->wMapSvrNum, lpMsg, &pMsgSend, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryRegAttackGuild(lpMsg->MapSvrNum, lpMsg, &pMsg, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.Result = 0;
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;	
+		pMsg.Result = iQueryResult;
 	}
 	
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_REGATTACKGUILD));		
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_REGATTACKGUILD));		
 }
 
 void DS_GDReqRestartCastleState(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_CASTLESIEGEEND* lpMsg = (CSP_REQ_CASTLESIEGEEND*)lpRecv;
-	CSP_ANS_CASTLESIEGEEND pMsgSend {};
+	CSP_ANS_CASTLESIEGEEND pMsg {};
     
-	pMsgSend.h.set(0x80, 0x0E, sizeof(CSP_ANS_CASTLESIEGEEND));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_RESTART_STATE, sizeof(CSP_ANS_CASTLESIEGEEND));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
     
 	int iQueryResult = 0;
 
-	if (!gCastleDBSet.DSDB_QueryRestartCastleState(lpMsg->wMapSvrNum, lpMsg, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryRestartCastleState(lpMsg->MapSvrNum, lpMsg, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.Result = 0;
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;	
+		pMsg.Result = iQueryResult;	
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLESIEGEEND));	
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CASTLESIEGEEND));	
 }
 
 void DS_GDReqMapSvrMsgMultiCast(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_MAPSVRMULTICAST* lpMsg = (CSP_REQ_MAPSVRMULTICAST*)lpRecv;
-	CSP_ANS_MAPSVRMULTICAST pMsgSend {};
+	CSP_ANS_MAPSVRMULTICAST pMsg {};
     
-	pMsgSend.h.set(0x80, 0x0F, sizeof(CSP_ANS_MAPSVRMULTICAST));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_MAPSVR_MULTICAST, sizeof(CSP_ANS_MAPSVRMULTICAST));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
     
-	memcpy(pMsgSend.szMsgText, lpMsg->szMsgText, sizeof(lpMsg->szMsgText));
+	memcpy(pMsg.MsgText, lpMsg->MsgText, sizeof(lpMsg->MsgText));
     
 	for(int n=0;n < MAX_SERVER;n++)
 	{
 		if(gServerManager[n].IsOnline() != 0)
 		{
-			gSocketManager.DataSend(n, (BYTE*)&pMsgSend, sizeof(CSP_ANS_MAPSVRMULTICAST));
+			gSocketManager.DataSend(n, (BYTE*)&pMsg, sizeof(CSP_ANS_MAPSVRMULTICAST));
 		}
     }
 }
 
 void DS_GDReqRegGuildMark(BYTE *lpRecv, int aIndex)
 {
-	if ( lpRecv == nullptr)
-	{
-		return;
-	}
-
     CSP_REQ_GUILDREGMARK* lpMsg = (CSP_REQ_GUILDREGMARK*)lpRecv;
-	CSP_ANS_GUILDREGMARK pMsgSend {};
+	CSP_ANS_GUILDREGMARK pMsg {};
     
-	pMsgSend.h.set(0x80, 0x10, sizeof(CSP_ANS_GUILDREGMARK));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iIndex = lpMsg->iIndex;
-	pMsgSend.iItemPos = lpMsg->iItemPos;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, SUB_CASTLE_REG_GUILD_MARK, sizeof(CSP_ANS_GUILDREGMARK));
+    pMsg.MapSvrNum = lpMsg->MapSvrNum;
+    pMsg.Index = lpMsg->Index;
+	pMsg.ItemPos = lpMsg->ItemPos;
 	
 	char szGuildName[9] = {'\0'};
-	memcpy(szGuildName, lpMsg->szGuildName, 8);
+	memcpy(szGuildName, lpMsg->GuildName, 8);
 	
 	int iQueryResult = 0;
     
-	if (!gCastleDBSet.DSDB_QueryGuildMarkRegMark(lpMsg->wMapSvrNum, szGuildName, &pMsgSend, &iQueryResult))
+	if (!gCastleDBSet.DSDB_QueryGuildMarkRegMark(lpMsg->MapSvrNum, szGuildName, &pMsg, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.Result = 0;
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;	
+		pMsg.Result = iQueryResult;	
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_GUILDREGMARK));	
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_GUILDREGMARK));	
 }
 
 void DS_GDReqGuildMarkReset(BYTE *lpRecv, int aIndex)
@@ -2804,20 +2860,20 @@ void DS_GDReqGuildMarkReset(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_GUILDRESETMARK* lpMsg = (CSP_REQ_GUILDRESETMARK*)lpRecv;
-	CSP_ANS_GUILDRESETMARK pMsgSend {};
+	CSP_ANS_GUILDRESETMARK pMsg {};
     
-	pMsgSend.h.set(0x80, 0x11, sizeof(CSP_ANS_GUILDRESETMARK));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, 0x11, sizeof(CSP_ANS_GUILDRESETMARK));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	char szGuildName[9] = {'\0'};
 	memcpy(szGuildName, lpMsg->szGuildName, 8);
 
-	if (!gCastleDBSet.DSDB_QueryGuildMarkReset(lpMsg->wMapSvrNum, szGuildName, &pMsgSend))
+	if (!gCastleDBSet.DSDB_QueryGuildMarkReset(lpMsg->wMapSvrNum, szGuildName, &pMsg))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.iResult = 0;
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_GUILDRESETMARK));		
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_GUILDRESETMARK));		
 }
 
 void DS_GDReqGuildSetGiveUp(BYTE *lpRecv, int aIndex)
@@ -2828,21 +2884,21 @@ void DS_GDReqGuildSetGiveUp(BYTE *lpRecv, int aIndex)
 	}
     
 	CSP_REQ_GUILDSETGIVEUP* lpMsg = (CSP_REQ_GUILDSETGIVEUP*)lpRecv;
-	CSP_ANS_GUILDSETGIVEUP pMsgSend {};
+	CSP_ANS_GUILDSETGIVEUP pMsg {};
     
-	pMsgSend.h.set(0x80, 0x12, sizeof(CSP_ANS_GUILDSETGIVEUP));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-	pMsgSend.iIndex = lpMsg->iIndex;
+	pMsg.Header.set(HEAD_CASTLE_SIEGE, 0x12, sizeof(CSP_ANS_GUILDSETGIVEUP));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.iIndex = lpMsg->iIndex;
 	
 	char szGuildName[9] = {'\0'};
 	memcpy(szGuildName, lpMsg->szGuildName, 8);
     
-	if (!gCastleDBSet.DSDB_QueryGuildSetGiveUp(lpMsg->wMapSvrNum, szGuildName, lpMsg->bIsGiveUp, &pMsgSend))
+	if (!gCastleDBSet.DSDB_QueryGuildSetGiveUp(lpMsg->wMapSvrNum, szGuildName, lpMsg->bIsGiveUp, &pMsg))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.iResult = 0;
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_GUILDSETGIVEUP));	
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_GUILDSETGIVEUP));	
 }
 
 void DS_GDReqCastleNpcRemove(BYTE *lpRecv, int aIndex)
@@ -2853,25 +2909,25 @@ void DS_GDReqCastleNpcRemove(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_NPCREMOVE* lpMsg = (CSP_REQ_NPCREMOVE*)lpRecv;
-	CSP_ANS_NPCREMOVE pMsgSend {};
+	CSP_ANS_NPCREMOVE pMsg {};
     
-	pMsgSend.h.set(0x80, 0x16, sizeof(CSP_ANS_NPCREMOVE));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iNpcNumber = lpMsg->iNpcNumber;
-	pMsgSend.iNpcIndex = lpMsg->iNpcIndex;
+	pMsg.Header.set(0x80, 0x16, sizeof(CSP_ANS_NPCREMOVE));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+    pMsg.iNpcNumber = lpMsg->iNpcNumber;
+	pMsg.iNpcIndex = lpMsg->iNpcIndex;
 	
 	int iQueryResult = 0;
     
 	if (!gCastleDBSet.DSDB_QueryCastleNpcRemove(lpMsg->wMapSvrNum, lpMsg, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.iResult = 0;
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;	
+		pMsg.iResult = iQueryResult;	
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCREMOVE));		
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_NPCREMOVE));		
 }
 
 void DS_GDReqCastleStateSync(BYTE *lpRecv, int aIndex)
@@ -2882,21 +2938,21 @@ void DS_GDReqCastleStateSync(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_CASTLESTATESYNC* lpMsg = (CSP_REQ_CASTLESTATESYNC*)lpRecv;
-	CSP_ANS_CASTLESTATESYNC pMsgSend {};
+	CSP_ANS_CASTLESTATESYNC pMsg {};
     
-	pMsgSend.h.set(0x80, 0x17, sizeof(CSP_ANS_CASTLESTATESYNC));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
-    pMsgSend.iCastleState = lpMsg->iCastleState;
-    pMsgSend.iTaxRateChaos = lpMsg->iTaxRateChaos;
-    pMsgSend.iTaxRateStore = lpMsg->iTaxRateStore;
-    pMsgSend.iTaxHuntZone = lpMsg->iTaxHuntZone;
-    memcpy(pMsgSend.szOwnerGuildName, lpMsg->szOwnerGuildName, 8);
+	pMsg.Header.set(0x80, 0x17, sizeof(CSP_ANS_CASTLESTATESYNC));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
+    pMsg.iCastleState = lpMsg->iCastleState;
+    pMsg.iTaxRateChaos = lpMsg->iTaxRateChaos;
+    pMsg.iTaxRateStore = lpMsg->iTaxRateStore;
+    pMsg.iTaxHuntZone = lpMsg->iTaxHuntZone;
+    memcpy(pMsg.szOwnerGuildName, lpMsg->szOwnerGuildName, 8);
     
 	for(int n=0;n < MAX_SERVER;n++)
 	{
 		if(gServerManager[n].IsOnline() != 0)
 		{
-			gSocketManager.DataSend(n, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLESTATESYNC));
+			gSocketManager.DataSend(n, (BYTE*)&pMsg, sizeof(CSP_ANS_CASTLESTATESYNC));
 		}
 	}
 }
@@ -2909,31 +2965,31 @@ void DS_GDReqCastleTributeMoney(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_CASTLETRIBUTEMONEY* lpMsg = (CSP_REQ_CASTLETRIBUTEMONEY*)lpRecv;
-	CSP_ANS_CASTLETRIBUTEMONEY pMsgSend {};
+	CSP_ANS_CASTLETRIBUTEMONEY pMsg {};
     
-	pMsgSend.h.set(0x80, 0x18, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(0x80, 0x18, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
     
 	int iQueryResult = 0;
 	__int64 i64MoneyResult = 0;
 	
 	if (lpMsg->iCastleTributeMoney < 0)
 	{
-		pMsgSend.iResult = 0;
+		pMsg.iResult = 0;
 	}
 	else
 	{
 		if(!gCastleDBSet.DSDB_QueryCastleMoneyChange(lpMsg->wMapSvrNum, lpMsg->iCastleTributeMoney, &i64MoneyResult, &iQueryResult))
 		{
-			pMsgSend.iResult = 0;
-			gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
+			pMsg.iResult = 0;
+			gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
 			return;
 		}
 
-		pMsgSend.iResult = iQueryResult;
+		pMsg.iResult = iQueryResult;
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CASTLETRIBUTEMONEY));
 }
 
 void DS_GDReqResetCastleTaxInfo(BYTE *lpRecv, int aIndex)
@@ -2944,22 +3000,22 @@ void DS_GDReqResetCastleTaxInfo(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_RESETCASTLETAXINFO* lpMsg = (CSP_REQ_RESETCASTLETAXINFO*)lpRecv;
-	CSP_ANS_RESETCASTLETAXINFO pMsgSend {};
+	CSP_ANS_RESETCASTLETAXINFO pMsg {};
     
-	pMsgSend.h.set(0x80, 0x19, sizeof(CSP_ANS_RESETCASTLETAXINFO));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(0x80, 0x19, sizeof(CSP_ANS_RESETCASTLETAXINFO));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	int iQueryResult = 0;
     
 	if (!gCastleDBSet.DSDB_QueryResetCastleTaxInfo(lpMsg->wMapSvrNum, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_RESETCASTLETAXINFO));
+		pMsg.iResult = 0;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETCASTLETAXINFO));
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_RESETCASTLETAXINFO));
+		pMsg.iResult = iQueryResult;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETCASTLETAXINFO));
 	}
 }
 
@@ -2971,22 +3027,22 @@ void DS_GDReqResetSiegeGuildInfo(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_RESETSIEGEGUILDINFO* lpMsg = (CSP_REQ_RESETSIEGEGUILDINFO*)lpRecv;
-	CSP_ANS_RESETSIEGEGUILDINFO pMsgSend {};
+	CSP_ANS_RESETSIEGEGUILDINFO pMsg {};
     
-	pMsgSend.h.set(0x80, 0x1A, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(0x80, 0x1A, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	int iQueryResult = 0;
     
 	if (!gCastleDBSet.DSDB_QueryResetSiegeGuildInfo(lpMsg->wMapSvrNum, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+		pMsg.iResult = 0;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+		pMsg.iResult = iQueryResult;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
 }
 
@@ -2998,22 +3054,22 @@ void DS_GDReqResetRegSiegeInfo(BYTE *lpRecv, int aIndex)
 	}
 
     CSP_REQ_RESETSIEGEGUILDINFO* lpMsg = (CSP_REQ_RESETSIEGEGUILDINFO*)lpRecv;
-	CSP_ANS_RESETSIEGEGUILDINFO pMsgSend {};
+	CSP_ANS_RESETSIEGEGUILDINFO pMsg {};
     
-	pMsgSend.h.set(0x80, 0x1B, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
-    pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.Header.set(0x80, 0x1B, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+    pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	int iQueryResult = 0;
     
 	if (!gCastleDBSet.DSDB_QueryResetRegSiegeInfo(lpMsg->wMapSvrNum, &iQueryResult))
 	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+		pMsg.iResult = 0;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
     else
 	{
-		pMsgSend.iResult = iQueryResult;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
+		pMsg.iResult = iQueryResult;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_RESETSIEGEGUILDINFO));
 	}
 }
 
@@ -3159,19 +3215,19 @@ void DS_GDReqFirstCreateNPC(BYTE *lpRecv, int aIndex)
 	CSP_REQ_NPCSAVEDATA* lpMsg = (CSP_REQ_NPCSAVEDATA*)lpRecv;
 	CSP_NPCSAVEDATA* lpMsgBody = (CSP_NPCSAVEDATA*)&lpRecv[12];
 	
-	CSP_ANS_NPCSAVEDATA pMsgSend {};
-	pMsgSend.h.set(0x84, sizeof(CSP_ANS_NPCSAVEDATA));
-	pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	CSP_ANS_NPCSAVEDATA pMsg {};
+	pMsg.Header.set(0x84, sizeof(CSP_ANS_NPCSAVEDATA));
+	pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	if (!gCastleDBSet.DSDB_QueryFirstCreateNPC(lpMsg->wMapSvrNum, lpMsg))
 	{
-		pMsgSend.iResult = 0;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCSAVEDATA));
+		pMsg.iResult = 0;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_NPCSAVEDATA));
 	}
 	else
 	{
-		pMsgSend.iResult = 1;
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCSAVEDATA));		
+		pMsg.iResult = 1;
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_NPCSAVEDATA));		
 	}
 }
 
@@ -3265,15 +3321,15 @@ void DS_GDReqCsSaveTotalGuildInfo(BYTE *lpRecv, int aIndex)
 	CSP_REQ_CSSAVETOTALGUILDINFO* lpMsg = (CSP_REQ_CSSAVETOTALGUILDINFO*)lpRecv;
 	CSP_CSSAVETOTALGUILDINFO* lpMsgBody = (CSP_CSSAVETOTALGUILDINFO*)&lpRecv[12];
 	
-	CSP_ANS_CSSAVETOTALGUILDINFO pMsgSend;
+	CSP_ANS_CSSAVETOTALGUILDINFO pMsg;
 	
-	pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	if (!gCastleDBSet.DSDB_QueryCsClearTotalGuildInfo(lpMsg->wMapSvrNum))
 	{
-		pMsgSend.iResult = 0;
-		pMsgSend.h.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
-		gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+		pMsg.iResult = 0;
+		pMsg.Header.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+		gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
 	}
 	else
 	{
@@ -3284,9 +3340,9 @@ void DS_GDReqCsSaveTotalGuildInfo(BYTE *lpRecv, int aIndex)
 
 			if (!gCastleDBSet.DSDB_QueryCsSaveTotalGuildInfo(lpMsg->wMapSvrNum, szGuildName, lpMsgBody[iGCNT].iCsGuildID, lpMsgBody[iGCNT].iGuildInvolved, lpMsgBody[iGCNT].iGuildScore))
 			{
-				pMsgSend.iResult = 0;
-				pMsgSend.h.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
-				gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+				pMsg.iResult = 0;
+				pMsg.Header.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+				gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
 				return;
 			}
 		}
@@ -3295,16 +3351,16 @@ void DS_GDReqCsSaveTotalGuildInfo(BYTE *lpRecv, int aIndex)
 		
 		if (!gCastleDBSet.DSDB_QueryCsSaveTotalGuildOK(lpMsg->wMapSvrNum, &iQueryResult))
 		{
-			pMsgSend.iResult = 0;
-			pMsgSend.h.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
-			gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+			pMsg.iResult = 0;
+			pMsg.Header.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+			gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
 		}
 		else
 		{
-			pMsgSend.iResult = 1;
-			pMsgSend.iResult = 1; //??
-			pMsgSend.h.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
-			gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+			pMsg.iResult = 1;
+			pMsg.iResult = 1; //??
+			pMsg.Header.set(0x87, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
+			gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_CSSAVETOTALGUILDINFO));
 		}
 	}
 }
@@ -3354,34 +3410,34 @@ void DS_GDReqCastleNpcUpdate(BYTE *lpRecv, int aIndex)
 	CSP_REQ_NPCUPDATEDATA* lpMsg = (CSP_REQ_NPCUPDATEDATA*)lpRecv;
 	CSP_NPCUPDATEDATA* lpMsgBody = (CSP_NPCUPDATEDATA*)&lpRecv[12];
 	
-	CSP_ANS_NPCSAVEDATA pMsgSend {};
-	pMsgSend.h.set(0x89,sizeof(CSP_ANS_NPCSAVEDATA));
+	CSP_ANS_NPCSAVEDATA pMsg {};
+	pMsg.Header.set(0x89,sizeof(CSP_ANS_NPCSAVEDATA));
 
-	pMsgSend.wMapSvrNum = lpMsg->wMapSvrNum;
+	pMsg.wMapSvrNum = lpMsg->wMapSvrNum;
 	
 	if (!gCastleDBSet.DSDB_QueryCastleNpcUpdate(lpMsg->wMapSvrNum, lpMsg))
 	{
-		pMsgSend.iResult = 0;
+		pMsg.iResult = 0;
 	}
 	else
 	{
-		pMsgSend.iResult = 1;
+		pMsg.iResult = 1;
 	}
 
-	gSocketManager.DataSend(aIndex, (BYTE*)&pMsgSend, sizeof(CSP_ANS_NPCSAVEDATA));
+	gSocketManager.DataSend(aIndex, (BYTE*)&pMsg, sizeof(CSP_ANS_NPCSAVEDATA));
 }
 
 void GDMarryInfoSaveRecv(SDHP_MARRY_INFO_SAVE_RECV* lpMsg) // OK
 {
     if(strcmp(lpMsg->mode,"marry") == 0)
     {
-        gQueryManager.ExecQuery("EXEC WZ_SetMarryInfo '%s','%s'",lpMsg->name,lpMsg->marryname);
+        gQueryManager.ExecQuery("EXEC WZ_SetMarryInfo '%s','%s'",lpMsg->CharacterName,lpMsg->marryname);
         gQueryManager.Fetch();
         gQueryManager.Close();
     }
     else if(strcmp(lpMsg->mode,"divorce") == 0)
     {
-        gQueryManager.ExecQuery("EXEC WZ_SetDivorceInfo '%s','%s'",lpMsg->name,lpMsg->marryname);
+        gQueryManager.ExecQuery("EXEC WZ_SetDivorceInfo '%s','%s'",lpMsg->CharacterName,lpMsg->marryname);
         gQueryManager.Fetch();
         gQueryManager.Close();
     }
@@ -3390,17 +3446,17 @@ void GDMarryInfoSaveRecv(SDHP_MARRY_INFO_SAVE_RECV* lpMsg) // OK
 #if(HIDE_VT)
 void GDCustomQuestSaveRecv(SDHP_CUSTOMQUEST_SAVE_RECV* lpMsg) // OK
 {
-	if (gQueryManager.ExecQuery("SELECT * FROM CustomQuest WHERE Name='%s'", lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT * FROM CustomQuest WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO CustomQuest (Name,quest) VALUES ('%s',%d)", lpMsg->name, lpMsg->quest);
+		gQueryManager.ExecQuery("INSERT INTO CustomQuest (Name,quest) VALUES ('%s',%d)", lpMsg->CharacterName, lpMsg->quest);
 		gQueryManager.Close();
 
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("Update CustomQuest SET quest = %d WHERE Name = '%s'", lpMsg->quest, lpMsg->name);
+		gQueryManager.ExecQuery("Update CustomQuest SET quest = %d WHERE Name = '%s'", lpMsg->quest, lpMsg->CharacterName);
 		gQueryManager.Close();
 	}
 
@@ -3411,13 +3467,13 @@ void GDCustomQuestRecv(SDHP_CUSTOMQUEST_RECV* lpMsg, int index) // OK
 
 	SDHP_CUSTOMQUEST_SEND pMsg;
 
-	pMsg.header.set(0xF1, sizeof(pMsg));
+	pMsg.Header.set(0xF1, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.name, lpMsg->name, sizeof(pMsg.name));
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	if (gQueryManager.ExecQuery("SELECT * FROM CustomQuest WHERE Name='%s'", lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT * FROM CustomQuest WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -3436,7 +3492,7 @@ void GDCustomQuestRecv(SDHP_CUSTOMQUEST_RECV* lpMsg, int index) // OK
 #endif
 void GDSetCoinRecv(SDHP_SETCOIN_RECV* lpMsg) // OK
 {
-	gQueryManager.ExecQuery("EXEC WZ_SetCoin '%s','%s','%d','%d','%d'",lpMsg->account,lpMsg->name,lpMsg->value1,lpMsg->value2,lpMsg->value3);
+	gQueryManager.ExecQuery("EXEC WZ_SetCoin '%s','%s','%d','%d','%d'",lpMsg->Account,lpMsg->CharacterName,lpMsg->value1,lpMsg->value2,lpMsg->value3);
 	gQueryManager.Fetch();
 	gQueryManager.Close();
 }
@@ -3448,11 +3504,11 @@ void GDCustomRankingRecv(SDHP_CUSTOM_RANKING_RECV* lpMsg, int index) // OK
 
 	PMSG_CUSTOM_RANKING_SEND pMsg;
 
-	pMsg.header.set(0xF4, 0);
+	pMsg.Header.set(0xF4, 0);
 
 	int size = sizeof(pMsg);
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
 	pMsg.type = lpMsg->type;
 
@@ -3460,7 +3516,7 @@ void GDCustomRankingRecv(SDHP_CUSTOM_RANKING_RECV* lpMsg, int index) // OK
 
 	CUSTOM_RANKING_DATA info;
 
-	if (gQueryManager.ExecQuery("EXEC WZ_CustomRanking %d", lpMsg->type) != 0)
+	if (gQueryManager.ExecQuery("EXEC WZ_CustomRanking %d", lpMsg->type))
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
@@ -3478,12 +3534,12 @@ void GDCustomRankingRecv(SDHP_CUSTOM_RANKING_RECV* lpMsg, int index) // OK
 	gQueryManager.Close();
 
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
 	memcpy(send, &pMsg, sizeof(pMsg));
 
-	//LogAdd(LOG_BLACK,"valor %d",pMsg.index);
+	//LogAdd(LOG_BLACK,"valor %d",pMsg.Index);
 
 	gSocketManager.DataSend(index, send, size);
 
@@ -3498,7 +3554,7 @@ void CharacterRanking(GDTop* lpMsg, int pIndex)
 	ZeroMemory(&rSend, sizeof(rSend));
 	rSend.h.set(0xD9, 0x02, sizeof(DGCharTop));
 
-	if (gQueryManager.ExecQuery("EXEC EX_RANKING1") == false)
+	if (!gQueryManager.ExecQuery("EXEC EX_RANKING1"))
 	{
 		gQueryManager.Close();
 	}
@@ -3516,7 +3572,7 @@ void CharacterRanking(GDTop* lpMsg, int pIndex)
 
 		char NickName[11] = { 0 };
 		gQueryManager.GetAsString("Name", NickName, sizeof(NickName));
-		strncpy_s(rSend.tp[iCharCount].Name, sizeof(rSend.tp[iCharCount].Name), NickName, _TRUNCATE);
+		strncpy_s(rSend.tp[iCharCount].CharacterName, sizeof(rSend.tp[iCharCount].CharacterName), NickName, _TRUNCATE);
 		rSend.tp[iCharCount].Class = gQueryManager.GetAsInteger("Class");
 		rSend.tp[iCharCount].level = gQueryManager.GetAsInteger("cLevel");
 		rSend.tp[iCharCount].Reset = gQueryManager.GetAsInteger("ResetCount");
@@ -3538,9 +3594,9 @@ void CharacterRanking(GDTop* lpMsg, int pIndex)
 	for (int b = 0; b<iCharCount; b++)
 	{
 		char cName[11] = { 0 };
-		strncpy_s(cName, sizeof(cName), rSend.tp[b].Name, _TRUNCATE);
+		strncpy_s(cName, sizeof(cName), rSend.tp[b].CharacterName, _TRUNCATE);
 
-		if (gQueryManager.ExecQuery("EXEC EX_RANKING2 '%s'", cName) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if (!gQueryManager.ExecQuery("EXEC EX_RANKING2 '%s'", cName) || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
 		}
@@ -3560,19 +3616,19 @@ void GetInfoCharTopBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 {
 	INFOCHAR_BUFFPHE pMsg {};
 
-	pMsg.header.set(0xD9, 0x04, sizeof(pMsg));
+	pMsg.Header.set(0xD9, 0x04, sizeof(pMsg));
 
-	pMsg.index = lpMsg->aIndex;
+	pMsg.Index = lpMsg->aIndex;
 
-	memcpy(pMsg.name, lpMsg->Name, sizeof(pMsg.name));
+	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	pMsg.result = ((gUtil.CheckTextSyntax(lpMsg->Name, sizeof(lpMsg->Name)) == 0) ? 0 : 1);
+	pMsg.Result = ((gUtil.CheckTextSyntax(lpMsg->CharacterName, sizeof(lpMsg->CharacterName)) == 0) ? 0 : 1);
 
-	if (pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM Character WHERE Name='%s'", lpMsg->Name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (pMsg.Result == 0 || !gQueryManager.ExecQuery("SELECT * FROM Character WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 0;
+		pMsg.Result = 0;
 	}
 	else
 	{
@@ -3587,7 +3643,7 @@ void GetInfoCharTopBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 		gQueryManager.Close();
 
 		//========================
-		if (gQueryManager.ExecQuery("Select G_Name,G_Status from GuildMember Where Name='%s'", lpMsg->Name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if (!gQueryManager.ExecQuery("Select G_Name,G_Status from GuildMember Where Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			memset(pMsg.GuildName, 0, sizeof(pMsg.GuildName));
 			gQueryManager.Close();
@@ -3618,7 +3674,7 @@ void GetDBBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 {
 	BUFFPHE_REQUESTDS_SETINFO pMsg {};
 
-	pMsg.header.set(0xD9, 0x03, sizeof(pMsg));
+	pMsg.Header.set(0xD9, 0x03, sizeof(pMsg));
 
 	pMsg.mDT_TongPoint = 0;
 	pMsg.mDT_Top1Point = 0;
@@ -3628,7 +3684,7 @@ void GetDBBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 	pMsg.mBT_Top1Point = 0;
 	memset(&pMsg.mBT_Top1Name, 0, sizeof(pMsg.mBT_Top1Name));
 
-	if (gQueryManager.ExecQuery("SELECT SUM(PointUsePhe) As TongPoint FROM Character WHERE PheHanhTau ='1'") == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT SUM(PointUsePhe) As TongPoint FROM Character WHERE PheHanhTau ='1'") || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 	}
@@ -3638,7 +3694,7 @@ void GetDBBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 		gQueryManager.Close();
 	}
 
-	if (gQueryManager.ExecQuery("Select top 1 name as Name, PointUsePhe as UsePoint from Character where PheHanhTau ='1' order by PointUsePhe desc") == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("Select top 1 name as Name, PointUsePhe as UsePoint from Character where PheHanhTau ='1' order by PointUsePhe desc") || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 	}
@@ -3650,7 +3706,7 @@ void GetDBBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 	}
 
 	//===Bao Tieu
-	if (gQueryManager.ExecQuery("SELECT SUM(PointUsePhe) As TongPoint FROM Character WHERE PheHanhTau ='2'") == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT SUM(PointUsePhe) As TongPoint FROM Character WHERE PheHanhTau ='2'") || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 	}
@@ -3659,7 +3715,7 @@ void GetDBBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index)
 		pMsg.mBT_TongPoint = gQueryManager.GetAsInteger("TongPoint");
 		gQueryManager.Close();
 	}
-	if (gQueryManager.ExecQuery("Select top 1 name as Name, PointUsePhe as UsePoint from Character where PheHanhTau ='2' order by PointUsePhe desc") == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("Select top 1 name as Name, PointUsePhe as UsePoint from Character where PheHanhTau ='2' order by PointUsePhe desc") || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 	}
@@ -3678,13 +3734,13 @@ void GDCustomAttackResumeRecv(SDHP_CARESUME_RECV* lpMsg,int index)
 
 	SDHP_CARESUME_SEND pMsg {};
 
-	pMsg.header.set(0xF5,sizeof(pMsg));
+	pMsg.Header.set(0xF5,sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.name,lpMsg->name,sizeof(pMsg.name));
+	memcpy(pMsg.CharacterName,lpMsg->CharacterName,sizeof(pMsg.CharacterName));
 
-	if(gQueryManager.ExecQuery("SELECT * FROM CustomAttack WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(!gQueryManager.ExecQuery("SELECT * FROM CustomAttack WHERE Name='%s'",lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 	}
@@ -3724,34 +3780,34 @@ void GDCustomAttackResumeRecv(SDHP_CARESUME_RECV* lpMsg,int index)
 
 void GDCustomAttackSaveRecv(SDHP_CARESUME_SAVE_RECV* lpMsg)
 {
-	if(gQueryManager.ExecQuery("SELECT * FROM CustomAttack WHERE Name='%s'",lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(!gQueryManager.ExecQuery("SELECT * FROM CustomAttack WHERE Name='%s'",lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO CustomAttack (Name,Active,Skill,Map,PosX,PosY,AutoBuff,OffPvP,AutoReset,AutoAddStr,AutoAddAgi,AutoAddVit,AutoAddEne,AutoAddCmd) VALUES ('%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)",lpMsg->name,lpMsg->active,lpMsg->skill,lpMsg->map,lpMsg->posx,lpMsg->posy,lpMsg->autobuff,lpMsg->offpvp,lpMsg->autoreset,lpMsg->autoaddstr,lpMsg->autoaddagi,lpMsg->autoaddvit,lpMsg->autoaddene,lpMsg->autoaddcmd);
+		gQueryManager.ExecQuery("INSERT INTO CustomAttack (Name,Active,Skill,Map,PosX,PosY,AutoBuff,OffPvP,AutoReset,AutoAddStr,AutoAddAgi,AutoAddVit,AutoAddEne,AutoAddCmd) VALUES ('%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)",lpMsg->CharacterName,lpMsg->active,lpMsg->skill,lpMsg->map,lpMsg->posx,lpMsg->posy,lpMsg->autobuff,lpMsg->offpvp,lpMsg->autoreset,lpMsg->autoaddstr,lpMsg->autoaddagi,lpMsg->autoaddvit,lpMsg->autoaddene,lpMsg->autoaddcmd);
 		gQueryManager.Close();
 
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("Update CustomAttack SET Active = %d, Skill = %d, Map = %d, PosX = %d, PosY = %d, AutoBuff = %d, OffPvP = %d, AutoReset = %d, AutoAddStr = %d, AutoAddAgi = %d, AutoAddVit = %d, AutoAddEne = %d, AutoAddCmd = %d  WHERE Name = '%s'",lpMsg->active,lpMsg->skill,lpMsg->map,lpMsg->posx,lpMsg->posy,lpMsg->autobuff,lpMsg->offpvp,lpMsg->autoreset,lpMsg->autoaddstr,lpMsg->autoaddagi,lpMsg->autoaddvit,lpMsg->autoaddene,lpMsg->autoaddcmd,lpMsg->name);
+		gQueryManager.ExecQuery("Update CustomAttack SET Active = %d, Skill = %d, Map = %d, PosX = %d, PosY = %d, AutoBuff = %d, OffPvP = %d, AutoReset = %d, AutoAddStr = %d, AutoAddAgi = %d, AutoAddVit = %d, AutoAddEne = %d, AutoAddCmd = %d  WHERE Name = '%s'",lpMsg->active,lpMsg->skill,lpMsg->map,lpMsg->posx,lpMsg->posy,lpMsg->autobuff,lpMsg->offpvp,lpMsg->autoreset,lpMsg->autoaddstr,lpMsg->autoaddagi,lpMsg->autoaddvit,lpMsg->autoaddene,lpMsg->autoaddcmd,lpMsg->CharacterName);
 		gQueryManager.Close();
 	}
 }
 
 void GDCustomNpcQuestSaveRecv(SDHP_CUSTOMNPCQUEST_SAVE_RECV* lpMsg) // OK
 {
-	if(gQueryManager.ExecQuery("SELECT * FROM CustomNpcQuest WHERE Name='%s' and Quest = %d",lpMsg->name,lpMsg->quest) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(!gQueryManager.ExecQuery("SELECT * FROM CustomNpcQuest WHERE Name='%s' and Quest = %d",lpMsg->CharacterName,lpMsg->quest) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO CustomNpcQuest (Name,quest,count,MonsterCount) VALUES ('%s',%d,1,99999)",lpMsg->name,lpMsg->quest);
+		gQueryManager.ExecQuery("INSERT INTO CustomNpcQuest (Name,quest,count,MonsterCount) VALUES ('%s',%d,1,99999)",lpMsg->CharacterName,lpMsg->quest);
 		gQueryManager.Close();
 
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("Update CustomNpcQuest SET Count = Count+1,MonsterCount=99999 WHERE Name = '%s' and Quest = %d",lpMsg->name,lpMsg->quest);
+		gQueryManager.ExecQuery("Update CustomNpcQuest SET Count = Count+1,MonsterCount=99999 WHERE Name = '%s' and Quest = %d",lpMsg->CharacterName,lpMsg->quest);
 		gQueryManager.Close();
 	}
 
@@ -3762,11 +3818,11 @@ void GDCustomNpcQuestRecv(SDHP_CUSTOMNPCQUEST_RECV* lpMsg,int index) // OK
 
 	SDHP_CUSTOMNPCQUEST_SEND pMsg {};
 
-	pMsg.header.set(0xF7,0x00,sizeof(pMsg));
+	pMsg.Header.set(0xF7,0x00,sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	if(gQueryManager.ExecQuery("SELECT * FROM CustomNpcQuest WHERE Name='%s' and Quest = %d",lpMsg->name,lpMsg->quest) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(!gQueryManager.ExecQuery("SELECT * FROM CustomNpcQuest WHERE Name='%s' and Quest = %d",lpMsg->CharacterName,lpMsg->quest) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -3797,17 +3853,17 @@ void GDCustomNpcQuestRecv(SDHP_CUSTOMNPCQUEST_RECV* lpMsg,int index) // OK
 
 void GDCustomNpcQuestMonsterCountSaveRecv(SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV* lpMsg) // OK
 {
-	if(gQueryManager.ExecQuery("SELECT * FROM CustomNpcQuest WHERE Name='%s' and Quest = %d",lpMsg->name,lpMsg->quest) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if(!gQueryManager.ExecQuery("SELECT * FROM CustomNpcQuest WHERE Name='%s' and Quest = %d",lpMsg->CharacterName,lpMsg->quest) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO CustomNpcQuest (Name,quest,count,monstercount) VALUES ('%s',%d,0,%d)",lpMsg->name,lpMsg->quest,lpMsg->monsterqtd);
+		gQueryManager.ExecQuery("INSERT INTO CustomNpcQuest (Name,quest,count,monstercount) VALUES ('%s',%d,0,%d)",lpMsg->CharacterName,lpMsg->quest,lpMsg->monsterqtd);
 		gQueryManager.Close();
 
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("Update CustomNpcQuest SET MonsterCount=%d WHERE Name = '%s' and Quest = %d",lpMsg->monsterqtd,lpMsg->name,lpMsg->quest);
+		gQueryManager.ExecQuery("Update CustomNpcQuest SET MonsterCount=%d WHERE Name = '%s' and Quest = %d",lpMsg->monsterqtd,lpMsg->CharacterName,lpMsg->quest);
 		gQueryManager.Close();
 
 	}
@@ -3862,17 +3918,17 @@ void GDCustomJewelBankRecv(SDHP_CUSTOM_JEWELBANK_RECV* lpMsg) // OK
 		break;
 	}
 
-	if (gQueryManager.ExecQuery("SELECT * FROM CustomJewelBank WHERE AccountID='%s'", lpMsg->account) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT * FROM CustomJewelBank WHERE AccountID='%s'", lpMsg->Account) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO CustomJewelBank (AccountID,Bless,Soul,Life,Creation,Guardian,GemStone,Harmony,Chaos,LowStone,HighStone) VALUES ('%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)", lpMsg->account, Bless, Soul, Life, Creation, Guardian, GemStone, Harmony, Chaos, LowStone, HighStone);
+		gQueryManager.ExecQuery("INSERT INTO CustomJewelBank (AccountID,Bless,Soul,Life,Creation,Guardian,GemStone,Harmony,Chaos,LowStone,HighStone) VALUES ('%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)", lpMsg->Account, Bless, Soul, Life, Creation, Guardian, GemStone, Harmony, Chaos, LowStone, HighStone);
 		gQueryManager.Close();
 
 	}
 	else
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("Update CustomJewelBank SET Bless+=%d,Soul+=%d,Life+=%d,Creation+=%d,Guardian+=%d,GemStone+=%d,Harmony+=%d,Chaos+=%d,LowStone+=%d,HighStone+=%d WHERE AccountID = '%s'", Bless, Soul, Life, Creation, Guardian, GemStone, Harmony, Chaos, LowStone, HighStone, lpMsg->account);
+		gQueryManager.ExecQuery("Update CustomJewelBank SET Bless+=%d,Soul+=%d,Life+=%d,Creation+=%d,Guardian+=%d,GemStone+=%d,Harmony+=%d,Chaos+=%d,LowStone+=%d,HighStone+=%d WHERE AccountID = '%s'", Bless, Soul, Life, Creation, Guardian, GemStone, Harmony, Chaos, LowStone, HighStone, lpMsg->Account);
 		gQueryManager.Close();
 	}
 
@@ -3882,11 +3938,11 @@ void GDCustomJewelBankInfoRecv(SDHP_CUSTOM_JEWELBANK_INFO_RECV* lpMsg, int index
 {
 	SDHP_CUSTOM_JEWELBANK_INFO_SEND pMsg = { 0 };
 
-	pMsg.header.set(0xF7, 0x05, sizeof(pMsg));
+	pMsg.Header.set(0xF7, 0x05, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	if (gQueryManager.ExecQuery("SELECT * FROM CustomJewelBank WHERE AccountID='%s'", lpMsg->account) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT * FROM CustomJewelBank WHERE AccountID='%s'", lpMsg->Account) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
@@ -3928,7 +3984,7 @@ void GDCustomGHRSRecv(SDHP_CUSTOM_GHRS_RECV* lpMsg, int index) // OK
 
 	PMSG_CUSTOM_GHRS_SEND pMsg {};
 
-	pMsg.header.set(0xF6, 0);
+	pMsg.Header.set(0xF6, 0);
 
 	int size = sizeof(pMsg);
 
@@ -3938,10 +3994,10 @@ void GDCustomGHRSRecv(SDHP_CUSTOM_GHRS_RECV* lpMsg, int index) // OK
 
 	pMsg.Grand = 0;
 
-	if (gQueryManager.ExecQuery("select top 1 MasterResetCount, ResetCount from GHRS_top1 where time = %d order by MasterResetCount DESC, ResetCount DESC", lpMsg->time) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("select top 1 MasterResetCount, ResetCount from GHRS_top1 where time = %d order by MasterResetCount DESC, ResetCount DESC", lpMsg->time) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		if (gQueryManager.ExecQuery("select TOP 1 MasterResetCount, ResetCount from Character where CtlCode = 0 Order by MasterResetCount DESC, ResetCount DESC, cLevel DESC, Experience DESC, Money DESC") != 0 && gQueryManager.Fetch() != SQL_NO_DATA) {
+		if (gQueryManager.ExecQuery("select TOP 1 MasterResetCount, ResetCount from Character where CtlCode = 0 Order by MasterResetCount DESC, ResetCount DESC, cLevel DESC, Experience DESC, Money DESC") && gQueryManager.Fetch() != SQL_NO_DATA) {
 			pMsg.resets = gQueryManager.GetAsInteger("ResetCount");
 			pMsg.Grand = gQueryManager.GetAsInteger("MasterResetCount");
 		}
@@ -3968,8 +4024,8 @@ void GDCustomGHRSRecv(SDHP_CUSTOM_GHRS_RECV* lpMsg, int index) // OK
 
 	gQueryManager.Close();
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
 	memcpy(send, &pMsg, sizeof(pMsg));
 
@@ -3985,17 +4041,17 @@ void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index) // OK
 {
 	SDHP_BOT_INFO_SEND pMsg {};
 
-	pMsg.header.set(0xF9, sizeof(pMsg));
+	pMsg.Header.set(0xF9, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
 	char CharName[11] = { 0 };
 
-	if (gQueryManager.ExecQuery("exec WZ_GetTopStatue %d, %d", lpMsg->TypeTop, lpMsg->Rank) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("exec WZ_GetTopStatue %d, %d", lpMsg->TypeTop, lpMsg->Rank) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 0;
+		pMsg.Result = 0;
 	}
 	else
 	{
@@ -4003,15 +4059,15 @@ void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index) // OK
 		gQueryManager.Close();
 
 	}
-	memcpy(pMsg.name, CharName, sizeof(pMsg.name));
+	memcpy(pMsg.CharacterName, CharName, sizeof(pMsg.CharacterName));
 
-	pMsg.result = ((gUtil.CheckTextSyntax(CharName, sizeof(CharName)) == 0) ? 0 : 1);
+	pMsg.Result = ((gUtil.CheckTextSyntax(CharName, sizeof(CharName)) == 0) ? 0 : 1);
 
-	if (pMsg.result == 0 || gQueryManager.ExecQuery("SELECT * FROM Character WHERE Name='%s'", CharName) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (pMsg.Result == 0 || !gQueryManager.ExecQuery("SELECT * FROM Character WHERE Name='%s'", CharName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 0;
+		pMsg.Result = 0;
 	}
 	else
 	{
@@ -4080,7 +4136,7 @@ void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index) // OK
 		gQueryManager.Close();
 
 		//========================
-		if (gQueryManager.ExecQuery("Select G_Name,G_Status from GuildMember Where Name='%s'", CharName) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if (!gQueryManager.ExecQuery("Select G_Name,G_Status from GuildMember Where Name='%s'", CharName) || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			memset(pMsg.GuildName, 0, sizeof(pMsg.GuildName));
 			gQueryManager.Close();
@@ -4115,7 +4171,7 @@ void GDGetSkinIsBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index) // OK
 
 	CBCUSTOM_LOAD_COUNT pMsg {};
 
-	pMsg.header.set(0xD9, 0x01, 0);
+	pMsg.Header.set(0xD9, 0x01, 0);
 
 	int size = sizeof(pMsg);
 
@@ -4125,7 +4181,7 @@ void GDGetSkinIsBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index) // OK
 
 	BCUSTOM_SKINMODEL_DATA info;
 
-	if (gQueryManager.ExecQuery("Select SkinIndex,StatusBuy from SkinModel where AccountID='%s'", lpMsg->AccountID) != 0)
+	if (gQueryManager.ExecQuery("Select SkinIndex,StatusBuy from SkinModel where AccountID='%s'", lpMsg->AccountID))
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
@@ -4145,8 +4201,8 @@ void GDGetSkinIsBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index) // OK
 		return;
 	}
 
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(size);
+	pMsg.Header.size[1] = SET_NUMBERLB(size);
 
 	memcpy(send, &pMsg, sizeof(pMsg));
 
@@ -4167,15 +4223,15 @@ void GDCharacterSachThuocTinhRecv(SACHTHUOCTINH_GD_REQ_DATA* lpMsg, int index) /
 {
 	SACHTHUOCTINH_DG_GET_DATA pMsg {};
 
-	pMsg.header.set(0xB0, 0x04, sizeof(pMsg));
+	pMsg.Header.set(0xB0, 0x04, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	if (gQueryManager.ExecQuery("SELECT * FROM CustomSachThuocTinh WHERE Name='%s'", lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT * FROM CustomSachThuocTinh WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		if (gQueryManager.ExecQuery("INSERT INTO CustomSachThuocTinh (Name,SACH_01,SACH_02,SACH_03,SACH_04,SACH_05,SACH_06,SACH_07) VALUES ('%s',0,0,0,0,0,0,0)", lpMsg->name) == 0)
+		if (!gQueryManager.ExecQuery("INSERT INTO CustomSachThuocTinh (Name,SACH_01,SACH_02,SACH_03,SACH_04,SACH_05,SACH_06,SACH_07) VALUES ('%s',0,0,0,0,0,0,0)", lpMsg->CharacterName))
 		{
 			gQueryManager.Close();
 		}
@@ -4221,15 +4277,15 @@ void GDCharacterMocNapRecv(MOCNAP_GD_REQ_DATA* lpMsg, int index) // OK
 {
 	MOCNAP_DG_GET_DATA pMsg {};
 
-	pMsg.header.set(0xB0, 0x09, sizeof(pMsg));
+	pMsg.Header.set(0xB0, 0x09, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	if (gQueryManager.ExecQuery("SELECT * FROM CustomMocNap WHERE Name='%s'", lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT * FROM CustomMocNap WHERE Name='%s'", lpMsg->CharacterName) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		if (gQueryManager.ExecQuery("INSERT INTO CustomMocNap (Name,MOCNAP1,MOCNAP2,MOCNAP3,MOCNAP4,MOCNAP5,MOCNAP6,MOCNAP7,MOCNAP8,MOCNAP9,MOCNAP10,MOCNAP11,MOCNAP12,MOCNAP13) VALUES ('%s',0,0,0,0,0,0,0,0,0,0,0,0,0)", lpMsg->name) == 0)
+		if (!gQueryManager.ExecQuery("INSERT INTO CustomMocNap (Name,MOCNAP1,MOCNAP2,MOCNAP3,MOCNAP4,MOCNAP5,MOCNAP6,MOCNAP7,MOCNAP8,MOCNAP9,MOCNAP10,MOCNAP11,MOCNAP12,MOCNAP13) VALUES ('%s',0,0,0,0,0,0,0,0,0,0,0,0,0)", lpMsg->CharacterName))
 		{
 			gQueryManager.Close();
 		}

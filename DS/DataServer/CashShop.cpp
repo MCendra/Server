@@ -34,15 +34,15 @@ void CCashShop::GDCashShopPointRecv(SDHP_CASH_SHOP_POINT_RECV* lpMsg, int index)
 
 		SDHP_CASH_SHOP_POINT_SEND pMsg;
 
-		pMsg.header.set(0x18,0x00,sizeof(pMsg));
+		pMsg.Header.set(0x18,0x00,sizeof(pMsg));
 
-		pMsg.index = lpMsg->index;
+		pMsg.Index = lpMsg->Index;
 
-		memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+		memcpy(pMsg.Account,lpMsg->Account,sizeof(pMsg.Account));
 
-		pMsg.result = 1;
+		pMsg.Result = 1;
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCoin '%s'",lpMsg->account) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+		if(!gQueryManager.ExecQuery("EXEC WZ_GetCoin '%s'",lpMsg->Account) || gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			pMsg.WCoinC = 0;
 			pMsg.WCoinP = 0;
@@ -86,7 +86,7 @@ void CCashShop::GDCashShopItemBuyRecv(SDHP_CASH_SHOP_ITEM_BUY_RECV* lpMsg, int i
 		{
 			pMsg.Result = 1;
 		}
-		else if (gQueryManager.ExecQuery("SELECT count(*) FROM CashShopInventory WHERE AccountID='%s' AND InventoryType=%d", lpMsg->Account, 83) == 0 ||
+		else if (!gQueryManager.ExecQuery("SELECT count(*) FROM CashShopInventory WHERE AccountID='%s' AND InventoryType=%d", lpMsg->Account, 83) ||
 			gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
@@ -132,7 +132,7 @@ void CCashShop::GDCashShopItemGifRecv(SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg, int i
 
 		gQueryManager.BindParameterAsString(1, lpMsg->GiftName, sizeof(lpMsg->GiftName));
 
-		if (gQueryManager.ExecQuery("SELECT AccountID FROM Character WHERE Name=?") == 0 ||
+		if (!gQueryManager.ExecQuery("SELECT AccountID FROM Character WHERE Name=?") ||
 			gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
@@ -149,7 +149,7 @@ void CCashShop::GDCashShopItemGifRecv(SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg, int i
 			{
 				pMsg.Result = 1;
 			}
-			else if (gQueryManager.ExecQuery("SELECT count(*) FROM CashShopInventory WHERE AccountID='%s' AND InventoryType=%d", pMsg.GiftAccount, 71) == 0 ||
+			else if (!gQueryManager.ExecQuery("SELECT count(*) FROM CashShopInventory WHERE AccountID='%s' AND InventoryType=%d", pMsg.GiftAccount, 71) ||
 				gQueryManager.Fetch() == SQL_NO_DATA)
 			{
 				gQueryManager.Close();
@@ -186,7 +186,7 @@ void CCashShop::GDCashShopItemNumRecv(SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg, int i
 		pMsg.InventoryPage = lpMsg->InventoryPage;
 		pMsg.InventoryType = lpMsg->InventoryType;
 
-		if (gQueryManager.ExecQuery("SELECT * FROM CashShopInventory WHERE AccountID='%s' AND InventoryType=%d", lpMsg->Account, lpMsg->InventoryType) == 0)
+		if (!gQueryManager.ExecQuery("SELECT * FROM CashShopInventory WHERE AccountID='%s' AND InventoryType=%d", lpMsg->Account, lpMsg->InventoryType))
 		{
 			gQueryManager.Close();
 
@@ -242,7 +242,7 @@ void CCashShop::GDCashShopItemUseRecv(SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg, int i
 		pMsg.ItemIndex = lpMsg->ItemIndex;
 		pMsg.ProductType = lpMsg->ProductType;
 
-		if (gQueryManager.ExecQuery("SELECT * FROM CashShopInventory WHERE BaseItemCode=%d", lpMsg->BaseItemCode) == 0 ||
+		if (!gQueryManager.ExecQuery("SELECT * FROM CashShopInventory WHERE BaseItemCode=%d", lpMsg->BaseItemCode) ||
 			gQueryManager.Fetch() == SQL_NO_DATA)
 		{
 			gQueryManager.Close();
@@ -302,7 +302,7 @@ void CCashShop::GDCashShopPeriodicItemRecv(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lp
 
 			SDHP_CASH_SHOP_PERIODIC_ITEM2 info{};
 
-			if (gQueryManager.ExecQuery("SELECT Time FROM CashShopPeriodicItem WHERE ItemSerial=%d", lpInfo->Serial) == 0 ||
+			if (!gQueryManager.ExecQuery("SELECT Time FROM CashShopPeriodicItem WHERE ItemSerial=%d", lpInfo->Serial) ||
 				gQueryManager.Fetch() == SQL_NO_DATA)
 			{
 				gQueryManager.Close();
@@ -540,9 +540,7 @@ bool CCashShop::LoadCashInfo(const char* account, DWORD& WCoinC, DWORD& WCoinP, 
 	GoblinPoint = 0;
 	Ruud = 0;
 
-	if (gQueryManager.ExecQuery(
-		"SELECT WCoinC,WCoinP,GoblinPoint,Ruud FROM CashShopData WHERE AccountID='%s'",
-		account) == 0)
+	if (!gQueryManager.ExecQuery("SELECT WCoinC,WCoinP,GoblinPoint,Ruud FROM CashShopData WHERE AccountID='%s'", account))
 	{
 		gQueryManager.Close();
 		return false;
@@ -566,9 +564,7 @@ bool CCashShop::LoadCashInfo(const char* account, DWORD& WCoinC, DWORD& WCoinP, 
 
 bool CCashShop::CreateCashInfo(const char* account)
 {
-	if (gQueryManager.ExecQuery(
-		"INSERT INTO CashShopData (AccountID,WCoinC,WCoinP,GoblinPoint,Ruud) "
-		"VALUES ('%s',0,0,0,0)", account) == 0)
+	if (!gQueryManager.ExecQuery("INSERT INTO CashShopData (AccountID,WCoinC,WCoinP,GoblinPoint,Ruud) VALUES ('%s',0,0,0,0)", account))
 	{
 		gQueryManager.Close();
 		return false;

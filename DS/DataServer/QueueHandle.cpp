@@ -23,7 +23,7 @@ size_t CQueue::GetQueueSize()
 
 bool CQueue::AddToQueue(const QUEUE_INFO* lpInfo)
 {
-	if (lpInfo == nullptr || lpInfo->size > MAX_BUFFER_QUEUE_SIZE)
+	if (lpInfo == nullptr || lpInfo->Size > MAX_BUFFER_QUEUE_SIZE)
 	{
 		return false;
 	}

@@ -9,12 +9,12 @@
 
 struct SDHP_PARTY_MATCHING_INSERT_RECV
 {
-	PSBMSG_HEAD header; // C1:29:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	char text[41];
-	char password[5];
+	PSBMSG_HEAD Header; // C1:29:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	char Text[41];
+	char Password[5];
 	WORD MinLevel;
 	WORD MaxLevel;
 	WORD HuntingGround;
@@ -30,11 +30,11 @@ struct SDHP_PARTY_MATCHING_INSERT_RECV
 
 struct SDHP_PARTY_MATCHING_LIST_RECV
 {
-	PSBMSG_HEAD header; // C1:29:01
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD page;
+	PSBMSG_HEAD Header; // C1:29:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Page;
 	WORD Level;
 	WORD Class;
 	BYTE GensType;
@@ -44,12 +44,12 @@ struct SDHP_PARTY_MATCHING_LIST_RECV
 
 struct SDHP_PARTY_MATCHING_JOIN_INSERT_RECV
 {
-	PSBMSG_HEAD header; // C1:29:02
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:29:02
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char LeaderName[11];
-	char password[5];
+	char Password[5];
 	WORD Level;
 	BYTE Class;
 	BYTE UsePassword;
@@ -59,81 +59,79 @@ struct SDHP_PARTY_MATCHING_JOIN_INSERT_RECV
 
 struct SDHP_PARTY_MATCHING_JOIN_INFO_RECV
 {
-	PSBMSG_HEAD header; // C1:29:03
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:29:03
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_LIST_RECV
 {
-	PSBMSG_HEAD header; // C1:29:04
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:29:04
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV
 {
-	PSBMSG_HEAD header; // C1:29:05
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:29:05
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char MemberName[11];
-	BYTE type;
+	BYTE Type;
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV
 {
-	PSBMSG_HEAD header; // C1:29:06
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE type;
-	BYTE flag;
+	PSBMSG_HEAD Header; // C1:29:06
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Type;
+	BYTE Flag;
 };
 
 struct SDHP_PARTY_MATCHING_INSERT_SAVE_RECV
 {
-	PSBMSG_HEAD header; // C1:29:30
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:29:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	WORD LeaderLevel;
 	BYTE LeaderClass;
 	BYTE PartyMemberCount;
 	BYTE GensType;
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_PARTY_MATCHING_INSERT_SEND
 {
-	PSBMSG_HEAD header; // C1:29:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSBMSG_HEAD Header; // C1:29:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 };
 
 struct SDHP_PARTY_MATCHING_LIST_SEND
 {
-	PSWMSG_HEAD header; // C2:29:01
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSWMSG_HEAD Header; // C2:29:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 	DWORD CurPage;
 	DWORD MaxPage;
-	DWORD count;
+	DWORD Count;
 };
 
 struct SDHP_PARTY_MATCHING_LIST
 {
-	char charactername[MAX_CHARACTER_NAME];
-	char text[41];
+	char CharacterName[MAX_CHARACTER_NAME];
+	char Text[41];
 	WORD MinLevel;
 	WORD MaxLevel;
 	WORD HuntingGround;
@@ -149,90 +147,88 @@ struct SDHP_PARTY_MATCHING_LIST
 
 struct SDHP_PARTY_MATCHING_JOIN_INSERT_SEND
 {
-	PSBMSG_HEAD header; // C1:29:02
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSBMSG_HEAD Header; // C1:29:02
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_INFO_SEND
 {
-	PSBMSG_HEAD header; // C1:29:03
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSBMSG_HEAD Header; // C1:29:03
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 	DWORD LeaderServerCode;
 	char LeaderName[11];
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_LIST_SEND
 {
-	PSWMSG_HEAD header; // C2:29:04
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSWMSG_HEAD Header; // C2:29:04
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 	DWORD count;
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_LIST
 {
-	char charactername[MAX_CHARACTER_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Class;
 	DWORD Level;
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_ACCEPT_SEND
 {
-	PSBMSG_HEAD header; // C1:29:05
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSBMSG_HEAD Header; // C1:29:05
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 	char MemberName[11];
-	BYTE type;
-	BYTE flag;
+	BYTE Type;
+	BYTE Flag;
 };
 
 struct SDHP_PARTY_MATCHING_JOIN_CANCEL_SEND
 {
-	PSBMSG_HEAD header; // C1:29:06
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
-	BYTE type;
-	BYTE flag;
+	PSBMSG_HEAD Header; // C1:29:06
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
+	BYTE Type;
+	BYTE Flag;
 };
 
 struct SDHP_PARTY_MATCHING_NOTIFY_SEND
 {
-	PSBMSG_HEAD header; // C1:29:07
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSBMSG_HEAD Header; // C1:29:07
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 	char LeaderName[11];
 };
 
 struct SDHP_PARTY_MATCHING_NOTIFY_LEADER_SEND
 {
-	PSBMSG_HEAD header; // C1:29:08
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD result;
+	PSBMSG_HEAD Header; // C1:29:08
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Result;
 };
 
-//**********************************************//
-//**********************************************//
 //**********************************************//
 
 struct PARTY_MATCHING_INFO
 {
-	char Name[11];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char Text[41];
 	char Password[5];
 	WORD MinLevel;
@@ -251,7 +247,7 @@ struct PARTY_MATCHING_INFO
 
 struct PARTY_MATCHING_JOIN_INFO
 {
-	char Name[11];
+	char CharacterName[MAX_CHARACTER_NAME];
 	char LeaderName[11];
 	WORD LeaderServerCode;
 	BYTE Class;
@@ -261,30 +257,30 @@ struct PARTY_MATCHING_JOIN_INFO
 class CPartyMatching
 {
 public:
-	CPartyMatching();
-	virtual ~CPartyMatching();
+	CPartyMatching() = default;
+	~CPartyMatching() = default;
 	void ClearPartyMatchingInfo(WORD ServerCode);
 	void ClearPartyMatchingJoinInfo(WORD ServerCode);
-	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo,char* name);
-	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo,WORD ServerCode,WORD Level,BYTE Class,BYTE GensType);
+	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, char* name);
+	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, WORD ServerCode, WORD Level, BYTE Class, BYTE GensType);
 	void InsertPartyMatchingInfo(PARTY_MATCHING_INFO PartyMatchingInfo);
 	void RemovePartyMatchingInfo(PARTY_MATCHING_INFO PartyMatchingInfo);
-	bool GetPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO* lpPartyMatchingJoinInfo,char* name);
+	bool GetPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO* lpPartyMatchingJoinInfo, char* name);
 	void InsertPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo);
 	void RemovePartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo);
 	void RemovePartyMatchingJoinInfoNotifyAll(PARTY_MATCHING_INFO PartyMatchingInfo);
-	DWORD GeneratePartyMatchingList(DWORD* CurPage,DWORD* MaxPage,BYTE UseSearchWord,char* SearchWord,BYTE* lpMsg,int* size);
-	DWORD GeneratePartyMatchingJoinList(char* LeaderName,BYTE* lpMsg,int* size);
-	void GDPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg,int index);
-	void GDPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMsg,int index);
-	void GDPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg,int index);
-	void GDPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg,int index);
-	void GDPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg,int index);
-	void GDPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg,int index);
-	void GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg,int index);
+	DWORD GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, BYTE UseSearchWord, char* SearchWord, BYTE* lpMsg, int* size);
+	DWORD GeneratePartyMatchingJoinList(char* LeaderName, BYTE* lpMsg, int* size);
+	void GDPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg, int index);
+	void GDPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMsg, int index);
+	void GDPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg, int index);
+	void GDPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg, int index);
+	void GDPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg, int index);
+	void GDPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int index);
+	void GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg, int index);
 	void GDPartyMatchingInsertSaveRecv(SDHP_PARTY_MATCHING_INSERT_SAVE_RECV* lpMsg);
-	void DGPartyMatchingNotifySend(char* name,char* LeaderName,DWORD result);
-	void DGPartyMatchingNotifyLeaderSend(char* name,DWORD result);
+	void DGPartyMatchingNotifySend(const char* name, const char* LeaderName, DWORD result);
+	void DGPartyMatchingNotifyLeaderSend(const char* name, DWORD result);
 private:
 	CCriticalSection m_critical;
 	std::map<std::string,PARTY_MATCHING_INFO> m_PartyMatchingInfo;

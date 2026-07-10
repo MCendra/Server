@@ -107,19 +107,19 @@ void ESDataSend(int index, const BYTE* lpMsg, int size)
 			return;
 		}
 
-		PSBMSG_HEAD header;
+		PSBMSG_HEAD Header;
 
-		header.set(
+		Header.set(
 			DS_HEAD_EXDB_PROTOCOL,
 			lpMsg[C1_PACKET_HEAD_OFFSET],
 			packetSize);
 
-		memcpy(send, &header, sizeof(header));
+		memcpy(send, &Header, sizeof(Header));
 
 		memcpy(
-			send + sizeof(header),
+			send + sizeof(Header),
 			lpMsg + C1_PACKET_DATA_OFFSET,
-			packetSize - static_cast<int>(sizeof(header)));
+			packetSize - static_cast<int>(sizeof(Header)));
 
 		gSocketManager.DataSend(index, send, packetSize);
 	}
@@ -134,19 +134,19 @@ void ESDataSend(int index, const BYTE* lpMsg, int size)
 			return;
 		}
 
-		PSWMSG_HEAD header;
+		PSWMSG_HEAD Header;
 
-		header.set(
+		Header.set(
 			DS_HEAD_EXDB_PROTOCOL,
 			lpMsg[C2_PACKET_HEAD_OFFSET],
 			packetSize);
 
-		memcpy(send, &header, sizeof(header));
+		memcpy(send, &Header, sizeof(Header));
 
 		memcpy(
-			send + sizeof(header),
+			send + sizeof(Header),
 			lpMsg + C2_PACKET_DATA_OFFSET,
-			packetSize - static_cast<int>(sizeof(header)));
+			packetSize - static_cast<int>(sizeof(Header)));
 
 		gSocketManager.DataSend(index, send, packetSize);
 	}
@@ -176,20 +176,20 @@ void ESDataRecv(int index, BYTE head, const BYTE* lpMsg, int size)
 			return;
 		}
 
-		PBMSG_HEAD header;
+		PBMSG_HEAD Header;
 
-		header.set(
+		Header.set(
 			lpMsg[C1_PACKET_DATA_OFFSET],
 			packetSize);
 
-		memcpy(recv, &header, sizeof(header));
+		memcpy(recv, &Header, sizeof(Header));
 
 		memcpy(
-			recv + sizeof(header),
+			recv + sizeof(Header),
 			lpMsg + C1_PACKET_DATA_OFFSET + 1,
-			packetSize - static_cast<int>(sizeof(header)));
+			packetSize - static_cast<int>(sizeof(Header)));
 
-		ExDBServerProtocolCore(index, header.head, recv, packetSize);
+		ExDBServerProtocolCore(index, Header.head, recv, packetSize);
 	}
 	break;
 
@@ -202,20 +202,20 @@ void ESDataRecv(int index, BYTE head, const BYTE* lpMsg, int size)
 			return;
 		}
 
-		PWMSG_HEAD header;
+		PWMSG_HEAD Header;
 
-		header.set(
+		Header.set(
 			lpMsg[C2_PACKET_DATA_OFFSET],
 			packetSize);
 
-		memcpy(recv, &header, sizeof(header));
+		memcpy(recv, &Header, sizeof(Header));
 
 		memcpy(
-			recv + sizeof(header),
+			recv + sizeof(Header),
 			lpMsg + C2_PACKET_DATA_OFFSET + 1,
-			packetSize - static_cast<int>(sizeof(header)));
+			packetSize - static_cast<int>(sizeof(Header)));
 
-		ExDBServerProtocolCore(index, header.head, recv, packetSize);
+		ExDBServerProtocolCore(index, Header.head, recv, packetSize);
 	}
 	break;
 	}

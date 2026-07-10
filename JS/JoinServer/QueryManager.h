@@ -32,7 +32,7 @@ private:
 	char m_odbc[32];
 	char m_user[32];
 	char m_pass[32];
-	SQLINTEGER m_RowCount;
+	bool m_HasRow;
 	SQLSMALLINT m_ColCount;
 	SQLCHAR m_SQLColName[MAX_COLUMNS][30];
 	char m_SQLData[MAX_COLUMNS][8192];

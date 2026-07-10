@@ -6,168 +6,267 @@
 
 CMuRummy gMuRummy;
 
-// Construction/Destruction
-
-CMuRummy::CMuRummy() // OK
+void CMuRummy::GDReqCardInfo(_tagPMSG_REQ_MURUMMY_SELECT_DS* lpMsg, int index)
 {
+#if (DATASERVER_UPDATE >= 802)
 
-}
-
-CMuRummy::~CMuRummy() // OK
-{
-
-}
-
-void CMuRummy::GDReqCardInfo(_tagPMSG_REQ_MURUMMY_SELECT_DS* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=802)
-
-	_tagPMSG_ANS_MURUMMY_SELECT_DS pMsg;
-
-	pMsg.h.set(0x12,0x00,sizeof(pMsg));
-
-	pMsg.aIndex = lpMsg->aIndex;
-
-	pMsg.btResult = 1;
-
-	if(gQueryManager.ExecQuery("SELECT TotalScore FROM MuRummyData WHERE Name='%s'",lpMsg->Name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (lpMsg == nullptr)
 	{
-		gQueryManager.Close();
-
-		pMsg.btResult = 0;
+		return;
 	}
-	else
+
+	_tagPMSG_ANS_MURUMMY_SELECT_DS pMsg{};
+
+	pMsg.Header.set(DS_HEAD_MURUMMY, DS_SUB_MURUMMY_LOAD, sizeof(pMsg));
+
+	pMsg.Index = lpMsg->Index;
+	pMsg.Result = 1;
+
+	if (gQueryManager.ExecQuery(
+		"SELECT TotalScore FROM MuRummyData WHERE Name='%s'",
+		lpMsg->CharacterName))
 	{
-		pMsg.wScore = gQueryManager.GetAsInteger("TotalScore");
+		const auto sqlRet = gQueryManager.Fetch();
 
-		gQueryManager.Close();
-
-		if(gQueryManager.ExecQuery("SELECT Color,Number,Slot,Status,Sequence FROM MuRummyCard WHERE Name='%s'",lpMsg->Name) == 0)
+		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
 		{
-			gQueryManager.Close();
-
-			pMsg.btResult = 0;
+			pMsg.Result = 0;
 		}
 		else
 		{
-			while(gQueryManager.Fetch() != SQL_NO_DATA)
-			{
-				int seq = gQueryManager.GetAsInteger("Sequence");
-
-				pMsg.stMuRummyCardInfoDS[seq].btColor = gQueryManager.GetAsInteger("Color");
-
-				pMsg.stMuRummyCardInfoDS[seq].btNumber = gQueryManager.GetAsInteger("Number");
-
-				pMsg.stMuRummyCardInfoDS[seq].btSlotNum = gQueryManager.GetAsInteger("Slot");
-
-				pMsg.stMuRummyCardInfoDS[seq].btSeq = seq;
-
-				pMsg.stMuRummyCardInfoDS[seq].btStatus = gQueryManager.GetAsInteger("Status");
-			}
-
-			gQueryManager.Close();
+			pMsg.Score = gQueryManager.GetAsInteger("TotalScore");
 		}
 	}
-
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.h.size);
-
-	#endif
-}
-
-void CMuRummy::GDReqCardInfoInsert(_tagPMSG_REQ_MURUMMY_INSERT_DS* lpMsg) // OK
-{
-	#if(DATASERVER_UPDATE>=802)
-
-	for(int n=0;n < _countof(lpMsg->stMuRummyCardInfoDS);n++)
-	{
-		gQueryManager.ExecQuery("INSERT INTO MuRummyCard (Name,Color,Number,Slot,Status,Sequence) VALUES ('%s',%d,%d,%d,%d,%d)",lpMsg->Name,lpMsg->stMuRummyCardInfoDS[n].btColor,lpMsg->stMuRummyCardInfoDS[n].btNumber,lpMsg->stMuRummyCardInfoDS[n].btSlotNum,lpMsg->stMuRummyCardInfoDS[n].btStatus,lpMsg->stMuRummyCardInfoDS[n].btSeq);
-		gQueryManager.Close();
-	}
-
-	#endif
-}
-
-void CMuRummy::GDReqCardInfoUpdate(_tagPMSG_REQ_MURUMMY_UPDATE_DS* lpMsg) // OK
-{
-	#if(DATASERVER_UPDATE>=802)
-
-	gQueryManager.ExecQuery("UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",lpMsg->btSlotNum,lpMsg->btStatus,lpMsg->Name,lpMsg->btSequence);
-	gQueryManager.Close();
-
-	#endif
-}
-
-void CMuRummy::GDReqScoreUpdate(_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg) // OK
-{
-	#if(DATASERVER_UPDATE>=802)
-
-	if(gQueryManager.ExecQuery("SELECT Name FROM MuRummyData WHERE Name='%s'",lpMsg->Name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO MuRummyData (Name,TotalScore) VALUES ('%s',%d)",lpMsg->Name,lpMsg->wScore);
-		gQueryManager.Close();
-	}
 	else
 	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE MuRummyData SET TotalScore=%d WHERE Name='%s'",lpMsg->wScore,lpMsg->Name);
-		gQueryManager.Close();
+		pMsg.Result = 0;
 	}
 
-	for(int n=0;n < _countof(lpMsg->stCardUpdateDS);n++)
-	{
-		gQueryManager.ExecQuery("UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",lpMsg->stCardUpdateDS[n].btSlotNum,lpMsg->stCardUpdateDS[n].btStatus,lpMsg->Name,lpMsg->stCardUpdateDS[n].btSeq);
-		gQueryManager.Close();
-	}
-
-	#endif
-}
-
-void CMuRummy::GDReqScoreDelete(_tagPMSG_REQ_MURUMMY_DELETE_DS* lpMsg) // OK
-{
-	#if(DATASERVER_UPDATE>=802)
-
-	gQueryManager.ExecQuery("DELETE MuRummyCard WHERE Name='%s'",lpMsg->Name);
 	gQueryManager.Close();
 
-	gQueryManager.ExecQuery("DELETE MuRummyData WHERE Name='%s'",lpMsg->Name);
-	gQueryManager.Close();
+	if (pMsg.Result != 0)
+	{
+		if (gQueryManager.ExecQuery(
+			"SELECT Color,Number,Slot,Status,Sequence FROM MuRummyCard WHERE Name='%s'",
+			lpMsg->CharacterName))
+		{
+			for (short sqlRet = gQueryManager.Fetch();
+				sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA;
+				sqlRet = gQueryManager.Fetch())
+			{
+				const int seq = gQueryManager.GetAsInteger("Sequence");
 
-	#endif
+				if (seq >= 0 && seq < _countof(pMsg.stMuRummyCardInfoDS))
+				{
+					pMsg.stMuRummyCardInfoDS[seq].Color = gQueryManager.GetAsInteger("Color");
+					pMsg.stMuRummyCardInfoDS[seq].Number = gQueryManager.GetAsInteger("Number");
+					pMsg.stMuRummyCardInfoDS[seq].SlotNum = gQueryManager.GetAsInteger("Slot");
+					pMsg.stMuRummyCardInfoDS[seq].Seq = seq;
+					pMsg.stMuRummyCardInfoDS[seq].Status = gQueryManager.GetAsInteger("Status");
+				}
+			}
+		}
+		else
+		{
+			pMsg.Result = 0;
+		}
+
+		gQueryManager.Close();
+	}
+
+	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+
+#endif
 }
 
-void CMuRummy::GDReqSlotInfoUpdate(_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg) // OK
+void CMuRummy::GDReqCardInfoInsert(_tagPMSG_REQ_MURUMMY_INSERT_DS* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=802)
+#if (DATASERVER_UPDATE >= 802)
 
-	gQueryManager.ExecQuery("UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",lpMsg->stCardUpdateDS.btSlotNum,lpMsg->stCardUpdateDS.btStatus,lpMsg->Name,lpMsg->stCardUpdateDS.btSeq);
-	gQueryManager.Close();
+	if (lpMsg == nullptr)
+	{
+		return;
+	}
 
-	#endif
+	for (int n = 0; n < _countof(lpMsg->stMuRummyCardInfoDS); n++)
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO MuRummyCard (Name,Color,Number,Slot,Status,Sequence) VALUES ('%s',%d,%d,%d,%d,%d)",
+			lpMsg->CharacterName,
+			lpMsg->stMuRummyCardInfoDS[n].Color,
+			lpMsg->stMuRummyCardInfoDS[n].Number,
+			lpMsg->stMuRummyCardInfoDS[n].SlotNum,
+			lpMsg->stMuRummyCardInfoDS[n].Status,
+			lpMsg->stMuRummyCardInfoDS[n].Seq);
+
+		gQueryManager.Close();
+	}
+
+#endif
 }
 
-void CMuRummy::GDReqMuRummyInfoUpdate(_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg) // OK
+void CMuRummy::GDReqCardInfoUpdate(_tagPMSG_REQ_MURUMMY_UPDATE_DS* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=802)
+#if (DATASERVER_UPDATE >= 802)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM MuRummyData WHERE Name='%s'",lpMsg->Name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (lpMsg == nullptr)
 	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO MuRummyData (Name,TotalScore) VALUES ('%s',%d)",lpMsg->Name,lpMsg->wScore);
-		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE MuRummyData SET TotalScore=%d WHERE Name='%s'",lpMsg->wScore,lpMsg->Name);
-		gQueryManager.Close();
+		return;
 	}
 
-	for(int n=0;n < _countof(lpMsg->stMuRummyCardUpdateDS);n++)
+	gQueryManager.ExecQuery(
+		"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
+		lpMsg->SlotNum,
+		lpMsg->Status,
+		lpMsg->CharacterName,
+		lpMsg->Sequence);
+
+	gQueryManager.Close();
+
+#endif
+}
+
+void CMuRummy::GDReqScoreUpdate(_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg)
+{
+#if (DATASERVER_UPDATE >= 802)
+
+	if (lpMsg == nullptr)
 	{
-		gQueryManager.ExecQuery("UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",lpMsg->stMuRummyCardUpdateDS[n].btSlotNum,lpMsg->stMuRummyCardUpdateDS[n].btStatus,lpMsg->Name,lpMsg->stMuRummyCardUpdateDS[n].btSeq);
+		return;
+	}
+
+	if (gQueryManager.ExecQuery(
+		"SELECT Name FROM MuRummyData WHERE Name='%s'",
+		lpMsg->CharacterName))
+	{
+		const auto sqlRet = gQueryManager.Fetch();
+
+		gQueryManager.Close();
+
+		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
+		{
+			gQueryManager.ExecQuery(
+				"INSERT INTO MuRummyData (Name,TotalScore) VALUES ('%s',%d)",
+				lpMsg->CharacterName,
+				lpMsg->Score);
+		}
+		else
+		{
+			gQueryManager.ExecQuery(
+				"UPDATE MuRummyData SET TotalScore=%d WHERE Name='%s'",
+				lpMsg->Score,
+				lpMsg->CharacterName);
+		}
+
 		gQueryManager.Close();
 	}
 
-	#endif
+	for (int n = 0; n < _countof(lpMsg->stCardUpdateDS); n++)
+	{
+		gQueryManager.ExecQuery(
+			"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
+			lpMsg->stCardUpdateDS[n].SlotNum,
+			lpMsg->stCardUpdateDS[n].Status,
+			lpMsg->CharacterName,
+			lpMsg->stCardUpdateDS[n].Seq);
+
+		gQueryManager.Close();
+	}
+
+#endif
+}
+
+void CMuRummy::GDReqScoreDelete(_tagPMSG_REQ_MURUMMY_DELETE_DS* lpMsg)
+{
+#if (DATASERVER_UPDATE >= 802)
+
+	if (lpMsg == nullptr)
+	{
+		return;
+	}
+
+	gQueryManager.ExecQuery(
+		"DELETE FROM MuRummyCard WHERE Name='%s'",
+		lpMsg->CharacterName);
+
+	gQueryManager.Close();
+
+	gQueryManager.ExecQuery(
+		"DELETE FROM MuRummyData WHERE Name='%s'",
+		lpMsg->CharacterName);
+
+	gQueryManager.Close();
+
+#endif
+}
+
+void CMuRummy::GDReqSlotInfoUpdate(_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg)
+{
+#if (DATASERVER_UPDATE >= 802)
+
+	if (lpMsg == nullptr)
+	{
+		return;
+	}
+
+	gQueryManager.ExecQuery(
+		"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
+		lpMsg->stCardUpdateDS.SlotNum,
+		lpMsg->stCardUpdateDS.Status,
+		lpMsg->CharacterName,
+		lpMsg->stCardUpdateDS.Seq);
+
+	gQueryManager.Close();
+
+#endif
+}
+
+void CMuRummy::GDReqMuRummyInfoUpdate(_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg)
+{
+#if (DATASERVER_UPDATE >= 802)
+
+	if (lpMsg == nullptr)
+	{
+		return;
+	}
+
+	if (gQueryManager.ExecQuery(
+		"SELECT Name FROM MuRummyData WHERE Name='%s'",
+		lpMsg->CharacterName))
+	{
+		const auto sqlRet = gQueryManager.Fetch();
+
+		gQueryManager.Close();
+
+		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
+		{
+			gQueryManager.ExecQuery(
+				"INSERT INTO MuRummyData (Name,TotalScore) VALUES ('%s',%d)",
+				lpMsg->CharacterName,
+				lpMsg->Score);
+		}
+		else
+		{
+			gQueryManager.ExecQuery(
+				"UPDATE MuRummyData SET TotalScore=%d WHERE Name='%s'",
+				lpMsg->Score,
+				lpMsg->CharacterName);
+		}
+
+		gQueryManager.Close();
+	}
+
+	for (int n = 0; n < _countof(lpMsg->stMuRummyCardUpdateDS); n++)
+	{
+		gQueryManager.ExecQuery(
+			"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
+			lpMsg->stMuRummyCardUpdateDS[n].SlotNum,
+			lpMsg->stMuRummyCardUpdateDS[n].Status,
+			lpMsg->CharacterName,
+			lpMsg->stMuRummyCardUpdateDS[n].Seq);
+
+		gQueryManager.Close();
+	}
+
+#endif
 }

@@ -59,15 +59,15 @@ void CSDataSend(int index, BYTE* lpMsg, int size)
 			{
 				BYTE send[8192]{};
 
-				PSBMSG_HEAD header;
+				PSBMSG_HEAD Header;
 
 				size += 1;
 
-				header.set(DS_HEAD_CONNECT_SERVER, lpMsg[C1_PACKET_HEAD_OFFSET], size);
+				Header.set(DS_HEAD_CONNECT_SERVER, lpMsg[C1_PACKET_HEAD_OFFSET], size);
 
-				std::memcpy(send, &header, sizeof(header));
+				std::memcpy(send, &Header, sizeof(Header));
 
-				std::memcpy(send + sizeof(header), lpMsg + C1_PACKET_DATA_OFFSET, size - sizeof(header));
+				std::memcpy(send + sizeof(Header), lpMsg + C1_PACKET_DATA_OFFSET, size - sizeof(Header));
 
 				gSocketManager.DataSend(index, send, size);
 			}
@@ -76,15 +76,15 @@ void CSDataSend(int index, BYTE* lpMsg, int size)
 			{
 				BYTE send[8192]{};
 
-				PSWMSG_HEAD header;
+				PSWMSG_HEAD Header;
 
 				size += 1;
 
-				header.set(DS_HEAD_CONNECT_SERVER, lpMsg[C2_PACKET_HEAD_OFFSET], size);
+				Header.set(DS_HEAD_CONNECT_SERVER, lpMsg[C2_PACKET_HEAD_OFFSET], size);
 
-				std::memcpy(send, &header, sizeof(header));
+				std::memcpy(send, &Header, sizeof(Header));
 
-				std::memcpy(send + sizeof(header), lpMsg + C2_PACKET_DATA_OFFSET, size - sizeof(header));
+				std::memcpy(send + sizeof(Header), lpMsg + C2_PACKET_DATA_OFFSET, size - sizeof(Header));
 
 				gSocketManager.DataSend(index, send, size);
 			}
@@ -105,17 +105,17 @@ void CSDataRecv(int index, BYTE head, BYTE* lpMsg, int size)
 	{
 		BYTE recv[8192]{};
 
-		PBMSG_HEAD header;
+		PBMSG_HEAD Header;
 
 		size -= 1;
 
-		header.set(lpMsg[C1_PACKET_DATA_OFFSET], size);
+		Header.set(lpMsg[C1_PACKET_DATA_OFFSET], size);
 
-		std::memcpy(recv, &header, sizeof(header));
+		std::memcpy(recv, &Header, sizeof(Header));
 
-		std::memcpy(recv + sizeof(header), lpMsg + C1_PACKET_DATA_OFFSET + 1, size - sizeof(header));
+		std::memcpy(recv + sizeof(Header), lpMsg + C1_PACKET_DATA_OFFSET + 1, size - sizeof(Header));
 
-		ChatServerProtocolCore(index, header.head, recv, size);
+		ChatServerProtocolCore(index, Header.head, recv, size);
 	}
 	break;
 
@@ -123,17 +123,17 @@ void CSDataRecv(int index, BYTE head, BYTE* lpMsg, int size)
 	{
 		BYTE recv[8192]{};
 
-		PWMSG_HEAD header;
+		PWMSG_HEAD Header;
 
 		size -= 1;
 
-		header.set(lpMsg[C2_PACKET_DATA_OFFSET], size);
+		Header.set(lpMsg[C2_PACKET_DATA_OFFSET], size);
 
-		std::memcpy(recv, &header, sizeof(header));
+		std::memcpy(recv, &Header, sizeof(Header));
 
-		std::memcpy(recv + sizeof(header), lpMsg + C2_PACKET_DATA_OFFSET + 1, size - sizeof(header));
+		std::memcpy(recv + sizeof(Header), lpMsg + C2_PACKET_DATA_OFFSET + 1, size - sizeof(Header));
 
-		ChatServerProtocolCore(index, header.head, recv, size);
+		ChatServerProtocolCore(index, Header.head, recv, size);
 	}
 	break;
 	}
@@ -172,7 +172,7 @@ void FriendListRequest(const FHP_FRIENDLIST_REQ* lpMsg, int index)
 
 	gQueryManager.Close();
 
-	if (gQueryManager.ExecQuery("SELECT FriendName,Del FROM T_FriendList WHERE GUID=%d", guid) != 0)
+	if (gQueryManager.ExecQuery("SELECT FriendName,Del FROM T_FriendList WHERE GUID=%d", guid))
 	{
 		FHP_FRIENDLIST friendList{};
 
@@ -296,8 +296,9 @@ void FriendAddRequest(const FHP_FRIEND_ADD_REQ* lpMsg, int index)
 				std::memcpy(notify.CharacterName, lpMsg->FriendName, sizeof(notify.CharacterName));
 				std::memcpy(notify.FriendName, lpMsg->CharacterName, sizeof(notify.FriendName));
 
-				if (CServerManager* lpServerManager = FindServerByCode(characterInfo.GameServerCode);
-					lpServerManager != nullptr)
+				CServerManager* lpServerManager = FindServerByCode(characterInfo.GameServerCode);
+
+				if (lpServerManager != nullptr)
 				{
 					CSDataSend(
 						lpServerManager->m_index,
@@ -624,7 +625,7 @@ void WaitFriendListResult(int index, DWORD guid, WORD aIndex, const char* name)
 {
 	if (gQueryManager.ExecQuery(
 		"SELECT FriendName FROM T_WaitFriend WHERE GUID=%d",
-		guid) != 0)
+		guid))
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
@@ -658,7 +659,7 @@ void FriendStateRecv(const char* name, BYTE state)
 {
 	DWORD guid = 0;
 
-	if (gQueryManager.ExecQuery("SELECT GUID FROM T_FriendMain WHERE Name='%s'", name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery("SELECT GUID FROM T_FriendMain WHERE Name='%s'", name) || gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 		return;
@@ -668,7 +669,7 @@ void FriendStateRecv(const char* name, BYTE state)
 
 	gQueryManager.Close();
 
-	if (gQueryManager.ExecQuery("SELECT FriendName,Del FROM T_FriendList WHERE GUID=%d", guid) != 0)
+	if (gQueryManager.ExecQuery("SELECT FriendName,Del FROM T_FriendList WHERE GUID=%d", guid))
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
@@ -709,7 +710,7 @@ void FriendMemoList(int index, DWORD guid, WORD aIndex, const char* name)
 {
 	if (gQueryManager.ExecQuery(
 		"SELECT MemoIndex,FriendName,wDate,Subject,bRead FROM T_FriendMail WHERE GUID=%d",
-		guid) != 0)
+		guid))
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
@@ -774,8 +775,9 @@ static void SendFriendState(const char* characterName, const char* friendName, B
 
 	pMsg.Offline = state;
 
-	if (CServerManager* lpServerManager = FindServerByCode(characterInfo.GameServerCode);
-		lpServerManager != nullptr)
+	CServerManager* lpServerManager = FindServerByCode(characterInfo.GameServerCode);
+
+	if (lpServerManager != nullptr)
 	{
 		CSDataSend(
 			lpServerManager->m_index,

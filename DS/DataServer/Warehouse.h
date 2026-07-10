@@ -8,22 +8,21 @@
 #define WAREHOUSE_SIZE 120
 #endif
 
-//
 // GameServer -> DataServer
 
 struct SDHP_WAREHOUSE_ITEM_RECV
 {
-	PSBMSG_HEAD header; // C1:05:00
-	WORD index;
-	char account[11];
+	PSBMSG_HEAD Header; // C1:05:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	UINT WarehouseNumber;
 };
 
 struct SDHP_WAREHOUSE_ITEM_SAVE_RECV
 {
-	PSWMSG_HEAD header; // C2:05:30
-	WORD index;
-	char account[11];
+	PSWMSG_HEAD Header; // C2:05:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE WarehouseItem[WAREHOUSE_SIZE][16];
 	UINT WarehouseMoney;
 	UINT WarehousePassword;
@@ -34,9 +33,9 @@ struct SDHP_WAREHOUSE_ITEM_SAVE_RECV
 
 struct SDHP_WAREHOUSE_ITEM_SEND
 {
-	PSWMSG_HEAD header; // C2:05:00
-	WORD index;
-	char account[11];
+	PSWMSG_HEAD Header; // C2:05:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 	BYTE WarehouseItem[WAREHOUSE_SIZE][16];
 	UINT WarehouseMoney;
 	WORD WarehousePassword;
@@ -44,30 +43,31 @@ struct SDHP_WAREHOUSE_ITEM_SEND
 
 struct SDHP_WAREHOUSE_FREE_SEND
 {
-	PSBMSG_HEAD header; // C1:05:01
-	WORD index;
-	char account[11];
+	PSBMSG_HEAD Header; // C1:05:01
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
 };
 
 //**********************************************//
+
 struct SDHP_WAREHOUSE_GUILD_STATUS_RECV
 {
-	PSBMSG_HEAD header; // C1:05:00
-	WORD index;
+	PSBMSG_HEAD Header; // C1:05:00
+	WORD Index;
 	char Name[9];
 };
 
 struct SDHP_WAREHOUSE_GUILD_STATUS_SEND
 {
-	PSBMSG_HEAD header; // C1:05:00
-	WORD index;
+	PSBMSG_HEAD Header; // C1:05:00
+	WORD Index;
 	int Status;
 };
 
 struct SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV
 {
-	PSBMSG_HEAD header; // C1:05:00
-	WORD index;
+	PSBMSG_HEAD Header; // C1:05:00
+	WORD Index;
 	char Name[9];
 	int Status;
 };
@@ -76,17 +76,16 @@ struct SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV
 class CWarehouse
 {
 public:
-	CWarehouse();
-	virtual ~CWarehouse();
+	CWarehouse() = default;
+	~CWarehouse() = default;
 	void GDWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg,int index);
 	void GDWarehouseItemSaveRecv(SDHP_WAREHOUSE_ITEM_SAVE_RECV* lpMsg);
 	void DGWarehouseFreeSend(int ServerIndex,WORD index,char* account);
 	void GDWarehouseGuildItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg,int index);
 	void GDWarehouseGuildItemSaveRecv(SDHP_WAREHOUSE_ITEM_SAVE_RECV* lpMsg);
 	void DGWarehouseGuildFreeSend(int ServerIndex,WORD index,char* account);
-	//--
-	void GDWarehouseGuildConsult(SDHP_WAREHOUSE_GUILD_STATUS_RECV * lpMsg, int index); // OK
-	void GDWarehouseGuildUpdate(SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV * lpMsg); // OK
+	void GDWarehouseGuildConsult(SDHP_WAREHOUSE_GUILD_STATUS_RECV * lpMsg, int index);
+	void GDWarehouseGuildUpdate(SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV * lpMsg);
 };
 
 extern CWarehouse gWarehouse;

@@ -7,326 +7,356 @@
 
 CGensSystem gGensSystem;
 
-// Construction/Destruction
-
-CGensSystem::CGensSystem() // OK
+void CGensSystem::GDGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg, int index)
 {
+#if (DATASERVER_UPDATE >= 501)
 
-}
+	SDHP_GENS_SYSTEM_INSERT_SEND pMsg{};
 
-CGensSystem::~CGensSystem() // OK
-{
+	pMsg.Header.set(DS_HEAD_GENS_SYSTEM, DS_SUB_GENS_SYSTEM_INSERT, sizeof(pMsg));
 
-}
+	pMsg.Index = lpMsg->Index;
 
-void CGensSystem::GDGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg,int index) // OK
-{
-	#if(DATASERVER_UPDATE>=501)
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	SDHP_GENS_SYSTEM_INSERT_SEND pMsg;
-
-	pMsg.header.set(0x11,0x00,sizeof(pMsg));
-
-	pMsg.index = lpMsg->index;
-
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
-
-	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
-
-	pMsg.result = 0;
-
+	pMsg.Result = 0;
 	pMsg.GensFamily = 0;
-
 	pMsg.GensRank = 0;
-
 	pMsg.GensContribution = 0;
 
-	if(gQueryManager.ExecQuery("INSERT INTO Gens_Rank (Name,Family,Contribution) VALUES ('%s',%d,0)",lpMsg->charactername,lpMsg->GensFamily) == 0)
+	if (!gQueryManager.ExecQuery(
+		"INSERT INTO Gens_Rank (Name,Family,Contribution) VALUES ('%s',%d,0)",
+		lpMsg->CharacterName,
+		lpMsg->GensFamily))
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 1;
-	}
-	else
-	{
-		pMsg.GensFamily = lpMsg->GensFamily;
+		pMsg.Result = 1;
 
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
+
+		return;
+	}
+
+	pMsg.GensFamily = lpMsg->GensFamily;
+
+	gQueryManager.Close();
+
+	if (!gQueryManager.ExecQuery(
+		"EXEC WZ_GetCharacterGensInfo '%s',%d",
+		lpMsg->CharacterName,
+		lpMsg->GensFamily) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
+	{
 		gQueryManager.Close();
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->charactername,lpMsg->GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
+		pMsg.Result = 1;
 
-			pMsg.result = 1;
-		}
-		else
-		{
-			pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
 
-			pMsg.GensContribution = gQueryManager.GetAsInteger("Contribution");
-
-			gQueryManager.Close();
-		}
+		return;
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+	pMsg.GensContribution = gQueryManager.GetAsInteger("Contribution");
 
-	#endif
+	gQueryManager.Close();
+
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
+
+#endif
 }
 
-void CGensSystem::GDGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg,int index) // OK
+void CGensSystem::GDGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=501)
+#if (DATASERVER_UPDATE >= 501)
 
-	SDHP_GENS_SYSTEM_DELETE_SEND pMsg;
+	SDHP_GENS_SYSTEM_DELETE_SEND pMsg{};
 
-	pMsg.header.set(0x11,0x01,sizeof(pMsg));
+	pMsg.Header.set(DS_HEAD_GENS_SYSTEM, DS_SUB_GENS_SYSTEM_DELETE, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
+	pMsg.Result = 0;
 
-	pMsg.result = 0;
-
-	if(gQueryManager.ExecQuery("DELETE FROM Gens_Rank WHERE Name='%s'",lpMsg->charactername) == 0)
+	if (!gQueryManager.ExecQuery(
+		"DELETE FROM Gens_Rank WHERE Name='%s'",
+		lpMsg->CharacterName))
 	{
-		gQueryManager.Close();
-
-		pMsg.result = 1;
-	}
-	else
-	{
-		gQueryManager.Close();
-
-		pMsg.result = 0;
+		pMsg.Result = 1;
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	gQueryManager.Close();
 
-	this->DGGensSystemCreateSend(lpMsg->GensFamily,(lpMsg->GensRank+1),0xFFFFFFFF);
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
 
-	#endif
+	DGGensSystemCreateSend(
+		lpMsg->GensFamily,
+		lpMsg->GensRank + 1,
+		0xFFFFFFFF);
+
+#endif
 }
 
-void CGensSystem::GDGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg,int index) // OK
+void CGensSystem::GDGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=501)
+#if (DATASERVER_UPDATE >= 501)
 
-	SDHP_GENS_SYSTEM_MEMBER_SEND pMsg;
+	SDHP_GENS_SYSTEM_MEMBER_SEND pMsg{};
 
-	pMsg.header.set(0x11,0x02,sizeof(pMsg));
+	pMsg.Header.set(DS_HEAD_GENS_SYSTEM, DS_SUB_GENS_SYSTEM_MEMBER, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
-
-	pMsg.result = 0;
-
+	pMsg.Result = 0;
 	pMsg.GensFamily = 0;
-
 	pMsg.GensRank = 0;
-
 	pMsg.GensContribution = 0;
 
-	if(gQueryManager.ExecQuery("SELECT Family FROM Gens_Rank WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery(
+		"SELECT Family FROM Gens_Rank WHERE Name='%s'",
+		lpMsg->CharacterName) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 1;
-	}
-	else
-	{
-		pMsg.GensFamily = gQueryManager.GetAsInteger("Family");
+		pMsg.Result = 1;
 
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
+
+		return;
+	}
+
+	pMsg.GensFamily = static_cast<BYTE>(gQueryManager.GetAsInteger("Family"));
+
+	gQueryManager.Close();
+
+	if (!gQueryManager.ExecQuery(
+		"EXEC WZ_GetCharacterGensInfo '%s',%d",
+		lpMsg->CharacterName,
+		pMsg.GensFamily) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
+	{
 		gQueryManager.Close();
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->charactername,pMsg.GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
+		pMsg.Result = 1;
 
-			pMsg.result = 1;
-		}
-		else
-		{
-			pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
 
-			pMsg.GensContribution = gQueryManager.GetAsInteger("Contribution");
-
-			gQueryManager.Close();
-		}
+		return;
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+	pMsg.GensContribution = gQueryManager.GetAsInteger("Contribution");
 
-	#endif
+	gQueryManager.Close();
+
+	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
+
+#endif
 }
 
-void CGensSystem::GDGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg,int index) // OK
+void CGensSystem::GDGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=501)
+#if (DATASERVER_UPDATE >= 501)
 
-	SDHP_GENS_SYSTEM_UPDATE_SEND pMsg;
+	SDHP_GENS_SYSTEM_UPDATE_SEND pMsg{};
 
-	pMsg.header.set(0x11,0x03,sizeof(pMsg));
+	pMsg.Header.set(DS_HEAD_GENS_SYSTEM, DS_SUB_GENS_SYSTEM_UPDATE, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
-
-	pMsg.result = 0;
-
+	pMsg.Result = 0;
 	pMsg.GensFamily = 0;
-
 	pMsg.GensRank = 0;
-
 	pMsg.GensContribution = 0;
 
-	if(gQueryManager.ExecQuery("UPDATE Gens_Rank SET Contribution=%d WHERE Name='%s'",lpMsg->GensContribution,lpMsg->charactername) == 0)
+	if (!gQueryManager.ExecQuery(
+		"UPDATE Gens_Rank SET Contribution=%d WHERE Name='%s'",
+		lpMsg->GensContribution,
+		lpMsg->CharacterName))
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 1;
-	}
-	else
-	{
-		pMsg.GensFamily = lpMsg->GensFamily;
+		pMsg.Result = 1;
 
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
+
+		return;
+	}
+
+	pMsg.GensFamily = lpMsg->GensFamily;
+
+	gQueryManager.Close();
+
+	if (!gQueryManager.ExecQuery(
+		"EXEC WZ_GetCharacterGensInfo '%s',%d",
+		lpMsg->CharacterName,
+		lpMsg->GensFamily) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
+	{
 		gQueryManager.Close();
 
-		if(gQueryManager.ExecQuery("EXEC WZ_GetCharacterGensInfo '%s',%d",lpMsg->charactername,lpMsg->GensFamily) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-		{
-			gQueryManager.Close();
+		pMsg.Result = 1;
 
-			pMsg.result = 1;
-		}
-		else
-		{
-			pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), pMsg.Header.size);
 
-			pMsg.GensContribution = gQueryManager.GetAsInteger("Contribution");
-
-			gQueryManager.Close();
-		}
-	}
-
-	if(pMsg.result != 0)
-	{
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
 		return;
 	}
 
-	if(pMsg.GensRank == lpMsg->GensRank)
+	pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+	pMsg.GensContribution = gQueryManager.GetAsInteger("Contribution");
+
+	gQueryManager.Close();
+
+	if (pMsg.GensRank == lpMsg->GensRank)
 	{
-		gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+		gSocketManager.DataSend(
+			index,
+			reinterpret_cast<BYTE*>(&pMsg),
+			pMsg.Header.size);
+
 		return;
 	}
 
-	if(pMsg.GensRank != lpMsg->GensRank && pMsg.GensRank < lpMsg->GensRank)
+	if (pMsg.GensRank < lpMsg->GensRank)
 	{
-		this->DGGensSystemCreateSend(lpMsg->GensFamily,pMsg.GensRank,lpMsg->GensRank);
+		DGGensSystemCreateSend(
+			lpMsg->GensFamily,
+			pMsg.GensRank,
+			lpMsg->GensRank);
+
 		return;
 	}
 
-	if(pMsg.GensRank != lpMsg->GensRank && pMsg.GensRank > lpMsg->GensRank)
-	{
-		this->DGGensSystemCreateSend(lpMsg->GensFamily,lpMsg->GensRank,pMsg.GensRank);
-		return;
-	}
+	DGGensSystemCreateSend(
+		lpMsg->GensFamily,
+		lpMsg->GensRank,
+		pMsg.GensRank);
 
-	#endif
+#endif
 }
 
-void CGensSystem::GDGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg,int index) // OK
+void CGensSystem::GDGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg, int index)
 {
-	#if(DATASERVER_UPDATE>=501)
+#if (DATASERVER_UPDATE >= 501)
 
-	SDHP_GENS_SYSTEM_REWARD_SEND pMsg;
+	SDHP_GENS_SYSTEM_REWARD_SEND pMsg{};
 
-	pMsg.header.set(0x11,0x04,sizeof(pMsg));
+	pMsg.Header.set(DS_HEAD_GENS_SYSTEM, DS_SUB_GENS_SYSTEM_REWARD, sizeof(pMsg));
 
-	pMsg.index = lpMsg->index;
+	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.account,lpMsg->account,sizeof(pMsg.account));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	memcpy(pMsg.charactername,lpMsg->charactername,sizeof(pMsg.charactername));
-
-	pMsg.result = 0;
-
+	pMsg.Result = 0;
 	pMsg.GensFamily = 0;
-
 	pMsg.GensRank = 0;
-
 	pMsg.GensRewardStatus = 0;
 
-	if(gQueryManager.ExecQuery("SELECT Rank,Status FROM Gens_Reward WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery(
+		"SELECT Rank,Status FROM Gens_Reward WHERE Name='%s'",
+		lpMsg->CharacterName) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
 
-		pMsg.result = 1;
-	}
-	else
-	{
-		pMsg.GensFamily = lpMsg->GensFamily;
+		pMsg.Result = 1;
 
-		pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+		gSocketManager.DataSend(
+			index,
+			reinterpret_cast<BYTE*>(&pMsg),
+			pMsg.Header.size);
 
-		pMsg.GensRewardStatus = gQueryManager.GetAsInteger("Status");
-
-		gQueryManager.Close();
+		return;
 	}
 
-	gSocketManager.DataSend(index,(BYTE*)&pMsg,pMsg.header.size);
+	pMsg.GensFamily = lpMsg->GensFamily;
+	pMsg.GensRank = gQueryManager.GetAsInteger("Rank");
+	pMsg.GensRewardStatus = gQueryManager.GetAsInteger("Status");
 
-	#endif
+	gQueryManager.Close();
+
+	gSocketManager.DataSend(
+		index,
+		reinterpret_cast<BYTE*>(&pMsg),
+		pMsg.Header.size);
+
+#endif
 }
 
-void CGensSystem::GDGensSystemRewardSaveRecv(SDHP_GENS_SYSTEM_REWARD_SAVE_RECV* lpMsg) // OK
+void CGensSystem::GDGensSystemRewardSaveRecv(SDHP_GENS_SYSTEM_REWARD_SAVE_RECV* lpMsg)
 {
-	#if(DATASERVER_UPDATE>=501)
+#if (DATASERVER_UPDATE >= 501)
 
-	if(gQueryManager.ExecQuery("SELECT Name FROM Gens_Reward WHERE Name='%s'",lpMsg->charactername) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
+	if (!gQueryManager.ExecQuery(
+		"SELECT Name FROM Gens_Reward WHERE Name='%s'",
+		lpMsg->CharacterName) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO Gens_Reward (Name,Rank,Status) VALUES ('%s',%d,%d)",lpMsg->charactername,lpMsg->GensRank,lpMsg->GensRewardStatus);
+
+		gQueryManager.ExecQuery(
+			"INSERT INTO Gens_Reward (Name,Rank,Status) VALUES ('%s',%d,%d)",
+			lpMsg->CharacterName,
+			lpMsg->GensRank,
+			lpMsg->GensRewardStatus);
+
 		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE Gens_Reward SET Status=%d WHERE Name='%s'",lpMsg->GensRewardStatus,lpMsg->charactername);
-		gQueryManager.Close();
+
+		return;
 	}
 
-	#endif
+	gQueryManager.Close();
+
+	gQueryManager.ExecQuery(
+		"UPDATE Gens_Reward SET Status=%d WHERE Name='%s'",
+		lpMsg->GensRewardStatus,
+		lpMsg->CharacterName);
+
+	gQueryManager.Close();
+
+#endif
 }
 
-void CGensSystem::DGGensSystemCreateSend(DWORD GensFamily,DWORD GensRankStart,DWORD GensRankFinal) // OK
+void CGensSystem::DGGensSystemCreateSend(
+	DWORD GensFamily,
+	DWORD GensRankStart,
+	DWORD GensRankFinal)
 {
-	#if(DATASERVER_UPDATE>=501)
+#if (DATASERVER_UPDATE >= 501)
 
-	SDHP_GENS_SYSTEM_CREATE_SEND pMsg;
+	SDHP_GENS_SYSTEM_CREATE_SEND pMsg{};
 
-	pMsg.header.set(0x11,0x70,sizeof(pMsg));
+	pMsg.Header.set(DS_HEAD_GENS_SYSTEM, DS_SUB_GENS_SYSTEM_CREATE, sizeof(pMsg));
 
 	pMsg.GensFamily = GensFamily;
-
 	pMsg.GensRankStart = GensRankStart;
-
 	pMsg.GensRankFinal = GensRankFinal;
 
-	for(int n=0;n < MAX_SERVER;n++)
+	for (int n = 0; n < MAX_SERVER; ++n)
 	{
-		if(gServerManager[n].IsOnline() != 0)
+		if (!gServerManager[n].IsOnline())
 		{
-			gSocketManager.DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
+			continue;
 		}
+
+		gSocketManager.DataSend(
+			n,
+			reinterpret_cast<BYTE*>(&pMsg),
+			pMsg.Header.size);
 	}
 
-	#endif
+#endif
 }

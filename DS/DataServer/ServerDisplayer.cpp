@@ -18,6 +18,7 @@ CServerDisplayer::CServerDisplayer()
 	m_font(nullptr),
 	m_smallfont(nullptr),
 	m_richeditmodule(nullptr),
+	m_isactive(false),
 	m_serverlistbottom(100),
 	m_lineheight(22),
 	m_rect{ 0, 0, 0, 0 }
@@ -28,7 +29,7 @@ CServerDisplayer::CServerDisplayer()
 	m_smallfont = CreateFont(18, 0, 0, 0, FW_NORMAL, false, false, false, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Segoe UI"));
 
 	// Crear pinceles para diferentes estados de visualizacion.
-	m_brush[0] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(60, 255, 51));
+	m_brush[0] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(46, 139, 87)); //RGB(105, 105, 105) : RGB(60, 255, 51));
 	m_brush[1] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(105, 105, 105) : RGB(120, 120, 120));
 	m_brush[2] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(0, 152, 239) : RGB(39, 79, 121));
 	m_brush[3] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(41, 37, 44) : RGB(255, 255, 255));

@@ -4,460 +4,460 @@
 
 struct CASTLE_DATA
 {
-	WORD wStartYear;
-	BYTE btStartMonth;
-	BYTE btStartDay;
-	WORD wEndYear;
-	BYTE btEndMonth;
-	BYTE btEndDay;
-	BYTE btIsSiegeGuildList;
-	BYTE btIsSiegeEnded;
-	BYTE btIsCastleOccupied;
-	char szCastleOwnGuild[9];
-	__int64 i64CastleMoney;
-	int iTaxRateChaos;
-	int iTaxRateStore;
-	int iTaxHuntZone;
-	int iFirstCreate;
+	WORD StartYear;
+	BYTE StartMonth;
+	BYTE StartDay;
+	WORD EndYear;
+	BYTE EndMonth;
+	BYTE EndDay;
+	BYTE IsSiegeGuildList;
+	BYTE IsSiegeEnded;
+	BYTE IsCastleOccupied;
+	char CastleOwnGuild[9];
+	__int64 CastleMoney;
+	int TaxRateChaos;
+	int TaxRateStore;
+	int TaxHuntZone;
+	int FirstCreate;
 };
 
 struct CSP_ANS_CASTLEDATA 
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	WORD wStartYear;
-	BYTE btStartMonth;
-	BYTE btStartDay;
-	WORD wEndYear;
-	BYTE btEndMonth;
-	BYTE btEndDay;
-	BYTE btIsSiegeGuildList;
-	BYTE btIsSiegeEnded;
-	BYTE btIsCastleOccupied;
-	char szCastleOwnGuild[8];
-	__int64 i64CastleMoney;
-	int iTaxRateChaos;
-	int iTaxRateStore;
-	int iTaxHuntZone;
-	int iFirstCreate;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	WORD StartYear;
+	BYTE StartMonth;
+	BYTE StartDay;
+	WORD EndYear;
+	BYTE EndMonth;
+	BYTE EndDay;
+	BYTE IsSiegeGuildList;
+	BYTE IsSiegeEnded;
+	BYTE IsCastleOccupied;
+	char CastleOwnGuild[MAX_GUILD_NAME];
+	__int64 CastleMoney;
+	int TaxRateChaos;
+	int TaxRateStore;
+	int TaxHuntZone;
+	int FirstCreate;
 };
 
 struct CSP_REQ_CASTLEDATA
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCastleEventCycle;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int CastleEventCycle;
 };
 
 struct CSP_REQ_OWNERGUILDMASTER
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
 };
 
 struct CSP_ANS_OWNERGUILDMASTER
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szCastleOwnGuild[8];
-	char szCastleOwnGuildMaster[10];
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	char CastleOwnGuild[MAX_GUILD_NAME];
+	char CastleOwnGuildMaster[MAX_CHARACTER_NAME];
 };
 
 struct CSP_REQ_NPCBUY
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcDfLevel;
-	int iNpcRgLevel;
-	int iNpcMaxHp;
-	int iNpcHp;
-	BYTE btNpcX;
-	BYTE btNpcY;
-	BYTE btNpcDIR;
-	int iBuyCost;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcDfLevel;
+	int NpcRgLevel;
+	int NpcMaxHp;
+	int NpcHp;
+	BYTE NpcX;
+	BYTE NpcY;
+	BYTE NpcDIR;
+	int BuyCost;
 };
 
 struct CSP_REQ_NPCREPAIR
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iNpcNumber;
-	int iNpcIndex;
-	int iRepairCost;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	int NpcNumber;
+	int NpcIndex;
+	int RepairCost;
 };
 
 struct CSP_ANS_NPCREPAIR
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcMaxHp;
-	int iNpcHp;
-	int iRepairCost;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcMaxHp;
+	int NpcHp;
+	int RepairCost;
 };
 
 struct CSP_REQ_NPCUPGRADE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcUpType;
-	int iNpcUpValue;
-	int iNpcUpIndex;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcUpType;
+	int NpcUpValue;
+	int NpcUpIndex;
 };
 
 struct CSP_ANS_TAXINFO
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	__int64 i64CastleMoney;
-	int iTaxRateChaos;
-	int iTaxRateStore;
-	int iTaxHuntZone;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	__int64 CastleMoney;
+	int TaxRateChaos;
+	int TaxRateStore;
+	int TaxHuntZone;
 };
 
 struct CSP_ANS_TAXRATECHANGE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iTaxKind;
-	int iTaxRate;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int TaxKind;
+	int TaxRate;
 };
 
 struct CSP_REQ_SDEDCHANGE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	WORD wStartYear;
-	BYTE btStartMonth;
-	BYTE btStartDay;
-	WORD wEndYear;
-	BYTE btEndMonth;
-	BYTE btEndDay;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	WORD StartYear;
+	BYTE StartMonth;
+	BYTE StartDay;
+	WORD EndYear;
+	BYTE EndMonth;
+	BYTE EndDay;
 };
 
 struct CSP_ANS_SDEDCHANGE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	WORD wStartYear;
-	BYTE btStartMonth;
-	BYTE btStartDay;
-	WORD wEndYear;
-	BYTE btEndMonth;
-	BYTE btEndDay;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	WORD StartYear;
+	BYTE StartMonth;
+	BYTE StartDay;
+	WORD EndYear;
+	BYTE EndMonth;
+	BYTE EndDay;
 };
 
 struct CSP_REQ_GUILDREGINFO
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_ANS_GUILDREGINFO
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
-	int iRegMarkCount;
-	bool bIsGiveUp;
-	BYTE btRegRank;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
+	int RegMarkCount;
+	bool IsGiveUp;
+	BYTE RegRank;
 };
 
 struct CSP_ANS_NPCBUY
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iNpcNumber;
-	int iNpcIndex;
-	int iBuyCost;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int NpcNumber;
+	int NpcIndex;
+	int BuyCost;
 };
 
 struct CSP_ANS_NPCUPGRADE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcUpType;
-	int iNpcUpValue;
-	int iNpcUpIndex;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcUpType;
+	int NpcUpValue;
+	int NpcUpIndex;
 };
 
 struct CSP_REQ_TAXINFO
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
 };
 
 struct CSP_REQ_TAXRATECHANGE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iTaxKind;
-	int iTaxRate;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	int TaxKind;
+	int TaxRate;
 };
 
 struct CSP_REQ_MONEYCHANGE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iMoneyChanged;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	int MoneyChanged;
 };
 
 struct CSP_ANS_MONEYCHANGE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iMoneyChanged;
-	__int64 i64CastleMoney;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int MoneyChanged;
+	__int64 CastleMoney;
 };
 
 struct CSP_REQ_SIEGEENDCHANGE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int bIsSiegeEnded;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int IsSiegeEnded;
 };
 
 struct CSP_ANS_SIEGEENDCHANGE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int bIsSiegeEnded;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int IsSiegeEnded;
 };
 
 struct CSP_REQ_CASTLEOWNERCHANGE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	BOOL bIsCastleOccupied;
-	char szOwnerGuildName[8];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	BOOL IsCastleOccupied;
+	char OwnerGuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_ANS_CASTLEOWNERCHANGE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	BOOL bIsCastleOccupied;
-	char szOwnerGuildName[8];
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	BOOL IsCastleOccupied;
+	char OwnerGuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_REQ_REGATTACKGUILD
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szEnemyGuildName[8];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	char EnemyGuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_ANS_REGATTACKGUILD
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szEnemyGuildName[8];
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	char EnemyGuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_REQ_MAPSVRMULTICAST
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	char szMsgText[128];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	char MsgText[128];
 };
 
 struct CSP_ANS_MAPSVRMULTICAST
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	char szMsgText[128];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	char MsgText[128];
 };
 
 struct CSP_REQ_CASTLESIEGEEND
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
 };
 
 struct CSP_ANS_CASTLESIEGEEND
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
 };
 
 struct CSP_ANS_GUILDREGMARK
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
-	int iItemPos;
-	int iRegMarkCount;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
+	int ItemPos;
+	int RegMarkCount;
 };
 
 struct CSP_REQ_GUILDREGMARK
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
-	int iItemPos;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
+	int ItemPos;
 };
 
 struct CSP_ANS_GUILDRESETMARK
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
-	int iRegMarkCount;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
+	int RegMarkCount;
 };
 
 struct CSP_REQ_GUILDRESETMARK
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_ANS_GUILDSETGIVEUP
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
-	BOOL bIsGiveUp;
-	int iRegMarkCount;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
+	BOOL IsGiveUp;
+	int RegMarkCount;
 };
 
 struct CSP_REQ_GUILDSETGIVEUP
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
-	char szGuildName[8];
-	BOOL bIsGiveUp;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
+	char GuildName[MAX_GUILD_NAME];
+	BOOL IsGiveUp;
 };
 
 struct CSP_REQ_NPCREMOVE
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iNpcNumber;
-	int iNpcIndex;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int NpcNumber;
+	int NpcIndex;
 };
 
 struct CSP_ANS_NPCREMOVE
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iNpcNumber;
-	int iNpcIndex;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int NpcNumber;
+	int NpcIndex;
 };
 
 struct CSP_REQ_CASTLESTATESYNC
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCastleState;
-	int iTaxRateChaos;
-	int iTaxRateStore;
-	int iTaxHuntZone;
-	char szOwnerGuildName[8];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int CastleState;
+	int TaxRateChaos;
+	int TaxRateStore;
+	int TaxHuntZone;
+	char OwnerGuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_ANS_CASTLESTATESYNC
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCastleState;
-	int iTaxRateChaos;
-	int iTaxRateStore;
-	int iTaxHuntZone;
-	char szOwnerGuildName[8];
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int CastleState;
+	int TaxRateChaos;
+	int TaxRateStore;
+	int TaxHuntZone;
+	char OwnerGuildName[MAX_GUILD_NAME];
 };
 
 struct CSP_NPCDATA
 {
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcDfLevel;
-	int iNpcRgLevel;
-	int iNpcMaxHp;
-	int iNpcHp;
-	BYTE btNpcX;
-	BYTE btNpcY;
-	BYTE btNpcDIR;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcDfLevel;
+	int NpcRgLevel;
+	int NpcMaxHp;
+	int NpcHp;
+	BYTE NpcX;
+	BYTE NpcY;
+	BYTE NpcDIR;
 };
 
 struct CSP_GUILDREGINFO
 {
-	char szGuildName[8];
-	int iRegMarkCount;
-	bool bIsGiveUp;
-	BYTE btRegRank;
+	char GuildName[MAX_GUILD_NAME];
+	int RegMarkCount;
+	bool IsGiveUp;
+	BYTE RegRank;
 };
 
 struct CSP_REQ_NPCSAVEDATA
 {
-	PWMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCount;
+	PWMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_ANS_NPCSAVEDATA
 {
-	PBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
+	PBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
 };
 
 struct CSP_CALCREGGUILDLIST
 {
-	char szGuildName[8];
-	int iRegMarkCount;
+	char GuildName[MAX_GUILD_NAME];
+	int RegMarkCount;
 	int iGuildMemberCount;
 	int iGuildMasterLevel;
 	int iSeqNum;
@@ -465,216 +465,216 @@ struct CSP_CALCREGGUILDLIST
 
 struct CSP_CSGUILDUNIONINFO
 {
-	char szGuildName[8];
-	int iCsGuildID;
+	char GuildName[MAX_GUILD_NAME];
+	int CsGuildID;
 };
 
 struct CSP_CSLOADTOTALGUILDINFO
 {
-	char szGuildName[8];
-	int iCsGuildID;
-	int iGuildInvolved;
-	int iGuildScore;
+	char GuildName[MAX_GUILD_NAME];
+	int CsGuildID;
+	int GuildInvolved;
+	int GuildScore;
 };
 
 struct CSP_REQ_NPCUPDATEDATA
 {
-	PWMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCount;
+	PWMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_NPCSAVEDATA
 {
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcDfLevel;
-	int iNpcRgLevel;
-	int iNpcMaxHp;
-	int iNpcHp;
-	BYTE btNpcX;
-	BYTE btNpcY;
-	BYTE btNpcDIR;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcDfLevel;
+	int NpcRgLevel;
+	int NpcMaxHp;
+	int NpcHp;
+	BYTE NpcX;
+	BYTE NpcY;
+	BYTE NpcDIR;
 };
 
 struct CSP_REQ_CASTLETRIBUTEMONEY
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
 	int iCastleTributeMoney;
 };
 
 struct CSP_ANS_CASTLETRIBUTEMONEY
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
 };
 
 struct CSP_REQ_RESETCASTLETAXINFO
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
 };
 
 struct CSP_ANS_RESETCASTLETAXINFO
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
 };
 
 struct CSP_REQ_RESETSIEGEGUILDINFO
 {
-	PSBMSG_HEAD h;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	WORD MapSvrNum;
 };
 
 struct CSP_ANS_RESETSIEGEGUILDINFO
 {
-	PSBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
+	PSBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
 };
 
 struct CSP_REQ_CSINITDATA
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCastleEventCycle;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int CastleEventCycle;
 };
 
 struct CSP_ANS_CSINITDATA
 {
-	PWMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	WORD wStartYear;
-	BYTE btStartMonth;
-	BYTE btStartDay;
-	WORD wEndYear;
-	BYTE btEndMonth;
-	BYTE btEndDay;
-	BYTE btIsSiegeGuildList;
-	BYTE btIsSiegeEnded;
-	BYTE btIsCastleOccupied;
-	char szCastleOwnGuild[8];
-	__int64 i64CastleMoney;
-	int iTaxRateChaos;
-	int iTaxRateStore;
-	int iTaxHuntZone;
-	int iFirstCreate;
-	int iCount;
+	PWMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	WORD StartYear;
+	BYTE StartMonth;
+	BYTE StartDay;
+	WORD EndYear;
+	BYTE EndMonth;
+	BYTE EndDay;
+	BYTE IsSiegeGuildList;
+	BYTE IsSiegeEnded;
+	BYTE IsCastleOccupied;
+	char CastleOwnGuild[8];
+	__int64 CastleMoney;
+	int TaxRateChaos;
+	int TaxRateStore;
+	int TaxHuntZone;
+	int FirstCreate;
+	int Count;
 };
 
 struct CSP_REQ_NPCDATA
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
 };
 
 struct CSP_ANS_NPCDATA
 {
-	PWMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iCount;
+	PWMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int Count;
 };
 
 struct CSP_REQ_ALLGUILDREGINFO
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iIndex;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Index;
 };
 
 struct CSP_ANS_ALLGUILDREGINFO
 {
-	PWMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iIndex;
-	int iCount;
+	PWMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Index;
+	int Count;
 };
 
 struct CSP_REQ_CALCREGGUILDLIST
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
 };
 
 struct CSP_ANS_CALCREGGUILDLIST
 {
-	PWMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iCount;
+	PWMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_REQ_CSGUILDUNIONINFO
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCount;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_ANS_CSGUILDUNIONINFO
 {
-	PWMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iCount;
+	PWMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_REQ_CSSAVETOTALGUILDINFO
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
-	int iCount;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_CSSAVETOTALGUILDINFO
 {
-	char szGuildName[8];
-	int iCsGuildID;
-	int iGuildInvolved;
-	int iGuildScore;
+	char GuildName[MAX_GUILD_NAME];
+	int CsGuildID;
+	int GuildInvolved;
+	int GuildScore;
 };
 
 struct CSP_ANS_CSSAVETOTALGUILDINFO
 {
-	PBMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
+	PBMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
 };
 
 struct CSP_REQ_CSLOADTOTALGUILDINFO
 {
-	PBMSG_HEAD h;
-	WORD wMapSvrNum;
+	PBMSG_HEAD Header;
+	WORD MapSvrNum;
 };
 
 struct CSP_ANS_CSLOADTOTALGUILDINFO
 {
-	PWMSG_HEAD h;
-	int iResult;
-	WORD wMapSvrNum;
-	int iCount;
+	PWMSG_HEAD Header;
+	int Result;
+	WORD MapSvrNum;
+	int Count;
 };
 
 struct CSP_NPCUPDATEDATA
 {
-	int iNpcNumber;
-	int iNpcIndex;
-	int iNpcDfLevel;
-	int iNpcRgLevel;
-	int iNpcMaxHp;
-	int iNpcHp;
-	BYTE btNpcX;
-	BYTE btNpcY;
-	BYTE btNpcDIR;
+	int NpcNumber;
+	int NpcIndex;
+	int NpcDfLevel;
+	int NpcRgLevel;
+	int NpcMaxHp;
+	int NpcHp;
+	BYTE NpcX;
+	BYTE NpcY;
+	BYTE NpcDIR;
 };
 
 class CCastleDBSet

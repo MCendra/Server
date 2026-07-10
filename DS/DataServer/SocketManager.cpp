@@ -500,10 +500,10 @@ bool CSocketManager::DataRecv(int index, IO_MAIN_BUFFER* lpIoBuffer)
 				Log.ToDisp(LOG_RED, "[SocketManager - DataRecv] Servidor invalido (Index: %d)", index);
 				return false;
 			}
-			QueueInfo.index = static_cast<WORD>(index);
-			QueueInfo.head = head;
-			memcpy(QueueInfo.buff, &lpMsg[count], size);
-			QueueInfo.size = static_cast<WORD>(size);
+			QueueInfo.Index = static_cast<WORD>(index);
+			QueueInfo.Head = head;
+			memcpy(QueueInfo.Buff, &lpMsg[count], size);
+			QueueInfo.Size = static_cast<WORD>(size);
 
 			// Encola el paquete para que ServerQueueThread lo procese.
 			if (m_ServerQueue.AddToQueue(&QueueInfo) != 0)
@@ -1033,12 +1033,12 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 {
 	DWORD IoSize;
-	DWORD index;
+	DWORD Index;
 	LPOVERLAPPED lpOverlapped;
 
 	while (true)
 	{
-		if (GetQueuedCompletionStatus(lpSocketManager->m_CompletionPort, &IoSize, &index, &lpOverlapped, INFINITE) == 0)
+		if (GetQueuedCompletionStatus(lpSocketManager->m_CompletionPort, &IoSize, &Index, &lpOverlapped, INFINITE) == 0)
 		{
 			DWORD Error = GetLastError();
 
@@ -1057,7 +1057,7 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 
 		// Señal de apagado publicada por Clean(): IoSize=0, index=0,
 		// lpOverlapped=nullptr (GQCS retorna exito para este post).
-		if (IoSize == 0 && index == 0)
+		if (IoSize == 0 && Index == 0)
 		{
 			if (lpOverlapped == nullptr) return 0;
 		}
@@ -1067,10 +1067,10 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 		switch (lpIoContext->IoType)
 		{
 		case IO_RECV:
-			lpSocketManager->OnRecv(index, IoSize, (IO_RECV_CONTEXT*)lpIoContext);
+			lpSocketManager->OnRecv(Index, IoSize, (IO_RECV_CONTEXT*)lpIoContext);
 			break;
 		case IO_SEND:
-			lpSocketManager->OnSend(index, IoSize, (IO_SEND_CONTEXT*)lpIoContext);
+			lpSocketManager->OnSend(Index, IoSize, (IO_SEND_CONTEXT*)lpIoContext);
 			break;
 		}
 	}
@@ -1104,9 +1104,9 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 
 			if (lpSocketManager->m_ServerQueue.GetFromQueue(&QueueInfo) != 0)
 			{
-				if (SERVER_RANGE(QueueInfo.index) != 0 && gServerManager[QueueInfo.index].IsOnline() != false)
+				if (SERVER_RANGE(QueueInfo.Index) != 0 && gServerManager[QueueInfo.Index].IsOnline() != false)
 				{
-					DataServerProtocolCore(QueueInfo.index, QueueInfo.head, QueueInfo.buff, QueueInfo.size);
+					DataServerProtocolCore(QueueInfo.Index, QueueInfo.Head, QueueInfo.Buff, QueueInfo.Size);
 				}
 			}
 		}

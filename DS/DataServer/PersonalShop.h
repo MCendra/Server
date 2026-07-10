@@ -6,26 +6,26 @@
 
 struct SDHP_PSHOP_ITEM_VALUE_RECV
 {
-	PSBMSG_HEAD header; // C1:25:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
+	PSBMSG_HEAD Header; // C1:25:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
 };
 
 struct SDHP_PSHOP_ITEM_VALUE_SAVE_RECV
 {
-	PSWMSG_HEAD header; // C2:25:30
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE count;
+	PSWMSG_HEAD Header; // C2:25:30
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Count;
 };
 
 struct SDHP_PSHOP_ITEM_VALUE_SAVE
 {
-	DWORD slot;
-	DWORD serial;
-	DWORD value;
+	DWORD Slot;
+	DWORD Serial;
+	DWORD Value;
 	WORD JoBValue;
 	WORD JoSValue;
 	WORD JoCValue;
@@ -33,13 +33,13 @@ struct SDHP_PSHOP_ITEM_VALUE_SAVE
 
 struct SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV
 {
-	PSBMSG_HEAD header; // C1:25:31
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD slot;
-	DWORD serial;
-	DWORD value;
+	PSBMSG_HEAD Header; // C1:25:31
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Slot;
+	DWORD Serial;
+	DWORD Value;
 	WORD JoBValue;
 	WORD JoSValue;
 	WORD JoCValue;
@@ -47,45 +47,41 @@ struct SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV
 
 struct SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV
 {
-	PSBMSG_HEAD header; // C1:25:32
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	DWORD slot;
+	PSBMSG_HEAD Header; // C1:25:32
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	DWORD Slot;
 };
 
-//**********************************************//
-//********** DataServer -> GameServer **********//
-//**********************************************//
+// DataServer -> GameServer
 
 struct SDHP_PSHOP_ITEM_VALUE_SEND
 {
-	PSWMSG_HEAD header; // C2:25:00
-	WORD index;
-	char account[11];
-	char charactername[MAX_CHARACTER_NAME];
-	BYTE count;
+	PSWMSG_HEAD Header; // C2:25:00
+	WORD Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Count;
 };
 
 struct SDHP_PSHOP_ITEM_VALUE
 {
-	DWORD slot;
-	DWORD serial;
-	DWORD value;
+	DWORD Slot;
+	DWORD Serial;
+	DWORD Value;
 	WORD JoBValue;
 	WORD JoSValue;
 	WORD JoCValue;
 };
 
 //**********************************************//
-//**********************************************//
-//**********************************************//
 
 class CPersonalShop
 {
 public:
-	CPersonalShop();
-	virtual ~CPersonalShop();
+	CPersonalShop() = default;
+	~CPersonalShop() = default;
 	void GDPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg,int index);
 	void GDPShopItemValueSaveRecv(SDHP_PSHOP_ITEM_VALUE_SAVE_RECV* lpMsg);
 	void GDPShopItemValueInsertSaveRecv(SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV* lpMsg);

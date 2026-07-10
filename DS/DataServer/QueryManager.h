@@ -12,6 +12,7 @@ public:
 	void Disconnect();
 	void Diagnostic(const char* query);
 	bool ExecQuery(const char* query, ...);
+	int GetAffectedRows();
 	void Close();
 	SQLRETURN Fetch();
 	int FindIndex(const char* columnName);
@@ -33,7 +34,7 @@ private:
 	char m_odbc[32];
 	char m_user[32];
 	char m_pass[32];
-	SQLINTEGER m_RowCount;
+	bool m_HasRow;
 	SQLSMALLINT m_ColCount;
 	SQLCHAR m_SQLColName[MAX_COLUMNS][30];
 	char m_SQLData[MAX_COLUMNS][8192];
