@@ -24,63 +24,28 @@ void ExDBServerProtocolCore(int index, BYTE head, const BYTE* lpMsg, int size)
 
 	switch (head)
 	{
-	case EXDB_HEAD_CHAR_CLOSE:
-		GDCharClose((SDHP_USERCLOSE*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_CREATE:
-		GDGuildCreateSend((SDHP_GUILDCREATE*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_DESTROY:
-		GDGuildDestroySend((SDHP_GUILDDESTROY*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_MEMBER_ADD:
-		GDGuildMemberAdd((SDHP_GUILDMEMBERADD*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_MEMBER_DEL:
-		GDGuildMemberDel((SDHP_GUILDMEMBERDEL*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_MEMBER_INFO:
-		DGGuildMemberInfoRequest((SDHP_GUILDMEMBER_INFO_REQUEST*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_SCORE_UPDATE:
-		DGGuildScoreUpdate((SDHP_GUILDSCOREUPDATE*)lpMsg, index);
-		break;
-	case EXDB_HEAD_GUILD_NOTICE:
-		GDGuildNoticeSave((SDHP_GUILDNOTICE*)lpMsg, index);
-		break;
+	case EXDB_HEAD_CHAR_CLOSE:				GDCharClose((SDHP_USERCLOSE*)lpMsg, index);								break;
+	case EXDB_HEAD_GUILD_CREATE:			GDGuildCreateSend((SDHP_GUILDCREATE*)lpMsg, index);						break;
+	case EXDB_HEAD_GUILD_DESTROY:			GDGuildDestroySend((SDHP_GUILDDESTROY*)lpMsg, index);					break;
+	case EXDB_HEAD_GUILD_MEMBER_ADD:		GDGuildMemberAdd((SDHP_GUILDMEMBERADD*)lpMsg, index);					break;
+	case EXDB_HEAD_GUILD_MEMBER_DEL:		GDGuildMemberDel((SDHP_GUILDMEMBERDEL*)lpMsg, index);					break;
+	case EXDB_HEAD_GUILD_MEMBER_INFO:		DGGuildMemberInfoRequest((SDHP_GUILDMEMBER_INFO_REQUEST*)lpMsg, index);	break;
+	case EXDB_HEAD_GUILD_SCORE_UPDATE:		DGGuildScoreUpdate((SDHP_GUILDSCOREUPDATE*)lpMsg, index);				break;
+	case EXDB_HEAD_GUILD_NOTICE:			GDGuildNoticeSave((SDHP_GUILDNOTICE*)lpMsg, index);						break;
 #if(NEWBOSSGUILD == 1)
-	case EXDB_HEAD_GUILD_SCORE_UPDATE_EX:
-		DGGuildScoreUpdate1((SDHP_GUILDSCOREUPDATE1*)lpMsg, index);
-		break;
+	case EXDB_HEAD_GUILD_SCORE_UPDATE_EX:	DGGuildScoreUpdate1((SDHP_GUILDSCOREUPDATE1*)lpMsg, index);				break;
 #endif
-
-	case EXDB_HEAD_GUILD_CHAT:
-		GDGuildServerGroupChattingSend((EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND*)lpMsg, index);
-		break;
-	case EXDB_HEAD_UNION_CHAT:
-		GDUnionServerGroupChattingSend((EXSDHP_SERVERGROUP_UNION_CHATTING_SEND*)lpMsg, index);
-		break;
-	case EXDB_HEAD_ASSIGN_STATUS:
-		GDGuildReqAssignStatus((EXSDHP_GUILD_ASSIGN_STATUS_REQ*)lpMsg, index);
-		break;
-	case EXDB_HEAD_ASSIGN_TYPE:
-		GDGuildReqAssignType((EXSDHP_GUILD_ASSIGN_TYPE_REQ*)lpMsg, index);
-		break;
-	case EXDB_HEAD_RELATIONSHIP_JOIN:
-		GDRelationShipReqJoin((EXSDHP_RELATIONSHIP_JOIN_REQ*)lpMsg, index);
-		break;
-	case EXDB_HEAD_RELATIONSHIP_BREAK:
-		GDUnionBreakOff((EXSDHP_RELATIONSHIP_BREAKOFF_REQ*)lpMsg, index);
-		break;
-	case EXDB_HEAD_UNION_LIST:
-		GDUnionListSend((EXSDHP_UNION_LIST_REQ*)lpMsg, index);
-		break;
+	case EXDB_HEAD_GUILD_CHAT:				GDGuildServerGroupChattingSend((EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND*)lpMsg, index);	break;
+	case EXDB_HEAD_UNION_CHAT:				GDUnionServerGroupChattingSend((EXSDHP_SERVERGROUP_UNION_CHATTING_SEND*)lpMsg, index);	break;
+	case EXDB_HEAD_ASSIGN_STATUS:			GDGuildReqAssignStatus((EXSDHP_GUILD_ASSIGN_STATUS_REQ*)lpMsg, index);	break;
+	case EXDB_HEAD_ASSIGN_TYPE:				GDGuildReqAssignType((EXSDHP_GUILD_ASSIGN_TYPE_REQ*)lpMsg, index);		break;
+	case EXDB_HEAD_RELATIONSHIP_JOIN:		GDRelationShipReqJoin((EXSDHP_RELATIONSHIP_JOIN_REQ*)lpMsg, index);		break;
+	case EXDB_HEAD_RELATIONSHIP_BREAK:		GDUnionBreakOff((EXSDHP_RELATIONSHIP_BREAKOFF_REQ*)lpMsg, index);		break;
+	case EXDB_HEAD_UNION_LIST:				GDUnionListSend((EXSDHP_UNION_LIST_REQ*)lpMsg, index);					break;
 	case EXDB_HEAD_KICKOUT_UNION_MEMBER:
 		switch (lpMsg[3])
 		{
-		case EXDB_SUB_HEAD_KICKOUT_UNION_MEMBER:
-			GDRelationShipReqKickOutUnionMember((EXSDHP_KICKOUT_UNIONMEMBER_REQ*)lpMsg, index);
-			break;
+		case EXDB_SUB_HEAD_KICKOUT_UNION_MEMBER:	GDRelationShipReqKickOutUnionMember((EXSDHP_KICKOUT_UNIONMEMBER_REQ*)lpMsg, index);	break;
 		}
 		break;
 	}

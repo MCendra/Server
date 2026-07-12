@@ -16,7 +16,7 @@ void CCommandManager::GDCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg, int ind
 
 	SDHP_COMMAND_RESET_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_RESET, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_RESET, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
@@ -54,7 +54,7 @@ void CCommandManager::GDCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* l
 
 	SDHP_COMMAND_MASTER_RESET_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_MASTER_RESET, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_MASTER_RESET, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
@@ -93,7 +93,7 @@ void CCommandManager::GDCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg, int ind
 
 	SDHP_COMMAND_MARRY_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_MARRY, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_MARRY, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
@@ -173,7 +173,7 @@ void CCommandManager::GDCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg, int i
 
 	SDHP_COMMAND_RENAME_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_RENAME, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_RENAME, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
@@ -219,7 +219,7 @@ void CCommandManager::GDCommandBlocAccRecv(SDHP_COMMAND_BLOC_RECV* lpMsg, int in
 
 	SDHP_COMMAND_BLOC_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_BLOCK_ACCOUNT, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_BLOCK_ACCOUNT, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 0;
 
@@ -262,7 +262,7 @@ void CCommandManager::GDCommandBlocCharRecv(SDHP_COMMAND_BLOC_RECV* lpMsg, int i
 
 	SDHP_COMMAND_BLOC_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_BLOCK_CHARACTER, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_BLOCK_CHARACTER, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 0;
 
@@ -305,7 +305,7 @@ void CCommandManager::GDCommandGiftRecv(SDHP_GIFT_RECV* lpMsg, int index)
 
 	SDHP_GIFT_SEND pMsg{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_GIFT, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_GIFT, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 0;
 
@@ -361,7 +361,7 @@ void CCommandManager::GDCommandTopRecv(SDHP_TOP_RECV* lpMsg, int index)
 	SDHP_TOP_SEND pMsg{};
 	SDHP_TOP_INFO info{};
 
-	pMsg.Header.set(DS_HEAD_COMMAND, DS_SUB_COMMAND_TOP, 0);
+	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_TOP, 0);
 
 	int size = sizeof(pMsg);
 

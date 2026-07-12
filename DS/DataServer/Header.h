@@ -163,21 +163,21 @@ constexpr BYTE PACKET_C4 = 0xC4;
 // Main Heads
 //==============================================================
 
-constexpr BYTE HEAD_SERVER_INFO = 0x00;
+constexpr BYTE HEAD_GLOBAL_ITEM_COUNT = 0x00;
 constexpr BYTE HEAD_CHARACTER_LIST = 0x01;
 constexpr BYTE HEAD_CHARACTER_CREATE = 0x02;
 constexpr BYTE HEAD_CHARACTER_DELETE = 0x03;
 constexpr BYTE HEAD_CHARACTER_INFO = 0x04;
-constexpr BYTE DS_HEAD_WAREHOUSE = 0x05;
+constexpr BYTE HEAD_WAREHOUSE = 0x05;
 constexpr BYTE HEAD_CREATE_ITEM = 0x07;
 constexpr BYTE HEAD_OPTION_DATA = 0x08;
 constexpr BYTE HEAD_PET_ITEM = 0x09;
 constexpr BYTE HEAD_CHARACTER_NAME_CHECK = 0x0A;
 constexpr BYTE HEAD_CHARACTER_RENAME = 0x0B;
-constexpr BYTE DS_HEAD_QUEST = 0x0C;
-constexpr BYTE DS_HEAD_MASTER_SKILL = 0x0D;
-constexpr BYTE DS_HEAD_NPC = 0x0E;
-constexpr BYTE DS_HEAD_COMMAND = 0x0F;
+constexpr BYTE HEAD_QUEST = 0x0C;
+constexpr BYTE HEAD_MASTER_SKILL = 0x0D;
+constexpr BYTE HEAD_NPC = 0x0E;
+constexpr BYTE HEAD_COMMAND = 0x0F;
 constexpr BYTE DS_HEAD_QUEST_WORLD = 0x10;
 constexpr BYTE DS_HEAD_GENS_SYSTEM = 0x11;
 constexpr BYTE DS_HEAD_MURUMMY = 0x12;
@@ -295,14 +295,14 @@ constexpr BYTE CS_HEAD_FRIEND_INVITATION	= 0x74;
 //**********************************************
 // Warehouse System SubHeads (0x05)
 //**********************************************
-constexpr BYTE DS_SUB_WAREHOUSE_PERSONAL_LOAD = 0x00;
-constexpr BYTE DS_SUB_WAREHOUSE_PERSONAL_FREE = 0x01;
-constexpr BYTE DS_SUB_WAREHOUSE_PERSONAL_SAVE = 0x30;
-constexpr BYTE DS_SUB_WAREHOUSE_GUILD_LOAD = 0x70;
-constexpr BYTE DS_SUB_WAREHOUSE_GUILD_FREE = 0x71;
-constexpr BYTE DS_SUB_WAREHOUSE_GUILD_SAVE = 0x75;
-constexpr BYTE DS_SUB_WAREHOUSE_GUILD_STATUS = 0x76;
-constexpr BYTE DS_SUB_WAREHOUSE_GUILD_UPDATE = 0x77;
+constexpr BYTE SUB_WAREHOUSE_PERSONAL_LOAD = 0x00;
+constexpr BYTE SUB_WAREHOUSE_PERSONAL_FREE = 0x01;
+constexpr BYTE SUB_WAREHOUSE_PERSONAL_SAVE = 0x30;
+constexpr BYTE SUB_WAREHOUSE_GUILD_LOAD = 0x70;
+constexpr BYTE SUB_WAREHOUSE_GUILD_FREE = 0x71;
+constexpr BYTE SUB_WAREHOUSE_GUILD_SAVE = 0x75;
+constexpr BYTE SUB_WAREHOUSE_GUILD_STATUS = 0x76;
+constexpr BYTE SUB_WAREHOUSE_GUILD_UPDATE = 0x77;
 //**********************************************
 // Gens System SubHeads (0x11)
 //**********************************************
@@ -316,20 +316,20 @@ constexpr BYTE DS_SUB_GENS_SYSTEM_CREATE		= 0x70;
 //**********************************************
 // Quest SubHeads (0x0C)
 //**********************************************
-constexpr BYTE DS_SUB_QUEST_KILLCOUNT_LOAD = 0x00;
-constexpr BYTE DS_SUB_QUEST_KILLCOUNT_SAVE = 0x30;
+constexpr BYTE SUB_QUEST_KILLCOUNT_LOAD = 0x00;
+constexpr BYTE SUB_QUEST_KILLCOUNT_SAVE = 0x30;
 //**********************************************
 // Master Skill Tree SubHeads (0x0D)
 //**********************************************
-constexpr BYTE DS_SUB_MASTER_SKILL_LOAD = 0x00;
-constexpr BYTE DS_SUB_MASTER_SKILL_SAVE = 0x30;
+constexpr BYTE SUB_MASTER_SKILL_LOAD = 0x00;
+constexpr BYTE SUB_MASTER_SKILL_SAVE = 0x30;
 //**********************************************
 // NPC SubHeads (0x0E)
 //**********************************************
-constexpr BYTE DS_SUB_NPC_LEO_LOAD = 0x00;
-constexpr BYTE DS_SUB_NPC_SANTA_LOAD = 0x01;
-constexpr BYTE DS_SUB_NPC_LEO_SAVE = 0x30;
-constexpr BYTE DS_SUB_NPC_SANTA_SAVE = 0x31;
+constexpr BYTE SUB_NPC_LEO_LOAD = 0x00;
+constexpr BYTE SUB_NPC_SANTA_LOAD = 0x01;
+constexpr BYTE SUB_NPC_LEO_SAVE = 0x30;
+constexpr BYTE SUB_NPC_SANTA_SAVE = 0x31;
 //**********************************************
 // Command SubHeads (0x0F)
 //**********************************************
@@ -511,17 +511,8 @@ constexpr BYTE DS_SUB_BUFFPHE_TOP_INFO = 0x19;
 //==============================================================
 // GameServer Main Heads
 //==============================================================
-//constexpr BYTE HEAD_SERVER_INFO = 0x00;
-//constexpr BYTE HEAD_CHARACTER_LIST = 0x01;
-//constexpr BYTE HEAD_CHARACTER_CREATE = 0x02;
-//constexpr BYTE HEAD_CHARACTER_DELETE = 0x03;
-//constexpr BYTE HEAD_CHARACTER_INFO = 0x04;
-//constexpr BYTE HEAD_CREATE_ITEM = 0x07;
 constexpr BYTE GS_HEAD_CUSTOM_EXTENSIONS = 0xFB;
 //**********************************************
-// Characters SubHeads (0x01)
-//**********************************************
-//constexpr BYTE GS_SUB_CHARACTER_LIST = 0x00;
 //**********************************************
 // Custom Extensions (0xFB)
 //**********************************************

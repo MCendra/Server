@@ -1,140 +1,119 @@
 // NpcTalk.cpp
 #include "Header.h"
 #include "NpcTalk.h"
+#include "Log.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
 CNpcTalk gNpcTalk;
 
-void CNpcTalk::GDNpcLeoTheHelperRecv(SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg, int index)
+void CNpcTalk::GDNpcLeoTheHelperRecv(const SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 202)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_NPC_LEO_THE_HELPER_RECV);
 
 	SDHP_NPC_LEO_THE_HELPER_SEND pMsg{};
-
-	pMsg.Header.set(DS_HEAD_NPC, DS_SUB_NPC_LEO_LOAD, sizeof(pMsg));
-
+	pMsg.Header.set(HEAD_NPC, SUB_NPC_LEO_LOAD, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	pMsg.status = 0;
+	pMsg.Status = 0;
 
-	if (gQueryManager.ExecQuery(
-		"SELECT Status FROM EventLeoTheHelper WHERE Name='%s'",
-		lpMsg->CharacterName))
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"SELECT Status FROM EventLeoTheHelper WHERE Name='%s'",
+			lpMsg->CharacterName) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
+
+	if (dataFound)
 	{
-		const auto sqlRet = gQueryManager.Fetch();
-
-		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
-		{
-			gQueryManager.Close();
-
-			gQueryManager.ExecQuery(
-				"INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',0)",
-				lpMsg->CharacterName);
-
-			gQueryManager.Close();
-		}
-		else
-		{
-			pMsg.status = static_cast<BYTE>(gQueryManager.GetAsInteger("Status"));
-
-			gQueryManager.Close();
-		}
+		pMsg.Status = static_cast<BYTE>(
+			gQueryManager.GetAsInteger("Status"));
 	}
 
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, pMsg.Header.size);
+	gQueryManager.Close();
+
+	if (!dataFound)
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',0)",
+			lpMsg->CharacterName);
+
+		gQueryManager.Close();
+	}
+
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
 #endif
 }
 
-void CNpcTalk::GDNpcSantaClausRecv(SDHP_NPC_SANTA_CLAUS_RECV* lpMsg, int index)
+void CNpcTalk::GDNpcSantaClausRecv(const SDHP_NPC_SANTA_CLAUS_RECV* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 401)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_NPC_SANTA_CLAUS_RECV);
 
 	SDHP_NPC_SANTA_CLAUS_SEND pMsg{};
-
-	pMsg.Header.set(DS_HEAD_NPC, DS_SUB_NPC_SANTA_LOAD, sizeof(pMsg));
-
+	pMsg.Header.set(HEAD_NPC, SUB_NPC_SANTA_LOAD, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	pMsg.status = 0;
+	pMsg.Status = 0;
 
-	if (gQueryManager.ExecQuery(
-		"SELECT Status FROM EventSantaClaus WHERE Name='%s'",
-		lpMsg->CharacterName))
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"SELECT Status FROM EventSantaClaus WHERE Name='%s'",
+			lpMsg->CharacterName) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
+
+	if (dataFound)
 	{
-		const auto sqlRet = gQueryManager.Fetch();
-
-		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
-		{
-			gQueryManager.Close();
-
-			gQueryManager.ExecQuery(
-				"INSERT INTO EventSantaClaus (Name,Status) VALUES ('%s',0)",
-				lpMsg->CharacterName);
-
-			gQueryManager.Close();
-		}
-		else
-		{
-			pMsg.status = static_cast<BYTE>(gQueryManager.GetAsInteger("Status"));
-
-			gQueryManager.Close();
-		}
+		pMsg.Status = static_cast<BYTE>(
+			gQueryManager.GetAsInteger("Status"));
 	}
 
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, pMsg.Header.size);
+	gQueryManager.Close();
+
+	if (!dataFound)
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO EventSantaClaus (Name,Status) VALUES ('%s',0)",
+			lpMsg->CharacterName);
+
+		gQueryManager.Close();
+	}
+
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
 #endif
 }
 
-void CNpcTalk::GDNpcLeoTheHelperSaveRecv(SDHP_NPC_LEO_THE_HELPER_SAVE_RECV* lpMsg)
+void CNpcTalk::GDNpcLeoTheHelperSaveRecv(const SDHP_NPC_LEO_THE_HELPER_SAVE_RECV* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 202)
 
-	if (lpMsg == nullptr)
+	VALIDATE_PACKET_SIZE(SDHP_NPC_LEO_THE_HELPER_SAVE_RECV);
+
+	gQueryManager.ExecQuery(
+		"UPDATE EventLeoTheHelper SET Status=%d WHERE Name='%s'",
+		lpMsg->Status,
+		lpMsg->CharacterName);
+
+	const SQLLEN affectedRows = gQueryManager.GetAffectedRows();
+
+	gQueryManager.Close();
+
+	if (affectedRows == 0)
 	{
-		return;
-	}
-
-	if (gQueryManager.ExecQuery(
-		"SELECT Name FROM EventLeoTheHelper WHERE Name='%s'",
-		lpMsg->CharacterName))
-	{
-		const auto sqlRet = gQueryManager.Fetch();
-
-		gQueryManager.Close();
-
-		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
-		{
-			gQueryManager.ExecQuery(
-				"INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',%d)",
-				lpMsg->CharacterName,
-				lpMsg->status);
-		}
-		else
-		{
-			gQueryManager.ExecQuery(
-				"UPDATE EventLeoTheHelper SET Status=%d WHERE Name='%s'",
-				lpMsg->status,
-				lpMsg->CharacterName);
-		}
+		gQueryManager.ExecQuery(
+			"INSERT INTO EventLeoTheHelper (Name,Status) VALUES ('%s',%d)",
+			lpMsg->CharacterName,
+			lpMsg->Status);
 
 		gQueryManager.Close();
 	}
@@ -142,37 +121,27 @@ void CNpcTalk::GDNpcLeoTheHelperSaveRecv(SDHP_NPC_LEO_THE_HELPER_SAVE_RECV* lpMs
 #endif
 }
 
-void CNpcTalk::GDNpcSantaClausSaveRecv(SDHP_NPC_SANTA_CLAUS_SAVE_RECV* lpMsg)
+void CNpcTalk::GDNpcSantaClausSaveRecv(const SDHP_NPC_SANTA_CLAUS_SAVE_RECV* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 401)
 
-	if (lpMsg == nullptr)
+	VALIDATE_PACKET_SIZE(SDHP_NPC_SANTA_CLAUS_SAVE_RECV);
+
+	gQueryManager.ExecQuery(
+		"UPDATE EventSantaClaus SET Status=%d WHERE Name='%s'",
+		lpMsg->Status,
+		lpMsg->CharacterName);
+
+	const SQLLEN affectedRows = gQueryManager.GetAffectedRows();
+
+	gQueryManager.Close();
+
+	if (affectedRows == 0)
 	{
-		return;
-	}
-
-	if (gQueryManager.ExecQuery(
-		"SELECT Name FROM EventSantaClaus WHERE Name='%s'",
-		lpMsg->CharacterName))
-	{
-		const auto sqlRet = gQueryManager.Fetch();
-
-		gQueryManager.Close();
-
-		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
-		{
-			gQueryManager.ExecQuery(
-				"INSERT INTO EventSantaClaus (Name,Status) VALUES ('%s',%d)",
-				lpMsg->CharacterName,
-				lpMsg->status);
-		}
-		else
-		{
-			gQueryManager.ExecQuery(
-				"UPDATE EventSantaClaus SET Status=%d WHERE Name='%s'",
-				lpMsg->status,
-				lpMsg->CharacterName);
-		}
+		gQueryManager.ExecQuery(
+			"INSERT INTO EventSantaClaus (Name,Status) VALUES ('%s',%d)",
+			lpMsg->CharacterName,
+			lpMsg->Status);
 
 		gQueryManager.Close();
 	}

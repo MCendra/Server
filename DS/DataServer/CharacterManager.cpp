@@ -70,3 +70,34 @@ long CCharacterManager::GetCharacterCount()
 
 	return static_cast<long>(m_CharacterInfo.size());
 }
+
+// Helpers
+
+bool CCharacterManager::GetFreeCharacterSlot(const std::array<std::array<char, MAX_CHARACTER_NAME>, MAX_CHARACTER_SLOT>& characterName, BYTE* slot)
+{
+	for (BYTE n = 0; n < MAX_CHARACTER_SLOT; ++n)
+	{
+		// Accede directamente al primer carácter del std::array
+		if (characterName[n][0] == '\0')
+		{
+			*slot = n;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CCharacterManager::GetCharacterSlot(const std::array<std::array<char, MAX_CHARACTER_NAME>, MAX_CHARACTER_SLOT>& characterName,	const char* name, BYTE* slot)
+{
+	for (BYTE n = 0; n < MAX_CHARACTER_SLOT; ++n)
+	{
+		if (std::strcmp(characterName[n].data(), name) == 0)
+		{
+			*slot = n;
+			return true;
+		}
+	}
+
+	return false;
+}

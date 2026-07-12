@@ -1,7 +1,9 @@
 // CharacterManager.h
 #pragma once
 #include "CriticalSection.h"
+#include <array>
 
+// Cantidad de caracteres por cuenta
 constexpr BYTE MAX_CHARACTER_SLOT = 5;
 constexpr BYTE CHARACTER_LIST_EQUIPMENT_COUNT = 12;
 
@@ -23,6 +25,8 @@ public:
 	void InsertCharacterInfo(const CHARACTER_INFO& characterInfo);
 	void RemoveCharacterInfo(const CHARACTER_INFO& characterInfo);
 	long GetCharacterCount();
+	bool GetFreeCharacterSlot(const std::array<std::array<char, MAX_CHARACTER_NAME>, MAX_CHARACTER_SLOT>& characterName, BYTE* slot);
+	bool GetCharacterSlot(const std::array<std::array<char, MAX_CHARACTER_NAME>, MAX_CHARACTER_SLOT>& characterName, const char* name, BYTE* slot);
 private:
 	CCriticalSection m_critical;
 	std::map<std::string,CHARACTER_INFO> m_CharacterInfo;

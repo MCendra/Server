@@ -43,8 +43,8 @@ class CQuest
 public:
 	CQuest() = default;
 	~CQuest() = default;
-	void GDQuestKillCountRecv(SDHP_QUEST_KILL_COUNT_RECV* lpMsg,int index);
-	void GDQuestKillCountSaveRecv(SDHP_QUEST_KILL_COUNT_SAVE_RECV* lpMsg);
+	void GDQuestKillCountRecv(const SDHP_QUEST_KILL_COUNT_RECV* lpMsg, int serverIndex, int size);
+	void GDQuestKillCountSaveRecv(const SDHP_QUEST_KILL_COUNT_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CQuest gQuest;

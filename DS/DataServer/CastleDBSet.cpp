@@ -6,7 +6,7 @@
 
 CCastleDBSet gCastleDBSet;
 
-BOOL CCastleDBSet::DSDB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventCycle, CASTLE_DATA* lpCastleData)
+BOOL CCastleDBSet::DB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventCycle, CASTLE_DATA* lpCastleData)
 {
 	if(lpCastleData == nullptr)
 	{
@@ -27,21 +27,21 @@ BOOL CCastleDBSet::DSDB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventC
 		return false;
 	}
 
-	lpCastleData->wStartYear = gQueryManager.GetAsInteger("SYEAR");
-	lpCastleData->btStartMonth = gQueryManager.GetAsInteger("SMONTH");
-	lpCastleData->btStartDay = gQueryManager.GetAsInteger("SDAY");
-	lpCastleData->wEndYear = gQueryManager.GetAsInteger("EYEAR");
-	lpCastleData->btEndMonth = gQueryManager.GetAsInteger("EMONTH");
-	lpCastleData->btEndDay = gQueryManager.GetAsInteger("EDAY");
-	lpCastleData->btIsSiegeGuildList = gQueryManager.GetAsInteger("SIEGE_GUILDLIST_SETTED");
-	lpCastleData->btIsSiegeEnded = gQueryManager.GetAsInteger("SIEGE_ENDED");
-	lpCastleData->btIsCastleOccupied = gQueryManager.GetAsInteger("CASTLE_OCCUPY");
-	lpCastleData->i64CastleMoney = gQueryManager.GetAsInteger64("MONEY");
-	lpCastleData->iTaxRateChaos = gQueryManager.GetAsInteger("TAX_RATE_CHAOS");
-	lpCastleData->iTaxRateStore = gQueryManager.GetAsInteger("TAX_RATE_STORE");
-	lpCastleData->iTaxHuntZone = gQueryManager.GetAsInteger("TAX_HUNT_ZONE");
-	lpCastleData->iFirstCreate = gQueryManager.GetAsInteger("FIRST_CREATE");
-	gQueryManager.GetAsString("OWNER_GUILD", lpCastleData->szCastleOwnGuild,sizeof(lpCastleData->szCastleOwnGuild));
+	lpCastleData->StartYear = gQueryManager.GetAsInteger("SYEAR");
+	lpCastleData->StartMonth = gQueryManager.GetAsInteger("SMONTH");
+	lpCastleData->StartDay = gQueryManager.GetAsInteger("SDAY");
+	lpCastleData->EndYear = gQueryManager.GetAsInteger("EYEAR");
+	lpCastleData->EndMonth = gQueryManager.GetAsInteger("EMONTH");
+	lpCastleData->EndDay = gQueryManager.GetAsInteger("EDAY");
+	lpCastleData->IsSiegeGuildList = gQueryManager.GetAsInteger("SIEGE_GUILDLIST_SETTED");
+	lpCastleData->IsSiegeEnded = gQueryManager.GetAsInteger("SIEGE_ENDED");
+	lpCastleData->IsCastleOccupied = gQueryManager.GetAsInteger("CASTLE_OCCUPY");
+	lpCastleData->CastleMoney = gQueryManager.GetAsInteger64("MONEY");
+	lpCastleData->TaxRateChaos = gQueryManager.GetAsInteger("TAX_RATE_CHAOS");
+	lpCastleData->TaxRateStore = gQueryManager.GetAsInteger("TAX_RATE_STORE");
+	lpCastleData->TaxHuntZone = gQueryManager.GetAsInteger("TAX_HUNT_ZONE");
+	lpCastleData->FirstCreate = gQueryManager.GetAsInteger("FIRST_CREATE");
+	gQueryManager.GetAsString("OWNER_GUILD", lpCastleData->CastleOwnGuild,sizeof(lpCastleData->CastleOwnGuild));
 	gQueryManager.Close();
 	return true;
 }
@@ -70,13 +70,13 @@ BOOL CCastleDBSet::DSDB_QueryOwnerGuildMaster(int iMapSvrGroup, CSP_ANS_OWNERGUI
 	char szOwnerGuild[8+8] = {'\0'};
 	char szOwnerGuildMaster[8+8] = {'\0'};
 	
-	lpOwnerGuildMaster->iResult = gQueryManager.GetAsInteger("QueryResult");
+	lpOwnerGuildMaster->Result = gQueryManager.GetAsInteger("QueryResult");
 	
 	gQueryManager.GetAsString("OwnerGuild", szOwnerGuild,sizeof(szOwnerGuild));
 	gQueryManager.GetAsString("OwnerGuildMaster", szOwnerGuildMaster,sizeof(szOwnerGuildMaster));
 	
-	memcpy(lpOwnerGuildMaster->szCastleOwnGuild, szOwnerGuild, 8);
-	memcpy(lpOwnerGuildMaster->szCastleOwnGuildMaster, szOwnerGuildMaster, 10);
+	memcpy(lpOwnerGuildMaster->CastleOwnGuild, szOwnerGuild, 8);
+	memcpy(lpOwnerGuildMaster->CastleOwnGuildMaster, szOwnerGuildMaster, 10);
 	
 	gQueryManager.Close();
 	return true;	
@@ -92,15 +92,15 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcBuy(int iMapSvrGroup, CSP_REQ_NPCBUY* lpNp
 	if (!gQueryManager.ExecQuery(
 		"EXEC WZ_CS_ReqNpcBuy %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
 		iMapSvrGroup,
-		lpNpcBuy->iNpcNumber,
-		lpNpcBuy->iNpcIndex,
-		lpNpcBuy->iNpcDfLevel,
-		lpNpcBuy->iNpcRgLevel,
-		lpNpcBuy->iNpcMaxHp,
-		lpNpcBuy->iNpcHp,
-		lpNpcBuy->btNpcX,
-		lpNpcBuy->btNpcY,
-		lpNpcBuy->btNpcDIR))
+		lpNpcBuy->NpcNumber,
+		lpNpcBuy->NpcIndex,
+		lpNpcBuy->NpcDfLevel,
+		lpNpcBuy->NpcRgLevel,
+		lpNpcBuy->NpcMaxHp,
+		lpNpcBuy->NpcHp,
+		lpNpcBuy->NpcX,
+		lpNpcBuy->NpcY,
+		lpNpcBuy->NpcDIR))
 	{
 		gQueryManager.Close();
 		return false;
@@ -130,8 +130,8 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcRepair(int iMapSvrGroup, CSP_REQ_NPCREPAIR
 	if (!gQueryManager.ExecQuery(
 		"EXEC WZ_CS_ReqNpcRepair %d, %d, %d",
 		iMapSvrGroup,
-		lpNpcRepair->iNpcNumber,
-		lpNpcRepair->iNpcIndex))
+		lpNpcRepair->NpcNumber,
+		lpNpcRepair->NpcIndex))
 	{
 		gQueryManager.Close();
 		return false;
@@ -147,8 +147,8 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcRepair(int iMapSvrGroup, CSP_REQ_NPCREPAIR
 
 	*lpiResult = gQueryManager.GetAsInteger("QueryResult");
 
-	lpNpcRepairResult->iNpcHp = gQueryManager.GetAsInteger("NPC_HP");
-	lpNpcRepairResult->iNpcMaxHp = gQueryManager.GetAsInteger("NPC_MAXHP");
+	lpNpcRepairResult->NpcHp = gQueryManager.GetAsInteger("NPC_HP");
+	lpNpcRepairResult->NpcMaxHp = gQueryManager.GetAsInteger("NPC_MAXHP");
 
 	gQueryManager.Close();
 	return true;
@@ -164,10 +164,10 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcUpgrade(int iMapSvrGroup, CSP_REQ_NPCUPGRA
 	if (!gQueryManager.ExecQuery(
 		"EXEC WZ_CS_ReqNpcUpgrade %d, %d, %d, %d, %d",
 		iMapSvrGroup,
-		lpNpcUpgrade->iNpcNumber,
-		lpNpcUpgrade->iNpcIndex,
-		lpNpcUpgrade->iNpcUpType,
-		lpNpcUpgrade->iNpcUpValue))
+		lpNpcUpgrade->NpcNumber,
+		lpNpcUpgrade->NpcIndex,
+		lpNpcUpgrade->NpcUpType,
+		lpNpcUpgrade->NpcUpValue))
 	{
 		gQueryManager.Close();
 		return false;
@@ -215,10 +215,10 @@ BOOL CCastleDBSet::DSDB_QueryTaxInfo(int iMapSvrGroup, CSP_ANS_TAXINFO* lpTaxInf
 		return false;
 	}
 
-	lpTaxInfo->i64CastleMoney = gQueryManager.GetAsInteger64("MONEY");
-	lpTaxInfo->iTaxRateChaos = gQueryManager.GetAsInteger("TAX_RATE_CHAOS");
-	lpTaxInfo->iTaxRateStore = gQueryManager.GetAsInteger("TAX_RATE_STORE");
-	lpTaxInfo->iTaxHuntZone = gQueryManager.GetAsInteger("TAX_HUNT_ZONE");
+	lpTaxInfo->CastleMoney = gQueryManager.GetAsInteger64("MONEY");
+	lpTaxInfo->TaxRateChaos = gQueryManager.GetAsInteger("TAX_RATE_CHAOS");
+	lpTaxInfo->TaxRateStore = gQueryManager.GetAsInteger("TAX_RATE_STORE");
+	lpTaxInfo->TaxHuntZone = gQueryManager.GetAsInteger("TAX_HUNT_ZONE");
 
 	gQueryManager.Close();
 
@@ -248,8 +248,8 @@ BOOL CCastleDBSet::DSDB_QueryTaxRateChange(int iMapSvrGroup, int iTaxType, int i
 
 	*lpiResult = gQueryManager.GetAsInteger("QueryResult");
 
-	lpTaxRateChange->iTaxKind = gQueryManager.GetAsInteger("TaxKind");
-	lpTaxRateChange->iTaxRate = gQueryManager.GetAsInteger("TaxRate");
+	lpTaxRateChange->TaxKind = gQueryManager.GetAsInteger("TaxKind");
+	lpTaxRateChange->TaxRate = gQueryManager.GetAsInteger("TaxRate");
 
 	gQueryManager.Close();
 
@@ -295,12 +295,12 @@ BOOL CCastleDBSet::DSDB_QuerySiegeDateChange(int iMapSvrGroup, CSP_REQ_SDEDCHANG
 	if (!gQueryManager.ExecQuery(
 		"EXEC WZ_CS_ModifyCastleSchedule %d, '%d-%d-%d 00:00:00', '%d-%d-%d 00:00:00'",
 		iMapSvrGroup,
-		lpSdEdChange->wStartYear,
-		lpSdEdChange->btStartMonth,
-		lpSdEdChange->btStartDay,
-		lpSdEdChange->wEndYear,
-		lpSdEdChange->btEndMonth,
-		lpSdEdChange->btEndDay))
+		lpSdEdChange->StartYear,
+		lpSdEdChange->StartMonth,
+		lpSdEdChange->StartDay,
+		lpSdEdChange->EndYear,
+		lpSdEdChange->EndMonth,
+		lpSdEdChange->EndDay))
 	{
 		gQueryManager.Close();
 		return false;
@@ -347,19 +347,19 @@ BOOL CCastleDBSet::DSDB_QueryGuildMarkRegInfo(int iMapSvrGroup, char* lpszGuildN
 		return false;
 	}
 
-	memcpy(lpGuildRegInfo->szGuildName, lpszGuildName, 8);
+	memcpy(lpGuildRegInfo->GuildName, lpszGuildName, 8);
 
 	if (sqlRet == SQL_NO_DATA)
 	{
-		lpGuildRegInfo->iRegMarkCount = 0;
+		lpGuildRegInfo->RegMarkCount = 0;
 		*lpiResult = 2;
 	}
 	else
 	{
 		*lpiResult = 1;
-		lpGuildRegInfo->iRegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
-		lpGuildRegInfo->btRegRank = gQueryManager.GetAsInteger("SEQ_NUM");
-		lpGuildRegInfo->bIsGiveUp = (gQueryManager.GetAsInteger("IS_GIVEUP") > 0);
+		lpGuildRegInfo->RegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
+		lpGuildRegInfo->RegRank = gQueryManager.GetAsInteger("SEQ_NUM");
+		lpGuildRegInfo->IsGiveUp = (gQueryManager.GetAsInteger("IS_GIVEUP") > 0);
 	}
 
 	gQueryManager.Close();
@@ -403,20 +403,20 @@ BOOL CCastleDBSet::DSDB_QueryCastleOwnerChange(int iMapSvrGroup, CSP_REQ_CASTLEO
 	}
 
 	char szGuildName[9]{};
-	memcpy(szGuildName, lpCastleOwnerInfo->szOwnerGuildName, 8);
+	memcpy(szGuildName, lpCastleOwnerInfo->OwnerGuildName, 8);
 
 	if (!gUtil.CheckTextSyntax(szGuildName, strlen(szGuildName)))
 	{
 		return false;
 	}
 
-	lpCastleOwnerInfoResult->bIsCastleOccupied = lpCastleOwnerInfo->bIsCastleOccupied;
-	memcpy(lpCastleOwnerInfoResult->szOwnerGuildName, lpCastleOwnerInfo->szOwnerGuildName, 8);
+	lpCastleOwnerInfoResult->IsCastleOccupied = lpCastleOwnerInfo->IsCastleOccupied;
+	memcpy(lpCastleOwnerInfoResult->OwnerGuildName, lpCastleOwnerInfo->OwnerGuildName, 8);
 
 	if (!gQueryManager.ExecQuery(
 		"EXEC WZ_CS_ModifyCastleOwnerInfo %d, %d, '%s'",
 		iMapSvrGroup,
-		lpCastleOwnerInfo->bIsCastleOccupied,
+		lpCastleOwnerInfo->IsCastleOccupied,
 		szGuildName))
 	{
 		gQueryManager.Close();
@@ -446,14 +446,14 @@ BOOL CCastleDBSet::DSDB_QueryRegAttackGuild(int iMapSvrGroup, CSP_REQ_REGATTACKG
 	}
 
 	char szGuildName[9]{};
-	memcpy(szGuildName, lpRegAttackGuild->szEnemyGuildName, 8);
+	memcpy(szGuildName, lpRegAttackGuild->EnemyGuildName, 8);
 
 	if (!gUtil.CheckTextSyntax(szGuildName, strlen(szGuildName)))
 	{
 		return false;
 	}
 
-	memcpy(lpRegAttackGuildResult->szEnemyGuildName, lpRegAttackGuild->szEnemyGuildName, 8);
+	memcpy(lpRegAttackGuildResult->EnemyGuildName, lpRegAttackGuild->EnemyGuildName, 8);
 
 	if (!gQueryManager.ExecQuery("EXEC WZ_CS_ReqRegAttackGuild %d, '%s'", iMapSvrGroup, szGuildName))
 	{
@@ -530,10 +530,10 @@ BOOL CCastleDBSet::DSDB_QueryGuildMarkRegMark(int iMapSvrGroup, char* lpszGuildN
 		return false;
 	}
 
-	memcpy(lpGuildRegMark->szGuildName, lpszGuildName, 8);
+	memcpy(lpGuildRegMark->GuildName, lpszGuildName, 8);
 
 	*lpiResult = gQueryManager.GetAsInteger("QueryResult");
-	lpGuildRegMark->iRegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
+	lpGuildRegMark->RegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
 
 	gQueryManager.Close();
 
@@ -566,10 +566,10 @@ BOOL CCastleDBSet::DSDB_QueryGuildMarkReset(int iMapSvrGroup, char* lpszGuildNam
 		return false;
 	}
 
-	memcpy(lpGuildResetMark->szGuildName, lpszGuildName, 8);
+	memcpy(lpGuildResetMark->GuildName, lpszGuildName, 8);
 
-	lpGuildResetMark->iResult = gQueryManager.GetAsInteger("QueryResult");
-	lpGuildResetMark->iRegMarkCount = gQueryManager.GetAsInteger("DEL_MARKS");
+	lpGuildResetMark->Result = gQueryManager.GetAsInteger("QueryResult");
+	lpGuildResetMark->RegMarkCount = gQueryManager.GetAsInteger("DEL_MARKS");
 
 	gQueryManager.Close();
 
@@ -602,11 +602,11 @@ BOOL CCastleDBSet::DSDB_QueryGuildSetGiveUp(int iMapSvrGroup, char* lpszGuildNam
 		return false;
 	}
 
-	memcpy(lpGuildSetGiveUp->szGuildName, lpszGuildName, 8);
+	memcpy(lpGuildSetGiveUp->GuildName, lpszGuildName, 8);
 
-	lpGuildSetGiveUp->bIsGiveUp = bIsGiveUp;
-	lpGuildSetGiveUp->iResult = gQueryManager.GetAsInteger("QueryResult");
-	lpGuildSetGiveUp->iRegMarkCount = gQueryManager.GetAsInteger("DEL_MARKS");
+	lpGuildSetGiveUp->IsGiveUp = bIsGiveUp;
+	lpGuildSetGiveUp->Result = gQueryManager.GetAsInteger("QueryResult");
+	lpGuildSetGiveUp->RegMarkCount = gQueryManager.GetAsInteger("DEL_MARKS");
 
 	gQueryManager.Close();
 
@@ -622,8 +622,8 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcRemove(int iMapSvrGroup, CSP_REQ_NPCREMOVE
 
 	if (!gQueryManager.ExecQuery("EXEC WZ_CS_ReqNpcRemove %d, %d, %d",
 		iMapSvrGroup,
-		lpNpcRemove->iNpcNumber,
-		lpNpcRemove->iNpcIndex))
+		lpNpcRemove->NpcNumber,
+		lpNpcRemove->NpcIndex))
 	{
 		gQueryManager.Close();
 		return false;
@@ -753,15 +753,15 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcInfo(int iMapSvrGroup, CSP_NPCDATA* lpNpcD
 			break;
 		}
 
-		lpNpcData[*lpiCount].iNpcNumber = gQueryManager.GetAsInteger("NPC_NUMBER");
-		lpNpcData[*lpiCount].iNpcIndex = gQueryManager.GetAsInteger("NPC_INDEX");
-		lpNpcData[*lpiCount].iNpcDfLevel = gQueryManager.GetAsInteger("NPC_DF_LEVEL");
-		lpNpcData[*lpiCount].iNpcRgLevel = gQueryManager.GetAsInteger("NPC_RG_LEVEL");
-		lpNpcData[*lpiCount].iNpcMaxHp = gQueryManager.GetAsInteger("NPC_MAXHP");
-		lpNpcData[*lpiCount].iNpcHp = gQueryManager.GetAsInteger("NPC_HP");
-		lpNpcData[*lpiCount].btNpcX = gQueryManager.GetAsInteger("NPC_X");
-		lpNpcData[*lpiCount].btNpcY = gQueryManager.GetAsInteger("NPC_Y");
-		lpNpcData[*lpiCount].btNpcDIR = gQueryManager.GetAsInteger("NPC_DIR");
+		lpNpcData[*lpiCount].NpcNumber = gQueryManager.GetAsInteger("NPC_NUMBER");
+		lpNpcData[*lpiCount].NpcIndex = gQueryManager.GetAsInteger("NPC_INDEX");
+		lpNpcData[*lpiCount].NpcDfLevel = gQueryManager.GetAsInteger("NPC_DF_LEVEL");
+		lpNpcData[*lpiCount].NpcRgLevel = gQueryManager.GetAsInteger("NPC_RG_LEVEL");
+		lpNpcData[*lpiCount].NpcMaxHp = gQueryManager.GetAsInteger("NPC_MAXHP");
+		lpNpcData[*lpiCount].NpcHp = gQueryManager.GetAsInteger("NPC_HP");
+		lpNpcData[*lpiCount].NpcX = gQueryManager.GetAsInteger("NPC_X");
+		lpNpcData[*lpiCount].NpcY = gQueryManager.GetAsInteger("NPC_Y");
+		lpNpcData[*lpiCount].NpcDIR = gQueryManager.GetAsInteger("NPC_DIR");
 
 		++(*lpiCount);
 
@@ -810,10 +810,10 @@ BOOL CCastleDBSet::DSDB_QueryAllGuildMarkRegInfo(int iMapSvrGroup, CSP_GUILDREGI
 			break;
 		}
 
-		gQueryManager.GetAsString("REG_SIEGE_GUILD", lpGuildRegInfo[*lpiCount].szGuildName, sizeof(lpGuildRegInfo[*lpiCount].szGuildName));
-		lpGuildRegInfo[*lpiCount].iRegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
-		lpGuildRegInfo[*lpiCount].bIsGiveUp = (gQueryManager.GetAsInteger("IS_GIVEUP") > 0);
-		lpGuildRegInfo[*lpiCount].btRegRank = gQueryManager.GetAsInteger("SEQ_NUM");
+		gQueryManager.GetAsString("REG_SIEGE_GUILD", lpGuildRegInfo[*lpiCount].GuildName, sizeof(lpGuildRegInfo[*lpiCount].GuildName));
+		lpGuildRegInfo[*lpiCount].RegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
+		lpGuildRegInfo[*lpiCount].IsGiveUp = (gQueryManager.GetAsInteger("IS_GIVEUP") > 0);
+		lpGuildRegInfo[*lpiCount].RegRank = gQueryManager.GetAsInteger("SEQ_NUM");
 
 		++(*lpiCount);
 
@@ -848,20 +848,20 @@ BOOL CCastleDBSet::DSDB_QueryFirstCreateNPC(int iMapSvrGroup, CSP_REQ_NPCSAVEDAT
 
 	gQueryManager.Close();
 
-	for (int iNpcCount = 0; iNpcCount < lpNpcSaveData->iCount; ++iNpcCount)
+	for (int iNpcCount = 0; iNpcCount < lpNpcSaveData->Count; ++iNpcCount)
 	{
 		if (!gQueryManager.ExecQuery(
 			"EXEC WZ_CS_ReqNpcBuy %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
 			iMapSvrGroup,
-			lpMsgBody[iNpcCount].iNpcNumber,
-			lpMsgBody[iNpcCount].iNpcIndex,
-			lpMsgBody[iNpcCount].iNpcDfLevel,
-			lpMsgBody[iNpcCount].iNpcRgLevel,
-			lpMsgBody[iNpcCount].iNpcMaxHp,
-			lpMsgBody[iNpcCount].iNpcHp,
-			lpMsgBody[iNpcCount].btNpcX,
-			lpMsgBody[iNpcCount].btNpcY,
-			lpMsgBody[iNpcCount].btNpcDIR))
+			lpMsgBody[iNpcCount].NpcNumber,
+			lpMsgBody[iNpcCount].NpcIndex,
+			lpMsgBody[iNpcCount].NpcDfLevel,
+			lpMsgBody[iNpcCount].NpcRgLevel,
+			lpMsgBody[iNpcCount].NpcMaxHp,
+			lpMsgBody[iNpcCount].NpcHp,
+			lpMsgBody[iNpcCount].NpcX,
+			lpMsgBody[iNpcCount].NpcY,
+			lpMsgBody[iNpcCount].NpcDIR))
 		{
 			gQueryManager.Close();
 			return false;
@@ -910,10 +910,10 @@ BOOL CCastleDBSet::DSDB_QueryCalcRegGuildList(int iMapSvrGroup, CSP_CALCREGGUILD
 
 		memcpy(&lpCalcRegGuildList[*lpiCount], szGuildName, 8);
 
-		lpCalcRegGuildList[*lpiCount].iRegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
-		lpCalcRegGuildList[*lpiCount].iGuildMemberCount = gQueryManager.GetAsInteger("GUILD_MEMBER");
-		lpCalcRegGuildList[*lpiCount].iGuildMasterLevel = gQueryManager.GetAsInteger("GM_LEVEL");
-		lpCalcRegGuildList[*lpiCount].iSeqNum = gQueryManager.GetAsInteger("SEQ_NUM");
+		lpCalcRegGuildList[*lpiCount].RegMarkCount = gQueryManager.GetAsInteger("REG_MARKS");
+		lpCalcRegGuildList[*lpiCount].GuildMemberCount = gQueryManager.GetAsInteger("GUILD_MEMBER");
+		lpCalcRegGuildList[*lpiCount].GuildMasterLevel = gQueryManager.GetAsInteger("GM_LEVEL");
+		lpCalcRegGuildList[*lpiCount].SeqNum = gQueryManager.GetAsInteger("SEQ_NUM");
 
 		++(*lpiCount);
 
@@ -971,7 +971,7 @@ BOOL CCastleDBSet::DSDB_QueryCsGuildUnionInfo(int iMapSvrGroup, char* lpszGuildN
 
 		memcpy(&lpCsGuildUnionInfo[iRetCount], szGuildName, 8);
 
-		lpCsGuildUnionInfo[iRetCount].iCsGuildID = iCsGuildID;
+		lpCsGuildUnionInfo[iRetCount].CsGuildID = iCsGuildID;
 
 		++iRetCount;
 
@@ -1098,9 +1098,9 @@ BOOL CCastleDBSet::DSDB_QueryCsLoadTotalGuildInfo(int iMapSvrGroup, CSP_CSLOADTO
 
 		memcpy(&lpLoadTotalGuildInfo[*lpiCount], szGuildName, 8);
 
-		lpLoadTotalGuildInfo[*lpiCount].iCsGuildID = gQueryManager.GetAsInteger("GUILD_ID");
-		lpLoadTotalGuildInfo[*lpiCount].iGuildInvolved = gQueryManager.GetAsInteger("GUILD_INVOLVED");
-		lpLoadTotalGuildInfo[*lpiCount].iGuildScore = gQueryManager.GetAsInteger("GUILD_SCORE");
+		lpLoadTotalGuildInfo[*lpiCount].CsGuildID = gQueryManager.GetAsInteger("GUILD_ID");
+		lpLoadTotalGuildInfo[*lpiCount].GuildInvolved = gQueryManager.GetAsInteger("GUILD_INVOLVED");
+		lpLoadTotalGuildInfo[*lpiCount].GuildScore = gQueryManager.GetAsInteger("GUILD_SCORE");
 
 		++(*lpiCount);
 
@@ -1135,20 +1135,20 @@ BOOL CCastleDBSet::DSDB_QueryCastleNpcUpdate(int iMapSvrGroup, CSP_REQ_NPCUPDATE
 
 	gQueryManager.Close();
 
-	for (int iNpcCount = 0; iNpcCount < lpNpcSaveData->iCount; ++iNpcCount)
+	for (int iNpcCount = 0; iNpcCount < lpNpcSaveData->Count; ++iNpcCount)
 	{
 		if (!gQueryManager.ExecQuery(
 			"EXEC WZ_CS_ReqNpcUpdate %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
 			iMapSvrGroup,
-			lpMsgBody[iNpcCount].iNpcNumber,
-			lpMsgBody[iNpcCount].iNpcIndex,
-			lpMsgBody[iNpcCount].iNpcDfLevel,
-			lpMsgBody[iNpcCount].iNpcRgLevel,
-			lpMsgBody[iNpcCount].iNpcMaxHp,
-			lpMsgBody[iNpcCount].iNpcHp,
-			lpMsgBody[iNpcCount].btNpcX,
-			lpMsgBody[iNpcCount].btNpcY,
-			lpMsgBody[iNpcCount].btNpcDIR))
+			lpMsgBody[iNpcCount].NpcNumber,
+			lpMsgBody[iNpcCount].NpcIndex,
+			lpMsgBody[iNpcCount].NpcDfLevel,
+			lpMsgBody[iNpcCount].NpcRgLevel,
+			lpMsgBody[iNpcCount].NpcMaxHp,
+			lpMsgBody[iNpcCount].NpcHp,
+			lpMsgBody[iNpcCount].NpcX,
+			lpMsgBody[iNpcCount].NpcY,
+			lpMsgBody[iNpcCount].NpcDIR))
 		{
 			gQueryManager.Close();
 			return false;

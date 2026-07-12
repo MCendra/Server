@@ -38,7 +38,7 @@ public:
 	// Busca un indice de servidor libre dentro de un rango especifico, considerando el tiempo offline para reutilizacion
 	int SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime);
 
-	void SetServerInfo(char* name, WORD port, WORD code);
+	void SetServerInfo(const char* name, WORD port, WORD code);
 public:
 	CCriticalSection m_lock;			// CORRECCIÓN: Se agregó un mutex para proteger el acceso a los datos del servidor
 	int m_index;						// Índice del servidor

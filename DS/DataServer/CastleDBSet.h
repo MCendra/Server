@@ -458,9 +458,9 @@ struct CSP_CALCREGGUILDLIST
 {
 	char GuildName[MAX_GUILD_NAME];
 	int RegMarkCount;
-	int iGuildMemberCount;
-	int iGuildMasterLevel;
-	int iSeqNum;
+	int GuildMemberCount;
+	int GuildMasterLevel;
+	int SeqNum;
 };
 
 struct CSP_CSGUILDUNIONINFO
@@ -501,7 +501,7 @@ struct CSP_REQ_CASTLETRIBUTEMONEY
 {
 	PSBMSG_HEAD Header;
 	WORD MapSvrNum;
-	int iCastleTributeMoney;
+	int CastleTributeMoney;
 };
 
 struct CSP_ANS_CASTLETRIBUTEMONEY
@@ -682,7 +682,7 @@ class CCastleDBSet
 public:
 	CCastleDBSet() = default;
 	~CCastleDBSet() = default;
-	BOOL DSDB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventCycle, CASTLE_DATA* lpCastleData);
+	BOOL DB_QueryCastleTotalInfo(int iMapSvrGroup, int iCastleEventCycle, CASTLE_DATA* lpCastleData);
 	BOOL DSDB_QueryOwnerGuildMaster(int iMapSvrGroup, CSP_ANS_OWNERGUILDMASTER* lpOwnerGuildMaster);
 	BOOL DSDB_QueryCastleNpcBuy(int iMapSvrGroup, CSP_REQ_NPCBUY* lpNpcBuy, int* lpiResult);
 	BOOL DSDB_QueryCastleNpcRepair(int iMapSvrGroup, CSP_REQ_NPCREPAIR* lpNpcRepair, CSP_ANS_NPCREPAIR* lpNpcRepairResult,  int* lpiResult);

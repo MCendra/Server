@@ -117,19 +117,19 @@ std::string NormalizeToLower(const char* text)
 	return key;
 }
 
-bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot)
-{
-	for(int n=0;n < 5;n++)
-	{
-		if(_stricmp(CharacterName[n],name) == 0)
-		{
-			*slot = static_cast<BYTE>(n);
-			return true;
-		}
-	}
-
-	return false;
-}
+//bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot)
+//{
+//	for(int n=0;n < 5;n++)
+//	{
+//		if(_stricmp(CharacterName[n],name) == 0)
+//		{
+//			*slot = static_cast<BYTE>(n);
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
 
 WORD GetServerCodeByName(const char* name)
 {

@@ -165,3 +165,54 @@ GO
 ALTER TABLE [dbo].[Character] ADD  DEFAULT ((0)) FOR [CTCRegDay]
 GO
 
+/* PARCHE */
+USE [MuOnline]
+GO
+
+IF COL_LENGTH('dbo.Character', 'UserSkinPick') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Character]
+    ADD [UserSkinPick] [int] NOT NULL
+        CONSTRAINT [DF_Character_UserSkinPick] DEFAULT ((0))
+END
+GO
+
+IF COL_LENGTH('dbo.Character', 'PheHanhTau') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Character]
+    ADD [PheHanhTau] [tinyint] NOT NULL
+        CONSTRAINT [DF_Character_PheHanhTau] DEFAULT ((0))
+END
+GO
+
+IF COL_LENGTH('dbo.Character', 'HonHoan') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Character]
+    ADD [HonHoan] [tinyint] NOT NULL
+        CONSTRAINT [DF_Character_HonHoan] DEFAULT ((0))
+END
+GO
+
+IF COL_LENGTH('dbo.Character', 'PointUsePhe') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Character]
+    ADD [PointUsePhe] [int] NOT NULL
+        CONSTRAINT [DF_Character_PointUsePhe] DEFAULT ((0))
+END
+GO
+
+IF COL_LENGTH('dbo.Character', 'LuotDiEndLess') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Character]
+    ADD [LuotDiEndLess] [smallint] NOT NULL
+        CONSTRAINT [DF_Character_LuotDiEndLess] DEFAULT ((0))
+END
+GO
+
+IF COL_LENGTH('dbo.Character', 'MOCNAPCOIN') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[Character]
+    ADD [MOCNAPCOIN] [int] NOT NULL
+        CONSTRAINT [DF_Character_MOCNAPCOIN] DEFAULT ((0))
+END
+GO

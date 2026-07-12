@@ -1,8 +1,10 @@
 #pragma once
 #include "Header.h"
 
-#define MAX_MAIN_PACKET_SIZE 2048
-#define MAX_UDP_PACKET_SIZE 8192
+#define MAX_RECV_PACKET_SIZE 1024		// Límite de seguridad de entrada: 1024 bytes
+#define MAX_SEND_PACKET_SIZE 2048		// Límite de seguridad de salida: 2048 bytes en un unico paquete
+#define MAX_SEND_SIDE_PACKET_SIZE 8192	// Límite de seguridad de salida: 8192 bytes en suma de partes de un paquete
+#define MAX_UDP_PACKET_SIZE 8192		// Límite de seguridad de salida: 8192 bytes entrada y salida en un unico paquete UDP
 
 // Encabezados de paquetes
 #define PACKET_HEADER_C1 0xC1
@@ -30,6 +32,17 @@
 #else
 #define MAX_SKILL_LIST 60
 #endif
+
+// Warehouse.h
+#if(DATASERVER_UPDATE>=602)
+#define WAREHOUSE_SIZE 240
+#else
+#define WAREHOUSE_SIZE 120
+#endif
+#define MAX_ITEM_BYTE 16
+// MasterSkillTree.h
+#define MAX_MASTER_SKILL_LIST 120
+#define MASTER_SKILL_DATA_SIZE 3
 
 constexpr BYTE SET_NUMBERHB(DWORD x) {
 	return static_cast<BYTE>(x >> 8);
@@ -165,6 +178,15 @@ struct PSWMSG_HEAD
 
 // GameServer -> DataServer
 
+struct SDHP_ITEM_COUNT_RECV
+{
+	PBMSG_HEAD Header; // C1:00
+	BYTE Type;
+	WORD ServerPort;
+	char ServerName[50];
+	WORD ServerCode;
+};
+
 struct SDHP_CHARACTER_LIST_RECV
 {
 	PBMSG_HEAD Header; // C1:01
@@ -188,7 +210,7 @@ struct SDHP_CHARACTER_DELETE_RECV
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE guild;
-	char GuildName[9];
+	char GuildName[MAX_GUILD_NAME];
 };
 
 struct SDHP_CHARACTER_INFO_RECV
@@ -236,8 +258,8 @@ struct SDHP_PET_ITEM_INFO_RECV
 	PWMSG_HEAD Header; // C2:09
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	BYTE type;
-	BYTE count;
+	BYTE Type;
+	BYTE Count;
 };
 
 struct SDHP_PET_ITEM_INFO1
@@ -281,19 +303,19 @@ struct SDHP_GLOBAL_POST_RECV
 {
 	PBMSG_HEAD Header; // C1:20
 	WORD MapServerGroup;
-	BYTE type;
+	BYTE Type;
 	char CharacterName[MAX_CHARACTER_NAME];
-	char message[60];
+	char Message[60];
 };
 
 struct SDHP_POST_ITEM_RECV
 {
 	PBMSG_HEAD Header;	//C1:78
 	WORD MapServerGroup;
-	BYTE type;
-	char chatid[10];
-	char chatmsg[60];
-	char item_data[107];
+	BYTE Type;
+	char Chatid[10];
+	char Chatmsg[60];
+	char Item_data[107];
 };
 
 struct SDHP_GLOBAL_ITEM_POST_RECV
@@ -301,21 +323,21 @@ struct SDHP_GLOBAL_ITEM_POST_RECV
 	PBMSG_HEAD Header; // C1:78
 	WORD MapServerGroup;
 	char CharacterName[MAX_CHARACTER_NAME];
-	char message[60];
-	char item_data[107];
+	char Message[60];
+	char Item_data[107];
 };
 
 struct SDHP_GLOBAL_NOTICE_RECV
 {
 	PBMSG_HEAD Header; // C1:21
 	WORD MapServerGroup;
-	BYTE type;
-	BYTE count;
-	BYTE opacity;
-	WORD delay;
-	DWORD color;
-	BYTE speed;
-	char message[128];
+	BYTE Type;
+	BYTE Count;
+	BYTE Opacity;
+	WORD Delay;
+	DWORD Color;
+	BYTE Speed;
+	char Message[128];
 };
 
 struct SDHP_SNS_DATA_RECV
@@ -363,17 +385,15 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 	WORD FruitAddPoint;
 	WORD FruitSubPoint;
 	BYTE Effect[MAX_EFFECT_LIST][13];
-	#if(DATASERVER_UPDATE>=602)
+#if(DATASERVER_UPDATE>=602)
 	BYTE ExtInventory;
 	BYTE ExtWarehouse;
-	#endif
+#endif
 	DWORD Kills;
 	DWORD Deads;
-
 #if(FLAG_SKIN)
 	int Flag;
 #endif
-
 #if(DANHHIEU_NEW)
 	int rDanhHieu;
 	int DHSatThuong;
@@ -383,25 +403,19 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 	int DHSD;
 	int DHGST;
 #endif
-
 #if(TULUYEN_NEW)
 	int rTuLuyen;
 #endif
-
-
 	//==Custom CTC
 	int CTCTime;
 	int CTCRegDay;
-
 #if(MOCNAP == 1)
 	int MOCNAPCOIN;
 #endif
-
 	DWORD mUserSkinPick;
 #if(CHONPHEDOILAP)
 	BYTE ChonPheHanhTau;
 #endif
-
 #if(B_HON_HOAN)
 	WORD CapDoHonHoan;
 #endif
@@ -409,9 +423,7 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 #if(EVENT_END_LESS)
 	WORD mLuotDiEndLess;
 #endif
-
 };
-
 
 struct SDHP_INVENTORY_ITEM_SAVE_RECV
 {
@@ -419,7 +431,7 @@ struct SDHP_INVENTORY_ITEM_SAVE_RECV
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE Inventory[INVENTORY_SIZE][16];
+	BYTE Inventory[INVENTORY_SIZE][MAX_ITEM_BYTE];
 };
 
 struct SDHP_OPTION_DATA_SAVE_RECV
@@ -603,14 +615,7 @@ struct SDHP_GLOBAL_WHISPER_RECV
 	char message[60];
 };
 
-struct SDHP_SERVER_INFO_RECV
-{
-	PBMSG_HEAD Header; // C1:00
-	BYTE type;
-	WORD ServerPort;
-	char ServerName[50];
-	WORD ServerCode;
-};
+
 
 struct SDHP_MARRY_INFO_SAVE_RECV
 {
@@ -754,7 +759,7 @@ struct SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV
 
 // DataServer -> GameServer
 
-struct SDHP_SERVER_INFO_SEND
+struct SDHP_ITEM_COUNT_SEND
 {
 	PBMSG_HEAD Header; // C1:00
 	BYTE Result;
@@ -859,12 +864,10 @@ struct SDHP_CHARACTER_INFO_SEND
 	#endif
 	DWORD Kills;
 	DWORD Deads;
-
 #if(FLAG_SKIN)
 	int Flag;
 #endif
 	BYTE TheGift; // only add in is struct
-
 #if(DANHHIEU_NEW)
 	int rDanhHieu;
 	int DHSatThuong;
@@ -874,21 +877,15 @@ struct SDHP_CHARACTER_INFO_SEND
 	int DHSD;
 	int DHGST;
 #endif
-
 #if(TULUYEN_NEW)
-
 	int rTuLuyen;
 #endif
-
-
 	//==Custom CTC
 	int CTCTime;
 	int CTCRegDay;
-
 #if(MOCNAP == 1)
 	int MOCNAPCOIN;
 #endif
-
 	DWORD mUserSkinPick;
 #if(CHONPHEDOILAP)
 	BYTE ChonPheHanhTau;
@@ -900,7 +897,6 @@ struct SDHP_CHARACTER_INFO_SEND
 #if(EVENT_END_LESS)
 	WORD mLuotDiEndLess;
 #endif
-
 };
 
 struct SDHP_CREATE_ITEM_SEND
@@ -1093,8 +1089,8 @@ struct PMSG_CUSTOM_RANKING_SEND
 {
 	PWMSG_HEAD Header; 
 	int Index;
-	int type;
-	int count;
+	int Type;
+	int Count;
 };
 
 struct SDHP_CARESUME_SEND
@@ -1102,37 +1098,35 @@ struct SDHP_CARESUME_SEND
     PBMSG_HEAD Header; // C1:F5
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-	WORD active;
-	WORD skill;
-	WORD map;
-	WORD posx;
-	WORD posy;
-	WORD autobuff;
-	WORD offpvp;
-	WORD autoreset;
-	DWORD autoaddstr;
-	DWORD autoaddagi;
-	DWORD autoaddvit;
-	DWORD autoaddene;
-	DWORD autoaddcmd;
+	WORD Active;
+	WORD Skill;
+	WORD Map;
+	WORD Posx;
+	WORD Posy;
+	WORD AutoBuff;
+	WORD OffPVP;
+	WORD AutoReset;
+	DWORD AutoAddstr;
+	DWORD AutoAddagi;
+	DWORD AutoAddvit;
+	DWORD AutoAddene;
+	DWORD AutoAddcmd;
 };
 
 struct SDHP_CUSTOMNPCQUEST_SEND
 {
     PSBMSG_HEAD Header; // C1:F1
     WORD Index;
-    WORD quest;
-	WORD indexnpc;
-	DWORD questcount;
-	DWORD monstercount;
+    WORD Quest;
+	WORD Indexnpc;
+	DWORD QuestCount;
+	DWORD MonsterCount;
 };
-
-
 
 struct THEGIFT_GD_SAVE_DATA
 {
 	PSBMSG_HEAD Header;
-	WORD	index;
+	WORD	Index;
 	char	Name[11];
 	BYTE	TheGift;
 };
@@ -1141,8 +1135,8 @@ struct THEGIFT_GD_SAVE_DATA
 struct PMSG_CUSTOM_GHRS_SEND
 {
 	PWMSG_HEAD Header;
-	int time;
-	int resets;
+	int Time;
+	int Resets;
 	int Grand;
 };
 #endif
@@ -1247,7 +1241,7 @@ struct SDHP_BOT_INFO_SEND
 	DWORD Deads;
 	int rDanhHieu;
 	// GUild
-	char GuildName[9];
+	char GuildName[MAX_GUILD_NAME];
 	int GuildNumber;
 	int GuildStatus;
 };
@@ -1287,18 +1281,23 @@ struct SDHP_CUSTOM_JEWELBANK_INFO_SEND
 	int HighStone;
 };
 
+// Enrutador de paquetes
+void DataServerProtocolCore(int serverIndex, const BYTE protocolHead, const BYTE* lpMsg, int size);
+
+void GDGlobalItemCountRecv(const SDHP_ITEM_COUNT_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterListRecv(const SDHP_CHARACTER_LIST_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterCreateRecv(const SDHP_CHARACTER_CREATE_RECV* lpMsg, int serverIndex, int size);
+void GGDCharacterDeleteRecv(const SDHP_CHARACTER_DELETE_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterInfoRecv(const SDHP_CHARACTER_INFO_RECV* lpMsg, int serverIndex, int size);
+void GDCreateItemRecv(const SDHP_CREATE_ITEM_RECV* lpMsg, int serverIndex, int size);
+void GDOptionDataRecv(const SDHP_OPTION_DATA_RECV* lpMsg, int serverIndex, int size);
+void GDPetItemInfoRecv(const SDHP_PET_ITEM_INFO_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterNameCheckRecv(const SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterNameChangeRecv(const SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg, int serverIndex, int size);
+
 void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg);
-void DataServerProtocolCore(int index,BYTE head,BYTE* lpMsg,int size);
-void GDServerInfoRecv(SDHP_SERVER_INFO_RECV* lpMsg,int index);
-void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg,int index);
-void GDCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg,int index);
-void GDCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg,int index);
-void GDCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg,int index);
-void GDCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg,int index);
-void GDOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg,int index);
-void GDPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg,int index);
-void GDCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg,int index);
-void GDCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg,int index);
+
+
 void GDCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg,int index);
 void GDCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg,int index);
 void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg,int index);
@@ -1365,7 +1364,7 @@ void CharacterRanking(GDTop* lpMsg, int pIndex);
 void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index);
 #endif
 
-void DS_GDReqCastleTotalInfo(BYTE *lpRecv, int aIndex);
+//void DS_GDReqCastleTotalInfo(BYTE *lpRecv, int aIndex);
 void DS_GDReqOwnerGuildMaster(BYTE *lpRecv, int aIndex);
 void DS_GDReqCastleNpcBuy(BYTE *lpRecv, int aIndex);
 void DS_GDReqCastleNpcRepair(BYTE *lpRecv, int aIndex);
@@ -1517,7 +1516,21 @@ struct INFOCHAR_BUFFPHE
 	BYTE ChonPheHanhTau;
 	int PointUsePhe;
 	// GUild
-	char GuildName[9];
+	char GuildName[MAX_GUILD_NAME];
 	int GuildNumber;
 	int GuildStatus;
 };
+
+inline BYTE GetProtocolSubHead(const BYTE* lpMsg);
+
+#define VALIDATE_PACKET_SIZE(PacketType)                                      \
+{                                                                             \
+    const int structSize = sizeof(PacketType);                                \
+    if (size != structSize)                                                   \
+    {                                                                         \
+        Log.ToDisp(LOG_RED,                                                   \
+            "[%s] Tamaño de paquete invalido (ServerIndex: %d, Size: %d, Expected: %d)", \
+            __FUNCTION__, serverIndex, size, structSize);                     \
+        return;                                                               \
+    }                                                                         \
+}

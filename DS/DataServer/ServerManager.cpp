@@ -62,14 +62,14 @@ void CServerManager::AddServer(int index, char* ip, SOCKET socket)
 
 		memset(&m_IoRecvContext->overlapped, 0, sizeof(m_IoRecvContext->overlapped));
 		m_IoRecvContext->wsabuf.buf = (char*)m_IoRecvContext->IoMainBuffer.buff;
-		m_IoRecvContext->wsabuf.len = MAX_MAIN_PACKET_SIZE;
+		m_IoRecvContext->wsabuf.len = MAX_RECV_PACKET_SIZE;
 		m_IoRecvContext->IoType = IO_RECV;
 		m_IoRecvContext->IoSize = 0;
 		m_IoRecvContext->IoMainBuffer.size = 0;
 
 		memset(&m_IoSendContext->overlapped, 0, sizeof(m_IoSendContext->overlapped));
 		m_IoSendContext->wsabuf.buf = (char*)m_IoSendContext->IoMainBuffer.buff;
-		m_IoSendContext->wsabuf.len = MAX_MAIN_PACKET_SIZE;
+		m_IoSendContext->wsabuf.len = MAX_RECV_PACKET_SIZE;
 		m_IoSendContext->IoType = IO_SEND;
 		m_IoSendContext->IoSize = 0;
 		m_IoSendContext->IoMainBuffer.size = 0;
@@ -117,7 +117,7 @@ void CServerManager::DelServer()
 	m_LastPacketTime = 0;
 }
 
-void CServerManager::SetServerInfo(char* name, WORD port, WORD code)
+void CServerManager::SetServerInfo(const char* name, WORD port, WORD code)
 {
 	strcpy_s(m_ServerName, name);
 	m_ServerPort = port;

@@ -1,6 +1,6 @@
-// CSProtocol.cpp
+// ChatServerProtocol.cpp
 #include "Header.h"
-#include "CSProtocol.h"
+#include "ChatServerProtocol.h"
 #include "CharacterManager.h"
 #include "QueryManager.h"
 #include "ServerManager.h"
@@ -10,44 +10,16 @@ void ChatServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int /*size*/)
 {
 	switch (head)
 	{
-		case CS_HEAD_FRIEND_LIST:
-			FriendListRequest(reinterpret_cast<FHP_FRIENDLIST_REQ*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_FRIEND_STATE:
-			FriendStateClientRecv(reinterpret_cast<FHP_FRIEND_STATE_C*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_FRIEND_ADD:
-			FriendAddRequest(reinterpret_cast<FHP_FRIEND_ADD_REQ*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_WAIT_FRIEND_ADD:
-			WaitFriendAddRequest(reinterpret_cast<FHP_WAITFRIEND_ADD_REQ*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_FRIEND_DELETE:
-			FriendDelRequest(reinterpret_cast<FHP_FRIEND_ADD_REQ*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_MEMO_SEND:
-			FriendMemoSend(reinterpret_cast<FHP_FRIEND_MEMO_SEND*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_MEMO_LIST:
-			FriendMemoListReq(reinterpret_cast<FHP_FRIEND_MEMO_LIST_REQ*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_MEMO_READ:
-			FriendMemoReadReq(reinterpret_cast<FHP_FRIEND_MEMO_RECV_REQ*>(lpMsg), index);
-			break;
-
-		case CS_HEAD_MEMO_DELETE:
-			FriendMemoDelReq(reinterpret_cast<FHP_FRIEND_MEMO_DEL_REQ*>(lpMsg), index);
-			break;
-		
-		default:
-			break;
+		case CS_HEAD_FRIEND_LIST:		FriendListRequest(reinterpret_cast<FHP_FRIENDLIST_REQ*>(lpMsg), index);			break;
+		case CS_HEAD_FRIEND_STATE:		FriendStateClientRecv(reinterpret_cast<FHP_FRIEND_STATE_C*>(lpMsg), index);		break;
+		case CS_HEAD_FRIEND_ADD:		FriendAddRequest(reinterpret_cast<FHP_FRIEND_ADD_REQ*>(lpMsg), index);			break;
+		case CS_HEAD_WAIT_FRIEND_ADD:	WaitFriendAddRequest(reinterpret_cast<FHP_WAITFRIEND_ADD_REQ*>(lpMsg), index);	break;
+		case CS_HEAD_FRIEND_DELETE:		FriendDelRequest(reinterpret_cast<FHP_FRIEND_ADD_REQ*>(lpMsg), index);			break;
+		case CS_HEAD_MEMO_SEND:			FriendMemoSend(reinterpret_cast<FHP_FRIEND_MEMO_SEND*>(lpMsg), index);			break;
+		case CS_HEAD_MEMO_LIST:			FriendMemoListReq(reinterpret_cast<FHP_FRIEND_MEMO_LIST_REQ*>(lpMsg), index);	break;
+		case CS_HEAD_MEMO_READ:			FriendMemoReadReq(reinterpret_cast<FHP_FRIEND_MEMO_RECV_REQ*>(lpMsg), index);	break;
+		case CS_HEAD_MEMO_DELETE:		FriendMemoDelReq(reinterpret_cast<FHP_FRIEND_MEMO_DEL_REQ*>(lpMsg), index);		break;
+		default:break;
 	}
 }
 

@@ -141,7 +141,7 @@
     <ClInclude Include="GuildManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CSProtocol.h">
+    <ClInclude Include="ChatServerProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CommandManager.h">
@@ -172,6 +172,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BufferHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CastleSiegeProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -281,7 +284,7 @@
     <ClCompile Include="GuildManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CSProtocol.cpp">
+    <ClCompile Include="ChatServerProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CommandManager.cpp">
@@ -309,6 +312,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BufferHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CastleSiegeProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

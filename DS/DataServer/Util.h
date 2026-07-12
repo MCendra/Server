@@ -18,7 +18,7 @@ public:
 
 extern CUtil gUtil;
 
-bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot);
+//bool GetCharacterSlot(char CharacterName[5][11],char* name,BYTE* slot);
 WORD GetServerCodeByName(const char* name);
 [[nodiscard]]
 std::string NormalizeToLower(const char* text);

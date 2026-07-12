@@ -1,4 +1,4 @@
-// CSProtocol.h
+// ChatServerProtocol.h
 #pragma once
 #include "DataServerProtocol.h"
 

@@ -163,10 +163,11 @@
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="CashShop.h" />
     <ClInclude Include="CastleDBSet.h" />
+    <ClInclude Include="CastleSiegeProtocol.h" />
     <ClInclude Include="CharacterManager.h" />
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="CriticalSection.h" />
-    <ClInclude Include="CSProtocol.h" />
+    <ClInclude Include="ChatServerProtocol.h" />
     <ClInclude Include="DataServer.h" />
     <ClInclude Include="DataServerProtocol.h" />
     <ClInclude Include="ESProtocol.h" />
@@ -214,12 +215,13 @@
     </ClCompile>
     <ClCompile Include="CashShop.cpp" />
     <ClCompile Include="CastleDBSet.cpp" />
+    <ClCompile Include="CastleSiegeProtocol.cpp" />
     <ClCompile Include="CharacterManager.cpp" />
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="CriticalSection.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="CSProtocol.cpp" />
+    <ClCompile Include="ChatServerProtocol.cpp" />
     <ClCompile Include="DataServer.cpp" />
     <ClCompile Include="DataServerProtocol.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

@@ -1,6 +1,5 @@
 // NpcTalk.h
 #pragma once
-
 #include "DataServerProtocol.h"
 
 // GameServer -> DataServer
@@ -27,7 +26,7 @@ struct SDHP_NPC_LEO_THE_HELPER_SAVE_RECV
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE status;
+	BYTE Status;
 };
 
 struct SDHP_NPC_SANTA_CLAUS_SAVE_RECV
@@ -36,7 +35,7 @@ struct SDHP_NPC_SANTA_CLAUS_SAVE_RECV
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE status;
+	BYTE Status;
 };
 
 // DataServer -> GameServer
@@ -47,7 +46,7 @@ struct SDHP_NPC_LEO_THE_HELPER_SEND
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE status;
+	BYTE Status;
 };
 
 struct SDHP_NPC_SANTA_CLAUS_SEND
@@ -56,7 +55,7 @@ struct SDHP_NPC_SANTA_CLAUS_SEND
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE status;
+	BYTE Status;
 };
 
 //**********************************************//
@@ -66,10 +65,10 @@ class CNpcTalk
 public:
 	CNpcTalk() = default;
 	~CNpcTalk() = default;
-	void GDNpcLeoTheHelperRecv(SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg,int index);
-	void GDNpcSantaClausRecv(SDHP_NPC_SANTA_CLAUS_RECV* lpMsg,int index);
-	void GDNpcLeoTheHelperSaveRecv(SDHP_NPC_LEO_THE_HELPER_SAVE_RECV* lpMsg);
-	void GDNpcSantaClausSaveRecv(SDHP_NPC_SANTA_CLAUS_SAVE_RECV* lpMsg);
+	void GDNpcLeoTheHelperRecv(const SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg, int serverIndex, int size);
+	void GDNpcSantaClausRecv(const SDHP_NPC_SANTA_CLAUS_RECV* lpMsg, int serverIndex, int size);
+	void GDNpcLeoTheHelperSaveRecv(const SDHP_NPC_LEO_THE_HELPER_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDNpcSantaClausSaveRecv(const SDHP_NPC_SANTA_CLAUS_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CNpcTalk gNpcTalk;

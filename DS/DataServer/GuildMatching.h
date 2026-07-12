@@ -31,7 +31,7 @@ struct SDHP_GUILD_MATCHING_INSERT_RECV
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	char Text[41];
-	char GuildName[9];
+	char GuildName[MAX_GUILD_NAME];
 	DWORD GuildNumber;
 	BYTE GuildMemberCount;
 	WORD GuildMasterLevel;

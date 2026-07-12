@@ -2,12 +2,6 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-#if(DATASERVER_UPDATE>=602)
-#define WAREHOUSE_SIZE 240
-#else
-#define WAREHOUSE_SIZE 120
-#endif
-
 // GameServer -> DataServer
 
 struct SDHP_WAREHOUSE_ITEM_RECV
@@ -23,7 +17,7 @@ struct SDHP_WAREHOUSE_ITEM_SAVE_RECV
 	PSWMSG_HEAD Header; // C2:05:30
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	BYTE WarehouseItem[WAREHOUSE_SIZE][16];
+	BYTE WarehouseItem[WAREHOUSE_SIZE][MAX_ITEM_BYTE];
 	UINT WarehouseMoney;
 	UINT WarehousePassword;
 	UINT WarehouseNumber;
@@ -36,7 +30,7 @@ struct SDHP_WAREHOUSE_ITEM_SEND
 	PSWMSG_HEAD Header; // C2:05:00
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	BYTE WarehouseItem[WAREHOUSE_SIZE][16];
+	BYTE WarehouseItem[WAREHOUSE_SIZE][MAX_ITEM_BYTE];
 	UINT WarehouseMoney;
 	WORD WarehousePassword;
 };
@@ -54,7 +48,7 @@ struct SDHP_WAREHOUSE_GUILD_STATUS_RECV
 {
 	PSBMSG_HEAD Header; // C1:05:00
 	WORD Index;
-	char Name[9];
+	char GuildName[MAX_GUILD_NAME];
 };
 
 struct SDHP_WAREHOUSE_GUILD_STATUS_SEND
@@ -68,7 +62,7 @@ struct SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV
 {
 	PSBMSG_HEAD Header; // C1:05:00
 	WORD Index;
-	char Name[9];
+	char GuildName[MAX_GUILD_NAME];
 	int Status;
 };
 
@@ -78,14 +72,14 @@ class CWarehouse
 public:
 	CWarehouse() = default;
 	~CWarehouse() = default;
-	void GDWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg,int index);
-	void GDWarehouseItemSaveRecv(SDHP_WAREHOUSE_ITEM_SAVE_RECV* lpMsg);
-	void DGWarehouseFreeSend(int ServerIndex,WORD index,char* account);
-	void GDWarehouseGuildItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg,int index);
-	void GDWarehouseGuildItemSaveRecv(SDHP_WAREHOUSE_ITEM_SAVE_RECV* lpMsg);
-	void DGWarehouseGuildFreeSend(int ServerIndex,WORD index,char* account);
-	void GDWarehouseGuildConsult(SDHP_WAREHOUSE_GUILD_STATUS_RECV * lpMsg, int index);
-	void GDWarehouseGuildUpdate(SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV * lpMsg);
+	void GDWarehouseItemRecv(const SDHP_WAREHOUSE_ITEM_RECV* lpMsg, int serverIndex, int size);
+	void GDWarehouseItemSaveRecv(const SDHP_WAREHOUSE_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDWarehouseGuildItemRecv(const SDHP_WAREHOUSE_ITEM_RECV* lpMsg, int serverIndex, int size);
+	void GDWarehouseGuildUpdate(const SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV* lpMsg, int serverIndex, int size);
+	void GDWarehouseGuildItemSaveRecv(const SDHP_WAREHOUSE_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDWarehouseGuildConsult(const SDHP_WAREHOUSE_GUILD_STATUS_RECV * lpMsg, int serverIndex, int size);
+	void DGWarehouseFreeSend(WORD index, int serverIndex, const char* account);
+	void DGWarehouseGuildFreeSend(WORD index, int serverIndex, const char* account);
 };
 
 extern CWarehouse gWarehouse;
