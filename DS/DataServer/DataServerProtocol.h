@@ -43,6 +43,17 @@
 // MasterSkillTree.h
 #define MAX_MASTER_SKILL_LIST 120
 #define MASTER_SKILL_DATA_SIZE 3
+// QuestWorld.h
+#define MAX_QUEST_WORLD_LIST 20
+// MuRummy.h
+#define MURUMMY_MAX_CARD 24
+// CashShop.h
+#define MAX_CASH_SHOP_PAGE 5
+#define MAX_CASH_SHOP_PAGE_ITEM 9
+// EventInventory.h
+#define EVENT_INVENTORY_SIZE 32
+// PartyMatching.h
+#define MAX_PARTY_USER 5
 
 constexpr BYTE SET_NUMBERHB(DWORD x) {
 	return static_cast<BYTE>(x >> 8);
@@ -324,7 +335,7 @@ struct SDHP_GLOBAL_ITEM_POST_RECV
 	WORD MapServerGroup;
 	char CharacterName[MAX_CHARACTER_NAME];
 	char Message[60];
-	char Item_data[107];
+	char Item_Data[107];
 };
 
 struct SDHP_GLOBAL_NOTICE_RECV
@@ -409,7 +420,7 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 	//==Custom CTC
 	int CTCTime;
 	int CTCRegDay;
-#if(MOCNAP == 1)
+#if(RECHARGEREWARD == 1)
 	int MOCNAPCOIN;
 #endif
 	DWORD mUserSkinPick;
@@ -420,7 +431,7 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 	WORD CapDoHonHoan;
 #endif
 	int PointUsePhe;
-#if(EVENT_END_LESS)
+#if(ENDLESSTOWEREVENT)
 	WORD mLuotDiEndLess;
 #endif
 };
@@ -611,8 +622,8 @@ struct SDHP_GLOBAL_WHISPER_RECV
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	char TargetName[11];
-	char message[60];
+	char TargetCharacterName[MAX_CHARACTER_NAME];
+	char Message[60];
 };
 
 
@@ -622,11 +633,11 @@ struct SDHP_MARRY_INFO_SAVE_RECV
     PBMSG_HEAD Header; // C1:F0
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-    char marryname[11];
-    char mode[11];
+    char MarryName[MAX_CHARACTER_NAME];
+    char Mode[11];
 };
 
-#if(HIDE_VT)
+#if(ENABLECUSTOMQUEST)
 struct SDHP_CUSTOMQUEST_RECV
 {
 	PBMSG_HEAD Header; // C1:F1
@@ -639,7 +650,7 @@ struct SDHP_CUSTOMQUEST_SAVE_RECV
 	PBMSG_HEAD Header; // C1:F2
 	WORD Index;
 	char CharacterName[MAX_CHARACTER_NAME];
-	DWORD quest;
+	DWORD Quest;
 };
 #endif
 
@@ -649,27 +660,27 @@ struct SDHP_SETCOIN_RECV
     WORD Index;
     char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	DWORD value1;
-	DWORD value2;
-	DWORD value3;
+	DWORD Value1;
+	DWORD Value2;
+	DWORD Value3;
 };
 
-#if(RANKINGGOC == 1)
+#if(ENABLECUSTOMRANKING == 1)
 struct SDHP_CUSTOM_RANKING_RECV
 {
 	PBMSG_HEAD Header; // C1:F4
 	WORD Index;
-	WORD type;
+	WORD Type;
 };
 #endif
 
 //---------------------------------------------------
-#if(RANKING_NEW == 1)
+#if(NEWRANKING == 1)
 #define MAXTOP 150
 
 struct GDTop
 {
-	PSWMSG_HEAD h;
+	PSWMSG_HEAD Header;
 	BYTE Result;
 };
 
@@ -677,18 +688,18 @@ struct CharTop
 {
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Class;
-	int level;
+	int Level;
 	int Reset;
 	int Relifes;
 	int Time;
 	int Map;
-	char Guild[9];
+	char GuildName[MAX_GUILD_NAME];
 };
 
 struct DGCharTop
 {
-	PSWMSG_HEAD h;
-	CharTop	tp[MAXTOP];
+	PSWMSG_HEAD Header;
+	CharTop	Tp[MAXTOP];
 };
 #endif
 
@@ -706,19 +717,19 @@ struct SDHP_CARESUME_SAVE_RECV
     PBMSG_HEAD Header; // C1:F6
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-	WORD active;
-	WORD skill;
-	WORD map;
-	WORD posx;
-	WORD posy;
-	WORD autobuff;
-	WORD offpvp;
-	WORD autoreset;
-	DWORD autoaddstr;
-	DWORD autoaddagi;
-	DWORD autoaddvit;
-	DWORD autoaddene;
-	DWORD autoaddcmd;
+	WORD Active;
+	WORD Skill;
+	WORD Map;
+	WORD Posx;
+	WORD Posy;
+	WORD AutoBuff;
+	WORD OffPVP;
+	WORD AutoReset;
+	DWORD AutoAddStr;
+	DWORD AutoAddAgi;
+	DWORD AutoAddVit;
+	DWORD AutoAddEne;
+	DWORD AutoAddCmd;
 };
 
 struct SDHP_RANKING_TVT_EVENT_SAVE_RECV
@@ -727,8 +738,8 @@ struct SDHP_RANKING_TVT_EVENT_SAVE_RECV
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	DWORD killcount;
-	DWORD deathcount;
+	DWORD KillCount;
+	DWORD DeathCount;
 };
 
 struct SDHP_CUSTOMNPCQUEST_RECV
@@ -736,8 +747,8 @@ struct SDHP_CUSTOMNPCQUEST_RECV
     PSBMSG_HEAD Header; // C1:F1
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-    WORD quest;
-	WORD indexnpc;
+    WORD Quest;
+	WORD Indexnpc;
 };
 
 struct SDHP_CUSTOMNPCQUEST_SAVE_RECV
@@ -745,7 +756,7 @@ struct SDHP_CUSTOMNPCQUEST_SAVE_RECV
     PSBMSG_HEAD Header; // C1:F2
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-	WORD quest;
+	WORD Quest;
 };
 
 struct SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV
@@ -753,8 +764,8 @@ struct SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV
     PSBMSG_HEAD Header; // C1:F1
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-    WORD quest;
-	DWORD monsterqtd;
+    WORD Quest;
+	DWORD MonsterQtd;
 };
 
 // DataServer -> GameServer
@@ -799,7 +810,7 @@ struct SDHP_CHARACTER_CREATE_SEND
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Result;
-	BYTE slot;
+	BYTE Slot;
 	BYTE Class;
 	BYTE equipment[24];
 	WORD level;
@@ -883,7 +894,7 @@ struct SDHP_CHARACTER_INFO_SEND
 	//==Custom CTC
 	int CTCTime;
 	int CTCRegDay;
-#if(MOCNAP == 1)
+#if(RECHARGEREWARD == 1)
 	int MOCNAPCOIN;
 #endif
 	DWORD mUserSkinPick;
@@ -894,8 +905,8 @@ struct SDHP_CHARACTER_INFO_SEND
 	WORD CapDoHonHoan;
 #endif
 	int PointUsePhe;
-#if(EVENT_END_LESS)
-	WORD mLuotDiEndLess;
+#if(ENDLESSTOWEREVENT)
+	WORD LuotDiEndLess;
 #endif
 };
 
@@ -950,8 +961,8 @@ struct SDHP_PET_ITEM_INFO_SEND
 	PWMSG_HEAD Header; // C2:09
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	BYTE type;
-	BYTE count;
+	BYTE Type;
+	BYTE Count;
 };
 
 struct SDHP_PET_ITEM_INFO2
@@ -976,8 +987,8 @@ struct SDHP_CHARACTER_NAME_CHANGE_SEND
 	PBMSG_HEAD Header; // C1:0B
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	char OldName[11];
-	char NewName[11];
+	char OldName[MAX_CHARACTER_NAME];
+	char NewName[MAX_CHARACTER_NAME];
 	BYTE Result;
 };
 
@@ -1001,19 +1012,19 @@ struct SDHP_GLOBAL_POST_SEND
 {
 	PBMSG_HEAD Header; // C1:20
 	WORD MapServerGroup;
-	BYTE type;
+	BYTE Type;
 	char CharacterName[MAX_CHARACTER_NAME];
-	char message[60];
+	char Message[60];
 };
 
 struct SDHP_POST_ITEM_SEND
 {
 	PBMSG_HEAD Header; 
 	WORD MapServerGroup;
-	BYTE type;
-	char chatid[10];
-	char chatmsg[60];
-	char item_data[107];
+	BYTE Type;
+	char Chatid[10];
+	char Chatmsg[60];
+	char Item_Data[107];
 };
 
 struct SDHP_GLOBAL_ITEM_POST_SEND
@@ -1021,21 +1032,21 @@ struct SDHP_GLOBAL_ITEM_POST_SEND
 	PBMSG_HEAD Header; // C1:78
 	WORD MapServerGroup;
 	char CharacterName[MAX_CHARACTER_NAME];
-	char message[60];
-	char item_data[107];
+	char Message[60];
+	char Item_Data[107];
 };
 
 struct SDHP_GLOBAL_NOTICE_SEND
 {
 	PBMSG_HEAD Header; // C1:21
 	WORD MapServerGroup;
-	BYTE type;
-	BYTE count;
-	BYTE opacity;
-	WORD delay;
-	DWORD color;
-	BYTE speed;
-	char message[128];
+	BYTE Type;
+	BYTE Count;
+	BYTE Opacity;
+	WORD Delay;
+	DWORD Color;
+	BYTE Speed;
+	char Message[128];
 };
 
 struct SDHP_SNS_DATA_SEND
@@ -1045,7 +1056,7 @@ struct SDHP_SNS_DATA_SEND
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Result;
-	BYTE data[256];
+	BYTE Data[256];
 };
 
 struct SDHP_GLOBAL_WHISPER_SEND
@@ -1055,8 +1066,8 @@ struct SDHP_GLOBAL_WHISPER_SEND
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Result;
-	char TargetName[11];
-	char message[60];
+	char TargetName[MAX_CHARACTER_NAME];
+	char Message[60];
 };
 
 struct SDHP_GLOBAL_WHISPER_ECHO_SEND
@@ -1065,15 +1076,15 @@ struct SDHP_GLOBAL_WHISPER_ECHO_SEND
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	char SourceName[11];
-	char message[60];
+	char SourceName[MAX_CHARACTER_NAME];
+	char Message[60];
 };
 //====================================================
-#if (GHRS_TOP1_NEW)
+#if (TOP1RESETLIMIT)
 struct SDHP_CUSTOM_GHRS_RECV
 {
 	PBMSG_HEAD Header; // C1:F0:09
-	int time;
+	int Time;
 };
 #endif
 //====================================================
@@ -1082,7 +1093,7 @@ struct SDHP_CUSTOMQUEST_SEND
     PBMSG_HEAD Header; // C1:F1
     WORD Index;
     char CharacterName[MAX_CHARACTER_NAME];
-	DWORD quest;
+	DWORD Quest;
 };
 
 struct PMSG_CUSTOM_RANKING_SEND
@@ -1106,11 +1117,11 @@ struct SDHP_CARESUME_SEND
 	WORD AutoBuff;
 	WORD OffPVP;
 	WORD AutoReset;
-	DWORD AutoAddstr;
-	DWORD AutoAddagi;
-	DWORD AutoAddvit;
-	DWORD AutoAddene;
-	DWORD AutoAddcmd;
+	DWORD AutoAddStr;
+	DWORD AutoAddAgi;
+	DWORD AutoAddVit;
+	DWORD AutoAddEne;
+	DWORD AutoAddCmd;
 };
 
 struct SDHP_CUSTOMNPCQUEST_SEND
@@ -1127,11 +1138,11 @@ struct THEGIFT_GD_SAVE_DATA
 {
 	PSBMSG_HEAD Header;
 	WORD	Index;
-	char	Name[11];
+	char	CharacterName[MAX_CHARACTER_NAME];
 	BYTE	TheGift;
 };
 
-#if (GHRS_TOP1_NEW)
+#if (TOP1RESETLIMIT)
 struct PMSG_CUSTOM_GHRS_SEND
 {
 	PWMSG_HEAD Header;
@@ -1141,10 +1152,10 @@ struct PMSG_CUSTOM_GHRS_SEND
 };
 #endif
 
-#if (MOCNAP == 1)
+#if (RECHARGEREWARD == 1)
 struct MOCNAP_GD_REQ_DATA
 {
-	PSBMSG_HEAD	header;
+	PSBMSG_HEAD	Header;
 	WORD Index;
 	char CharacterName[MAX_CHARACTER_NAME];
 };
@@ -1172,8 +1183,8 @@ struct MOCNAP_GD_SAVE_DATA
 {
 	PSBMSG_HEAD Header;
 	// ----
-	WORD	index;
-	char	Name[11];
+	WORD	Index;
+	char	CharacterName[MAX_CHARACTER_NAME];
 	int		MOCNAP1;
 	int		MOCNAP2;
 	int		MOCNAP3;
@@ -1190,7 +1201,7 @@ struct MOCNAP_GD_SAVE_DATA
 };
 #endif
 
-#if(BOT_STATUE == 1)
+#if(TOP1BOTSTATUE == 1)
 struct SDHP_BOT_INFO_GET
 {
 	PBMSG_HEAD Header; // C1:04
@@ -1254,8 +1265,8 @@ struct SDHP_CUSTOM_JEWELBANK_RECV
 	PSBMSG_HEAD Header;
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	WORD type;
-	DWORD count;
+	WORD Type;
+	DWORD Count;
 };
 
 struct SDHP_CUSTOM_JEWELBANK_INFO_RECV
@@ -1281,6 +1292,18 @@ struct SDHP_CUSTOM_JEWELBANK_INFO_SEND
 	int HighStone;
 };
 
+#pragma pack(push, 1)
+struct SDHP_CHANGE_PASSWORD_RECV
+{
+	PSBMSG_HEAD Header;
+	int  Index;
+	char Account[MAX_ACCOUNT_NAME];
+	char OldPassword[11];
+	char NewPassword[11];
+
+};
+#pragma pack(pop)
+
 // Enrutador de paquetes
 void DataServerProtocolCore(int serverIndex, const BYTE protocolHead, const BYTE* lpMsg, int size);
 
@@ -1295,122 +1318,74 @@ void GDPetItemInfoRecv(const SDHP_PET_ITEM_INFO_RECV* lpMsg, int serverIndex, in
 void GDCharacterNameCheckRecv(const SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg, int serverIndex, int size);
 void GDCharacterNameChangeRecv(const SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg, int serverIndex, int size);
 
-void GDSaveTheGiftRecv(THEGIFT_GD_SAVE_DATA* lpMsg);
+void GDSaveTheGiftRecv(const THEGIFT_GD_SAVE_DATA* lpMsg, int serverIndex, int size);
 
-
-void GDCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg,int index);
-void GDCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg,int index);
-void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg,int index);
-void GDGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg, int index);
+void GDCrywolfSyncRecv(const SDHP_CRYWOLF_SYNC_RECV* lpMsg, int serverIndex, int size);
+void GDCrywolfInfoRecv(const SDHP_CRYWOLF_INFO_RECV* lpMsg, int serverIndex, int size);
+void GDGlobalPostRecv(const SDHP_GLOBAL_POST_RECV* lpMsg, int serverIndex, int size);
+void GDGlobalItemPostRecv(const SDHP_GLOBAL_ITEM_POST_RECV* lpMsg, int serverIndex, int size);
 void GDPostItemRecv(SDHP_POST_ITEM_RECV* lpMsg,int index);
 void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg,int index);
-void GDSNSDataRecv(SDHP_SNS_DATA_RECV* lpMsg,int index);
-void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg);
-void GDInventoryItemSaveRecv(SDHP_INVENTORY_ITEM_SAVE_RECV* lpMsg);
-void GDOptionDataSaveRecv(SDHP_OPTION_DATA_SAVE_RECV* lpMsg);
-void GDPetItemInfoSaveRecv(SDHP_PET_ITEM_INFO_SAVE_RECV* lpMsg);
-void GDResetInfoSaveRecv(SDHP_RESET_INFO_SAVE_RECV* lpMsg);
-void GDMasterResetInfoSaveRecv(SDHP_MASTER_RESET_INFO_SAVE_RECV* lpMsg);
-void GDRankingDuelSaveRecv(SDHP_RANKING_DUEL_SAVE_RECV* lpMsg);
-void GDRankingBloodCastleSaveRecv(SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV* lpMsg);
-void GDRankingChaosCastleSaveRecv(SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV* lpMsg);
-void GDRankingDevilSquareSaveRecv(SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV* lpMsg);
-void GDRankingIllusionTempleSaveRecv(SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV* lpMsg);
-void GDCreationCardSaveRecv(SDHP_CREATION_CARD_SAVE_RECV* lpMsg);
-void GDCrywolfInfoSaveRecv(SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg);
-void GDSNSDataSaveRecv(SDHP_SNS_DATA_SAVE_RECV* lpMsg);
+void GDSNSDataRecv(const SDHP_SNS_DATA_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterInfoSaveRecv(const SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDInventoryItemSaveRecv(const SDHP_INVENTORY_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDOptionDataSaveRecv(const SDHP_OPTION_DATA_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDPetItemInfoSaveRecv(const SDHP_PET_ITEM_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDResetInfoSaveRecv(const SDHP_RESET_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDMasterResetInfoSaveRecv(const SDHP_MASTER_RESET_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDRankingDuelSaveRecv(const SDHP_RANKING_DUEL_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDRankingBloodCastleSaveRecv(const SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDRankingChaosCastleSaveRecv(const SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDRankingDevilSquareSaveRecv(const SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDRankingIllusionTempleSaveRecv(const SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDCreationCardSaveRecv(const SDHP_CREATION_CARD_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDCrywolfInfoSaveRecv(const SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDSNSDataSaveRecv(const SDHP_SNS_DATA_SAVE_RECV* lpMsg, int serverIndex, int size);
 void GDCustomMonsterRewardSaveRecv(SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV* lpMsg);
 void GDRankingCustomArenaSaveRecv(SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV* lpMsg);
-void GDRankingTvTEventSaveRecv(SDHP_RANKING_TVT_EVENT_SAVE_RECV* lpMsg);
-void GDConnectCharacterRecv(SDHP_CONNECT_CHARACTER_RECV* lpMsg,int index);
+void GDRankingTvTEventSaveRecv(const SDHP_RANKING_TVT_EVENT_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDConnectCharacterRecv(const SDHP_CONNECT_CHARACTER_RECV* lpMsg, int serverIndex, int size);
 void GDDisconnectCharacterRecv(SDHP_DISCONNECT_CHARACTER_RECV* lpMsg,int index);
-void GDGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg,int index);
-void DGGlobalWhisperEchoSend(WORD ServerCode,WORD index,char* account,char* name,char* SourceName,char* message);
-void GDMarryInfoSaveRecv(SDHP_MARRY_INFO_SAVE_RECV* lpMsg);
-#if(HIDE_VT)
-void GDCustomQuestSaveRecv(SDHP_CUSTOMQUEST_SAVE_RECV* lpMsg);
-void GDCustomQuestRecv(SDHP_CUSTOMQUEST_RECV* lpMsg, int index);
+void GDGlobalWhisperRecv(const SDHP_GLOBAL_WHISPER_RECV* lpMsg, int serverIndex, int size);
+void DGGlobalWhisperEchoSend(WORD serverCode, WORD userIndex, const char* account, const char* targetCharacterName, const char* sourceCharacterName, const char* message);
+void GDMarryInfoSaveRecv(const SDHP_MARRY_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+#if(ENABLECUSTOMQUEST)
+void GDCustomQuestSaveRecv(const SDHP_CUSTOMQUEST_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDCustomQuestRecv(const SDHP_CUSTOMQUEST_RECV* lpMsg, int serverIndex, int size);
 #endif
-void GDSetCoinRecv(SDHP_SETCOIN_RECV* lpMsg);
-#if(RANKINGGOC == 1)
-void GDCustomRankingRecv(SDHP_CUSTOM_RANKING_RECV* lpMsg, int index);
+void GDSetCoinRecv(const SDHP_SETCOIN_RECV* lpMsg, int serverIndex, int size);
+#if(ENABLECUSTOMRANKING == 1)
+void GDCustomRankingRecv(const SDHP_CUSTOM_RANKING_RECV* lpMsg, int serverIndex, int size);
 #endif
-void GDCustomAttackResumeRecv(SDHP_CARESUME_RECV* lpMsg,int index);
-void GDCustomAttackSaveRecv(SDHP_CARESUME_SAVE_RECV* lpMsg);
-void GDCustomNpcQuestSaveRecv(SDHP_CUSTOMNPCQUEST_SAVE_RECV* lpMsg);
-void GDCustomNpcQuestRecv(SDHP_CUSTOMNPCQUEST_RECV* lpMsg,int index);
-void GDCustomNpcQuestMonsterCountSaveRecv(SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV* lpMsg);
+void GDCustomAttackResumeRecv(const SDHP_CARESUME_RECV* lpMsg, int serverIndex, int size);
+void GDCustomAttackSaveRecv(const SDHP_CARESUME_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDCustomNpcQuestSaveRecv(const SDHP_CUSTOMNPCQUEST_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDCustomNpcQuestRecv(const SDHP_CUSTOMNPCQUEST_RECV* lpMsg, int serverIndex, int size);
+void GDCustomNpcQuestMonsterCountSaveRecv(const SDHP_CUSTOMNPCQUESTMONSTERSAVE_RECV* lpMsg, int serverIndex, int size);
 
-//===================================================================================
-#if (GHRS_TOP1_NEW)
-void GDCustomGHRSRecv(SDHP_CUSTOM_GHRS_RECV* lpMsg, int index);
-#endif
-//===================================================================================
-#if (MOCNAP == 1)
-void GDCharacterMocNapRecv(MOCNAP_GD_REQ_DATA* lpMsg, int index);
-void GDCharacterMocNapSaveRecv(MOCNAP_GD_SAVE_DATA* lpMsg);
+#if (TOP1RESETLIMIT)
+void GDCustomGHRSRecv(const SDHP_CUSTOM_GHRS_RECV* lpMsg, int serverIndex, int size);
 #endif
 
-void GDCustomJewelBankRecv(SDHP_CUSTOM_JEWELBANK_RECV* lpMsg);
-void GDCustomJewelBankInfoRecv(SDHP_CUSTOM_JEWELBANK_INFO_RECV* lpMsg, int index);
-
-// RAW FUNCTIONS
-
-#if (RANKING_NEW == 1)
-void CharacterRanking(GDTop* lpMsg, int pIndex);
+#if (RECHARGEREWARD)
+void GDCharacterMocNapRecv(const MOCNAP_GD_REQ_DATA* lpMsg, int serverIndex, int size);
+void GDCharacterMocNapSaveRecv(const MOCNAP_GD_SAVE_DATA* lpMsg, int serverIndex, int size);
 #endif
 
-#if (BOT_STATUE == 1)
-void GDBotInfoRecv(SDHP_BOT_INFO_GET* lpMsg, int index);
+void GDCustomJewelBankRecv(const SDHP_CUSTOM_JEWELBANK_RECV* lpMsg, int serverIndex, int size);
+void GDCustomJewelBankInfoRecv(const SDHP_CUSTOM_JEWELBANK_INFO_RECV* lpMsg, int serverIndex, int size);
+
+
+#if (NEWRANKING)
+void CharacterRanking(const GDTop* lpMsg, int serverIndex, int size);
 #endif
 
-//void DS_GDReqCastleTotalInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqOwnerGuildMaster(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleNpcBuy(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleNpcRepair(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleNpcUpgrade(BYTE *lpRecv, int aIndex);
-void DS_GDReqTaxInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqTaxRateChange(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleMoneyChange(BYTE *lpRecv, int aIndex);
-void DS_GDReqSiegeDateChange(BYTE *lpRecv, int aIndex);
-void DS_GDReqGuildMarkRegInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqSiegeEndedChange(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleOwnerChange(BYTE *lpRecv, int aIndex);
-void DS_GDReqRegAttackGuild(BYTE *lpRecv, int aIndex);
-void DS_GDReqRestartCastleState(BYTE *lpRecv, int aIndex);
-void DS_GDReqMapSvrMsgMultiCast(BYTE *lpRecv, int aIndex);
-void DS_GDReqRegGuildMark(BYTE *lpRecv, int aIndex);
-void DS_GDReqGuildMarkReset(BYTE *lpRecv, int aIndex);
-void DS_GDReqGuildSetGiveUp(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleNpcRemove(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleStateSync(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleTributeMoney(BYTE *lpRecv, int aIndex);
-void DS_GDReqResetCastleTaxInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqResetSiegeGuildInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqResetRegSiegeInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleInitData(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleNpcInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqAllGuildMarkRegInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqFirstCreateNPC(BYTE *lpRecv, int aIndex);
-void DS_GDReqCalcRegGuildList(BYTE *lpRecv, int aIndex);
-void DS_GDReqCsGuildUnionInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqCsSaveTotalGuildInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqCsLoadTotalGuildInfo(BYTE *lpRecv, int aIndex);
-void DS_GDReqCastleNpcUpdate(BYTE *lpRecv, int aIndex);
+#if (TOP1BOTSTATUE)
+void GDBotInfoRecv(const SDHP_BOT_INFO_GET* lpMsg, int serverIndex, int size);
+#endif
 
-//==Change Pass
-#pragma pack(push, 1)
-struct SDHP_CHANGE_PASSWORD_RECV
-{
-	PSBMSG_HEAD Header;
-	int  Index;
-	char Account[MAX_ACCOUNT_NAME];
-	char OldPassword[11];
-	char NewPassword[11];
+void GDChangePasswordRecv(const SDHP_CHANGE_PASSWORD_RECV* lpMsg, int serverIndex, int size);
 
-};
-#pragma pack(pop)
-void GDChangePasswordRecv(SDHP_CHANGE_PASSWORD_RECV* lpMsg, int aIndex);
 struct SDHP_CHANGE_PASSWORD_SEND
 {
 	PSBMSG_HEAD Header;
@@ -1421,7 +1396,7 @@ struct SDHP_CHANGE_PASSWORD_SEND
 struct GSSENDDS_GETLISTISBUYSKIN
 {
 	PSBMSG_HEAD Header;
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	int aIndex;
 };
 struct BCUSTOM_SKINMODEL_DATA
@@ -1439,12 +1414,12 @@ struct CBCUSTOM_LOAD_COUNT
 	int count;
 };
 
-void GDGetSkinIsBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index);
-void GDSaveSkinBuy(GSSENDDS_GETLISTISBUYSKIN* lpMsg, int index);
+void GDGetSkinIsBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int size);
+void GDSaveSkinBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int size);
 
 //====================================================
-#if (SACHTHUOCTINH_NEW)
-struct SACHTHUOCTINH_GD_REQ_DATA
+#if (CUSTOMELEMENTALBOOK)
+struct ELEMENTALBOOK_GD_REQ_DATA
 {
 	PSBMSG_HEAD	header;
 	WORD Index;
@@ -1454,32 +1429,32 @@ struct SACHTHUOCTINH_DG_GET_DATA
 {
 	PSBMSG_HEAD Header;
 	WORD Index;
-	int SACHTHUOCTINH_01;
-	int SACHTHUOCTINH_02;
-	int SACHTHUOCTINH_03;
-	int SACHTHUOCTINH_04;
-	int SACHTHUOCTINH_05;
-	int SACHTHUOCTINH_06;
-	int SACHTHUOCTINH_07;
+	int BookFire;
+	int BookWater;
+	int BookWind;
+	int BookEarth;
+	int BookDark;
+	int BookLight;
+	int BookPoison;
 };
-struct SACHTHUOCTINH_GD_SAVE_DATA
+struct ELEMENTALBOOK_GD_SAVE_DATA
 {
 	PSBMSG_HEAD Header;
 	WORD	index;
 	char	Name[11];
-	int SACHTHUOCTINH_01;
-	int SACHTHUOCTINH_02;
-	int SACHTHUOCTINH_03;
-	int SACHTHUOCTINH_04;
-	int SACHTHUOCTINH_05;
-	int SACHTHUOCTINH_06;
-	int SACHTHUOCTINH_07;
+	int BookFire;
+	int BookWater;
+	int BookWind;
+	int BookEarth;
+	int BookDark;
+	int BookLight;
+	int BookPoison;
 };
 #endif
 //====================================================
-#if (SACHTHUOCTINH_NEW)
-void GDCharacterSachThuocTinhRecv(SACHTHUOCTINH_GD_REQ_DATA* lpMsg, int index);
-void GDCharacterSachThuocTinhSaveRecv(SACHTHUOCTINH_GD_SAVE_DATA* lpMsg);
+#if (CUSTOMELEMENTALBOOK)
+void GDCharacterElementalBookRecv(const ELEMENTALBOOK_GD_REQ_DATA* lpMsg, int serverIndex, int size);
+void GDCharacterElementalBookSaveRecv(const ELEMENTALBOOK_GD_SAVE_DATA* lpMsg, int serverIndex, int size);
 #endif
 //===================================================================================
 struct BUFFPHE_REQUESTDS
@@ -1499,8 +1474,8 @@ struct BUFFPHE_REQUESTDS_SETINFO
 	int  mBT_Top1Point;
 };
 
-void GetDBBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index);
-void GetInfoCharTopBuffPhe(BUFFPHE_REQUESTDS* lpMsg, int index);
+void GetDBBuffPhe(const BUFFPHE_REQUESTDS* lpMsg, int serverIndex, int size);
+void GetInfoCharTopBuffPhe(const BUFFPHE_REQUESTDS* lpMsg, int serverIndex, int size);
 
 struct INFOCHAR_BUFFPHE
 {

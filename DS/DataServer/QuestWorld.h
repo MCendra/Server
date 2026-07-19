@@ -2,8 +2,6 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-#define MAX_QUEST_WORLD_LIST 20
-
 // GameServer -> DataServer
 
 struct SDHP_QUEST_WORLD_RECV
@@ -41,8 +39,8 @@ class CQuestWorld
 public:
 	CQuestWorld() = default;
 	~CQuestWorld() = default;
-	void GDQuestWorldRecv(SDHP_QUEST_WORLD_RECV* lpMsg,int index);
-	void GDQuestWorldSaveRecv(SDHP_QUEST_WORLD_SAVE_RECV* lpMsg);
+	void GDQuestWorldRecv(const SDHP_QUEST_WORLD_RECV* lpMsg, int serverIndex, int size);
+	void GDQuestWorldSaveRecv(const SDHP_QUEST_WORLD_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CQuestWorld gQuestWorld;

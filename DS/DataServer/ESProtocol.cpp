@@ -75,7 +75,7 @@ void ESDataSend(int index, const BYTE* lpMsg, int size)
 		PSBMSG_HEAD Header;
 
 		Header.set(
-			DS_HEAD_EXDB_PROTOCOL,
+			HEAD_EXDB_PROTOCOL,
 			lpMsg[C1_PACKET_HEAD_OFFSET],
 			packetSize);
 
@@ -102,7 +102,7 @@ void ESDataSend(int index, const BYTE* lpMsg, int size)
 		PSWMSG_HEAD Header;
 
 		Header.set(
-			DS_HEAD_EXDB_PROTOCOL,
+			HEAD_EXDB_PROTOCOL,
 			lpMsg[C2_PACKET_HEAD_OFFSET],
 			packetSize);
 

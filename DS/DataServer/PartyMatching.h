@@ -3,8 +3,6 @@
 #include "CriticalSection.h"
 #include "DataServerProtocol.h"
 
-#define MAX_PARTY_USER 5
-
 // GameServer -> DataServer
 
 struct SDHP_PARTY_MATCHING_INSERT_RECV
@@ -261,24 +259,24 @@ public:
 	~CPartyMatching() = default;
 	void ClearPartyMatchingInfo(WORD ServerCode);
 	void ClearPartyMatchingJoinInfo(WORD ServerCode);
-	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, char* name);
+	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, const char* characterName);
 	bool GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, WORD ServerCode, WORD Level, BYTE Class, BYTE GensType);
 	void InsertPartyMatchingInfo(PARTY_MATCHING_INFO PartyMatchingInfo);
 	void RemovePartyMatchingInfo(PARTY_MATCHING_INFO PartyMatchingInfo);
-	bool GetPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO* lpPartyMatchingJoinInfo, char* name);
+	bool GetPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO* lpPartyMatchingJoinInfo, const char* characterName);
 	void InsertPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo);
 	void RemovePartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo);
 	void RemovePartyMatchingJoinInfoNotifyAll(PARTY_MATCHING_INFO PartyMatchingInfo);
-	DWORD GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, BYTE UseSearchWord, char* SearchWord, BYTE* lpMsg, int* size);
-	DWORD GeneratePartyMatchingJoinList(char* LeaderName, BYTE* lpMsg, int* size);
-	void GDPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg, int index);
-	void GDPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMsg, int index);
-	void GDPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg, int index);
-	void GDPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg, int index);
-	void GDPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg, int index);
-	void GDPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int index);
-	void GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg, int index);
-	void GDPartyMatchingInsertSaveRecv(SDHP_PARTY_MATCHING_INSERT_SAVE_RECV* lpMsg);
+	DWORD GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, BYTE UseSearchWord, const char* SearchWord, BYTE* lpMsg, int* size);
+	DWORD GeneratePartyMatchingJoinList(const char* LeaderName, BYTE* lpMsg, int* size);
+	void GDPartyMatchingInsertRecv(const SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingListRecv(const SDHP_PARTY_MATCHING_LIST_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingJoinInsertRecv(const SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingJoinInfoRecv(const SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingJoinListRecv(const SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingJoinAcceptRecv(const SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingJoinCancelRecv(const SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg, int serverIndex, int size);
+	void GDPartyMatchingInsertSaveRecv(const SDHP_PARTY_MATCHING_INSERT_SAVE_RECV* lpMsg, int serverIndex, int size);
 	void DGPartyMatchingNotifySend(const char* name, const char* LeaderName, DWORD result);
 	void DGPartyMatchingNotifyLeaderSend(const char* name, DWORD result);
 private:

@@ -2,11 +2,9 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-#define MURUMMY_MAX_CARD 24
-
-struct _tagMuRummyCardInfoDS
+struct MuRummyCardInfoDS
 {
-	_tagMuRummyCardInfoDS()
+	MuRummyCardInfoDS()
 	{
 		this->Color = -1;
 		this->Number = -1;
@@ -22,9 +20,9 @@ struct _tagMuRummyCardInfoDS
 	BYTE Status;
 };
 
-struct _tagMuRummyCardUpdateDS
+struct MuRummyCardUpdateDS
 {
-	_tagMuRummyCardUpdateDS()
+	MuRummyCardUpdateDS()
 	{
 		this->SlotNum = -1;
 		this->Seq = -1;
@@ -36,73 +34,73 @@ struct _tagMuRummyCardUpdateDS
 	BYTE Status;
 };
 
-struct _tagPMSG_REQ_MURUMMY_SELECT_DS
+struct PMSG_REQ_MURUMMY_SELECT_DS
 {
 	PSBMSG_HEAD Header; // C1:12:00
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	WORD Index;
 };
 
-struct _tagPMSG_ANS_MURUMMY_SELECT_DS
+struct PMSG_ANS_MURUMMY_SELECT_DS
 {
 	PSBMSG_HEAD Header; // C1:12:00
 	WORD Index;
 	WORD Score;
 	BYTE Result;
-	_tagMuRummyCardInfoDS stMuRummyCardInfoDS[MURUMMY_MAX_CARD];
+	MuRummyCardInfoDS stMuRummyCardInfoDS[MURUMMY_MAX_CARD];
 };
 
-struct _tagPMSG_REQ_MURUMMY_INSERT_DS
+struct PMSG_REQ_MURUMMY_INSERT_DS
 {
 	PSBMSG_HEAD Header; // C1:12:30
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	WORD Index;
-	_tagMuRummyCardInfoDS stMuRummyCardInfoDS[MURUMMY_MAX_CARD];
+	MuRummyCardInfoDS stMuRummyCardInfoDS[MURUMMY_MAX_CARD];
 };
 
-struct _tagPMSG_REQ_MURUMMY_UPDATE_DS 
+struct PMSG_REQ_MURUMMY_UPDATE_DS 
 {
 	PSBMSG_HEAD Header; // C1:12:31
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE SlotNum;
 	BYTE Status;
 	BYTE Sequence;
 };
 
-struct _tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS
+struct PMSG_REQ_MURUMMY_SCORE_UPDATE_DS
 {
 	PSBMSG_HEAD Header; // C1:12:32
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	WORD Score;
-	_tagMuRummyCardUpdateDS stCardUpdateDS[3];
+	MuRummyCardUpdateDS stCardUpdateDS[3];
 };
 
-struct _tagPMSG_REQ_MURUMMY_DELETE_DS
+struct PMSG_REQ_MURUMMY_DELETE_DS
 {
 	PSBMSG_HEAD Header; // C1:12:33
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 };
 
-struct _tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS
+struct PMSG_REQ_MURUMMY_SLOTUPDATE_DS
 {
 	PSBMSG_HEAD Header; // C1:12:34
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	_tagMuRummyCardUpdateDS stCardUpdateDS;
+	MuRummyCardUpdateDS stCardUpdateDS;
 };
 
-struct _tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS
+struct PMSG_REQ_MURUMMY_INFO_UPDATE_DS
 {
 	PSBMSG_HEAD Header; // C1:12:35
-	char AccountID[11];
+	char AccountID[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	WORD Score;
-	_tagMuRummyCardUpdateDS stMuRummyCardUpdateDS[MURUMMY_MAX_CARD];
+	MuRummyCardUpdateDS stMuRummyCardUpdateDS[MURUMMY_MAX_CARD];
 };
 
 class CMuRummy
@@ -110,13 +108,13 @@ class CMuRummy
 public:
 	CMuRummy() = default;
 	~CMuRummy() = default;
-	void GDReqCardInfo(_tagPMSG_REQ_MURUMMY_SELECT_DS* lpMsg,int index);
-	void GDReqCardInfoInsert(_tagPMSG_REQ_MURUMMY_INSERT_DS* lpMsg);
-	void GDReqCardInfoUpdate(_tagPMSG_REQ_MURUMMY_UPDATE_DS* lpMsg);
-	void GDReqScoreUpdate(_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg);
-	void GDReqScoreDelete(_tagPMSG_REQ_MURUMMY_DELETE_DS* lpMsg);
-	void GDReqSlotInfoUpdate(_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg);
-	void GDReqMuRummyInfoUpdate(_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg);
+	void GDReqCardInfo(const PMSG_REQ_MURUMMY_SELECT_DS* lpMsg, int serverIndex, int size);
+	void GDReqCardInfoInsert(const PMSG_REQ_MURUMMY_INSERT_DS* lpMsg, int serverIndex, int size);
+	void GDReqCardInfoUpdate(const PMSG_REQ_MURUMMY_UPDATE_DS* lpMsg, int serverIndex, int size);
+	void GDReqScoreUpdate(const PMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg, int serverIndex, int size);
+	void GDReqScoreDelete(const PMSG_REQ_MURUMMY_DELETE_DS* lpMsg, int serverIndex, int size);
+	void GDReqSlotInfoUpdate(const PMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg, int serverIndex, int size);
+	void GDReqMuRummyInfoUpdate(const PMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg, int serverIndex, int size);
 };
 
 extern CMuRummy gMuRummy;

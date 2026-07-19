@@ -18,7 +18,7 @@ struct SDHP_HELPER_DATA_SAVE_RECV
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE data[256];
+	BYTE Data[256];
 };
 
 // DataServer -> GameServer
@@ -30,7 +30,7 @@ struct SDHP_HELPER_DATA_SEND
 	char Account[MAX_ACCOUNT_NAME];
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Result;
-	BYTE data[256];
+	BYTE Data[256];
 };
 
 class CHelper
@@ -39,8 +39,8 @@ public:
 	CHelper() = default;
 	~CHelper() = default;
 
-	void GDHelperDataRecv(const SDHP_HELPER_DATA_RECV* lpMsg, int index);
-	void GDHelperDataSaveRecv(const SDHP_HELPER_DATA_SAVE_RECV* lpMsg);
+	void GDHelperDataRecv(const SDHP_HELPER_DATA_RECV* lpMsg, int serverIndex, int size);
+	void GDHelperDataSaveRecv(const SDHP_HELPER_DATA_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CHelper gHelper;

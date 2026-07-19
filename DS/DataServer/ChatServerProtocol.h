@@ -224,7 +224,7 @@ struct FHP_FRIEND_INVITATION_RET
 //**********************************************//
 
 void CSDataSend(int index, BYTE* lpMsg, int size);
-void CSDataRecv(int index, BYTE head, BYTE* lpMsg, int size);
+void CSDataRecv(int index, BYTE head, const BYTE* lpMsg, int size);
 void ChatServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size);
 void FriendListRequest(const FHP_FRIENDLIST_REQ* lpMsg, int index);
 void FriendStateClientRecv(const FHP_FRIEND_STATE_C* lpMsg, int index);

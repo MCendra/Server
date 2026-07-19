@@ -1,6 +1,7 @@
 // EventInventory.cpp
 #include "Header.h"
 #include "EventInventory.h"
+#include "Log.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
@@ -8,82 +9,95 @@ CEventInventory gEventInventory;
 
 // Construction/Destruction
 
-void CEventInventory::GDEventInventoryRecv(SDHP_EVENT_INVENTORY_RECV* lpMsg, int index)
+void CEventInventory::GDEventInventoryRecv(const SDHP_EVENT_INVENTORY_RECV* lpMsg, int serverIndex,	int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_EVENT_INVENTORY_RECV);
 
 	SDHP_EVENT_INVENTORY_SEND pMsg{};
 
-	pMsg.Header.set(0x26, 0x00, sizeof(pMsg));
-
+	pMsg.Header.set(HEAD_EVENT_INVENTORY, SUB_EVENT_INVENTORY, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(
+		pMsg.Account,
+		lpMsg->Account,
+		sizeof(pMsg.Account));
 
-	if (!gQueryManager.ExecQuery("SELECT Items FROM EventInventory WHERE Name='%s'", lpMsg->CharacterName))
+	std::memcpy(
+		pMsg.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(pMsg.CharacterName));
+
+	std::memset(
+		pMsg.EventInventory,
+		0xFF,
+		sizeof(pMsg.EventInventory));
+
+	if (gQueryManager.ExecQuery(
+		"SELECT Items FROM EventInventory WHERE Name='%s'",
+		lpMsg->CharacterName))
 	{
-		gQueryManager.Close();
-		memset(pMsg.EventInventory, 0xFF, sizeof(pMsg.EventInventory));
+		const auto sqlRet = gQueryManager.Fetch();
 
-		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
-		return;
+		if (sqlRet != SQL_NO_DATA &&
+			sqlRet != SQL_NULL_DATA)
+		{
+			gQueryManager.GetAsBinary(
+				"Items",
+				pMsg.EventInventory[0],
+				sizeof(pMsg.EventInventory));
+		}
 	}
-
-	if (gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-		memset(pMsg.EventInventory, 0xFF, sizeof(pMsg.EventInventory));
-
-		gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
-		return;
-	}
-
-	gQueryManager.GetAsBinary("Items", pMsg.EventInventory[0], sizeof(pMsg.EventInventory));
 
 	gQueryManager.Close();
 
-	gSocketManager.DataSend(index, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 
 #endif
 }
 
-void CEventInventory::GDEventInventorySaveRecv(SDHP_EVENT_INVENTORY_SAVE_RECV* lpMsg)
+void CEventInventory::GDEventInventorySaveRecv(const SDHP_EVENT_INVENTORY_SAVE_RECV* lpMsg, int serverIndex, int size)
 {
-	#if (DATASERVER_UPDATE >= 802)
+#if (DATASERVER_UPDATE >= 802)
 
-		if (lpMsg == nullptr)
-		{
-			return;
-		}
+	VALIDATE_PACKET_SIZE(SDHP_EVENT_INVENTORY_SAVE_RECV);
 
-		const bool exists =
-			gQueryManager.ExecQuery("SELECT Name FROM EventInventory WHERE Name='%s'", lpMsg->CharacterName) &&
-			(gQueryManager.Fetch() != SQL_NO_DATA);
+	bool exists = false;
 
-		gQueryManager.Close();
+	if (gQueryManager.ExecQuery(
+		"SELECT 1 FROM EventInventory WHERE Name='%s'",
+		lpMsg->CharacterName))
+	{
+		const auto sqlRet = gQueryManager.Fetch();
 
-		gQueryManager.BindParameterAsBinary(1, lpMsg->EventInventory[0], sizeof(lpMsg->EventInventory));
+		exists =
+			(sqlRet != SQL_NO_DATA &&
+				sqlRet != SQL_NULL_DATA);
+	}
 
-		if (exists)
-		{
-			gQueryManager.ExecQuery(
-				"UPDATE EventInventory SET Items=? WHERE Name='%s'",
-				lpMsg->CharacterName);
-		}
-		else
-		{
-			gQueryManager.ExecQuery(
-				"INSERT INTO EventInventory (Name,Items) VALUES ('%s',?)",
-				lpMsg->CharacterName);
-		}
+	gQueryManager.Close();
 
-		gQueryManager.Close();
+	gQueryManager.BindParameterAsBinary(
+		1,
+		lpMsg->EventInventory[0],
+		sizeof(lpMsg->EventInventory));
+
+	if (exists)
+	{
+		gQueryManager.ExecQuery(
+			"UPDATE EventInventory SET Items=? WHERE Name='%s'",
+			lpMsg->CharacterName);
+	}
+	else
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO EventInventory (Name,Items) VALUES ('%s',?)",
+			lpMsg->CharacterName);
+	}
+
+	gQueryManager.Close();
 
 #endif
 }

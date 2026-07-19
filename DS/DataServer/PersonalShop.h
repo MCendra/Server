@@ -82,10 +82,10 @@ class CPersonalShop
 public:
 	CPersonalShop() = default;
 	~CPersonalShop() = default;
-	void GDPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg,int index);
-	void GDPShopItemValueSaveRecv(SDHP_PSHOP_ITEM_VALUE_SAVE_RECV* lpMsg);
-	void GDPShopItemValueInsertSaveRecv(SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV* lpMsg);
-	void GDPShopItemValueDeleteSaveRecv(SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV* lpMsg);
+	void GDPShopItemValueRecv(const SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg, int serverIndex, int size);
+	void GDPShopItemValueSaveRecv(const SDHP_PSHOP_ITEM_VALUE_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDPShopItemValueInsertSaveRecv(const SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDPShopItemValueDeleteSaveRecv(const SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CPersonalShop gPersonalShop;

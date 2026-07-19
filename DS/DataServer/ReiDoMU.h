@@ -35,8 +35,8 @@ class CReiDoMU
 public:
 	CReiDoMU() = default;
 	~CReiDoMU() = default;
-	void GDRankingKingGuildSaveRecv(SDHP_RANKING_KING_GUILD_SAVE_RECV* lpMsg);
-	void GDRankingKingPlayerSaveRecv(SDHP_RANKING_KING_PLAYER_SAVE_RECV* lpMsg);
+	void GDRankingKingGuildSaveRecv(const SDHP_RANKING_KING_GUILD_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDRankingKingPlayerSaveRecv(const SDHP_RANKING_KING_PLAYER_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CReiDoMU gReiDoMU;

@@ -1,6 +1,7 @@
 // PartyMatching.cpp
 #include "Header.h"
 #include "PartyMatching.h"
+#include "Log.h"
 #include "CharacterManager.h"
 #include "SocketManager.h"
 #include "Util.h"
@@ -53,13 +54,13 @@ void CPartyMatching::ClearPartyMatchingJoinInfo(WORD ServerCode)
 #endif
 }
 
-bool CPartyMatching::GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, char* name)
+bool CPartyMatching::GetPartyMatchingInfo(PARTY_MATCHING_INFO* lpPartyMatchingInfo, const char* characterName)
 {
 #if (DATASERVER_UPDATE >= 801)
 
 	CCriticalSection::CLock lock(this->m_critical);
 
-	auto it = this->m_PartyMatchingInfo.find(NormalizeToLower(name));
+	auto it = this->m_PartyMatchingInfo.find(NormalizeToLower(characterName));
 
 	if (it != this->m_PartyMatchingInfo.end())
 	{
@@ -173,13 +174,13 @@ void CPartyMatching::RemovePartyMatchingInfo(PARTY_MATCHING_INFO PartyMatchingIn
 #endif
 }
 
-bool CPartyMatching::GetPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO* lpPartyMatchingJoinInfo, char* name)
+bool CPartyMatching::GetPartyMatchingJoinInfo(PARTY_MATCHING_JOIN_INFO* lpPartyMatchingJoinInfo, const char* characterName)
 {
 #if(DATASERVER_UPDATE>=801)
 
 	CCriticalSection::CLock lock(this->m_critical);
 
-	auto it = this->m_PartyMatchingJoinInfo.find(NormalizeToLower(name));
+	auto it = this->m_PartyMatchingJoinInfo.find(NormalizeToLower(characterName));
 
 	if (it != this->m_PartyMatchingJoinInfo.end())
 	{
@@ -249,7 +250,7 @@ void CPartyMatching::RemovePartyMatchingJoinInfoNotifyAll(PARTY_MATCHING_INFO Pa
 #endif
 }
 
-DWORD CPartyMatching::GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, BYTE UseSearchWord, char* SearchWord, BYTE* lpMsg, int* size)
+DWORD CPartyMatching::GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, BYTE UseSearchWord, const char* SearchWord, BYTE* lpMsg, int* size)
 {
 #if(DATASERVER_UPDATE>=801)
 
@@ -306,7 +307,7 @@ DWORD CPartyMatching::GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, 
 #endif
 }
 
-DWORD CPartyMatching::GeneratePartyMatchingJoinList(char* LeaderName, BYTE* lpMsg, int* size)
+DWORD CPartyMatching::GeneratePartyMatchingJoinList(const char* LeaderName, BYTE* lpMsg, int* size)
 {
 #if(DATASERVER_UPDATE>=801)
 
@@ -343,193 +344,565 @@ DWORD CPartyMatching::GeneratePartyMatchingJoinList(char* LeaderName, BYTE* lpMs
 #endif
 }
 
-void CPartyMatching::GDPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg, int index)
+void CPartyMatching::GDPartyMatchingInsertRecv(
+	const SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg,
+	int serverIndex,
+	int size)
 {
-#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_PARTY_MATCHING_INSERT_SEND pMsg;
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_INSERT_RECV);
+
+	SDHP_PARTY_MATCHING_INSERT_SEND pMsg{};
 
 	pMsg.Header.set(0x29, 0x00, sizeof(pMsg));
 
 	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(
+		pMsg.Account,
+		lpMsg->Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(pMsg.CharacterName));
 
 	pMsg.Result = 0;
 
-	PARTY_MATCHING_INFO PartyMatchingInfo;
+	PARTY_MATCHING_INFO partyMatchingInfo{};
 
-	if (this->GetPartyMatchingInfo(&PartyMatchingInfo, lpMsg->CharacterName) != 0)
+	if (GetPartyMatchingInfo(&partyMatchingInfo, lpMsg->CharacterName))
 	{
 		pMsg.Result = 0xFFFFFFFE;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
 		return;
 	}
 
-	memcpy(PartyMatchingInfo.CharacterName, lpMsg->CharacterName, sizeof(PartyMatchingInfo.CharacterName));
-	memcpy(PartyMatchingInfo.Text, lpMsg->Text, sizeof(PartyMatchingInfo.Text));
-	memcpy(PartyMatchingInfo.Password, lpMsg->Password, sizeof(PartyMatchingInfo.Password));
+	std::memcpy(
+		partyMatchingInfo.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(partyMatchingInfo.CharacterName));
 
-	PartyMatchingInfo.MinLevel = lpMsg->MinLevel;
-	PartyMatchingInfo.MaxLevel = lpMsg->MaxLevel;
-	PartyMatchingInfo.HuntingGround = lpMsg->HuntingGround;
-	PartyMatchingInfo.LeaderLevel = lpMsg->LeaderLevel;
-	PartyMatchingInfo.LeaderClass = lpMsg->LeaderClass;
-	PartyMatchingInfo.WantedClass = lpMsg->WantedClass;
+	std::memcpy(
+		partyMatchingInfo.Text,
+		lpMsg->Text,
+		sizeof(partyMatchingInfo.Text));
 
-	memcpy(
-		PartyMatchingInfo.WantedClassDetailInfo,
+	std::memcpy(
+		partyMatchingInfo.Password,
+		lpMsg->Password,
+		sizeof(partyMatchingInfo.Password));
+
+	partyMatchingInfo.MinLevel = lpMsg->MinLevel;
+	partyMatchingInfo.MaxLevel = lpMsg->MaxLevel;
+	partyMatchingInfo.HuntingGround = lpMsg->HuntingGround;
+	partyMatchingInfo.LeaderLevel = lpMsg->LeaderLevel;
+	partyMatchingInfo.LeaderClass = lpMsg->LeaderClass;
+	partyMatchingInfo.WantedClass = lpMsg->WantedClass;
+
+	std::memcpy(
+		partyMatchingInfo.WantedClassDetailInfo,
 		lpMsg->WantedClassDetailInfo,
-		sizeof(PartyMatchingInfo.WantedClassDetailInfo));
+		sizeof(partyMatchingInfo.WantedClassDetailInfo));
 
-	PartyMatchingInfo.PartyMemberCount = lpMsg->PartyMemberCount;
-	PartyMatchingInfo.ApprovalType = lpMsg->ApprovalType;
-	PartyMatchingInfo.UsePassword = lpMsg->UsePassword;
-	PartyMatchingInfo.GensType = lpMsg->GensType;
-	PartyMatchingInfo.ServerCode = gServerManager[index].m_ServerCode;
+	partyMatchingInfo.PartyMemberCount = lpMsg->PartyMemberCount;
+	partyMatchingInfo.ApprovalType = lpMsg->ApprovalType;
+	partyMatchingInfo.UsePassword = lpMsg->UsePassword;
+	partyMatchingInfo.GensType = lpMsg->GensType;
+	partyMatchingInfo.ServerCode =
+		gServerManager[serverIndex].m_ServerCode;
 
-	this->InsertPartyMatchingInfo(PartyMatchingInfo);
+	InsertPartyMatchingInfo(partyMatchingInfo);
 
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+	gSocketManager.DataSend(
+		serverIndex,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
 
 #endif
 }
 
-void CPartyMatching::GDPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMsg, int index)
+void CPartyMatching::GDPartyMatchingListRecv(const SDHP_PARTY_MATCHING_LIST_RECV* lpMsg, int serverIndex, int size)
 {
-#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	BYTE send[1024];
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_LIST_RECV);
 
-	SDHP_PARTY_MATCHING_LIST_SEND pMsg;
+	BYTE send[MAX_SEND_PACKET_SIZE]{};
+
+	SDHP_PARTY_MATCHING_LIST_SEND pMsg{};
 
 	pMsg.Header.set(0x29, 0x01, 0);
 
-	int size = sizeof(pMsg);
+	int sendSize = sizeof(pMsg);
 
 	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(
+		pMsg.Account,
+		lpMsg->Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(pMsg.CharacterName));
 
 	pMsg.Result = 0;
 	pMsg.CurPage = lpMsg->Page;
 	pMsg.MaxPage = 1;
 
-	pMsg.Count = this->GeneratePartyMatchingList(
+	pMsg.Count = GeneratePartyMatchingList(
 		&pMsg.CurPage,
 		&pMsg.MaxPage,
 		lpMsg->UseSearchWord,
 		lpMsg->SearchWord,
 		send,
-		&size);
+		&sendSize);
 
-	pMsg.Header.size[0] = SET_NUMBERHB(size);
-	pMsg.Header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(sendSize);
+	pMsg.Header.size[1] = SET_NUMBERLB(sendSize);
 
-	memcpy(send, &pMsg, sizeof(pMsg));
+	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index, send, size);
+	gSocketManager.DataSend(
+		serverIndex,
+		send,
+		sendSize);
 
 #endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg, int index)
-{
-#if(DATASERVER_UPDATE>=801)
 
-	SDHP_PARTY_MATCHING_JOIN_INSERT_SEND pMsg;
+void CPartyMatching::GDPartyMatchingJoinInsertRecv(const SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg, int serverIndex, int size)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV);
+
+	SDHP_PARTY_MATCHING_JOIN_INSERT_SEND pMsg{};
 
 	pMsg.Header.set(0x29, 0x02, sizeof(pMsg));
 
 	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(
+		pMsg.Account,
+		lpMsg->Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(pMsg.CharacterName));
 
 	pMsg.Result = 0;
 
-	PARTY_MATCHING_INFO PartyMatchingInfo;
-	PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo;
+	PARTY_MATCHING_INFO partyMatchingInfo{};
+	PARTY_MATCHING_JOIN_INFO partyMatchingJoinInfo{};
 
-	if (lpMsg->UseRandomParty == 0 &&
-		this->GetPartyMatchingInfo(&PartyMatchingInfo, lpMsg->LeaderName) == 0)
+	if (lpMsg->UseRandomParty == 0)
 	{
-		pMsg.Result = 0xFFFFFFFE;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-		return;
-	}
+		if (!GetPartyMatchingInfo(
+			&partyMatchingInfo,
+			lpMsg->LeaderName))
+		{
+			pMsg.Result = 0xFFFFFFFE;
 
-	if (lpMsg->UseRandomParty != 0 &&
-		this->GetPartyMatchingInfo(
-			&PartyMatchingInfo,
-			gServerManager[index].m_ServerCode,
-			lpMsg->Level,
-			lpMsg->Class,
-			lpMsg->GensType) == 0)
-	{
-		pMsg.Result = 0xFFFFFFFD;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-		return;
-	}
+			gSocketManager.DataSend(
+				serverIndex,
+				reinterpret_cast<BYTE*>(&pMsg),
+				sizeof(pMsg));
 
-	if (PartyMatchingInfo.UsePassword != 0 &&
-		strcmp(PartyMatchingInfo.Password, lpMsg->Password) != 0)
-	{
-		pMsg.Result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-		return;
-	}
-
-	if (this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo, lpMsg->CharacterName) != 0)
-	{
-		pMsg.Result = 0xFFFFFFFC;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-		return;
-	}
-
-	if (_stricmp(PartyMatchingInfo.CharacterName, lpMsg->CharacterName) == 0)
-	{
-		pMsg.Result = 0xFFFFFFFB;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-		return;
-	}
-
-	memcpy(
-		PartyMatchingJoinInfo.CharacterName,
-		lpMsg->CharacterName,
-		sizeof(PartyMatchingJoinInfo.CharacterName));
-
-	memcpy(
-		PartyMatchingJoinInfo.LeaderName,
-		PartyMatchingInfo.CharacterName,
-		sizeof(PartyMatchingJoinInfo.LeaderName));
-
-	PartyMatchingJoinInfo.LeaderServerCode = PartyMatchingInfo.ServerCode;
-	PartyMatchingJoinInfo.Class = lpMsg->Class;
-	PartyMatchingJoinInfo.Level = lpMsg->Level;
-
-	this->InsertPartyMatchingJoinInfo(PartyMatchingJoinInfo);
-
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-
-	if (PartyMatchingInfo.ApprovalType == 0)
-	{
-		this->DGPartyMatchingNotifyLeaderSend(PartyMatchingInfo.CharacterName, 0);
+			return;
+		}
 	}
 	else
 	{
-		this->DGPartyMatchingNotifySend(
-			PartyMatchingJoinInfo.CharacterName,
-			PartyMatchingInfo.CharacterName,
+		if (!GetPartyMatchingInfo(
+			&partyMatchingInfo,
+			gServerManager[serverIndex].m_ServerCode,
+			lpMsg->Level,
+			lpMsg->Class,
+			lpMsg->GensType))
+		{
+			pMsg.Result = 0xFFFFFFFD;
+
+			gSocketManager.DataSend(
+				serverIndex,
+				reinterpret_cast<BYTE*>(&pMsg),
+				sizeof(pMsg));
+
+			return;
+		}
+	}
+
+	if (partyMatchingInfo.UsePassword != 0 &&
+		std::strcmp(
+			partyMatchingInfo.Password,
+			lpMsg->Password) != 0)
+	{
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
+		return;
+	}
+
+	if (GetPartyMatchingJoinInfo(
+		&partyMatchingJoinInfo,
+		lpMsg->CharacterName))
+	{
+		pMsg.Result = 0xFFFFFFFC;
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
+		return;
+	}
+
+	if (_stricmp(
+		partyMatchingInfo.CharacterName,
+		lpMsg->CharacterName) == 0)
+	{
+		pMsg.Result = 0xFFFFFFFB;
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
+		return;
+	}
+
+	std::memcpy(
+		partyMatchingJoinInfo.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(partyMatchingJoinInfo.CharacterName));
+
+	std::memcpy(
+		partyMatchingJoinInfo.LeaderName,
+		partyMatchingInfo.CharacterName,
+		sizeof(partyMatchingJoinInfo.LeaderName));
+
+	partyMatchingJoinInfo.LeaderServerCode =
+		partyMatchingInfo.ServerCode;
+
+	partyMatchingJoinInfo.Class = lpMsg->Class;
+	partyMatchingJoinInfo.Level = lpMsg->Level;
+
+	InsertPartyMatchingJoinInfo(partyMatchingJoinInfo);
+
+	gSocketManager.DataSend(
+		serverIndex,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
+
+	if (partyMatchingInfo.ApprovalType == 0)
+	{
+		DGPartyMatchingNotifyLeaderSend(
+			partyMatchingInfo.CharacterName,
+			0);
+	}
+	else
+	{
+		DGPartyMatchingNotifySend(
+			partyMatchingJoinInfo.CharacterName,
+			partyMatchingInfo.CharacterName,
 			1);
 	}
 
 #endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg, int index)
+void CPartyMatching::GDPartyMatchingJoinAcceptRecv(const SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int serverIndex, int size)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV);
+
+	SDHP_PARTY_MATCHING_JOIN_ACCEPT_SEND pMsg{};
+
+	pMsg.Header.set(0x29, 0x05, sizeof(pMsg));
+
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(
+		pMsg.Account,
+		lpMsg->Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(pMsg.CharacterName));
+
+	std::memcpy(
+		pMsg.MemberName,
+		lpMsg->MemberName,
+		sizeof(pMsg.MemberName));
+
+	pMsg.Result = 0;
+	pMsg.Type = lpMsg->Type;
+	pMsg.Flag = 0;
+
+	PARTY_MATCHING_INFO partyMatchingInfo{};
+	PARTY_MATCHING_JOIN_INFO partyMatchingJoinInfo{};
+
+	if (!GetPartyMatchingInfo(
+		&partyMatchingInfo,
+		lpMsg->CharacterName) ||
+		!GetPartyMatchingJoinInfo(
+			&partyMatchingJoinInfo,
+			lpMsg->MemberName))
+	{
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+
+		return;
+	}
+
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
+
+	DGPartyMatchingNotifySend(
+		lpMsg->MemberName,
+		lpMsg->CharacterName,
+		(lpMsg->Type == 0) ? 2 : 1);
+
+#endif
+}
+
+void CPartyMatching::GDPartyMatchingJoinCancelRecv(
+	const SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg,
+	int serverIndex,
+	int size)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV);
+
+	SDHP_PARTY_MATCHING_JOIN_CANCEL_SEND pMsg{};
+
+	pMsg.Header.set(0x29, 0x06, sizeof(pMsg));
+
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(
+		pMsg.Account,
+		lpMsg->Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		lpMsg->CharacterName,
+		sizeof(pMsg.CharacterName));
+
+	pMsg.Result = 0;
+	pMsg.Type = lpMsg->Type;
+	pMsg.Flag = lpMsg->Flag;
+
+	if (lpMsg->Type == 0)
+	{
+		PARTY_MATCHING_INFO partyMatchingInfo{};
+
+		if (!GetPartyMatchingInfo(
+			&partyMatchingInfo,
+			lpMsg->CharacterName))
+		{
+			pMsg.Result = 0xFFFFFFFF;
+
+			gSocketManager.DataSend(
+				serverIndex,
+				reinterpret_cast<BYTE*>(&pMsg),
+				sizeof(pMsg));
+
+			return;
+		}
+
+		RemovePartyMatchingInfo(partyMatchingInfo);
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
+		RemovePartyMatchingJoinInfoNotifyAll(
+			partyMatchingInfo);
+
+		return;
+	}
+
+	PARTY_MATCHING_JOIN_INFO partyMatchingJoinInfo{};
+
+	if (!GetPartyMatchingJoinInfo(
+		&partyMatchingJoinInfo,
+		lpMsg->CharacterName))
+	{
+		pMsg.Result = 0xFFFFFFFF;
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
+		return;
+	}
+
+	RemovePartyMatchingJoinInfo(
+		partyMatchingJoinInfo);
+
+	gSocketManager.DataSend(
+		serverIndex,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
+
+#endif
+}
+
+void CPartyMatching::GDPartyMatchingInsertSaveRecv(
+	const SDHP_PARTY_MATCHING_INSERT_SAVE_RECV* lpMsg,
+	int serverIndex,
+	int size)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_INSERT_SAVE_RECV);
+
+	PARTY_MATCHING_INFO partyMatchingInfo{};
+
+	if (!GetPartyMatchingInfo(&partyMatchingInfo, lpMsg->CharacterName))
+	{
+		return;
+	}
+
+	partyMatchingInfo.LeaderLevel = lpMsg->LeaderLevel;
+	partyMatchingInfo.LeaderClass = lpMsg->LeaderClass;
+	partyMatchingInfo.PartyMemberCount = lpMsg->PartyMemberCount;
+	partyMatchingInfo.GensType = lpMsg->GensType;
+
+	InsertPartyMatchingInfo(partyMatchingInfo);
+
+#endif
+}
+
+void CPartyMatching::DGPartyMatchingNotifySend(const char* characterName, const char* leaderName, DWORD result)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	if (characterName == nullptr || leaderName == nullptr)
+	{
+		return;
+	}
+
+	CHARACTER_INFO characterInfo{};
+
+	if (!gCharacterManager.GetCharacterInfo(&characterInfo, characterName))
+	{
+		return;
+	}
+
+	CServerManager* const lpServerManager =	FindServerByCode(characterInfo.GameServerCode);
+
+	if (lpServerManager == nullptr)
+	{
+		return;
+	}
+
+	SDHP_PARTY_MATCHING_NOTIFY_SEND pMsg{};
+
+	pMsg.Header.set(0x29, 0x07, sizeof(pMsg));
+
+	pMsg.Index = characterInfo.UserIndex;
+	pMsg.Result = result;
+
+	std::memcpy(
+		pMsg.Account,
+		characterInfo.Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		characterInfo.CharacterName,
+		sizeof(pMsg.CharacterName));
+
+	std::memcpy(
+		pMsg.LeaderName,
+		leaderName,
+		sizeof(pMsg.LeaderName));
+
+	gSocketManager.DataSend(
+		lpServerManager->m_index,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
+
+#endif
+}
+
+void CPartyMatching::DGPartyMatchingNotifyLeaderSend(const char* name, DWORD result)
+{
+#if (DATASERVER_UPDATE >= 801)
+
+	if (name == nullptr)
+	{
+		return;
+	}
+
+	CHARACTER_INFO characterInfo{};
+
+	if (!gCharacterManager.GetCharacterInfo(
+		&characterInfo,
+		name))
+	{
+		return;
+	}
+
+	CServerManager* const lpServerManager =
+		FindServerByCode(characterInfo.GameServerCode);
+
+	if (lpServerManager == nullptr)
+	{
+		return;
+	}
+
+	SDHP_PARTY_MATCHING_NOTIFY_LEADER_SEND pMsg{};
+
+	pMsg.Header.set(0x29, 0x08, sizeof(pMsg));
+
+	pMsg.Index = characterInfo.UserIndex;
+	pMsg.Result = result;
+
+	std::memcpy(
+		pMsg.Account,
+		characterInfo.Account,
+		sizeof(pMsg.Account));
+
+	std::memcpy(
+		pMsg.CharacterName,
+		characterInfo.CharacterName,
+		sizeof(pMsg.CharacterName));
+
+	gSocketManager.DataSend(
+		lpServerManager->m_index,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
+
+#endif
+}
+
+void CPartyMatching::GDPartyMatchingJoinInfoRecv(const SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg, int serverIndex, int size)
 {
 #if(DATASERVER_UPDATE>=801)
 
@@ -540,6 +913,7 @@ void CPartyMatching::GDPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_R
 	pMsg.Index = lpMsg->Index;
 
 	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+
 	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
 	pMsg.Result = 0;
@@ -549,232 +923,51 @@ void CPartyMatching::GDPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_R
 	if (this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo, lpMsg->CharacterName) == 0)
 	{
 		pMsg.Result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+		gSocketManager.DataSend(serverIndex, (BYTE*)&pMsg, sizeof(pMsg));
 		return;
 	}
 
 	pMsg.LeaderServerCode = PartyMatchingJoinInfo.LeaderServerCode;
 
-	memcpy(
-		pMsg.LeaderName,
-		PartyMatchingJoinInfo.LeaderName,
-		sizeof(pMsg.LeaderName));
+	memcpy(pMsg.LeaderName, PartyMatchingJoinInfo.LeaderName, sizeof(pMsg.LeaderName));
 
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+	gSocketManager.DataSend(serverIndex, (BYTE*)&pMsg, sizeof(pMsg));
 
 #endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg, int index)
+void CPartyMatching::GDPartyMatchingJoinListRecv(const SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg, int serverIndex, int size)
 {
-#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	BYTE send[1024];
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_JOIN_LIST_RECV);
 
-	SDHP_PARTY_MATCHING_JOIN_LIST_SEND pMsg;
+	BYTE send[MAX_SEND_PACKET_SIZE]{};
+
+	SDHP_PARTY_MATCHING_JOIN_LIST_SEND pMsg{};
 
 	pMsg.Header.set(0x29, 0x04, 0);
 
-	int size = sizeof(pMsg);
+	int sendSize = sizeof(pMsg);
 
 	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
 	pMsg.Result = 0;
 
 	pMsg.count = this->GeneratePartyMatchingJoinList(
 		lpMsg->CharacterName,
 		send,
-		&size);
+		&sendSize);
 
-	pMsg.Header.size[0] = SET_NUMBERHB(size);
-	pMsg.Header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(sendSize);
+	pMsg.Header.size[1] = SET_NUMBERLB(sendSize);
 
-	memcpy(send, &pMsg, sizeof(pMsg));
+	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index, send, size);
-
-#endif
-}
-
-void CPartyMatching::GDPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int index)
-{
-#if(DATASERVER_UPDATE>=801)
-
-	SDHP_PARTY_MATCHING_JOIN_ACCEPT_SEND pMsg;
-
-	pMsg.Header.set(0x29, 0x05, sizeof(pMsg));
-
-	pMsg.Index = lpMsg->Index;
-
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
-
-	pMsg.Result = 0;
-
-	memcpy(pMsg.MemberName, lpMsg->MemberName, sizeof(pMsg.MemberName));
-
-	pMsg.Type = lpMsg->Type;
-	pMsg.Flag = 0;
-
-	PARTY_MATCHING_INFO PartyMatchingInfo;
-	PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo;
-
-	if (this->GetPartyMatchingInfo(&PartyMatchingInfo, lpMsg->CharacterName) == 0 ||
-		this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo, lpMsg->MemberName) == 0)
-	{
-		pMsg.Result = 0xFFFFFFFF;
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-		return;
-	}
-
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-
-	this->DGPartyMatchingNotifySend(
-		lpMsg->MemberName,
-		lpMsg->CharacterName,
-		(lpMsg->Type == 0) ? 2 : 1);
-
-#endif
-}
-
-void CPartyMatching::GDPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg, int index)
-{
-#if(DATASERVER_UPDATE>=801)
-
-	SDHP_PARTY_MATCHING_JOIN_CANCEL_SEND pMsg;
-
-	pMsg.Header.set(0x29, 0x06, sizeof(pMsg));
-
-	pMsg.Index = lpMsg->Index;
-
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
-
-	pMsg.Result = 0;
-	pMsg.Type = lpMsg->Type;
-	pMsg.Flag = lpMsg->Flag;
-
-	if (lpMsg->Type == 0)
-	{
-		PARTY_MATCHING_INFO PartyMatchingInfo;
-
-		if (this->GetPartyMatchingInfo(&PartyMatchingInfo, lpMsg->CharacterName) == 0)
-		{
-			pMsg.Result = 0xFFFFFFFF;
-			gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-			return;
-		}
-
-		this->RemovePartyMatchingInfo(PartyMatchingInfo);
-
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-
-		this->RemovePartyMatchingJoinInfoNotifyAll(PartyMatchingInfo);
-	}
-	else
-	{
-		PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo;
-
-		if (this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo, lpMsg->CharacterName) == 0)
-		{
-			pMsg.Result = 0xFFFFFFFF;
-			gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-			return;
-		}
-
-		this->RemovePartyMatchingJoinInfo(PartyMatchingJoinInfo);
-
-		gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
-	}
-
-#endif
-}
-
-void CPartyMatching::GDPartyMatchingInsertSaveRecv(SDHP_PARTY_MATCHING_INSERT_SAVE_RECV* lpMsg)
-{
-#if(DATASERVER_UPDATE>=801)
-
-	PARTY_MATCHING_INFO PartyMatchingInfo;
-
-	if (this->GetPartyMatchingInfo(&PartyMatchingInfo, lpMsg->CharacterName) == 0)
-	{
-		return;
-	}
-
-	PartyMatchingInfo.LeaderLevel = lpMsg->LeaderLevel;
-	PartyMatchingInfo.LeaderClass = lpMsg->LeaderClass;
-	PartyMatchingInfo.PartyMemberCount = lpMsg->PartyMemberCount;
-	PartyMatchingInfo.GensType = lpMsg->GensType;
-
-	this->InsertPartyMatchingInfo(PartyMatchingInfo);
-
-#endif
-}
-
-void CPartyMatching::DGPartyMatchingNotifySend(const char* name, const char* LeaderName, DWORD result)
-{
-#if(DATASERVER_UPDATE>=801)
-
-	CHARACTER_INFO CharacterInfo;
-
-	if (gCharacterManager.GetCharacterInfo(&CharacterInfo, const_cast<char*>(name)) == 0)
-	{
-		return;
-	}
-
-	SDHP_PARTY_MATCHING_NOTIFY_SEND pMsg;
-
-	pMsg.Header.set(0x29, 0x07, sizeof(pMsg));
-
-	pMsg.Index = CharacterInfo.UserIndex;
-
-	memcpy(pMsg.Account, CharacterInfo.Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, CharacterInfo.CharacterName, sizeof(pMsg.CharacterName));
-	memcpy(pMsg.LeaderName, LeaderName, sizeof(pMsg.LeaderName));
-
-	pMsg.Result = result;
-
-	CServerManager* lpServerManager = FindServerByCode(CharacterInfo.GameServerCode);
-
-	if (lpServerManager != nullptr)
-	{
-		gSocketManager.DataSend(lpServerManager->m_index, (BYTE*)&pMsg, pMsg.Header.size);
-	}
-
-#endif
-}
-
-void CPartyMatching::DGPartyMatchingNotifyLeaderSend(const char* name, DWORD result)
-{
-#if(DATASERVER_UPDATE>=801)
-
-	CHARACTER_INFO CharacterInfo;
-
-	if (gCharacterManager.GetCharacterInfo(&CharacterInfo, const_cast<char*>(name)) == 0)
-	{
-		return;
-	}
-
-	SDHP_PARTY_MATCHING_NOTIFY_LEADER_SEND pMsg;
-
-	pMsg.Header.set(0x29, 0x08, sizeof(pMsg));
-
-	pMsg.Index = CharacterInfo.UserIndex;
-
-	memcpy(pMsg.Account, CharacterInfo.Account, sizeof(pMsg.Account));
-	memcpy(pMsg.CharacterName, CharacterInfo.CharacterName, sizeof(pMsg.CharacterName));
-
-	pMsg.Result = result;
-
-	CServerManager* lpServerManager = FindServerByCode(CharacterInfo.GameServerCode);
-
-	if (lpServerManager != nullptr)
-	{
-		gSocketManager.DataSend(lpServerManager->m_index, (BYTE*)&pMsg, pMsg.Header.size);
-	}
+	gSocketManager.DataSend(serverIndex, send, sendSize);
 
 #endif
 }

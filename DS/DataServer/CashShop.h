@@ -2,9 +2,6 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-#define MAX_CASH_SHOP_PAGE 5
-#define MAX_CASH_SHOP_PAGE_ITEM 9
-
 // GameServer -> DataServer
 
 struct SDHP_CASH_SHOP_POINT_RECV
@@ -92,7 +89,7 @@ struct SDHP_CASH_SHOP_ADD_POINT_SAVE_RECV
 	PSBMSG_HEAD Header; // C1:18:30
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	char GiftAccount[11];
+	char GiftAccount[MAX_ACCOUNT_NAME];
 	DWORD AddWCoinC;
 	DWORD AddWCoinP;
 	DWORD AddGoblinPoint;
@@ -104,7 +101,7 @@ struct SDHP_CASH_SHOP_SUB_POINT_SAVE_RECV
 	PSBMSG_HEAD Header; // C1:18:31
 	WORD Index;
 	char Account[MAX_ACCOUNT_NAME];
-	char GiftAccount[11];
+	char GiftAccount[MAX_ACCOUNT_NAME];
 	DWORD SubWCoinC;
 	DWORD SubWCoinP;
 	DWORD SubGoblinPoint;
@@ -321,18 +318,18 @@ class CCashShop
 public:
 	CCashShop() = default;
 	~CCashShop() = default;
-	void GDCashShopPointRecv(SDHP_CASH_SHOP_POINT_RECV* lpMsg,int index);
-	void GDCashShopItemBuyRecv(SDHP_CASH_SHOP_ITEM_BUY_RECV* lpMsg,int index);
-	void GDCashShopItemGifRecv(SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg,int index);
-	void GDCashShopItemNumRecv(SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg,int index);
-	void GDCashShopItemUseRecv(SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg,int index);
-	void GDCashShopPeriodicItemRecv(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lpMsg,int index);
-	void GDCashShopRecievePointRecv(SDHP_CASH_SHOP_RECIEVE_POINT_RECV* lpMsg,int index);
-	void GDCashShopAddPointSaveRecv(SDHP_CASH_SHOP_ADD_POINT_SAVE_RECV* lpMsg);
-	void GDCashShopSubPointSaveRecv(SDHP_CASH_SHOP_SUB_POINT_SAVE_RECV* lpMsg);
-	void GDCashShopInsertItemSaveRecv(SDHP_CASH_SHOP_INSERT_ITEM_SAVE_RECV* lpMsg);
-	void GDCashShopDeleteItemSaveRecv(SDHP_CASH_SHOP_DELETE_ITEM_SAVE_RECV* lpMsg);
-	void GDCashShopPeriodicItemSaveRecv(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV* lpMsg);
+	void GDCashShopPointRecv(const SDHP_CASH_SHOP_POINT_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopItemBuyRecv(const SDHP_CASH_SHOP_ITEM_BUY_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopItemGifRecv(const SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopItemNumRecv(const SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopItemUseRecv(const SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopPeriodicItemRecv(const SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopRecievePointRecv(const SDHP_CASH_SHOP_RECIEVE_POINT_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopAddPointSaveRecv(const SDHP_CASH_SHOP_ADD_POINT_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopSubPointSaveRecv(const SDHP_CASH_SHOP_SUB_POINT_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopInsertItemSaveRecv(const SDHP_CASH_SHOP_INSERT_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopDeleteItemSaveRecv(const SDHP_CASH_SHOP_DELETE_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDCashShopPeriodicItemSaveRecv(const SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
 
 private:
 	// Fix:

@@ -1,142 +1,114 @@
 // CommandManager.cpp
 #include "Header.h"
 #include "CommandManager.h"
+#include "Log.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 #include "Util.h"
 
 CCommandManager gCommandManager;
 
-void CCommandManager::GDCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg, int index)
+void CCommandManager::GDCommandResetRecv(const SDHP_COMMAND_RESET_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_RESET_RECV);
 
 	SDHP_COMMAND_RESET_SEND pMsg{};
-
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_RESET, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_RESET, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	if (gQueryManager.ExecQuery(
-		"EXEC WZ_GetResetInfo '%s','%s'",
-		lpMsg->Account,
-		lpMsg->CharacterName))
-	{
-		const auto sqlRet = gQueryManager.Fetch();
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"EXEC WZ_GetResetInfo '%s','%s'",
+			lpMsg->Account,
+			lpMsg->CharacterName) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
 
-		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
-		{
-			pMsg.ResetDay = gQueryManager.GetAsInteger("ResetDay");
-			pMsg.ResetWek = gQueryManager.GetAsInteger("ResetWek");
-			pMsg.ResetMon = gQueryManager.GetAsInteger("ResetMon");
-		}
+	if (dataFound)
+	{
+		pMsg.ResetDay = gQueryManager.GetAsInteger("ResetDay");
+		pMsg.ResetWek = gQueryManager.GetAsInteger("ResetWek");
+		pMsg.ResetMon = gQueryManager.GetAsInteger("ResetMon");
 	}
 
 	gQueryManager.Close();
 
-	gSocketManager.DataSend(
-		index,
-		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void CCommandManager::GDCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* lpMsg, int index)
+void CCommandManager::GDCommandMasterResetRecv(const SDHP_COMMAND_MASTER_RESET_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_MASTER_RESET_RECV);
 
 	SDHP_COMMAND_MASTER_RESET_SEND pMsg{};
-
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_MASTER_RESET, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_MASTER_RESET, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
-	if (gQueryManager.ExecQuery(
-		"EXEC WZ_GetMasterResetInfo '%s','%s'",
-		lpMsg->Account,
-		lpMsg->CharacterName))
-	{
-		const auto sqlRet = gQueryManager.Fetch();
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"EXEC WZ_GetMasterResetInfo '%s','%s'",
+			lpMsg->Account,
+			lpMsg->CharacterName) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
 
-		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
-		{
-			pMsg.MasterResetDay = gQueryManager.GetAsInteger("MasterResetDay");
-			pMsg.MasterResetWek = gQueryManager.GetAsInteger("MasterResetWek");
-			pMsg.MasterResetMon = gQueryManager.GetAsInteger("MasterResetMon");
-		}
+	if (dataFound)
+	{
+		pMsg.MasterResetDay = gQueryManager.GetAsInteger("MasterResetDay");
+		pMsg.MasterResetWek = gQueryManager.GetAsInteger("MasterResetWek");
+		pMsg.MasterResetMon = gQueryManager.GetAsInteger("MasterResetMon");
 	}
 
 	gQueryManager.Close();
 
-	gSocketManager.DataSend(
-		index,
-		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
 // Marry System
-void CCommandManager::GDCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg, int index)
+void CCommandManager::GDCommandMarryRecv(const SDHP_COMMAND_MARRY_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_MARRY_RECV);
 
 	SDHP_COMMAND_MARRY_SEND pMsg{};
-
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_MARRY, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_MARRY, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 	std::memcpy(pMsg.MarryName, lpMsg->MarryName, sizeof(pMsg.MarryName));
 	std::memcpy(pMsg.Mode, lpMsg->Mode, sizeof(pMsg.Mode));
 
-	if (gQueryManager.ExecQuery(
-		"EXEC WZ_GetMarryInfo '%s','%s'",
-		lpMsg->CharacterName,
-		lpMsg->MarryName))
+	const bool dataFound =
+		gQueryManager.ExecQuery(
+			"EXEC WZ_GetMarryInfo '%s','%s'",
+			lpMsg->CharacterName,
+			lpMsg->MarryName) &&
+		gQueryManager.Fetch() != SQL_NO_DATA;
+
+	if (dataFound)
 	{
-		const auto sqlRet = gQueryManager.Fetch();
+		pMsg.CountYou = gQueryManager.GetAsInteger("CountYou");
+		pMsg.CountHim = gQueryManager.GetAsInteger("CountHim");
+		pMsg.MarriedOn = gQueryManager.GetAsInteger("MarriedOn");
 
-		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
-		{
-			pMsg.CountYou = gQueryManager.GetAsInteger("CountYou");
-			pMsg.CountHim = gQueryManager.GetAsInteger("CountHim");
-			pMsg.MarriedOn = gQueryManager.GetAsInteger("MarriedOn");
-
-			gQueryManager.GetAsString("NameGet1", pMsg.NameGet1, sizeof(pMsg.NameGet1));
-			gQueryManager.GetAsString("NameGet2", pMsg.NameGet2, sizeof(pMsg.NameGet2));
-		}
+		gQueryManager.GetAsString("NameGet1", pMsg.NameGet1, sizeof(pMsg.NameGet1));
+		gQueryManager.GetAsString("NameGet2", pMsg.NameGet2, sizeof(pMsg.NameGet2));
 	}
 
 	gQueryManager.Close();
 
-	gSocketManager.DataSend(
-		index,
-		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void CCommandManager::GDCommandRewardRecv(SDHP_COMMAND_REWARD_RECV* lpMsg, int index)
+void CCommandManager::GDCommandRewardRecv(const SDHP_COMMAND_REWARD_RECV* lpMsg, int serverIndex, int size)
 {
-	UNREFERENCED_PARAMETER(index);
-
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_REWARD_RECV);
 
 	gQueryManager.ExecQuery(
-		"EXEC WZ_SetReward '%s','%s','%s','%s','%d','%d'",
+		"EXEC WZ_SetReward '%s','%s','%s','%s',%d,%d",
 		lpMsg->Account,
 		lpMsg->CharacterName,
 		lpMsg->AccountGM,
@@ -147,15 +119,12 @@ void CCommandManager::GDCommandRewardRecv(SDHP_COMMAND_REWARD_RECV* lpMsg, int i
 	gQueryManager.Close();
 }
 
-void CCommandManager::GDCommandRewardAllRecv(SDHP_COMMAND_REWARDALL_RECV* lpMsg, int index)
+void CCommandManager::GDCommandRewardAllRecv(const SDHP_COMMAND_REWARDALL_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_REWARDALL_RECV);
 
 	gQueryManager.ExecQuery(
-		"EXEC WZ_SetRewardAll '%s','%s','%d','%d'",
+		"EXEC WZ_SetRewardAll '%s','%s',%d,%d",
 		lpMsg->AccountGM,
 		lpMsg->NameGM,
 		lpMsg->Type,
@@ -164,21 +133,20 @@ void CCommandManager::GDCommandRewardAllRecv(SDHP_COMMAND_REWARDALL_RECV* lpMsg,
 	gQueryManager.Close();
 }
 
-void CCommandManager::GDCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg, int index)
+void CCommandManager::GDCommandRenameRecv(const SDHP_COMMAND_RENAME_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_RENAME_RECV);
 
 	SDHP_COMMAND_RENAME_SEND pMsg{};
 
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_RENAME, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_RENAME, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 
 	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
 	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 	std::memcpy(pMsg.NewName, lpMsg->NewName, sizeof(pMsg.NewName));
+
+	pMsg.Result = 2;
 
 	if (gQueryManager.ExecQuery(
 		"EXEC WZ_RenameCharacter '%s','%s','%s'",
@@ -192,183 +160,121 @@ void CCommandManager::GDCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg, int i
 		{
 			pMsg.Result = static_cast<BYTE>(gQueryManager.GetResult(0));
 		}
-		else
-		{
-			pMsg.Result = 2;
-		}
-	}
-	else
-	{
-		pMsg.Result = 2;
 	}
 
 	gQueryManager.Close();
 
-	gSocketManager.DataSend(
-		index,
-		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void CCommandManager::GDCommandBlocAccRecv(SDHP_COMMAND_BLOC_RECV* lpMsg, int index)
+void CCommandManager::GDCommandBlocAccRecv(const SDHP_COMMAND_BLOC_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_BLOC_RECV);
 
 	SDHP_COMMAND_BLOC_SEND pMsg{};
 
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_BLOCK_ACCOUNT, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_BLOCK_ACCOUNT, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 0;
 
 	if (gQueryManager.ExecQuery(
-		"SELECT TOP 1 1 FROM Character WHERE Name='%s'",
+		"UPDATE MEMB_INFO "
+		"SET BLOC_CODE=1,BLOC_EXPIRE=DATEADD(DAY,%d,GETDATE()) "
+		"WHERE MEMB___ID=(SELECT TOP 1 AccountID FROM Character WHERE Name='%s')",
+		lpMsg->Days,
 		lpMsg->CharacterNameBloc))
 	{
-		const auto sqlRet = gQueryManager.Fetch();
-
-		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
-		{
-			gQueryManager.Close();
-
-			if (gQueryManager.ExecQuery(
-				"UPDATE MEMB_INFO "
-				"SET BLOC_CODE=1, BLOC_EXPIRE=(GETDATE()+%d) "
-				"WHERE MEMB___ID=(SELECT TOP 1 AccountID FROM Character WHERE Name='%s')",
-				lpMsg->Days,
-				lpMsg->CharacterNameBloc))
-			{
-				pMsg.Result = 1;
-			}
-		}
+		pMsg.Result = 1;
 	}
 
 	gQueryManager.Close();
 
-	gSocketManager.DataSend(
-		index,
-		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sizeof(pMsg));
 }
 
-void CCommandManager::GDCommandBlocCharRecv(SDHP_COMMAND_BLOC_RECV* lpMsg, int index)
+void CCommandManager::GDCommandBlocCharRecv(const SDHP_COMMAND_BLOC_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_COMMAND_BLOC_RECV);
 
 	SDHP_COMMAND_BLOC_SEND pMsg{};
 
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_BLOCK_CHARACTER, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_BLOCK_CHARACTER, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 0;
 
 	if (gQueryManager.ExecQuery(
-		"SELECT 1 FROM Character WHERE Name='%s'",
+		"UPDATE Character "
+		"SET CTLCODE=1,BLOC_EXPIRE=DATEADD(DAY,%d,GETDATE()) "
+		"WHERE Name='%s'",
+		lpMsg->Days,
 		lpMsg->CharacterNameBloc))
 	{
-		const auto sqlRet = gQueryManager.Fetch();
-
-		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
-		{
-			gQueryManager.Close();
-
-			if (gQueryManager.ExecQuery(
-				"UPDATE Character "
-				"SET CTLCODE=1, BLOC_EXPIRE=(GETDATE()+%d) "
-				"WHERE Name='%s'",
-				lpMsg->Days,
-				lpMsg->CharacterNameBloc))
-			{
-				pMsg.Result = 1;
-			}
-		}
+		pMsg.Result = (gQueryManager.GetAffectedRows() == 1);
 	}
 
 	gQueryManager.Close();
 
 	gSocketManager.DataSend(
-		index,
+		serverIndex,
 		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+		sizeof(pMsg));
 }
 
-void CCommandManager::GDCommandGiftRecv(SDHP_GIFT_RECV* lpMsg, int index)
+void CCommandManager::GDCommandGiftRecv(const SDHP_GIFT_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_GIFT_RECV);
 
 	SDHP_GIFT_SEND pMsg{};
 
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_GIFT, sizeof(pMsg));
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_GIFT, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 0;
 
 	if (gQueryManager.ExecQuery(
-		"SELECT Quantity FROM CustomGift WHERE AccountID='%s'",
+		"UPDATE CustomGift "
+		"SET Quantity=Quantity+1 "
+		"OUTPUT INSERTED.Quantity "
+		"WHERE AccountID='%s'; "
+		"IF @@ROWCOUNT=0 "
+		"BEGIN "
+		"INSERT INTO CustomGift (AccountID,Quantity) "
+		"OUTPUT INSERTED.Quantity "
+		"VALUES ('%s',1); "
+		"END",
+		lpMsg->Account,
 		lpMsg->Account))
 	{
 		const auto sqlRet = gQueryManager.Fetch();
 
-		if (sqlRet == SQL_NO_DATA)
+		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
 		{
-			gQueryManager.Close();
-
-			if (gQueryManager.ExecQuery(
-				"INSERT INTO CustomGift (AccountID,Quantity) VALUES ('%s',1)",
-				lpMsg->Account))
-			{
-				pMsg.Result = 1;
-			}
-		}
-		else if (sqlRet != SQL_NULL_DATA)
-		{
-			pMsg.Result = gQueryManager.GetAsInteger("Quantity") + 1;
-
-			gQueryManager.Close();
-
-			if (gQueryManager.ExecQuery(
-				"UPDATE CustomGift SET Quantity=Quantity+1 WHERE AccountID='%s'",
-				lpMsg->Account) == FALSE)
-			{
-				pMsg.Result = 0;
-			}
+			pMsg.Result = gQueryManager.GetResult(0);
 		}
 	}
 
 	gQueryManager.Close();
 
 	gSocketManager.DataSend(
-		index,
+		serverIndex,
 		reinterpret_cast<BYTE*>(&pMsg),
-		pMsg.Header.size);
+		sizeof(pMsg));
 }
 
-void CCommandManager::GDCommandTopRecv(SDHP_TOP_RECV* lpMsg, int index)
+void CCommandManager::GDCommandTopRecv(const SDHP_TOP_RECV* lpMsg, int serverIndex, int size)
 {
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_TOP_RECV);
 
-	BYTE send[4096]{};
+	BYTE send[MAX_SEND_PACKET_SIZE]{};
 
 	SDHP_TOP_SEND pMsg{};
-	SDHP_TOP_INFO info{};
 
-	pMsg.Header.set(HEAD_COMMAND, DS_SUB_COMMAND_TOP, 0);
-
-	int size = sizeof(pMsg);
-
+	pMsg.Header.set(HEAD_COMMAND, SUB_COMMAND_TOP, 0);
 	pMsg.Index = lpMsg->Index;
 	pMsg.Type = lpMsg->Type;
 	pMsg.Class = lpMsg->Class;
 	pMsg.Count = 0;
+
+	int sendSize = sizeof(pMsg);
 
 	const int wzClass = (lpMsg->Class == 999) ? -1 : lpMsg->Class;
 
@@ -386,6 +292,8 @@ void CCommandManager::GDCommandTopRecv(SDHP_TOP_RECV* lpMsg, int index)
 			pMsg.Count < maxCount;
 			sqlRet = gQueryManager.Fetch())
 		{
+			SDHP_TOP_INFO info{};
+
 			gQueryManager.GetAsString(
 				"VALUE1",
 				info.CharacterName,
@@ -393,20 +301,20 @@ void CCommandManager::GDCommandTopRecv(SDHP_TOP_RECV* lpMsg, int index)
 
 			info.Value = gQueryManager.GetAsInteger("VALUE2");
 
-			std::memcpy(&send[size], &info, sizeof(info));
+			std::memcpy(send + sendSize, &info, sizeof(info));
 
-			size += sizeof(SDHP_TOP_INFO);
+			sendSize += sizeof(info);
 			++pMsg.Count;
 		}
 	}
 
 	gQueryManager.Close();
 
-	pMsg.Header.size[0] = SET_NUMBERHB(size);
-	pMsg.Header.size[1] = SET_NUMBERLB(size);
+	pMsg.Header.size[0] = SET_NUMBERHB(sendSize);
+	pMsg.Header.size[1] = SET_NUMBERLB(sendSize);
 
 	std::memcpy(send, &pMsg, sizeof(pMsg));
 
-	gSocketManager.DataSend(index, send, size);
+	gSocketManager.DataSend(serverIndex, send, sendSize);
 }
 

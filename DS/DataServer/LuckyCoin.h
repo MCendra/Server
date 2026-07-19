@@ -81,11 +81,11 @@ class CLuckyCoin
 public:
 	CLuckyCoin() = default;
 	~CLuckyCoin() = default;
-	void GDLuckyCoinCountRecv(SDHP_LUCKY_COIN_COUNT_RECV* lpMsg,int index);
-	void GDLuckyCoinRegisterRecv(SDHP_LUCKY_COIN_REGISTER_RECV* lpMsg,int index);
-	void GDLuckyCoinExchangeRecv(SDHP_LUCKY_COIN_EXCHANGE_RECV* lpMsg,int index);
-	void GDLuckyCoinAddCountSaveRecv(SDHP_LUCKY_COIN_ADD_COUNT_SAVE_RECV* lpMsg);
-	void GDLuckyCoinSubCountSaveRecv(SDHP_LUCKY_COIN_SUB_COUNT_SAVE_RECV* lpMsg);
+	void GDLuckyCoinCountRecv(const SDHP_LUCKY_COIN_COUNT_RECV* lpMsg,int serverIndex, int size);
+	void GDLuckyCoinRegisterRecv(const SDHP_LUCKY_COIN_REGISTER_RECV* lpMsg, int serverIndex, int size);
+	void GDLuckyCoinExchangeRecv(const SDHP_LUCKY_COIN_EXCHANGE_RECV* lpMsg, int serverIndex, int size);
+	void GDLuckyCoinAddCountSaveRecv(const SDHP_LUCKY_COIN_ADD_COUNT_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDLuckyCoinSubCountSaveRecv(const SDHP_LUCKY_COIN_SUB_COUNT_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CLuckyCoin gLuckyCoin;

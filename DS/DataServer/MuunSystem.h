@@ -41,8 +41,8 @@ class CMuunSystem
 public:
 	CMuunSystem() = default;
 	~CMuunSystem() = default;
-	void GDMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg,int index);
-	void GDMuunInventorySaveRecv(SDHP_MUUN_INVENTORY_SAVE_RECV* lpMsg);
+	void GDMuunInventoryRecv(const SDHP_MUUN_INVENTORY_RECV* lpMsg, int serverIndex, int size);
+	void GDMuunInventorySaveRecv(const SDHP_MUUN_INVENTORY_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CMuunSystem gMuunSystem;

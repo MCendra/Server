@@ -136,12 +136,12 @@ class CGensSystem
 public:
 	CGensSystem() = default;
 	~CGensSystem() = default;
-	void GDGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg,int index);
-	void GDGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg,int index);
-	void GDGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg,int index);
-	void GDGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg,int index);
-	void GDGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg,int index);
-	void GDGensSystemRewardSaveRecv(SDHP_GENS_SYSTEM_REWARD_SAVE_RECV* lpMsg);
+	void GDGensSystemInsertRecv(const SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg, int serverIndex, int size);
+	void GDGensSystemDeleteRecv(const SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg, int serverIndex, int size);
+	void GDGensSystemMemberRecv(const SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg, int serverIndex, int size);
+	void GDGensSystemUpdateRecv(const SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg, int serverIndex, int size);
+	void GDGensSystemRewardRecv(const SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg, int serverIndex, int size);
+	void GDGensSystemRewardSaveRecv(const SDHP_GENS_SYSTEM_REWARD_SAVE_RECV* lpMsg, int serverIndex, int size);
 	void DGGensSystemCreateSend(DWORD GensFamily,DWORD GensRankStart,DWORD GensRankFinal);
 };
 

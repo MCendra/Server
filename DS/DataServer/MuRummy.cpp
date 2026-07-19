@@ -1,30 +1,31 @@
 // MuRummy.cpp
 #include "Header.h"
 #include "MuRummy.h"
+#include "Log.h"
 #include "QueryManager.h"
 #include "SocketManager.h"
 
 CMuRummy gMuRummy;
 
-void CMuRummy::GDReqCardInfo(_tagPMSG_REQ_MURUMMY_SELECT_DS* lpMsg, int index)
+void CMuRummy::GDReqCardInfo(const PMSG_REQ_MURUMMY_SELECT_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_SELECT_DS);
 
-	_tagPMSG_ANS_MURUMMY_SELECT_DS pMsg{};
+	PMSG_ANS_MURUMMY_SELECT_DS pMsg{};
 
-	pMsg.Header.set(DS_HEAD_MURUMMY, DS_SUB_MURUMMY_LOAD, sizeof(pMsg));
-
+	pMsg.Header.set(HEAD_MURUMMY, SUB_MURUMMY_LOAD, sizeof(pMsg));
 	pMsg.Index = lpMsg->Index;
 	pMsg.Result = 1;
 
-	if (gQueryManager.ExecQuery(
+	if (!gQueryManager.ExecQuery(
 		"SELECT TotalScore FROM MuRummyData WHERE Name='%s'",
 		lpMsg->CharacterName))
+	{
+		pMsg.Result = 0;
+	}
+	else
 	{
 		const auto sqlRet = gQueryManager.Fetch();
 
@@ -37,67 +38,69 @@ void CMuRummy::GDReqCardInfo(_tagPMSG_REQ_MURUMMY_SELECT_DS* lpMsg, int index)
 			pMsg.Score = gQueryManager.GetAsInteger("TotalScore");
 		}
 	}
-	else
-	{
-		pMsg.Result = 0;
-	}
 
 	gQueryManager.Close();
 
 	if (pMsg.Result != 0)
 	{
-		if (gQueryManager.ExecQuery(
-			"SELECT Color,Number,Slot,Status,Sequence FROM MuRummyCard WHERE Name='%s'",
+		if (!gQueryManager.ExecQuery(
+			"SELECT Color,Number,Slot,Status,Sequence "
+			"FROM MuRummyCard WHERE Name='%s'",
 			lpMsg->CharacterName))
-		{
-			for (short sqlRet = gQueryManager.Fetch();
-				sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA;
-				sqlRet = gQueryManager.Fetch())
-			{
-				const int seq = gQueryManager.GetAsInteger("Sequence");
-
-				if (seq >= 0 && seq < _countof(pMsg.stMuRummyCardInfoDS))
-				{
-					pMsg.stMuRummyCardInfoDS[seq].Color = gQueryManager.GetAsInteger("Color");
-					pMsg.stMuRummyCardInfoDS[seq].Number = gQueryManager.GetAsInteger("Number");
-					pMsg.stMuRummyCardInfoDS[seq].SlotNum = gQueryManager.GetAsInteger("Slot");
-					pMsg.stMuRummyCardInfoDS[seq].Seq = seq;
-					pMsg.stMuRummyCardInfoDS[seq].Status = gQueryManager.GetAsInteger("Status");
-				}
-			}
-		}
-		else
 		{
 			pMsg.Result = 0;
 		}
+		else
+		{
+			for (auto sqlRet = gQueryManager.Fetch();
+				sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA;
+				sqlRet = gQueryManager.Fetch())
+			{
+				const int sequence =
+					gQueryManager.GetAsInteger("Sequence");
+
+				if (sequence < 0 ||
+					sequence >= static_cast<int>(_countof(pMsg.stMuRummyCardInfoDS)))
+				{
+					continue;
+				}
+
+				auto& card = pMsg.stMuRummyCardInfoDS[sequence];
+
+				card.Color = gQueryManager.GetAsInteger("Color");
+				card.Number = gQueryManager.GetAsInteger("Number");
+				card.SlotNum = gQueryManager.GetAsInteger("Slot");
+				card.Seq = sequence;
+				card.Status = gQueryManager.GetAsInteger("Status");
+			}
+		}
 
 		gQueryManager.Close();
 	}
 
-	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg),	sizeof(pMsg));
 
 #endif
 }
 
-void CMuRummy::GDReqCardInfoInsert(_tagPMSG_REQ_MURUMMY_INSERT_DS* lpMsg)
+void CMuRummy::GDReqCardInfoInsert(const PMSG_REQ_MURUMMY_INSERT_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_INSERT_DS);
 
-	for (int n = 0; n < _countof(lpMsg->stMuRummyCardInfoDS); n++)
+	for (const auto& card : lpMsg->stMuRummyCardInfoDS)
 	{
 		gQueryManager.ExecQuery(
-			"INSERT INTO MuRummyCard (Name,Color,Number,Slot,Status,Sequence) VALUES ('%s',%d,%d,%d,%d,%d)",
+			"INSERT INTO MuRummyCard "
+			"(Name,Color,Number,Slot,Status,Sequence) "
+			"VALUES ('%s',%d,%d,%d,%d,%d)",
 			lpMsg->CharacterName,
-			lpMsg->stMuRummyCardInfoDS[n].Color,
-			lpMsg->stMuRummyCardInfoDS[n].Number,
-			lpMsg->stMuRummyCardInfoDS[n].SlotNum,
-			lpMsg->stMuRummyCardInfoDS[n].Status,
-			lpMsg->stMuRummyCardInfoDS[n].Seq);
+			card.Color,
+			card.Number,
+			card.SlotNum,
+			card.Status,
+			card.Seq);
 
 		gQueryManager.Close();
 	}
@@ -105,17 +108,16 @@ void CMuRummy::GDReqCardInfoInsert(_tagPMSG_REQ_MURUMMY_INSERT_DS* lpMsg)
 #endif
 }
 
-void CMuRummy::GDReqCardInfoUpdate(_tagPMSG_REQ_MURUMMY_UPDATE_DS* lpMsg)
+void CMuRummy::GDReqCardInfoUpdate(const PMSG_REQ_MURUMMY_UPDATE_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_UPDATE_DS);
 
 	gQueryManager.ExecQuery(
-		"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
+		"UPDATE MuRummyCard "
+		"SET Slot=%d,Status=%d "
+		"WHERE Name='%s' AND Sequence=%d",
 		lpMsg->SlotNum,
 		lpMsg->Status,
 		lpMsg->CharacterName,
@@ -126,49 +128,52 @@ void CMuRummy::GDReqCardInfoUpdate(_tagPMSG_REQ_MURUMMY_UPDATE_DS* lpMsg)
 #endif
 }
 
-void CMuRummy::GDReqScoreUpdate(_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg)
+void CMuRummy::GDReqScoreUpdate(const PMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_SCORE_UPDATE_DS);
+
+	bool exists = false;
 
 	if (gQueryManager.ExecQuery(
-		"SELECT Name FROM MuRummyData WHERE Name='%s'",
+		"SELECT 1 FROM MuRummyData WHERE Name='%s'",
 		lpMsg->CharacterName))
 	{
 		const auto sqlRet = gQueryManager.Fetch();
 
-		gQueryManager.Close();
-
-		if (sqlRet == SQL_NO_DATA || sqlRet == SQL_NULL_DATA)
-		{
-			gQueryManager.ExecQuery(
-				"INSERT INTO MuRummyData (Name,TotalScore) VALUES ('%s',%d)",
-				lpMsg->CharacterName,
-				lpMsg->Score);
-		}
-		else
-		{
-			gQueryManager.ExecQuery(
-				"UPDATE MuRummyData SET TotalScore=%d WHERE Name='%s'",
-				lpMsg->Score,
-				lpMsg->CharacterName);
-		}
-
-		gQueryManager.Close();
+		exists = (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA);
 	}
 
-	for (int n = 0; n < _countof(lpMsg->stCardUpdateDS); n++)
+	gQueryManager.Close();
+
+	if (exists)
 	{
 		gQueryManager.ExecQuery(
-			"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
-			lpMsg->stCardUpdateDS[n].SlotNum,
-			lpMsg->stCardUpdateDS[n].Status,
+			"UPDATE MuRummyData SET TotalScore=%d WHERE Name='%s'",
+			lpMsg->Score,
+			lpMsg->CharacterName);
+	}
+	else
+	{
+		gQueryManager.ExecQuery(
+			"INSERT INTO MuRummyData (Name,TotalScore) VALUES ('%s',%d)",
 			lpMsg->CharacterName,
-			lpMsg->stCardUpdateDS[n].Seq);
+			lpMsg->Score);
+	}
+
+	gQueryManager.Close();
+
+	for (const auto& card : lpMsg->stCardUpdateDS)
+	{
+		gQueryManager.ExecQuery(
+			"UPDATE MuRummyCard "
+			"SET Slot=%d,Status=%d "
+			"WHERE Name='%s' AND Sequence=%d",
+			card.SlotNum,
+			card.Status,
+			lpMsg->CharacterName,
+			card.Seq);
 
 		gQueryManager.Close();
 	}
@@ -176,14 +181,11 @@ void CMuRummy::GDReqScoreUpdate(_tagPMSG_REQ_MURUMMY_SCORE_UPDATE_DS* lpMsg)
 #endif
 }
 
-void CMuRummy::GDReqScoreDelete(_tagPMSG_REQ_MURUMMY_DELETE_DS* lpMsg)
+void CMuRummy::GDReqScoreDelete(const PMSG_REQ_MURUMMY_DELETE_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_DELETE_DS);
 
 	gQueryManager.ExecQuery(
 		"DELETE FROM MuRummyCard WHERE Name='%s'",
@@ -200,17 +202,16 @@ void CMuRummy::GDReqScoreDelete(_tagPMSG_REQ_MURUMMY_DELETE_DS* lpMsg)
 #endif
 }
 
-void CMuRummy::GDReqSlotInfoUpdate(_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg)
+void CMuRummy::GDReqSlotInfoUpdate(const PMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_SLOTUPDATE_DS);
 
 	gQueryManager.ExecQuery(
-		"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
+		"UPDATE MuRummyCard "
+		"SET Slot=%d,Status=%d "
+		"WHERE Name='%s' AND Sequence=%d",
 		lpMsg->stCardUpdateDS.SlotNum,
 		lpMsg->stCardUpdateDS.Status,
 		lpMsg->CharacterName,
@@ -221,17 +222,14 @@ void CMuRummy::GDReqSlotInfoUpdate(_tagPMSG_REQ_MURUMMY_SLOTUPDATE_DS* lpMsg)
 #endif
 }
 
-void CMuRummy::GDReqMuRummyInfoUpdate(_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg)
+void CMuRummy::GDReqMuRummyInfoUpdate(const PMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 802)
 
-	if (lpMsg == nullptr)
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(PMSG_REQ_MURUMMY_INFO_UPDATE_DS);
 
 	if (gQueryManager.ExecQuery(
-		"SELECT Name FROM MuRummyData WHERE Name='%s'",
+		"SELECT 1 FROM MuRummyData WHERE Name='%s'",
 		lpMsg->CharacterName))
 	{
 		const auto sqlRet = gQueryManager.Fetch();
@@ -255,15 +253,21 @@ void CMuRummy::GDReqMuRummyInfoUpdate(_tagPMSG_REQ_MURUMMY_INFO_UPDATE_DS* lpMsg
 
 		gQueryManager.Close();
 	}
+	else
+	{
+		gQueryManager.Close();
+	}
 
-	for (int n = 0; n < _countof(lpMsg->stMuRummyCardUpdateDS); n++)
+	for (const auto& card : lpMsg->stMuRummyCardUpdateDS)
 	{
 		gQueryManager.ExecQuery(
-			"UPDATE MuRummyCard SET Slot=%d,Status=%d WHERE Name='%s' AND Sequence=%d",
-			lpMsg->stMuRummyCardUpdateDS[n].SlotNum,
-			lpMsg->stMuRummyCardUpdateDS[n].Status,
+			"UPDATE MuRummyCard "
+			"SET Slot=%d,Status=%d "
+			"WHERE Name='%s' AND Sequence=%d",
+			card.SlotNum,
+			card.Status,
 			lpMsg->CharacterName,
-			lpMsg->stMuRummyCardUpdateDS[n].Seq);
+			card.Seq);
 
 		gQueryManager.Close();
 	}

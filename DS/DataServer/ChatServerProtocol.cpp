@@ -25,20 +25,18 @@ void ChatServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int /*size*/)
 
 void CSDataSend(int index, BYTE* lpMsg, int size)
 {
+	BYTE send[MAX_SEND_PACKET_SIZE]{};
+
+	PSWMSG_HEAD Header{};
+
+	size += 1;
+
 	switch (lpMsg[PACKET_TYPE_OFFSET])
 	{
 		case PACKET_C1:
 			{
-				BYTE send[8192]{};
-
-				PSBMSG_HEAD Header;
-
-				size += 1;
-
-				Header.set(DS_HEAD_CONNECT_SERVER, lpMsg[C1_PACKET_HEAD_OFFSET], size);
-
+				Header.set(HEAD_CONNECT_SERVER, lpMsg[C1_PACKET_HEAD_OFFSET], size);
 				std::memcpy(send, &Header, sizeof(Header));
-
 				std::memcpy(send + sizeof(Header), lpMsg + C1_PACKET_DATA_OFFSET, size - sizeof(Header));
 
 				gSocketManager.DataSend(index, send, size);
@@ -46,16 +44,8 @@ void CSDataSend(int index, BYTE* lpMsg, int size)
 			break;
 		case PACKET_C2:
 			{
-				BYTE send[8192]{};
-
-				PSWMSG_HEAD Header;
-
-				size += 1;
-
-				Header.set(DS_HEAD_CONNECT_SERVER, lpMsg[C2_PACKET_HEAD_OFFSET], size);
-
+				Header.set(HEAD_CONNECT_SERVER, lpMsg[C2_PACKET_HEAD_OFFSET], size);
 				std::memcpy(send, &Header, sizeof(Header));
-
 				std::memcpy(send + sizeof(Header), lpMsg + C2_PACKET_DATA_OFFSET, size - sizeof(Header));
 
 				gSocketManager.DataSend(index, send, size);
@@ -66,25 +56,23 @@ void CSDataSend(int index, BYTE* lpMsg, int size)
 	}
 }
 
-void CSDataRecv(int index, BYTE head, BYTE* lpMsg, int size)
+void CSDataRecv(int index, BYTE head, const BYTE* lpMsg, int size)
 {
 
 	UNREFERENCED_PARAMETER(head);
+
+	BYTE recv[MAX_RECV_PACKET_SIZE]{};
+
+	PBMSG_HEAD Header{};
+
+	size -= 1;
 
 	switch (lpMsg[PACKET_TYPE_OFFSET])
 	{
 	case PACKET_C1:
 	{
-		BYTE recv[8192]{};
-
-		PBMSG_HEAD Header;
-
-		size -= 1;
-
 		Header.set(lpMsg[C1_PACKET_DATA_OFFSET], size);
-
 		std::memcpy(recv, &Header, sizeof(Header));
-
 		std::memcpy(recv + sizeof(Header), lpMsg + C1_PACKET_DATA_OFFSET + 1, size - sizeof(Header));
 
 		ChatServerProtocolCore(index, Header.head, recv, size);
@@ -93,16 +81,8 @@ void CSDataRecv(int index, BYTE head, BYTE* lpMsg, int size)
 
 	case PACKET_C2:
 	{
-		BYTE recv[8192]{};
-
-		PWMSG_HEAD Header;
-
-		size -= 1;
-
 		Header.set(lpMsg[C2_PACKET_DATA_OFFSET], size);
-
 		std::memcpy(recv, &Header, sizeof(Header));
-
 		std::memcpy(recv + sizeof(Header), lpMsg + C2_PACKET_DATA_OFFSET + 1, size - sizeof(Header));
 
 		ChatServerProtocolCore(index, Header.head, recv, size);

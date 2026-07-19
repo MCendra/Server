@@ -284,16 +284,16 @@ public:
 	DWORD GenerateGuildMatchingList(DWORD* curPage,DWORD* maxPage,BYTE* lpMsg,int* size);
 	DWORD GenerateGuildMatchingList(DWORD* curPage, DWORD* maxPage, const char* searchWord, BYTE* lpMsg, int* size);
 	DWORD GenerateGuildMatchingJoinList(const char* guildName, BYTE* lpMsg, int* size);
-	void GDGuildMatchingListRecv(const SDHP_GUILD_MATCHING_LIST_RECV* lpMsg, int index);
-	void GDGuildMatchingListSearchRecv(const SDHP_GUILD_MATCHING_LIST_SEARCH_RECV* lpMsg, int index);
-	void GDGuildMatchingInsertRecv(const SDHP_GUILD_MATCHING_INSERT_RECV* lpMsg, int index);
-	void GDGuildMatchingCancelRecv(const SDHP_GUILD_MATCHING_CANCEL_RECV* lpMsg, int index);
-	void GDGuildMatchingJoinInsertRecv(const SDHP_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg, int index);
-	void GDGuildMatchingJoinCancelRecv(const SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg, int index);
-	void GDGuildMatchingJoinAcceptRecv(const SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int index);
-	void GDGuildMatchingJoinListRecv(const SDHP_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg, int index);
-	void GDGuildMatchingJoinInfoRecv(const SDHP_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg, int index);
-	void GDGuildMatchingInsertSaveRecv(const SDHP_GUILD_MATCHING_INSERT_SAVE_RECV* lpMsg);
+	void GDGuildMatchingListRecv(const SDHP_GUILD_MATCHING_LIST_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingListSearchRecv(const SDHP_GUILD_MATCHING_LIST_SEARCH_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingInsertRecv(const SDHP_GUILD_MATCHING_INSERT_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingCancelRecv(const SDHP_GUILD_MATCHING_CANCEL_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingJoinInsertRecv(const SDHP_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingJoinCancelRecv(const SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingJoinAcceptRecv(const SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingJoinListRecv(const SDHP_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingJoinInfoRecv(const SDHP_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg, int serverIndex, int size);
+	void GDGuildMatchingInsertSaveRecv(const SDHP_GUILD_MATCHING_INSERT_SAVE_RECV* lpMsg, int serverIndex, int size);
 	void DGGuildMatchingNotifySend(const char* characterName, const char* guildName, DWORD result);
 	void DGGuildMatchingNotifyMasterSend(const char* characterName, DWORD result);
 private:

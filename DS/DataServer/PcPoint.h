@@ -86,11 +86,11 @@ class CPcPoint
 public:
 	CPcPoint() = default;
 	~CPcPoint() = default;
-	void GDPcPointPointRecv(SDHP_PC_POINT_POINT_RECV* lpMsg,int index);
-	void GDPcPointItemBuyRecv(SDHP_PC_POINT_ITEM_BUY_RECV* lpMsg,int index);
-	void GDPcPointRecievePointRecv(SDHP_PC_POINT_RECIEVE_POINT_RECV* lpMsg,int index);
-	void GDPcPointAddPointSaveRecv(SDHP_PC_POINT_ADD_POINT_SAVE_RECV* lpMsg);
-	void GDPcPointSubPointSaveRecv(SDHP_PC_POINT_SUB_POINT_SAVE_RECV* lpMsg);
+	void GDPcPointPointRecv(const SDHP_PC_POINT_POINT_RECV* lpMsg, int serverIndex, int size);
+	void GDPcPointItemBuyRecv(const SDHP_PC_POINT_ITEM_BUY_RECV* lpMsg, int serverIndex, int size);
+	void GDPcPointRecievePointRecv(const SDHP_PC_POINT_RECIEVE_POINT_RECV* lpMsg, int serverIndex, int size);
+	void GDPcPointAddPointSaveRecv(const SDHP_PC_POINT_ADD_POINT_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDPcPointSubPointSaveRecv(const SDHP_PC_POINT_SUB_POINT_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CPcPoint gPcPoint;

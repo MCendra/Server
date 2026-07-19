@@ -115,10 +115,10 @@ class CPentagramSystem
 public:
 	CPentagramSystem() = default;
 	~CPentagramSystem() = default;
-	void GDPentagramJewelInfoRecv(SDHP_PENTAGRAM_JEWEL_INFO_RECV* lpMsg,int index);
-	void GDPentagramJewelInfoSaveRecv(SDHP_PENTAGRAM_JEWEL_INFO_SAVE_RECV* lpMsg);
-	void GDPentagramJewelInsertSaveRecv(SDHP_PENTAGRAM_JEWEL_INSERT_SAVE_RECV* lpMsg);
-	void GDPentagramJewelDeleteSaveRecv(SDHP_PENTAGRAM_JEWEL_DELETE_SAVE_RECV* lpMsg);
+	void GDPentagramJewelInfoRecv(const SDHP_PENTAGRAM_JEWEL_INFO_RECV* lpMsg, int serverIndex, int size);
+	void GDPentagramJewelInfoSaveRecv(const SDHP_PENTAGRAM_JEWEL_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDPentagramJewelInsertSaveRecv(const SDHP_PENTAGRAM_JEWEL_INSERT_SAVE_RECV* lpMsg, int serverIndex, int size);
+	void GDPentagramJewelDeleteSaveRecv(const SDHP_PENTAGRAM_JEWEL_DELETE_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CPentagramSystem gPentagramSystem;

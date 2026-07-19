@@ -164,7 +164,7 @@ struct SDHP_TOP_INFO
 
 struct CUSTOM_RANKING_DATA
 {
-	char szName[20];
+	char Name[20];
 	int Value;
 };
 
@@ -173,16 +173,16 @@ class CCommandManager
 public:
 	CCommandManager() = default;
 	~CCommandManager() = default;
-	void GDCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg,int index);
-	void GDCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* lpMsg,int index);
-	void GDCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg,int index);
-	void GDCommandRewardRecv(SDHP_COMMAND_REWARD_RECV* lpMsg,int index);
-	void GDCommandRewardAllRecv(SDHP_COMMAND_REWARDALL_RECV* lpMsg,int index);
-	void GDCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg,int index);
-	void GDCommandBlocAccRecv(SDHP_COMMAND_BLOC_RECV* lpMsg,int index);
-	void GDCommandBlocCharRecv(SDHP_COMMAND_BLOC_RECV* lpMsg,int index);
-	void GDCommandGiftRecv(SDHP_GIFT_RECV* lpMsg,int index);
-	void GDCommandTopRecv(SDHP_TOP_RECV* lpMsg,int index);
+	void GDCommandResetRecv(const SDHP_COMMAND_RESET_RECV* lpMsg,int serverIndex, int size);
+	void GDCommandMasterResetRecv(const SDHP_COMMAND_MASTER_RESET_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandMarryRecv(const SDHP_COMMAND_MARRY_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandRewardRecv(const SDHP_COMMAND_REWARD_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandRewardAllRecv(const SDHP_COMMAND_REWARDALL_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandRenameRecv(const SDHP_COMMAND_RENAME_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandBlocAccRecv(const SDHP_COMMAND_BLOC_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandBlocCharRecv(const SDHP_COMMAND_BLOC_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandGiftRecv(const SDHP_GIFT_RECV* lpMsg, int serverIndex, int size);
+	void GDCommandTopRecv(const SDHP_TOP_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CCommandManager gCommandManager;

@@ -174,7 +174,7 @@
     <ClInclude Include="BufferHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CastleSiegeProtocol.h">
+    <ClInclude Include="CastleSiege.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -314,7 +314,7 @@
     <ClCompile Include="BufferHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CastleSiegeProtocol.cpp">
+    <ClCompile Include="CastleSiege.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

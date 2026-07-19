@@ -2,8 +2,6 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-#define EVENT_INVENTORY_SIZE 32
-
 // GameServer -> DataServer
 
 struct SDHP_EVENT_INVENTORY_RECV
@@ -41,8 +39,8 @@ class CEventInventory
 public:
 	CEventInventory() = default;
 	~CEventInventory() = default;
-	void GDEventInventoryRecv(SDHP_EVENT_INVENTORY_RECV* lpMsg,int index);
-	void GDEventInventorySaveRecv(SDHP_EVENT_INVENTORY_SAVE_RECV* lpMsg);
+	void GDEventInventoryRecv(const SDHP_EVENT_INVENTORY_RECV* lpMsg, int serverIndex, int size);
+	void GDEventInventorySaveRecv(const SDHP_EVENT_INVENTORY_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CEventInventory gEventInventory;

@@ -56,8 +56,8 @@ class CLuckyItem
 public:
 	CLuckyItem() = default;
 	~CLuckyItem() = default;
-	void GDLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg,int index);
-	void GDLuckyItemSaveRecv(SDHP_LUCKY_ITEM_SAVE_RECV* lpMsg);
+	void GDLuckyItemRecv(const SDHP_LUCKY_ITEM_RECV* lpMsg, int serverIndex, int size);
+	void GDLuckyItemSaveRecv(const SDHP_LUCKY_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
 };
 
 extern CLuckyItem gLuckyItem;
