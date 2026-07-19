@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_LUCKY_ITEM_RECV
 {
 	PSWMSG_HEAD Header; // C2:22:00
@@ -48,6 +49,7 @@ struct SDHP_LUCKY_ITEM2
 	DWORD Serial;
 	DWORD DurabilitySmall;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

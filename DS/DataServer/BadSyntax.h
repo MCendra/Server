@@ -1,13 +1,14 @@
 // BadSyntax.h
 #pragma once
-
 #include <string>
 #include <vector>
 
+#pragma pack(push,1)
 struct BAD_SYNTAX_INFO
 {
 	std::string Syntax;
 };
+#pragma pack(pop)
 
 class CBadSyntax
 {

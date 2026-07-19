@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_COMMAND_RESET_RECV
 {
 	PSBMSG_HEAD Header; // C1:0F:00
@@ -167,6 +168,7 @@ struct CUSTOM_RANKING_DATA
 	char Name[20];
 	int Value;
 };
+#pragma pack(pop)
 
 class CCommandManager
 {

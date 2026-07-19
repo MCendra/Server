@@ -29,7 +29,7 @@ void CGuildManager::Init()
 
 			guildInfo.Score = gQueryManager.GetAsInteger("G_Score");
 
-#if (NEWBOSSGUILD == 1)
+#if (GUILDBOSSEVENT  == 1)
 			guildInfo.Score1 = gQueryManager.GetAsInteger("G_Score1");
 #endif
 
@@ -712,7 +712,7 @@ BYTE CGuildManager::SetGuildScore(const char* szGuildName, DWORD Score)
 	return 1;
 }
 
-#if (NEWBOSSGUILD == 1)
+#if (GUILDBOSSEVENT  == 1)
 BYTE CGuildManager::SetGuildScore1(const char* szGuildName, DWORD Score1)
 {
 	GUILD_INFO* lpGuildInfo = GetGuildInfo(szGuildName);

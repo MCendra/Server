@@ -5,6 +5,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_PARTY_MATCHING_INSERT_RECV
 {
 	PSBMSG_HEAD Header; // C1:29:00
@@ -221,6 +222,7 @@ struct SDHP_PARTY_MATCHING_NOTIFY_LEADER_SEND
 	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD Result;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

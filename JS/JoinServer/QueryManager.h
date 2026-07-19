@@ -11,7 +11,8 @@ public:
 	bool Connect(const char* odbc, const char* user, const char* pass);
 	void Disconnect();
 	void Diagnostic(const char* query);
-	bool ExecQuery(const char* query,...);
+	bool ExecQuery(const char* query, ...);
+	int GetAffectedRows();
 	void Close();
 	SQLRETURN Fetch();
 	int FindIndex(const char* ColName);

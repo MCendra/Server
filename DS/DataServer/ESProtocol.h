@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer 
 
+#pragma pack(push,1)
 struct SDHP_USERCLOSE
 {
 	PBMSG_HEAD Header; // C1:02 [RECV/SEND]
@@ -65,7 +66,7 @@ struct SDHP_GUILDSCOREUPDATE
 	int Score;
 };
 
-#if(NEWBOSSGUILD == 1)
+#if(GUILDBOSSEVENT  == 1)
 struct SDHP_GUILDSCOREUPDATE1
 {
 	PBMSG_HEAD Header; // C1:37 [RECV/SEND]
@@ -346,6 +347,7 @@ struct EXSDHP_KICKOUT_UNIONMEMBER_RESULT
 	char UnionMasterGuildName[MAX_GUILD_NAME];
 	char UnionMemberGuildName[MAX_GUILD_NAME];
 };
+#pragma pack(pop)
 
 //**********************************************//
 
@@ -361,7 +363,7 @@ struct EXSDHP_KICKOUT_UNIONMEMBER_RESULT
 	void GDGuildMemberDel(const SDHP_GUILDMEMBERDEL* lpMsg, int index);
 	void DGGuildMemberInfoRequest(const SDHP_GUILDMEMBER_INFO_REQUEST* lpMsg, int index);
 	void DGGuildScoreUpdate(const SDHP_GUILDSCOREUPDATE* lpMsg, int index);
-	#if(NEWBOSSGUILD == 1)
+	#if(GUILDBOSSEVENT  == 1)
 	void DGGuildScoreUpdate1(const SDHP_GUILDSCOREUPDATE1* lpMsg, int index);
 	#endif
 	void GDGuildNoticeSave(const SDHP_GUILDNOTICE* lpMsg, int index);

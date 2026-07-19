@@ -2,6 +2,7 @@
 #pragma once
 #include "DataServerProtocol.h"
 
+#pragma pack(push,1)
 struct MuRummyCardInfoDS
 {
 	MuRummyCardInfoDS()
@@ -102,6 +103,7 @@ struct PMSG_REQ_MURUMMY_INFO_UPDATE_DS
 	WORD Score;
 	MuRummyCardUpdateDS stMuRummyCardUpdateDS[MURUMMY_MAX_CARD];
 };
+#pragma pack(pop)
 
 class CMuRummy
 {

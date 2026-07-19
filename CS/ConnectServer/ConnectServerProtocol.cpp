@@ -80,7 +80,7 @@ void CCServerListRecv(PMSG_SERVER_LIST_RECV* lpMsg, int index)
 {
 	UNREFERENCED_PARAMETER(lpMsg);
 
-	BYTE send[MAX_MAIN_PACKET_SIZE] = {};
+	BYTE send[MAX_SEND_PACKET_SIZE] = {};
 
 	PMSG_SERVER_LIST_SEND pMsg = {};
 

@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_MASTER_SKILL_TREE_RECV
 {
 	PSBMSG_HEAD Header; // C1:0D:00
@@ -41,6 +42,7 @@ struct SDHP_MASTER_SKILL_TREE_SEND
 	BYTE MasterSkill[MAX_MASTER_SKILL_LIST][MASTER_SKILL_DATA_SIZE];
 	#endif
 };
+#pragma pack(pop)
 
 //**********************************************//
 

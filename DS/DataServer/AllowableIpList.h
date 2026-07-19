@@ -1,10 +1,12 @@
 // AllowableIpList.h:
 #pragma once
 
+#pragma pack(push,1)
 struct ALLOWABLE_IP_INFO
 {
 	char IpAddr[16];
 };
+#pragma pack(pop)
 
 class CAllowableIpList
 {

@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_NPC_LEO_THE_HELPER_RECV
 {
 	PSBMSG_HEAD Header; // C1:0E:00
@@ -57,6 +58,7 @@ struct SDHP_NPC_SANTA_CLAUS_SEND
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE Status;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

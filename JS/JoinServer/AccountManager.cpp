@@ -130,11 +130,15 @@ long CAccountManager::GetAccountCount()
 	return static_cast<long>(this->m_AccountInfo.size());;
 }
 
-LONG CheckAccountCaseSensitive(int value)
+char CheckAccountCaseSensitive(char value)
 {
-	// Si CaseSensitive == 0 (no distingue mayúsculas), normaliza a minúscula.
-	// Si CaseSensitive == 1, deja el valor tal cual.
-	return (CaseSensitive == 0)	? tolower((unsigned char)value) : value;
+	if (CaseSensitive == 0)
+	{
+		return static_cast<char>(
+			std::tolower(static_cast<unsigned char>(value)));
+	}
+
+	return value;
 }
 
 DWORD MakeAccountKey(const char* account)

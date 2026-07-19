@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_PENTAGRAM_JEWEL_INFO_RECV
 {
 	PSBMSG_HEAD Header; // C1:23:00
@@ -107,6 +108,7 @@ struct SDHP_PENTAGRAM_JEWEL_INFO
 	BYTE OptionIndexRank5;
 	BYTE OptionLevelRank5;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

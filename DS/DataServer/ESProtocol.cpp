@@ -32,7 +32,7 @@ void ExDBServerProtocolCore(int index, BYTE head, const BYTE* lpMsg, int size)
 	case EXDB_HEAD_GUILD_MEMBER_INFO:		DGGuildMemberInfoRequest((SDHP_GUILDMEMBER_INFO_REQUEST*)lpMsg, index);	break;
 	case EXDB_HEAD_GUILD_SCORE_UPDATE:		DGGuildScoreUpdate((SDHP_GUILDSCOREUPDATE*)lpMsg, index);				break;
 	case EXDB_HEAD_GUILD_NOTICE:			GDGuildNoticeSave((SDHP_GUILDNOTICE*)lpMsg, index);						break;
-#if(NEWBOSSGUILD == 1)
+#if(GUILDBOSSEVENT  == 1)
 	case EXDB_HEAD_GUILD_SCORE_UPDATE_EX:	DGGuildScoreUpdate1((SDHP_GUILDSCOREUPDATE1*)lpMsg, index);				break;
 #endif
 	case EXDB_HEAD_GUILD_CHAT:				GDGuildServerGroupChattingSend((EXSDHP_SERVERGROUP_GUILD_CHATTING_SEND*)lpMsg, index);	break;
@@ -459,7 +459,7 @@ void DGGuildScoreUpdate(const SDHP_GUILDSCOREUPDATE* lpMsg, int index)
 	}
 }
 
-#if (NEWBOSSGUILD == 1)
+#if (GUILDBOSSEVENT  == 1)
 
 void DGGuildScoreUpdate1(const SDHP_GUILDSCOREUPDATE1* lpMsg, int index)
 {

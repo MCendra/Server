@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct FHP_FRIENDLIST_REQ
 {
 	PBMSG_HEAD Header; // C1:60
@@ -220,6 +221,7 @@ struct FHP_FRIEND_INVITATION_RET
 	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD WindowGuid;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

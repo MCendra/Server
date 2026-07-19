@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_QUEST_WORLD_RECV
 {
 	PSBMSG_HEAD Header; // C1:10:00
@@ -31,6 +32,7 @@ struct SDHP_QUEST_WORLD_SEND
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE QuestWorldList[MAX_QUEST_WORLD_LIST][20];
 };
+#pragma pack(pop)
 
 //**********************************************//
 

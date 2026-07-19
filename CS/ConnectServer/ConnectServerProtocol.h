@@ -3,8 +3,10 @@
 #include "Header.h"
 #include <array>
 
-#define MAX_MAIN_PACKET_SIZE 2048
-#define MAX_UDP_PACKET_SIZE 4096
+#define MAX_RECV_PACKET_SIZE 1024		// Límite de seguridad de entrada: 1024 bytes
+#define MAX_SEND_PACKET_SIZE 2048		// Límite de seguridad de salida: 2048 bytes en un unico paquete
+#define MAX_SEND_SIDE_PACKET_SIZE 8192	// Límite de seguridad de salida: 8192 bytes en suma de partes de un paquete
+#define MAX_UDP_PACKET_SIZE 8192		// Límite de seguridad de salida: 8192 bytes entrada y salida en un unico paquete UDP
 
 // Encabezados de paquetes
 #define PACKET_HEADER_C1 0xC1

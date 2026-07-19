@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_WAREHOUSE_ITEM_RECV
 {
 	PSBMSG_HEAD Header; // C1:05:00
@@ -42,8 +43,6 @@ struct SDHP_WAREHOUSE_FREE_SEND
 	char Account[MAX_ACCOUNT_NAME];
 };
 
-//**********************************************//
-
 struct SDHP_WAREHOUSE_GUILD_STATUS_RECV
 {
 	PSBMSG_HEAD Header; // C1:05:00
@@ -65,7 +64,7 @@ struct SDHP_WAREHOUSE_GUILD_STATUS_UPDATE_RECV
 	char GuildName[MAX_GUILD_NAME];
 	int Status;
 };
-
+#pragma pack(pop)
 
 class CWarehouse
 {

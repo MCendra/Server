@@ -41,7 +41,7 @@ __forceinline bool CServerManager::CheckAlloc()
 }
 
 // Agrega un nuevo servidor a la lista de servidores activos
-void CServerManager::AddServer(int index,char* ip,SOCKET socket)
+void CServerManager::AddServer(int index, char* ip, SOCKET socket)
 {
 	{
 		CCriticalSection::CLock lock(m_lock);
@@ -58,20 +58,20 @@ void CServerManager::AddServer(int index,char* ip,SOCKET socket)
 		if (m_IoSendContext == nullptr)
 			m_IoSendContext = new IO_SEND_CONTEXT;
 
-		memset(&m_IoRecvContext->overlapped, 0, sizeof(m_IoRecvContext->overlapped));
-		m_IoRecvContext->wsabuf.buf = (char*)m_IoRecvContext->IoMainBuffer.buff;
-		m_IoRecvContext->wsabuf.len = MAX_MAIN_PACKET_SIZE;
+		memset(&m_IoRecvContext->OverLapped, 0, sizeof(m_IoRecvContext->OverLapped));
+		m_IoRecvContext->WSAbuf.buf = (char*)m_IoRecvContext->IoRecvBuffer.Buffer;
+		m_IoRecvContext->WSAbuf.len = MAX_RECV_PACKET_SIZE;
 		m_IoRecvContext->IoType = IO_RECV;
 		m_IoRecvContext->IoSize = 0;
-		m_IoRecvContext->IoMainBuffer.size = 0;
+		m_IoRecvContext->IoRecvBuffer.Size = 0;
 
-		memset(&m_IoSendContext->overlapped, 0, sizeof(m_IoSendContext->overlapped));
-		m_IoSendContext->wsabuf.buf = (char*)m_IoSendContext->IoMainBuffer.buff;
-		m_IoSendContext->wsabuf.len = MAX_MAIN_PACKET_SIZE;
+		memset(&m_IoSendContext->OverLapped, 0, sizeof(m_IoSendContext->OverLapped));
+		m_IoSendContext->WSAbuf.buf = (char*)m_IoSendContext->IoSendBuffer.Buffer;
+		m_IoSendContext->WSAbuf.len = MAX_SEND_PACKET_SIZE;
 		m_IoSendContext->IoType = IO_SEND;
 		m_IoSendContext->IoSize = 0;
-		m_IoSendContext->IoMainBuffer.size = 0;
-		m_IoSendContext->IoSideBuffer.size = 0;
+		m_IoSendContext->IoSendBuffer.Size = 0;
+		m_IoSendContext->IoSideBuffer.Size = 0;
 
 		memset(m_ServerName, 0, sizeof(m_ServerName));
 
@@ -79,8 +79,6 @@ void CServerManager::AddServer(int index,char* ip,SOCKET socket)
 		m_ServerCode = 0xFFFF;
 		m_LastStateChangeTime = GetTickCount64();
 		m_LastPacketTime = 0;
-		m_CurUserCount = 0;
-		m_MaxUserCount = 0;
 	}
 
 	Log.ToDisp(LOG_BLACK, "[ServerManager - AddServer] Servidor agregado (Index: %d, IP: %s)", m_index, m_IpAddr);

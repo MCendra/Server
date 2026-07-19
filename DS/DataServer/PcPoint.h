@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_PC_POINT_POINT_RECV
 {
 	PSBMSG_HEAD Header; // C1:19:00
@@ -78,6 +79,7 @@ struct SDHP_PC_POINT_RECIEVE_POINT_SEND
 	DWORD CallbackArg2;
 	DWORD PcPoint;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

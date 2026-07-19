@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_EVENT_INVENTORY_RECV
 {
 	PSBMSG_HEAD Header; // C1:26:00
@@ -31,6 +32,7 @@ struct SDHP_EVENT_INVENTORY_SEND
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE EventInventory[EVENT_INVENTORY_SIZE][16];
 };
+#pragma pack(pop)
 
 //**********************************************//
 

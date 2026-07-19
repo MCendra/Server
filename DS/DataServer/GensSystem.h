@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_GENS_SYSTEM_INSERT_RECV
 {
 	PSBMSG_HEAD Header; // C1:11:00
@@ -128,6 +129,7 @@ struct SDHP_GENS_SYSTEM_CREATE_SEND
 	DWORD GensRankStart;
 	DWORD GensRankFinal;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

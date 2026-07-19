@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_PSHOP_ITEM_VALUE_RECV
 {
 	PSBMSG_HEAD Header; // C1:25:00
@@ -74,6 +75,7 @@ struct SDHP_PSHOP_ITEM_VALUE
 	WORD JoSValue;
 	WORD JoCValue;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

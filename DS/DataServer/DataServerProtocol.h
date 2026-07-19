@@ -1,8 +1,8 @@
 #pragma once
 #include "Header.h"
 
-#define MAX_RECV_PACKET_SIZE 1024		// Límite de seguridad de entrada: 1024 bytes
-#define MAX_SEND_PACKET_SIZE 2048		// Límite de seguridad de salida: 2048 bytes en un unico paquete
+#define MAX_RECV_PACKET_SIZE 2048		// Límite de seguridad de entrada: 1024 bytes
+#define MAX_SEND_PACKET_SIZE 4096		// Límite de seguridad de salida: 2048 bytes en un unico paquete
 #define MAX_SEND_SIDE_PACKET_SIZE 8192	// Límite de seguridad de salida: 8192 bytes en suma de partes de un paquete
 #define MAX_UDP_PACKET_SIZE 8192		// Límite de seguridad de salida: 8192 bytes entrada y salida en un unico paquete UDP
 
@@ -54,6 +54,8 @@
 #define EVENT_INVENTORY_SIZE 32
 // PartyMatching.h
 #define MAX_PARTY_USER 5
+// MuunSystem.h
+#define MUUN_INVENTORY_SIZE 62
 
 constexpr BYTE SET_NUMBERHB(DWORD x) {
 	return static_cast<BYTE>(x >> 8);
@@ -92,6 +94,7 @@ constexpr QWORD MAKE_NUMBERQW(DWORD x, DWORD y) {
 }
 
 // Packet Base
+#pragma pack(push,1)
 
 struct PBMSG_HEAD
 {
@@ -402,7 +405,7 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 #endif
 	DWORD Kills;
 	DWORD Deads;
-#if(FLAG_SKIN)
+#if(CUSTOMFLAGSKIN)
 	int Flag;
 #endif
 #if(DANHHIEU_NEW)
@@ -424,10 +427,10 @@ struct SDHP_CHARACTER_INFO_SAVE_RECV
 	int MOCNAPCOIN;
 #endif
 	DWORD mUserSkinPick;
-#if(CHONPHEDOILAP)
+#if(CUSTOMFACTIONSYSTEM)
 	BYTE ChonPheHanhTau;
 #endif
-#if(B_HON_HOAN)
+#if(CUSTOMSOULRINGEFFECT)
 	WORD CapDoHonHoan;
 #endif
 	int PointUsePhe;
@@ -875,7 +878,7 @@ struct SDHP_CHARACTER_INFO_SEND
 	#endif
 	DWORD Kills;
 	DWORD Deads;
-#if(FLAG_SKIN)
+#if(CUSTOMFLAGSKIN)
 	int Flag;
 #endif
 	BYTE TheGift; // only add in is struct
@@ -898,10 +901,10 @@ struct SDHP_CHARACTER_INFO_SEND
 	int MOCNAPCOIN;
 #endif
 	DWORD mUserSkinPick;
-#if(CHONPHEDOILAP)
+#if(CUSTOMFACTIONSYSTEM)
 	BYTE ChonPheHanhTau;
 #endif
-#if(B_HON_HOAN)
+#if(CUSTOMSOULRINGEFFECT)
 	WORD CapDoHonHoan;
 #endif
 	int PointUsePhe;
@@ -1079,7 +1082,7 @@ struct SDHP_GLOBAL_WHISPER_ECHO_SEND
 	char SourceName[MAX_CHARACTER_NAME];
 	char Message[60];
 };
-//====================================================
+
 #if (TOP1RESETLIMIT)
 struct SDHP_CUSTOM_GHRS_RECV
 {
@@ -1087,7 +1090,7 @@ struct SDHP_CUSTOM_GHRS_RECV
 	int Time;
 };
 #endif
-//====================================================
+
 struct SDHP_CUSTOMQUEST_SEND
 {
     PBMSG_HEAD Header; // C1:F1
@@ -1209,10 +1212,6 @@ struct SDHP_BOT_INFO_GET
 	WORD Rank;
 	WORD TypeTop;
 };
-//=========================
-
-
-
 
 struct SDHP_BOT_INFO_SEND
 {
@@ -1258,8 +1257,6 @@ struct SDHP_BOT_INFO_SEND
 };
 #endif
 
-
-
 struct SDHP_CUSTOM_JEWELBANK_RECV
 {
 	PSBMSG_HEAD Header;
@@ -1292,7 +1289,6 @@ struct SDHP_CUSTOM_JEWELBANK_INFO_SEND
 	int HighStone;
 };
 
-#pragma pack(push, 1)
 struct SDHP_CHANGE_PASSWORD_RECV
 {
 	PSBMSG_HEAD Header;
@@ -1302,6 +1298,106 @@ struct SDHP_CHANGE_PASSWORD_RECV
 	char NewPassword[11];
 
 };
+
+struct SDHP_CHANGE_PASSWORD_SEND
+{
+	PSBMSG_HEAD Header;
+	int  Index;
+	BYTE Result;
+};
+
+struct GSSENDDS_GETLISTISBUYSKIN
+{
+	PSBMSG_HEAD Header;
+	char AccountID[MAX_ACCOUNT_NAME];
+	int Index;
+};
+struct BCUSTOM_SKINMODEL_DATA
+{
+	int SkinIndex;
+	int StatusBuy;
+};
+
+//=======Xai CHung All Count
+struct CBCUSTOM_LOAD_COUNT
+{
+	PSWMSG_HEAD Header;
+
+	int Index;
+	int Count;
+};
+
+#if (CUSTOMELEMENTALBOOK)
+struct ELEMENTALBOOK_GD_REQ_DATA
+{
+	PSBMSG_HEAD	header;
+	WORD Index;
+	char CharacterName[MAX_CHARACTER_NAME];
+};
+
+struct SACHTHUOCTINH_DG_GET_DATA
+{
+	PSBMSG_HEAD Header;
+	WORD Index;
+	int BookFire;
+	int BookWater;
+	int BookWind;
+	int BookEarth;
+	int BookDark;
+	int BookLight;
+	int BookPoison;
+};
+
+struct ELEMENTALBOOK_GD_SAVE_DATA
+{
+	PSBMSG_HEAD Header;
+	WORD	index;
+	char	Name[11];
+	int BookFire;
+	int BookWater;
+	int BookWind;
+	int BookEarth;
+	int BookDark;
+	int BookLight;
+	int BookPoison;
+};
+#endif
+
+struct BUFFPHE_REQUESTDS
+{
+	PSBMSG_HEAD Header;
+	int aIndex;
+	char CharacterName[MAX_CHARACTER_NAME];
+};
+struct BUFFPHE_REQUESTDS_SETINFO
+{
+	PSWMSG_HEAD Header; // C2:04
+	int  mDT_TongPoint;
+	char mDT_Top1Name[11];
+	int  mDT_Top1Point;
+	int  mBT_TongPoint;
+	char mBT_Top1Name[11];
+	int  mBT_Top1Point;
+};
+
+struct INFOCHAR_BUFFPHE
+{
+	PSWMSG_HEAD Header; // C2:04
+	WORD Index;
+	BYTE Result;
+	char CharacterName[MAX_CHARACTER_NAME];
+	BYTE Class;
+	WORD Level;
+	BYTE Inventory[INVENTORY_SIZE][16];
+	BYTE Skill[MAX_SKILL_LIST][3];
+	BYTE Effect[MAX_EFFECT_LIST][13];
+	BYTE ChonPheHanhTau;
+	int PointUsePhe;
+	// GUild
+	char GuildName[MAX_GUILD_NAME];
+	int GuildNumber;
+	int GuildStatus;
+};
 #pragma pack(pop)
 
 // Enrutador de paquetes
@@ -1310,7 +1406,7 @@ void DataServerProtocolCore(int serverIndex, const BYTE protocolHead, const BYTE
 void GDGlobalItemCountRecv(const SDHP_ITEM_COUNT_RECV* lpMsg, int serverIndex, int size);
 void GDCharacterListRecv(const SDHP_CHARACTER_LIST_RECV* lpMsg, int serverIndex, int size);
 void GDCharacterCreateRecv(const SDHP_CHARACTER_CREATE_RECV* lpMsg, int serverIndex, int size);
-void GGDCharacterDeleteRecv(const SDHP_CHARACTER_DELETE_RECV* lpMsg, int serverIndex, int size);
+void GDCharacterDeleteRecv(const SDHP_CHARACTER_DELETE_RECV* lpMsg, int serverIndex, int size);
 void GDCharacterInfoRecv(const SDHP_CHARACTER_INFO_RECV* lpMsg, int serverIndex, int size);
 void GDCreateItemRecv(const SDHP_CREATE_ITEM_RECV* lpMsg, int serverIndex, int size);
 void GDOptionDataRecv(const SDHP_OPTION_DATA_RECV* lpMsg, int serverIndex, int size);
@@ -1324,8 +1420,8 @@ void GDCrywolfSyncRecv(const SDHP_CRYWOLF_SYNC_RECV* lpMsg, int serverIndex, int
 void GDCrywolfInfoRecv(const SDHP_CRYWOLF_INFO_RECV* lpMsg, int serverIndex, int size);
 void GDGlobalPostRecv(const SDHP_GLOBAL_POST_RECV* lpMsg, int serverIndex, int size);
 void GDGlobalItemPostRecv(const SDHP_GLOBAL_ITEM_POST_RECV* lpMsg, int serverIndex, int size);
-void GDPostItemRecv(SDHP_POST_ITEM_RECV* lpMsg,int index);
-void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg,int index);
+void GDPostItemRecv(SDHP_POST_ITEM_RECV* lpMsg,int index); // Revisar
+void GDGlobalNoticeRecv(const SDHP_GLOBAL_NOTICE_RECV* lpMsg, int serverIndex, int size);
 void GDSNSDataRecv(const SDHP_SNS_DATA_RECV* lpMsg, int serverIndex, int size);
 void GDCharacterInfoSaveRecv(const SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
 void GDInventoryItemSaveRecv(const SDHP_INVENTORY_ITEM_SAVE_RECV* lpMsg, int serverIndex, int size);
@@ -1341,11 +1437,11 @@ void GDRankingIllusionTempleSaveRecv(const SDHP_RANKING_ILLUSION_TEMPLE_SAVE_REC
 void GDCreationCardSaveRecv(const SDHP_CREATION_CARD_SAVE_RECV* lpMsg, int serverIndex, int size);
 void GDCrywolfInfoSaveRecv(const SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
 void GDSNSDataSaveRecv(const SDHP_SNS_DATA_SAVE_RECV* lpMsg, int serverIndex, int size);
-void GDCustomMonsterRewardSaveRecv(SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV* lpMsg);
-void GDRankingCustomArenaSaveRecv(SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV* lpMsg);
+void GDCustomMonsterRewardSaveRecv(const SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV* lpMsg, int serverIndex, int size);
+void GDRankingCustomArenaSaveRecv(const SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV* lpMsg, int serverIndex, int size);
 void GDRankingTvTEventSaveRecv(const SDHP_RANKING_TVT_EVENT_SAVE_RECV* lpMsg, int serverIndex, int size);
 void GDConnectCharacterRecv(const SDHP_CONNECT_CHARACTER_RECV* lpMsg, int serverIndex, int size);
-void GDDisconnectCharacterRecv(SDHP_DISCONNECT_CHARACTER_RECV* lpMsg,int index);
+void GDDisconnectCharacterRecv(const SDHP_DISCONNECT_CHARACTER_RECV* lpMsg, int serverIndex, int size);
 void GDGlobalWhisperRecv(const SDHP_GLOBAL_WHISPER_RECV* lpMsg, int serverIndex, int size);
 void DGGlobalWhisperEchoSend(WORD serverCode, WORD userIndex, const char* account, const char* targetCharacterName, const char* sourceCharacterName, const char* message);
 void GDMarryInfoSaveRecv(const SDHP_MARRY_INFO_SAVE_RECV* lpMsg, int serverIndex, int size);
@@ -1375,7 +1471,6 @@ void GDCharacterMocNapSaveRecv(const MOCNAP_GD_SAVE_DATA* lpMsg, int serverIndex
 void GDCustomJewelBankRecv(const SDHP_CUSTOM_JEWELBANK_RECV* lpMsg, int serverIndex, int size);
 void GDCustomJewelBankInfoRecv(const SDHP_CUSTOM_JEWELBANK_INFO_RECV* lpMsg, int serverIndex, int size);
 
-
 #if (NEWRANKING)
 void CharacterRanking(const GDTop* lpMsg, int serverIndex, int size);
 #endif
@@ -1386,115 +1481,16 @@ void GDBotInfoRecv(const SDHP_BOT_INFO_GET* lpMsg, int serverIndex, int size);
 
 void GDChangePasswordRecv(const SDHP_CHANGE_PASSWORD_RECV* lpMsg, int serverIndex, int size);
 
-struct SDHP_CHANGE_PASSWORD_SEND
-{
-	PSBMSG_HEAD Header;
-	int  Index;
-	BYTE Result;
-};
-
-struct GSSENDDS_GETLISTISBUYSKIN
-{
-	PSBMSG_HEAD Header;
-	char AccountID[MAX_ACCOUNT_NAME];
-	int aIndex;
-};
-struct BCUSTOM_SKINMODEL_DATA
-{
-	int SkinIndex;
-	int StatusBuy;
-};
-
-//=======Xai CHung All Count
-struct CBCUSTOM_LOAD_COUNT
-{
-	PSWMSG_HEAD Header;
-
-	int aIndex;
-	int count;
-};
-
 void GDGetSkinIsBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int size);
 void GDSaveSkinBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int size);
 
-//====================================================
-#if (CUSTOMELEMENTALBOOK)
-struct ELEMENTALBOOK_GD_REQ_DATA
-{
-	PSBMSG_HEAD	header;
-	WORD Index;
-	char CharacterName[MAX_CHARACTER_NAME];
-};
-struct SACHTHUOCTINH_DG_GET_DATA
-{
-	PSBMSG_HEAD Header;
-	WORD Index;
-	int BookFire;
-	int BookWater;
-	int BookWind;
-	int BookEarth;
-	int BookDark;
-	int BookLight;
-	int BookPoison;
-};
-struct ELEMENTALBOOK_GD_SAVE_DATA
-{
-	PSBMSG_HEAD Header;
-	WORD	index;
-	char	Name[11];
-	int BookFire;
-	int BookWater;
-	int BookWind;
-	int BookEarth;
-	int BookDark;
-	int BookLight;
-	int BookPoison;
-};
-#endif
-//====================================================
 #if (CUSTOMELEMENTALBOOK)
 void GDCharacterElementalBookRecv(const ELEMENTALBOOK_GD_REQ_DATA* lpMsg, int serverIndex, int size);
 void GDCharacterElementalBookSaveRecv(const ELEMENTALBOOK_GD_SAVE_DATA* lpMsg, int serverIndex, int size);
 #endif
-//===================================================================================
-struct BUFFPHE_REQUESTDS
-{
-	PSBMSG_HEAD Header;
-	int aIndex;
-	char CharacterName[MAX_CHARACTER_NAME];
-};
-struct BUFFPHE_REQUESTDS_SETINFO
-{
-	PSWMSG_HEAD Header; // C2:04
-	int  mDT_TongPoint;
-	char mDT_Top1Name[11];
-	int  mDT_Top1Point;
-	int  mBT_TongPoint;
-	char mBT_Top1Name[11];
-	int  mBT_Top1Point;
-};
 
 void GetDBBuffPhe(const BUFFPHE_REQUESTDS* lpMsg, int serverIndex, int size);
 void GetInfoCharTopBuffPhe(const BUFFPHE_REQUESTDS* lpMsg, int serverIndex, int size);
-
-struct INFOCHAR_BUFFPHE
-{
-	PSWMSG_HEAD Header; // C2:04
-	WORD Index;
-	BYTE Result;
-	char CharacterName[MAX_CHARACTER_NAME];
-	BYTE Class;
-	WORD Level;
-	BYTE Inventory[INVENTORY_SIZE][16];
-	BYTE Skill[MAX_SKILL_LIST][3];
-	BYTE Effect[MAX_EFFECT_LIST][13];
-	BYTE ChonPheHanhTau;
-	int PointUsePhe;
-	// GUild
-	char GuildName[MAX_GUILD_NAME];
-	int GuildNumber;
-	int GuildStatus;
-};
 
 inline BYTE GetProtocolSubHead(const BYTE* lpMsg);
 

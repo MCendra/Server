@@ -217,6 +217,18 @@ bool CQueryManager::ExecQuery(const char* query, ...)
 	return true;
 }
 
+int CQueryManager::GetAffectedRows()
+{
+	SQLLEN rows = 0;
+
+	if (!SQL_SUCCEEDED(SQLRowCount(m_STMT, &rows)))
+	{
+		return -1;
+	}
+
+	return static_cast<int>(rows);
+}
+
 void CQueryManager::Close()
 {
 	SQLCloseCursor(m_STMT);

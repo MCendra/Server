@@ -4,6 +4,7 @@
 
 // DataServer -> GameServer
 
+#pragma pack(push,1)
 struct PMSG_OWNERGUILD_SEND
 {
 	PBMSG_HEAD Header; // C1:74
@@ -27,6 +28,7 @@ struct SDHP_RANKING_KING_PLAYER_SAVE_RECV
 	char CharacterName[MAX_CHARACTER_NAME];
 	DWORD Score;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

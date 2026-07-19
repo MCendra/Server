@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_QUEST_KILL_COUNT_RECV
 {
 	PSBMSG_HEAD Header; // C1:0C:00
@@ -35,6 +36,7 @@ struct SDHP_QUEST_KILL_COUNT_SEND
 	DWORD MonsterClass[5];
 	DWORD KillCount[5];
 };
+#pragma pack(pop)
 
 //**********************************************//
 

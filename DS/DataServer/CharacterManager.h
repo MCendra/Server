@@ -7,6 +7,7 @@
 constexpr BYTE MAX_CHARACTER_SLOT = 5;
 constexpr BYTE CHARACTER_LIST_EQUIPMENT_COUNT = 12;
 
+#pragma pack(push,1)
 struct CHARACTER_INFO
 {
 	char CharacterName[MAX_CHARACTER_NAME];
@@ -14,6 +15,7 @@ struct CHARACTER_INFO
 	WORD UserIndex;
 	WORD GameServerCode;
 };
+#pragma pack(pop)
 
 class CCharacterManager
 {

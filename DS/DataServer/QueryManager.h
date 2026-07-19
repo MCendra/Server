@@ -1,7 +1,7 @@
 // QueryManager.h
 #pragma once
 
-#define MAX_COLUMNS 1000
+#define MAX_COLUMNS 500
 
 class CQueryManager
 {

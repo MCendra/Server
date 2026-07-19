@@ -8,10 +8,10 @@
 
 struct QUEUE_INFO
 {
-	WORD index;
-	WORD size;
-	BYTE head;
-	BYTE buff[MAX_BUFFER_QUEUE_SIZE];
+	WORD ServerIndex;
+	WORD Size;
+	BYTE ProtocolHead;
+	BYTE Buffer[MAX_BUFFER_QUEUE_SIZE];
 };
 
 class CQueue

@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_CASH_SHOP_POINT_RECV
 {
 	PSBMSG_HEAD Header; // C1:18:00
@@ -310,6 +311,7 @@ struct BANKEX_DG_GET_POINT
 	long	Life;
 	long	Harmony;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

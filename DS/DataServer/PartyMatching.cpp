@@ -252,25 +252,25 @@ void CPartyMatching::RemovePartyMatchingJoinInfoNotifyAll(PARTY_MATCHING_INFO Pa
 
 DWORD CPartyMatching::GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, BYTE UseSearchWord, const char* SearchWord, BYTE* lpMsg, int* size)
 {
-#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
 	DWORD count = 0;
-	DWORD PageCount = 0;
+	DWORD pageCount = 0;
 
 	CCriticalSection::CLock lock(this->m_critical);
 
-	SDHP_PARTY_MATCHING_LIST info;
+	SDHP_PARTY_MATCHING_LIST info{};
 
 	for (const auto& pair : this->m_PartyMatchingInfo)
 	{
 		const PARTY_MATCHING_INFO& data = pair.second;
 
-		if (UseSearchWord == 0 || strstr(data.Text, SearchWord) != nullptr)
+		if (UseSearchWord == 0 || std::strstr(data.Text, SearchWord) != nullptr)
 		{
-			if (PageCount >= (((*CurPage) - 1) * 9) && PageCount < ((*CurPage) * 9))
+			if (pageCount >= (((*CurPage) - 1) * 9) && pageCount < ((*CurPage) * 9))
 			{
-				memcpy(info.Text, data.Text, sizeof(info.Text));
-				memcpy(info.CharacterName, data.CharacterName, sizeof(info.CharacterName));
+				std::memcpy(info.Text, data.Text, sizeof(info.Text));
+				std::memcpy(info.CharacterName, data.CharacterName, sizeof(info.CharacterName));
 
 				info.MinLevel = data.MinLevel;
 				info.MaxLevel = data.MaxLevel;
@@ -281,26 +281,37 @@ DWORD CPartyMatching::GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, 
 				info.PartyMemberCount = data.PartyMemberCount;
 				info.UsePassword = data.UsePassword;
 
-				memcpy(info.WantedClassDetailInfo, data.WantedClassDetailInfo, sizeof(info.WantedClassDetailInfo));
+				std::memcpy(
+					info.WantedClassDetailInfo,
+					data.WantedClassDetailInfo,
+					sizeof(info.WantedClassDetailInfo));
 
 				info.ServerCode = data.ServerCode;
 				info.GensType = data.GensType;
 
-				memcpy(&lpMsg[*size], &info, sizeof(info));
+				std::memcpy(&lpMsg[*size], &info, sizeof(info));
+
 				(*size) += sizeof(info);
 
 				++count;
 			}
 
-			++PageCount;
+			++pageCount;
 		}
 	}
 
-	*MaxPage = ((PageCount == 0) ? 1 : (((PageCount - 1) / 9) + 1));
+	*MaxPage = (pageCount == 0) ? 1 : (((pageCount - 1) / 9) + 1);
 
 	return count;
 
 #else
+
+	UNREFERENCED_PARAMETER(CurPage);
+	UNREFERENCED_PARAMETER(MaxPage);
+	UNREFERENCED_PARAMETER(UseSearchWord);
+	UNREFERENCED_PARAMETER(SearchWord);
+	UNREFERENCED_PARAMETER(lpMsg);
+	UNREFERENCED_PARAMETER(size);
 
 	return 0;
 
@@ -309,13 +320,13 @@ DWORD CPartyMatching::GeneratePartyMatchingList(DWORD* CurPage, DWORD* MaxPage, 
 
 DWORD CPartyMatching::GeneratePartyMatchingJoinList(const char* LeaderName, BYTE* lpMsg, int* size)
 {
-#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
 	DWORD count = 0;
 
 	CCriticalSection::CLock lock(this->m_critical);
 
-	SDHP_PARTY_MATCHING_JOIN_LIST info;
+	SDHP_PARTY_MATCHING_JOIN_LIST info{};
 
 	for (const auto& pair : this->m_PartyMatchingJoinInfo)
 	{
@@ -323,12 +334,13 @@ DWORD CPartyMatching::GeneratePartyMatchingJoinList(const char* LeaderName, BYTE
 
 		if (_stricmp(data.LeaderName, LeaderName) == 0)
 		{
-			memcpy(info.CharacterName, data.CharacterName, sizeof(info.CharacterName));
+			std::memcpy(info.CharacterName, data.CharacterName, sizeof(info.CharacterName));
 
 			info.Class = data.Class;
 			info.Level = data.Level;
 
-			memcpy(&lpMsg[*size], &info, sizeof(info));
+			std::memcpy(&lpMsg[*size], &info, sizeof(info));
+
 			(*size) += sizeof(info);
 
 			++count;
@@ -338,6 +350,10 @@ DWORD CPartyMatching::GeneratePartyMatchingJoinList(const char* LeaderName, BYTE
 	return count;
 
 #else
+
+	UNREFERENCED_PARAMETER(LeaderName);
+	UNREFERENCED_PARAMETER(lpMsg);
+	UNREFERENCED_PARAMETER(size);
 
 	return 0;
 
@@ -904,34 +920,46 @@ void CPartyMatching::DGPartyMatchingNotifyLeaderSend(const char* name, DWORD res
 
 void CPartyMatching::GDPartyMatchingJoinInfoRecv(const SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg, int serverIndex, int size)
 {
-#if(DATASERVER_UPDATE>=801)
+#if (DATASERVER_UPDATE >= 801)
 
-	SDHP_PARTY_MATCHING_JOIN_INFO_SEND pMsg;
+	VALIDATE_PACKET_SIZE(SDHP_PARTY_MATCHING_JOIN_INFO_RECV);
 
-	pMsg.Header.set(0x29, 0x03, sizeof(pMsg));
+	SDHP_PARTY_MATCHING_JOIN_INFO_SEND pMsg{};
+
+	pMsg.Header.set(HEAD_PARTY_MATCHING, SUB_PARTY_MATCHING_JOIN_INFO, sizeof(pMsg));
 
 	pMsg.Index = lpMsg->Index;
 
-	memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
-
-	memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+	std::memcpy(pMsg.CharacterName, lpMsg->CharacterName, sizeof(pMsg.CharacterName));
 
 	pMsg.Result = 0;
 
-	PARTY_MATCHING_JOIN_INFO PartyMatchingJoinInfo;
+	PARTY_MATCHING_JOIN_INFO partyMatchingJoinInfo{};
 
-	if (this->GetPartyMatchingJoinInfo(&PartyMatchingJoinInfo, lpMsg->CharacterName) == 0)
+	if (this->GetPartyMatchingJoinInfo(&partyMatchingJoinInfo, lpMsg->CharacterName) == 0)
 	{
-		pMsg.Result = 0xFFFFFFFF;
-		gSocketManager.DataSend(serverIndex, (BYTE*)&pMsg, sizeof(pMsg));
+		pMsg.Result = static_cast<DWORD>(-1);
+
+		gSocketManager.DataSend(
+			serverIndex,
+			reinterpret_cast<BYTE*>(&pMsg),
+			sizeof(pMsg));
+
 		return;
 	}
 
-	pMsg.LeaderServerCode = PartyMatchingJoinInfo.LeaderServerCode;
+	pMsg.LeaderServerCode = partyMatchingJoinInfo.LeaderServerCode;
 
-	memcpy(pMsg.LeaderName, PartyMatchingJoinInfo.LeaderName, sizeof(pMsg.LeaderName));
+	std::memcpy(
+		pMsg.LeaderName,
+		partyMatchingJoinInfo.LeaderName,
+		sizeof(pMsg.LeaderName));
 
-	gSocketManager.DataSend(serverIndex, (BYTE*)&pMsg, sizeof(pMsg));
+	gSocketManager.DataSend(
+		serverIndex,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
 
 #endif
 }

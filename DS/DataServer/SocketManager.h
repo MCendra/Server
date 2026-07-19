@@ -9,6 +9,7 @@
 #define IO_RECV 0
 #define IO_SEND 1
 
+#pragma pack(push,1)
 struct IO_RECV_BUFFER
 {
 	BYTE Buffer[MAX_RECV_PACKET_SIZE];
@@ -53,6 +54,7 @@ struct IO_SEND_CONTEXT
 	IO_SEND_BUFFER IoSendBuffer;
 	IO_SIDE_BUFFER IoSideBuffer;
 };
+#pragma pack(pop)
 
 class CSocketManager
 {

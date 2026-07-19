@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_LUCKY_COIN_COUNT_RECV
 {
 	PSBMSG_HEAD Header; // C1:1A:00
@@ -73,6 +74,7 @@ struct SDHP_LUCKY_COIN_EXCHANGE_SEND
 	DWORD TradeCoin;
 	DWORD LuckyCoin;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

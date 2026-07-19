@@ -4,6 +4,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_HELPER_DATA_RECV
 {
 	PSBMSG_HEAD Header; // C1:17:00
@@ -32,6 +33,7 @@ struct SDHP_HELPER_DATA_SEND
 	BYTE Result;
 	BYTE Data[256];
 };
+#pragma pack(pop)
 
 class CHelper
 {

@@ -284,10 +284,10 @@ void DataServerProtocolCore(int serverIndex, const BYTE protocolHead, const BYTE
 			case SUB_RESERVED_1B: break;
 			}
 			break;
-		case HEAD_CRYWOLF_SYNC:	GDCrywolfSyncRecv(reinterpret_cast<const SDHP_CRYWOLF_SYNC_RECV*>(lpMsg), serverIndex, size);	break;
-		case HEAD_CRYWOLF_INFO:	GDCrywolfInfoRecv(reinterpret_cast<const SDHP_CRYWOLF_INFO_RECV*>(lpMsg), serverIndex, size);	break;
-		case HEAD_GLOBAL_POST:	GDGlobalPostRecv(reinterpret_cast<const SDHP_GLOBAL_POST_RECV*>(lpMsg), serverIndex, size);		break;
-		case HEAD_GLOBAL_NOTICE:GDGlobalNoticeRecv(reinterpret_cast<const SDHP_GLOBAL_NOTICE_RECV*>(lpMsg), serverIndex, size);	break;
+		case HEAD_CRYWOLF_SYNC:GDCrywolfSyncRecv(reinterpret_cast<const SDHP_CRYWOLF_SYNC_RECV*>(lpMsg), serverIndex, size);break;
+		case HEAD_CRYWOLF_INFO:GDCrywolfInfoRecv(reinterpret_cast<const SDHP_CRYWOLF_INFO_RECV*>(lpMsg), serverIndex, size);break;
+		case HEAD_GLOBAL_POST:GDGlobalPostRecv(reinterpret_cast<const SDHP_GLOBAL_POST_RECV*>(lpMsg), serverIndex, size);break;
+		case HEAD_GLOBAL_NOTICE:GDGlobalNoticeRecv(reinterpret_cast<const SDHP_GLOBAL_NOTICE_RECV*>(lpMsg), serverIndex, size);break;
 #if(DATASERVER_UPDATE>=602)
 		case HEAD_LUCKY_ITEM:
 			switch (protocolSubHead)
@@ -906,7 +906,7 @@ void GDCharacterInfoRecv(const SDHP_CHARACTER_INFO_RECV* lpMsg, int serverIndex,
 		pMsg.ExtInventory = static_cast<BYTE>(gQueryManager.GetAsInteger("ExtInventory"));
 #endif
 
-#if(FLAG_SKIN)
+#if(CUSTOMFLAGSKIN)
 		pMsg.Flag = gQueryManager.GetAsInteger("Flag");
 #endif
 
@@ -926,11 +926,11 @@ void GDCharacterInfoRecv(const SDHP_CHARACTER_INFO_RECV* lpMsg, int serverIndex,
 
 		pMsg.mUserSkinPick = static_cast<DWORD>(gQueryManager.GetAsInteger("UserSkinPick"));
 
-#if(CHONPHEDOILAP)
+#if(CUSTOMFACTIONSYSTEM)
 		pMsg.ChonPheHanhTau = static_cast<BYTE>(gQueryManager.GetAsInteger("PheHanhTau"));
 #endif
 
-#if(B_HON_HOAN)
+#if(CUSTOMSOULRINGEFFECT)
 		pMsg.CapDoHonHoan = static_cast<BYTE>(gQueryManager.GetAsInteger("HonHoan"));
 		pMsg.PointUsePhe = static_cast<DWORD>(gQueryManager.GetAsInteger("PointUsePhe"));
 #endif
@@ -1606,13 +1606,13 @@ void GDCharacterInfoSaveRecv(const SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg, int ser
 	if (!gQueryManager.ExecQuery(
 		"UPDATE Character SET "
 		"UserSkinPick=%d, Kills=%d, Deads=%d"
-#if (CHONPHEDOILAP)
+#if (CUSTOMFACTIONSYSTEM)
 		", PheHanhTau=%d"
 #endif
 #if (ENDLESSTOWEREVENT)
 		", LuotDiEndLess=%d"
 #endif
-#if (B_HON_HOAN)
+#if (CUSTOMSOULRINGEFFECT)
 		", HonHoan=%d, PointUsePhe=%d"
 #endif
 #if (DANHHIEU_NEW)
@@ -1629,19 +1629,19 @@ void GDCharacterInfoSaveRecv(const SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg, int ser
 #else
 		", CTCTime=%d, CTCRegDay=0" // Bug original corregido: Agregado WHERE abajo, y CTCRegDay=0
 #endif
-#if (FLAG_SKIN)
+#if (CUSTOMFLAGSKIN)
 		", Flag=%d"
 #endif
 		" WHERE AccountID='%s' AND Name='%s'",
 
 		lpMsg->mUserSkinPick, lpMsg->Kills, lpMsg->Deads,
-#if (CHONPHEDOILAP)
+#if (CUSTOMFACTIONSYSTEM)
 		lpMsg->ChonPheHanhTau,
 #endif
 #if (ENDLESSTOWEREVENT)
 		lpMsg->mLuotDiEndLess,
 #endif
-#if (B_HON_HOAN)
+#if (CUSTOMSOULRINGEFFECT)
 		lpMsg->CapDoHonHoan, lpMsg->PointUsePhe,
 #endif
 #if (DANHHIEU_NEW)
@@ -1658,7 +1658,7 @@ void GDCharacterInfoSaveRecv(const SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg, int ser
 #else
 		static_cast<int>(RSTimeCTC * 60), // El valor para CTCTime si el sistema está desactivado
 #endif
-#if (FLAG_SKIN)
+#if (CUSTOMFLAGSKIN)
 		lpMsg->Flag,
 #endif
 		lpMsg->Account, lpMsg->CharacterName))
@@ -2268,7 +2268,7 @@ void GDCustomQuestRecv(const SDHP_CUSTOMQUEST_RECV* lpMsg, int serverIndex, int 
 		lpMsg->CharacterName,
 		sizeof(pMsg.CharacterName));
 
-	pMsg.quest = 0;
+	pMsg.Quest = 0;
 
 	if (gQueryManager.ExecQuery(
 		"SELECT quest FROM CustomQuest WHERE Name='%s'",
@@ -2278,7 +2278,7 @@ void GDCustomQuestRecv(const SDHP_CUSTOMQUEST_RECV* lpMsg, int serverIndex, int 
 
 		if (sqlRet != SQL_NO_DATA && sqlRet != SQL_NULL_DATA)
 		{
-			pMsg.quest = gQueryManager.GetAsInteger("quest");
+			pMsg.Quest = gQueryManager.GetAsInteger("quest");
 		}
 	}
 
@@ -2303,7 +2303,7 @@ void GDCustomQuestSaveRecv(const SDHP_CUSTOMQUEST_SAVE_RECV* lpMsg,	int serverIn
 	{
 		gQueryManager.ExecQuery(
 			"UPDATE CustomQuest SET quest=%d WHERE Name='%s'",
-			lpMsg->quest,
+			lpMsg->Quest,
 			lpMsg->CharacterName);
 	}
 	else
@@ -2311,7 +2311,7 @@ void GDCustomQuestSaveRecv(const SDHP_CUSTOMQUEST_SAVE_RECV* lpMsg,	int serverIn
 		gQueryManager.ExecQuery(
 			"INSERT INTO CustomQuest (Name,quest) VALUES ('%s',%d)",
 			lpMsg->CharacterName,
-			lpMsg->quest);
+			lpMsg->Quest);
 	}
 
 	gQueryManager.Close();
@@ -2350,8 +2350,8 @@ void GDCustomRankingRecv(const SDHP_CUSTOM_RANKING_RECV* lpMsg, int serverIndex,
 	int sendSize = sizeof(pMsg);
 
 	pMsg.Index = lpMsg->Index;
-	pMsg.type = lpMsg->type;
-	pMsg.count = 0;
+	pMsg.Type = lpMsg->Type;
+	pMsg.Count = 0;
 
 	CUSTOM_RANKING_DATA info{};
 
@@ -2359,8 +2359,8 @@ void GDCustomRankingRecv(const SDHP_CUSTOM_RANKING_RECV* lpMsg, int serverIndex,
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
-			gQueryManager.GetAsString("VALUE1", info.szName, sizeof(info.szName));
-			info.valor = gQueryManager.GetAsInteger("VALUE2");
+			gQueryManager.GetAsString("VALUE1", info.Name, sizeof(info.Name));
+			info.Value = gQueryManager.GetAsInteger("VALUE2");
 
 			if ((sendSize + static_cast<int>(sizeof(info))) > MAX_SEND_PACKET_SIZE)
 			{
@@ -2371,7 +2371,7 @@ void GDCustomRankingRecv(const SDHP_CUSTOM_RANKING_RECV* lpMsg, int serverIndex,
 
 			sendSize += sizeof(info);
 
-			++pMsg.count;
+			++pMsg.Count;
 		}
 	}
 
@@ -2406,16 +2406,15 @@ void CharacterRanking(const GDTop* lpMsg, int serverIndex, int size)
 				break;
 			}
 
-			char characterName[11]{};
+			char characterName[MAX_CHARACTER_NAME]{};
 
 			gQueryManager.GetAsString("Name", characterName, sizeof(characterName));
 
-			std::strncpy(
+			strncpy_s(
 				pMsg.Tp[characterCount].CharacterName,
+				sizeof(pMsg.Tp[characterCount].CharacterName),
 				characterName,
-				sizeof(pMsg.Tp[characterCount].CharacterName));
-
-			pMsg.Tp[characterCount].CharacterName[sizeof(pMsg.Tp[characterCount].CharacterName) - 1] = 0;
+				_TRUNCATE);
 
 			pMsg.Tp[characterCount].Class = gQueryManager.GetAsInteger("Class");
 			pMsg.Tp[characterCount].Level = gQueryManager.GetAsInteger("cLevel");
@@ -2444,16 +2443,15 @@ void CharacterRanking(const GDTop* lpMsg, int serverIndex, int size)
 			continue;
 		}
 
-		char guildName[9]{};
+		char guildName[MAX_GUILD_NAME]{};
 
 		gQueryManager.GetAsString("G_Name", guildName, sizeof(guildName));
 
-		std::strncpy(
+		strncpy_s(
 			pMsg.Tp[n].GuildName,
+			sizeof(pMsg.Tp[n].GuildName),
 			guildName,
-			sizeof(pMsg.Tp[n].GuildName));
-
-		pMsg.Tp[n].GuildName[sizeof(pMsg.Tp[n].GuildName) - 1] = 0;
+			_TRUNCATE);
 
 		gQueryManager.Close();
 	}
@@ -3169,8 +3167,8 @@ void GDGetSkinIsBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int
 
 	int sendSize = sizeof(pMsg);
 
-	pMsg.count = 0;
-	pMsg.aIndex = lpMsg->aIndex;
+	pMsg.Count = 0;
+	pMsg.Index = lpMsg->Index;
 
 	BCUSTOM_SKINMODEL_DATA info{};
 
@@ -3189,7 +3187,7 @@ void GDGetSkinIsBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int
 			std::memcpy(&send[sendSize], &info, sizeof(info));
 			sendSize += sizeof(info);
 
-			++pMsg.count;
+			++pMsg.Count;
 		}
 	}
 
@@ -3211,7 +3209,7 @@ void GDSaveSkinBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int 
 		gQueryManager.ExecQuery(
 			"SELECT AccountID FROM SkinModel WHERE AccountID='%s' AND SkinIndex=%d",
 			lpMsg->AccountID,
-			lpMsg->aIndex) &&
+			lpMsg->Index) &&
 		(gQueryManager.Fetch() != SQL_NO_DATA);
 
 	gQueryManager.Close();
@@ -3221,7 +3219,7 @@ void GDSaveSkinBuy(const GSSENDDS_GETLISTISBUYSKIN* lpMsg, int serverIndex, int 
 		gQueryManager.ExecQuery(
 			"INSERT INTO SkinModel (AccountID,SkinIndex,StatusBuy) VALUES ('%s',%d,1)",
 			lpMsg->AccountID,
-			lpMsg->aIndex);
+			lpMsg->Index);
 
 		gQueryManager.Close();
 	}

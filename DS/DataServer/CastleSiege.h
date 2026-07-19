@@ -2,7 +2,9 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-// GameServer -> DataServer 
+// GameServer -> DataServer
+
+#pragma pack(push,1)
 struct CSP_REQ_CASTLEDATA
 {
 	PSBMSG_HEAD Header;
@@ -680,6 +682,7 @@ struct CASTLE_DATA
 	int TaxHuntZone;
 	int FirstCreate;
 };
+#pragma pack(pop)
 
 //**********************************************//
 

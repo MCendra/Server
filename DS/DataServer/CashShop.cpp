@@ -289,25 +289,21 @@ void CCashShop::GDCashShopItemNumRecv(const SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg,
 #endif
 }
 
-void CCashShop::GDCashShopPeriodicItemRecv(const SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lpMsg, int serverIndex,	int size)
+void CCashShop::GDCashShopPeriodicItemRecv(const SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lpMsg, int serverIndex, int size)
 {
 #if (DATASERVER_UPDATE >= 501)
 
-	if (size < sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV))
-	{
-		return;
-	}
+	VALIDATE_PACKET_SIZE(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV);
 
-	constexpr int maxRecvCount =
+	constexpr size_t maxRecvCount =
 		(MAX_RECV_PACKET_SIZE - sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV)) /
 		sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM1);
 
-	const int recvCount = static_cast<int>(lpMsg->Count);
+	const size_t recvCount = static_cast<size_t>(lpMsg->Count);
 
-	if (recvCount < 0 ||
-		recvCount > maxRecvCount ||
-		sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV) +
-		(sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM1) * recvCount) > size)
+	if (recvCount > maxRecvCount ||
+		(sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV) +
+			(sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM1) * recvCount)) > static_cast<size_t>(size))
 	{
 		return;
 	}
@@ -323,18 +319,18 @@ void CCashShop::GDCashShopPeriodicItemRecv(const SDHP_CASH_SHOP_PERIODIC_ITEM_RE
 
 	int sendSize = sizeof(pMsg);
 
-	constexpr int maxSendCount =
+	constexpr size_t maxSendCount =
 		(MAX_SEND_PACKET_SIZE - sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SEND)) /
 		sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM2);
 
-	const int count = (recvCount < maxSendCount) ? recvCount : maxSendCount;
+	const size_t count = (recvCount < maxSendCount) ? recvCount : maxSendCount;
 
 	const auto* lpInfo =
 		reinterpret_cast<const SDHP_CASH_SHOP_PERIODIC_ITEM1*>(
 			reinterpret_cast<const BYTE*>(lpMsg) +
 			sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV));
 
-	for (int n = 0; n < count; ++n)
+	for (size_t n = 0; n < count; ++n)
 	{
 		SDHP_CASH_SHOP_PERIODIC_ITEM2 info{};
 
@@ -599,16 +595,16 @@ void CCashShop::GDCashShopPeriodicItemSaveRecv(const SDHP_CASH_SHOP_PERIODIC_ITE
 		return;
 	}
 
-	const int count = static_cast<int>(lpMsg->Count);
-
-	constexpr int maxCount =
+	constexpr size_t maxCount =
 		(MAX_RECV_PACKET_SIZE -
 			sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV)) /
 		sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE);
 
+	const size_t count = lpMsg->Count;
+
 	if (count > maxCount ||
-		sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV) +
-		(sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE) * count) > size)
+		(sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV) +
+			(sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE) * count)) > static_cast<size_t>(size))
 	{
 		return;
 	}
@@ -618,7 +614,7 @@ void CCashShop::GDCashShopPeriodicItemSaveRecv(const SDHP_CASH_SHOP_PERIODIC_ITE
 			reinterpret_cast<const BYTE*>(lpMsg) +
 			sizeof(SDHP_CASH_SHOP_PERIODIC_ITEM_SAVE_RECV));
 
-	for (int n = 0; n < count; ++n)
+	for (size_t n = 0; n < count; ++n)
 	{
 		gQueryManager.ExecQuery(
 			"IF EXISTS (SELECT 1 FROM CashShopPeriodicItem WHERE ItemSerial=%d) "
@@ -692,4 +688,67 @@ bool CCashShop::CreateCashInfo(const char* account)
 	gQueryManager.Close();
 
 	return result;
+}
+
+void CCashShop::GDCashShopItemUseRecv(const SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg, int serverIndex, int size)
+{
+#if (DATASERVER_UPDATE >= 501)
+
+	VALIDATE_PACKET_SIZE(SDHP_CASH_SHOP_ITEM_USE_RECV);
+
+	SDHP_CASH_SHOP_ITEM_USE_SEND pMsg{};
+
+	pMsg.Header.set(0x18, 0x04, sizeof(pMsg));
+
+	pMsg.Index = lpMsg->Index;
+
+	std::memcpy(pMsg.Account, lpMsg->Account, sizeof(pMsg.Account));
+
+	pMsg.Result = 0;
+
+	pMsg.BaseItemCode = lpMsg->BaseItemCode;
+	pMsg.MainItemCode = lpMsg->MainItemCode;
+	pMsg.ItemIndex = lpMsg->ItemIndex;
+	pMsg.ProductType = lpMsg->ProductType;
+
+	if (!gQueryManager.ExecQuery(
+		"SELECT BaseItemCode,MainItemCode,PackageMainIndex,ProductBaseIndex,"
+		"ProductMainIndex,CoinValue,ProductType,GiftName,GiftText "
+		"FROM CashShopInventory WHERE BaseItemCode=%d",
+		lpMsg->BaseItemCode) ||
+		gQueryManager.Fetch() == SQL_NO_DATA)
+	{
+		gQueryManager.Close();
+
+		pMsg.Result = 1;
+	}
+	else
+	{
+		pMsg.ProductInfo.BaseItemCode = gQueryManager.GetAsInteger("BaseItemCode");
+		pMsg.ProductInfo.MainItemCode = gQueryManager.GetAsInteger("MainItemCode");
+		pMsg.ProductInfo.PackageMainIndex = gQueryManager.GetAsInteger("PackageMainIndex");
+		pMsg.ProductInfo.ProductBaseIndex = gQueryManager.GetAsInteger("ProductBaseIndex");
+		pMsg.ProductInfo.ProductMainIndex = gQueryManager.GetAsInteger("ProductMainIndex");
+		pMsg.ProductInfo.CoinValue = gQueryManager.GetAsFloat("CoinValue");
+		pMsg.ProductInfo.ProductType = gQueryManager.GetAsInteger("ProductType");
+
+		gQueryManager.GetAsString(
+			"GiftName",
+			pMsg.ProductInfo.GiftName,
+			sizeof(pMsg.ProductInfo.GiftName));
+
+		gQueryManager.GetAsString(
+			"GiftText",
+			pMsg.ProductInfo.GiftText,
+			sizeof(pMsg.ProductInfo.GiftText));
+
+		gQueryManager.Close();
+	}
+
+	gSocketManager.DataSend(
+		serverIndex,
+		reinterpret_cast<BYTE*>(&pMsg),
+		sizeof(pMsg));
+
+#endif
 }

@@ -5,6 +5,7 @@
 
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_GUILD_MATCHING_LIST_RECV
 {
 	PSBMSG_HEAD Header; // C1:28:00
@@ -266,6 +267,7 @@ struct GUILD_MATCHING_JOIN_INFO
 	BYTE Class;
 	DWORD Level;
 };
+#pragma pack(pop)
 
 class CGuildMatching
 {

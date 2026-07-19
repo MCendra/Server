@@ -2,10 +2,9 @@
 #pragma once
 #include "DataServerProtocol.h"
 
-#define MUUN_INVENTORY_SIZE 62
-
 // GameServer -> DataServer
 
+#pragma pack(push,1)
 struct SDHP_MUUN_INVENTORY_RECV
 {
 	PSBMSG_HEAD Header; // C1:27:00
@@ -33,6 +32,7 @@ struct SDHP_MUUN_INVENTORY_SEND
 	char CharacterName[MAX_CHARACTER_NAME];
 	BYTE MuunInventory[MUUN_INVENTORY_SIZE][16];
 };
+#pragma pack(pop)
 
 //**********************************************//
 

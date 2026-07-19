@@ -7,6 +7,7 @@
 #define MAX_GUILD_RIVAL 2
 #define MAX_GUILD_MEMBER 80
 
+#pragma pack(push,1)
 struct GUILD_MEMBER_INFO
 {
 	void Clear()
@@ -35,7 +36,7 @@ struct GUILD_INFO
 		RivalNumber = 0;
 		Score = 0;
 
-#if (NEWBOSSGUILD == 1)
+#if (GUILDBOSSEVENT  == 1)
 		Score1 = 0;
 #endif
 
@@ -73,7 +74,7 @@ struct GUILD_INFO
 	DWORD RivalNumber;
 	DWORD Score;
 
-#if (NEWBOSSGUILD == 1)
+#if (GUILDBOSSEVENT  == 1)
 	DWORD Score1;
 #endif
 
@@ -84,6 +85,7 @@ struct GUILD_INFO
 	BYTE Mark[32];
 	GUILD_MEMBER_INFO GuildMember[MAX_GUILD_MEMBER];
 };
+#pragma pack(pop)
 
 class CGuildManager
 {
@@ -116,7 +118,7 @@ public:
 
 	BYTE SetGuildScore(const char* guildName, DWORD score);
 
-#if (NEWBOSSGUILD == 1)
+#if (GUILDBOSSEVENT  == 1)
 	BYTE SetGuildScore1(const char* guildName, DWORD score1);
 #endif
 
