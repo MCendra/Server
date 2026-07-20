@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "Util.h"
+// Util.cpp
+#include "Header.h"
 #include "GameMain.h"
 #include "HackCheck.h"
 #include "ItemManager.h"
@@ -7,10 +7,77 @@
 #include "SocketManager.h"
 #include "ThemidaSDK.h"
 #include "Viewport.h"
+#include "Util.h"
 
-std::mt19937 seed;
-std::uniform_int_distribution<int> dist;
+// Instancia global
+CUtil gUtil;
+
+char* WorkingPath = nullptr;                 // Path del ejecutable declarado en Header.h
+
+namespace
+{
+	std::mt19937 g_RandomEngine{ std::random_device{}() };
+	std::uniform_int_distribution<int> g_RandomDistribution(
+		0,
+		std::numeric_limits<int>::max());
+}
+
 short RoadPathTable[MAX_ROAD_PATH_TABLE] = {-1,-1,0,-1,1,-1,1,0,1,1,0,1,-1,1,-1,0};
+
+void CUtil::GetExecutablePath()
+{
+	DWORD bufferSize = MAX_PATH;
+	std::vector<char> buffer;
+	buffer.resize(bufferSize);
+
+	while (true)
+	{
+		DWORD result = GetModuleFileNameA(nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
+		if (result == 0)
+		{
+			// No se pudo obtener la ruta
+			if (WorkingPath)
+			{
+				free(WorkingPath);
+				WorkingPath = nullptr;
+			}
+			return;
+		}
+
+		// Si el buffer fue insuficiente, GetModuleFileName devuelve igual al tamaño del buffer
+		if (result >= buffer.size())
+		{
+			// Aumentar y volver a intentar
+			buffer.resize(buffer.size() * 2);
+			continue;
+		}
+
+		// Encontrar la ultima barra invertida para mantener solo el directorio
+		char* lastSlash = strrchr(buffer.data(), '\\');
+		if (lastSlash)
+		{
+			*(lastSlash + 1) = '\0';
+		}
+
+		// Liberar anterior si existe y duplicar
+		if (WorkingPath)
+		{
+			free(WorkingPath);
+		}
+		WorkingPath = _strdup(buffer.data());
+		return;
+	}
+}
+
+//void CUtil::SetLargeRand()
+//{
+//	seed.seed(std::random_device{}());
+//}
+
+int CUtil::GetLargeRand()
+{
+	return g_RandomDistribution(g_RandomEngine);
+}
 
 int SafeGetItem(int index) // OK
 {
@@ -557,16 +624,9 @@ void PostMessageNew(char* name,char* message,char* text) // OK
 }
 
 
-void SetLargeRand() // OK
-{
-	seed = std::mt19937(std::random_device());
-	dist = std::uniform_int_distribution<int>(0,2147483647);
-}
 
-long GetLargeRand() // OK
-{
-	return dist(seed);
-}
+
+
 
 void MsgBox(char* message, ...) // OK
 {

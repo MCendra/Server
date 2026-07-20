@@ -1,50 +1,47 @@
-// Log.h: interface for the CLog class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// Log.h
 #pragma once
+#include "ServerLog.h"      // Define LogType (GENERAL, ACCOUNT) y gServerLog
+#include "ServerDisplayer.h" // Define LogColor y gServerDisplayer
 
-#define MAX_LOG 20
+// CLog es la fachada unificada de logging para JoinServer.
+//
+// Cualquier archivo que incluya Log.h puede:
+//   Log.ToFile(LogType::GENERAL,  "mensaje %d", valor);   → solo a disco, carpeta LOG
+//   Log.ToFile(LogType::ACCOUNT,  "login %s",   usuario); → solo a disco, carpeta LOG_ACCOUNT
+//   Log.ToDisp(LOG_GREEN, "mensaje %d", valor);            → pantalla + disco (GENERAL)
+//
+// La diferencia con ConnectServer es que ToFile recibe LogType como
+// primer parametro, permitiendo dirigir el mensaje al archivo correcto.
+// ToDisp siempre va a GENERAL (los eventos de cuenta son demasiado
+// verbosos para mostrarlos en pantalla en tiempo real).
 
-enum eLogType
-{
-	LOG_GENERAL = 0,
-	LOG_CHAT = 1,
-	LOG_COMMAND = 2,
-	LOG_TRADE = 3,
-	LOG_CONNECT = 4,
-	LOG_HACK = 5,
-	LOG_CASH_SHOP = 6,
-	LOG_CHAOS_MIX = 7,
-	LOG_ANTIFLOOD = 8,
-	LOG_RESET = 9,
-	LOG_TIEN_TE = 10,
-	LOG_KET_NOI = 11,
-	LOG_THU_MUA = 12,
-
-};
-
-struct LOG_INFO
-{
-	BOOL Active;
-	char Directory[256];
-	int Day;
-	int Month;
-	int Year;
-	char Filename[256];
-	HANDLE File;
-};
+//struct LOG_INFO
+//{
+//	BOOL Active;
+//	char Directory[256];
+//	int Day;
+//	int Month;
+//	int Year;
+//	char Filename[256];
+//	HANDLE File;
+//};
 
 class CLog
 {
 public:
-	CLog();
-	virtual ~CLog();
-	void AddLog(BOOL active,char* directory);
-	void Output(eLogType type,char* text,...);
+	CLog() = default;
+	~CLog() = default;
+
+	// Escribe a disco en el archivo correspondiente al tipo indicado.
+	// No muestra nada en pantalla.
+	void ToFile(LogType type, const char* text, ...);
+
+	// Muestra en pantalla Y escribe en el log GENERAL a disco.
+	// Para eventos de operacion que el operador necesita ver en tiempo real.
+	void ToDisp(LogColor color, const char* text, ...);
+
 private:
-	LOG_INFO m_LogInfo[MAX_LOG];
-	int m_count;
+	std::string FormatMessage(const char* text, va_list args) const;
 };
 
-extern CLog gLog;
+extern CLog Log;

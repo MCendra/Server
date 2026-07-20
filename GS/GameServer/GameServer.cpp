@@ -1,56 +1,24 @@
-#include "stdafx.h"
-#include "Resource.h"
-#include "BloodCastle.h"
-#include "CastleDeep.h"
-#include "CastleSiege.h"
-#include "ChaosCastle.h"
-#include "Crywolf.h"
-#include "CustomArena.h"
-#include "CustomEventDrop.h"
-#include "CustomOnlineLottery.h"
-#include "CustomQuiz.h"
-#include "DevilSquare.h"
-#include "EventTvT.h"
+// GameServer.cpp : Define el punto de entrada de la aplicacion.
+#include "Header.h"
 #include "GameServer.h"
-#include "GameMain.h"
-#include "IllusionTemple.h"
-#include "InvasionManager.h"
-#include "JSProtocol.h"
-#include "Message.h"
-#include "MiniDump.h"
-#include "Notice.h"
-#include "Protect.h"
-#include "QueueTimer.h"
-#include "ServerDisplayer.h"
-#include "ServerInfo.h"
-#include "SocketManager.h"
-#include "SocketManagerUdp.h"
-#include "ThemidaSDK.h"
-#include "Util.h"
-#include "ReiDoMU.h"
-#include "IpManager.h"
-#include "Log.h"
-#include "CustomAttack.h"
-#include "CustomStore.h"
-#include "OfflineMode.h"
-#include "License.h"
-#include "RamFix.h"
-#include "FakeOnline.h"
-#include "SkyEvent.h"
-#include "BossGuild.h"
-#include "CTCMini.h"
-#include "BotStore.h"
-#include "Path.h"
-#include "BotOnline.h"
-#include "BEventThanMa.h"
-TCHAR szTitle[MAX_LOADSTRING];
-TCHAR szWindowClass[MAX_LOADSTRING];
-HINSTANCE hInst;
-HWND hWnd;
 
+// Variables globales:
+HINSTANCE hInst;                               // Instancia actual
+CHAR szTitle[MAX_LOADSTRING];                  // Texto de la barra de titulo
+CHAR szWindowClass[MAX_LOADSTRING];            // Nombre de clase de la ventana principal
+HWND g_hWnd;                                   // Renombrado para evitar shadowing
 
+// Declaraciones de funciones adelantadas incluidas en este modulo de codigo:
+ATOM                MyRegisterClass(HINSTANCE hInstance);
+BOOL                InitInstance(HINSTANCE, int);
+LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow) // OK
+constexpr int WINDOW_WIDTH = 980;                  // Ancho de la ventana
+constexpr int WINDOW_HEIGHT = 750;                 // Alto de la ventana
+
+//int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow) // OK
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
 	/*if(gProtect.ReadMainFile("..\\Data\\Hack\\keyword.enc") == 0)
 	{
@@ -58,45 +26,60 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 		ExitProcess(0);
 	}*/
 
-	VM_START
+	//VM_START
 
 	CMiniDump::Start();
 
-	LoadString(hInstance,IDS_APP_TITLE,szTitle,MAX_LOADSTRING);
-	LoadString(hInstance,IDC_GAMESERVER,szWindowClass,MAX_LOADSTRING);
+	// Inicializar cadenas globales en ASCII
+	LoadStringA(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringA(hInstance, IDC_GAMESERVER, szWindowClass, MAX_LOADSTRING);
 
+	// Registrar el tipo de ventana
 	MyRegisterClass(hInstance);
 
-	if(InitInstance(hInstance,nCmdShow) == 0)
+	// Realizar la inicializacion de la aplicacion:
+	if (!InitInstance(hInstance, nCmdShow))
 	{
-		return 0;
+		// Asegurar limpieza del minidump antes de salir
+		CMiniDump::Clean();
+		return false;
 	}
 
-	SetLargeRand();
+	// Obtener el path del ejecutable
+	gUtil.GetExecutablePath();
 
-#if(FIXVT == 1)
-	CreateThread(NULL, NULL, LPTHREAD_START_ROUTINE(RamFix), NULL, 0, 0); // Ram Fix
-#endif
+	// Inicializa controlador de visualizacion de mensajes
+	gServerDisplayer.Init(g_hWnd);
+
+	// Inicializa el log al disco
+	gServerLog.Init(true);
+
+	// Inicializa el archivo ini de configuración del servidor
+	gServerConfig.Init();
+
+//#if(FIXVT == 1)
+//	CreateThread(NULL, NULL, LPTHREAD_START_ROUTINE(RamFix), NULL, 0, 0); // Ram Fix
+//#endif
 
 	gServerInfo.ReadStartupInfo("GameServerInfo",".\\Data\\GameServerInfo - Common.ini");
 
-	#if(PROTECT_STATE==1)
+	//#if(PROTECT_STATE==1)
 
-	#if(GAMESERVER_UPDATE>=801)
-		gProtect.StartAuth(AUTH_SERVER_TYPE_S8_GAME_SERVER);
-	#elif(GAMESERVER_UPDATE>=601)
-		//gProtect.StartAuth(AUTH_SERVER_TYPE_S6_GAME_SERVER);
-	#if(CheckLicHWID)
-		gLicense.GetComputerHardwareId();
-	#endif
+	//#if(GAMESERVER_UPDATE>=801)
+	//	gProtect.StartAuth(AUTH_SERVER_TYPE_S8_GAME_SERVER);
+	//#elif(GAMESERVER_UPDATE>=601)
+	//	//gProtect.StartAuth(AUTH_SERVER_TYPE_S6_GAME_SERVER);
+	//#if(CheckLicHWID)
+	//	gLicense.GetComputerHardwareId();
+	//#endif
 
-	#elif(GAMESERVER_UPDATE>=401)
-		//gProtect.StartAuth(AUTH_SERVER_TYPE_S4_GAME_SERVER);
-	#else
-		gProtect.StartAuth(AUTH_SERVER_TYPE_S2_GAME_SERVER);
-	#endif
+	//#elif(GAMESERVER_UPDATE>=401)
+	//	//gProtect.StartAuth(AUTH_SERVER_TYPE_S4_GAME_SERVER);
+	//#else
+	//	gProtect.StartAuth(AUTH_SERVER_TYPE_S2_GAME_SERVER);
+	//#endif
 
-	#endif
+	//#endif
 
 	char buff[256];
 
@@ -104,7 +87,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 
 	SetWindowText(hWnd,buff);
 
-	gServerDisplayer.Init(hWnd);
 
 	WSADATA wsa;
 
@@ -186,41 +168,61 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	return msg.wParam;
 }
 
-ATOM MyRegisterClass(HINSTANCE hInstance) // OK
+//
+//  FUNCIÓN: MyRegisterClass()
+//
+//  PROPÓSITO: Registra la clase de ventana.
+//
+ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-	WNDCLASSEX wcex;
+	// Inicializa toda la estructura a cero
+	WNDCLASSEXA wcex = {};
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
-
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = (WNDPROC)WndProc;
+	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance,(LPCTSTR)IDI_GAMESERVER);
-	wcex.hCursor = LoadCursor(0,IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName = (LPCSTR)IDC_GAMESERVER;
+	wcex.hIcon = LoadIconA(hInstance, MAKEINTRESOURCEA(IDI_GAMESERVER));
+	wcex.hCursor = LoadCursorA(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCEA(IDC_GAMESERVER);
 	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(wcex.hInstance,(LPCTSTR)IDI_SMALL);
+	wcex.hIconSm = LoadIconA(wcex.hInstance, MAKEINTRESOURCEA(IDI_SMALL));
 
-	return RegisterClassEx(&wcex);
+	return RegisterClassExA(&wcex);
 }
 
-BOOL InitInstance(HINSTANCE hInstance,int nCmdShow) // OK
+//
+//   FUNCIÓN: InitInstance(HINSTANCE, int)
+//
+//   PROPÓSITO: Guarda el identificador de instancia y crea la ventana principal
+//
+//   COMENTARIOS:
+//
+//        En esta función, se guarda el identificador de instancia en una variable común y
+//        se crea y muestra la ventana principal del programa.
+//
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
+	// Almacenar identificador de instancia en una variable global
 	hInst = hInstance;
 
-	hWnd = CreateWindow(szWindowClass,szTitle,WS_OVERLAPPEDWINDOW | WS_THICKFRAME,CW_USEDEFAULT,0,980,750,0,0,hInstance,0);
+	g_hWnd = CreateWindowA(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_THICKFRAME,
+		CW_USEDEFAULT, 0, WINDOW_WIDTH, WINDOW_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
-	if(hWnd == 0)
+	if (!g_hWnd)
 	{
-		return 0;
+		Log.ToFile("[GS] CreateWindowA fallo. Codigo error: %d", GetLastError());
+		return false;
 	}
 
-	ShowWindow(hWnd,nCmdShow);
-	UpdateWindow(hWnd);
-	return 1;
+	ShowWindow(g_hWnd, nCmdShow);
+
+	UpdateWindow(g_hWnd);
+
+	return true;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // OK

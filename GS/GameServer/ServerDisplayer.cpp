@@ -1,8 +1,5 @@
-// ServerDisplayer.cpp: implementation of the CServerDisplayer class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// ServerDisplayer.cpp
+#include "Header.h"
 #include "ServerDisplayer.h"
 #include "CustomArena.h"
 #include "GameMain.h"
@@ -14,12 +11,15 @@
 #include "User.h"
 #include "CustomGHRS.h"
 
+// Instancia global del visualizador de servidor
 CServerDisplayer gServerDisplayer;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CServerDisplayer::CServerDisplayer() // OK
+// Definición de textos de estado
+constexpr char TEXT_WINDOWS_TITLE[] = "[GS] GameServer %s - %s (ON: %d) %s";
+constexpr char GAMESERVER_WAIT[] = "ESPERANDO";
+constexpr char GAMESERVER_ACTIVE[] = "ACTIVO";
+
+CServerDisplayer::CServerDisplayer()
 {
 	this->EventBc = -1;
 
@@ -34,24 +34,16 @@ CServerDisplayer::CServerDisplayer() // OK
 	this->m_font4 = CreateFont(18, 0, 0, 0, FW_DONTCARE, 0, 0, 0, VIETNAMESE_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Times");
 	this->m_font5 = CreateFont(15, 0, 0, 0, FW_DONTCARE, 0, 0, 0, VIETNAMESE_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "MS Sans Serif");
 
-#if(GAMESERVER_TYPE2 == 0)
-	this->m_brush[0] = CreateSolidBrush(RGB(0, 0, 0));
-	this->m_brush[1] = CreateSolidBrush(RGB(120, 120, 120));	//rojo
-	this->m_brush[2] = CreateSolidBrush(RGB(39, 79, 121));	// 0, 152, 239	//<-
-	this->m_brush[3] = CreateSolidBrush(RGB(255, 255, 255));	//semiblack	//<- blanco
-	this->m_brush[4] = CreateSolidBrush(RGB(210, 210, 210));	//Black //<- semi blanco
-#else
-	this->m_brush[0] = CreateSolidBrush(RGB(105, 105, 105));		//<- cuando esta activo
-	this->m_brush[1] = CreateSolidBrush(RGB(110, 240, 120));	//<- cuando esta desactivado
-	this->m_brush[2] = CreateSolidBrush(RGB(0, 152, 239));		// 0, 152, 239	//<-39, 79, 121
-	this->m_brush[3] = CreateSolidBrush(RGB(255, 255, 255));	//semiblack	//<- fondo
-	this->m_brush[4] = CreateSolidBrush(RGB(210, 210, 210));	//Black //<- fondo de eventos e informacion
-#endif
+	// Crear pinceles para diferentes estados de visualizacion.
+	m_brush[0] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(0, 0, 0) : RGB(105, 105, 105));
+	m_brush[1] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(120, 120, 120) : RGB(110, 240, 120));
+	m_brush[2] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(39, 79, 121) : RGB(0, 152, 239));
+	m_brush[3] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(255, 255, 255) : RGB(255, 255, 255));
+	m_brush[4] = CreateSolidBrush((GAMESERVER_TYPE2 == 0) ? RGB(210, 210, 210) : RGB(210, 210, 210));
 
-
-
-	strcpy_s(this->m_DisplayerText[0], "STANDBY MODE");
-	strcpy_s(this->m_DisplayerText[1], "ACTIVE MODE");
+	// Inicializa los textos para mostrar en la ventana.
+	strncpy_s(m_displayertext[0], sizeof(m_displayertext[0]), GAMESERVER_WAIT, _TRUNCATE);
+	strncpy_s(m_displayertext[1], sizeof(m_displayertext[1]), GAMESERVER_ACTIVE, _TRUNCATE);
 }
 
 CServerDisplayer::~CServerDisplayer() // OK
@@ -64,39 +56,75 @@ CServerDisplayer::~CServerDisplayer() // OK
 	DeleteObject(this->m_brush[4]);
 }
 
-void CServerDisplayer::Init(HWND hWnd) // OK
+// Inicializa la clase con el HWND de la ventana principal
+void CServerDisplayer::Init(HWND hWnd)
 {
-	PROTECT_START
+	m_hwnd = hWnd;
 
-		this->m_hwnd = hWnd;
+	GetClientRect(m_hwnd, &m_rect);
 
-	PROTECT_FINAL
+	m_richeditmodule = LoadLibraryA("Msftedit.dll");
 
-		gLog.AddLog(1, "LOG");
+	if (m_richeditmodule == nullptr)
+	{
+		Log.ToDisp(LOG_RED, "[ServerDisplayer - Init] No se pudo cargar Msftedit.dll");
+		return;
+	}
 
-	gLog.AddLog(gServerInfo.m_WriteChatLog, "LOG\\CHAT_LOG");
+	m_hrichedit = CreateWindowExA(
+		0,
+		"RICHEDIT50W",      // Nombre ANSI del MSFTEDIT_CLASS — mismo resultado
+		"",
+		WS_CHILD | WS_VISIBLE | WS_VSCROLL |
+		ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | ES_NOHIDESEL,
+		0, m_serverlistbottom,
+		m_rect.right,
+		m_rect.bottom - m_serverlistbottom,
+		m_hwnd,
+		nullptr, nullptr, nullptr
+	);
 
-	gLog.AddLog(gServerInfo.m_WriteCommandLog, "LOG\\COMMAND_LOG");
+	if (m_hrichedit == nullptr)
+	{
+		Log.ToDisp(LOG_RED, "[ServerDisplayer - Init] No se pudo crear el control RichEdit. Error: %lu", GetLastError());
+		return;
+	}
 
-	gLog.AddLog(gServerInfo.m_WriteTradeLog, "LOG\\TRADE_LOG");
+	UpdateLayout();
 
-	gLog.AddLog(gServerInfo.m_WriteConnectLog, "LOG\\CONNECT_LOG");
+	SendMessage(m_hrichedit, WM_SETFONT, (WPARAM)m_smallfont, true);
+	SendMessage(m_hrichedit, EM_SETLIMITTEXT, 200 * MAX_LOG_TEXT_SIZE, 0);
 
-	gLog.AddLog(gServerInfo.m_WriteHackLog, "LOG\\HACK_LOG");
+	COLORREF bkColor = GetSysColor(COLOR_WINDOW);
+	SendMessage(m_hrichedit, EM_SETBKGNDCOLOR, 0, bkColor);
 
-	gLog.AddLog(gServerInfo.m_WriteCashShopLog, "LOG\\CASH_SHOP_LOG");
+	UpdateWindowTitle(0, 0);
 
-	gLog.AddLog(gServerInfo.m_WriteChaosMixLog, "LOG\\CHAOS_MIX_LOG");
+	//gLog.AddLog(1, "LOG");
 
-	gLog.AddLog(gServerInfo.m_WriteAntifloodLog, "LOG\\ANTIFLOOD_LOG");
+	//gLog.AddLog(gServerInfo.m_WriteChatLog, "LOG\\CHAT_LOG");
 
-	gLog.AddLog(gServerInfo.m_WriteResetLog, "LOG\\RESET_LOG");
+	//gLog.AddLog(gServerInfo.m_WriteCommandLog, "LOG\\COMMAND_LOG");
 
-	gLog.AddLog(gServerInfo.m_WriteTienTeLog, "LOG\\TIENTE_LOG");
+	//gLog.AddLog(gServerInfo.m_WriteTradeLog, "LOG\\TRADE_LOG");
 
-	gLog.AddLog(gServerInfo.m_WriteKetNoiLog, "LOG\\KETNOI_LOG");
+	//gLog.AddLog(gServerInfo.m_WriteConnectLog, "LOG\\CONNECT_LOG");
 
-	gLog.AddLog(gServerInfo.m_WriteThuMuaExcLog, "LOG\\THUMUA_LOG");
+	//gLog.AddLog(gServerInfo.m_WriteHackLog, "LOG\\HACK_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteCashShopLog, "LOG\\CASH_SHOP_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteChaosMixLog, "LOG\\CHAOS_MIX_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteAntifloodLog, "LOG\\ANTIFLOOD_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteResetLog, "LOG\\RESET_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteTienTeLog, "LOG\\TIENTE_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteKetNoiLog, "LOG\\KETNOI_LOG");
+
+	//gLog.AddLog(gServerInfo.m_WriteThuMuaExcLog, "LOG\\THUMUA_LOG");
 
 }
 

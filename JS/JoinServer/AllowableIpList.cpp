@@ -41,14 +41,11 @@ void CAllowableIpList::Load(const char* path)
 
 				const char* ip = scriptParser.GetString();
 
-				if (ip[0] == '\0')
+				if (ip && ip[0] != '\0')
 				{
-					continue;
+					strcpy_s(info.IpAddr, ip);
+					m_AllowableIpInfo.emplace(info.IpAddr, info);
 				}
-
-				strcpy_s(info.IpAddr, ip);
-
-				m_AllowableIpInfo.try_emplace(info.IpAddr, info);
 			}
 		}
 	}

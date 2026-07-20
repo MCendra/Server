@@ -9,8 +9,19 @@
 enum class LogType : uint8_t
 {
 	GENERAL = 0,
-	ACCOUNT = 1,
-	MAX_LOG = 2
+	CHAT = 1,
+	COMMAND = 2,
+	TRADE = 3,
+	CONNECT = 4,
+	HACK = 5,
+	CASH_SHOP = 6,
+	CHAOS_MIX = 7,
+	ANTIFLOOD = 8,
+	RESET = 9,
+	TIEN_TE = 10,
+	KET_NOI = 11,
+	THU_MUA = 12,
+	MAX_LOG = 20
 };
 
 struct LogInitInfo

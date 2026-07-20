@@ -6,12 +6,34 @@
 CServerLog gServerLog;
 
 constexpr char LOG_DIRECTORY_NAME[] = "LOG";
-constexpr char LOG_ACCOUNT_DIRECTORY_NAME[] = "LOG_ACCOUNT";
+constexpr char LOG_CHAT_DIRECTORY_NAME[] = "LOG_CHAT";
+constexpr char LOG_COMMAND_DIRECTORY_NAME[] = "LOG_COMMAND";
+constexpr char LOG_TRADE_DIRECTORY_NAME[] = "LOG_TRADE";
+constexpr char LOG_CONNECT_DIRECTORY_NAME[] = "LOG_CONNECT";
+constexpr char LOG_HACK_DIRECTORY_NAME[] = "LOG_HACK";
+constexpr char LOG_CASH_SHOP_DIRECTORY_NAME[] = "LOG_CASH_SHOP";
+constexpr char LOG_CHAOS_MIX_DIRECTORY_NAME[] = "LOG_CHAOS_MIX";
+constexpr char LOG_ANTIFLOOD_DIRECTORY_NAME[] = "LOG_ANTIFLOOD";
+constexpr char LOG_RESET_DIRECTORY_NAME[] = "LOG_RESET";
+constexpr char LOG_TIEN_TE_DIRECTORY_NAME[] = "LOG_TIEN_TE";
+constexpr char LOG_KET_NOI_DIRECTORY_NAME[] = "LOG_KET_NOI";
+constexpr char LOG_THU_MUA_DIRECTORY_NAME[] = "LOG_THU_MUA";
 
 static constexpr LogInitInfo logTable[] =
 {
-	{ LogType::GENERAL,	LOG_DIRECTORY_NAME },
-	{ LogType::ACCOUNT, LOG_ACCOUNT_DIRECTORY_NAME },
+	{ LogType::GENERAL,		LOG_DIRECTORY_NAME },
+	{ LogType::CHAT,		LOG_CHAT_DIRECTORY_NAME },
+	{ LogType::COMMAND,		LOG_COMMAND_DIRECTORY_NAME },
+	{ LogType::TRADE,		LOG_TRADE_DIRECTORY_NAME },
+	{ LogType::CONNECT,		LOG_CONNECT_DIRECTORY_NAME },
+	{ LogType::HACK,		LOG_HACK_DIRECTORY_NAME },
+	{ LogType::CASH_SHOP,	LOG_CASH_SHOP_DIRECTORY_NAME },
+	{ LogType::CHAOS_MIX,	LOG_CHAOS_MIX_DIRECTORY_NAME },
+	{ LogType::ANTIFLOOD,	LOG_ANTIFLOOD_DIRECTORY_NAME },
+	{ LogType::RESET,		LOG_RESET_DIRECTORY_NAME },
+	{ LogType::TIEN_TE,		LOG_TIEN_TE_DIRECTORY_NAME },
+	{ LogType::KET_NOI,		LOG_KET_NOI_DIRECTORY_NAME },
+	{ LogType::THU_MUA,		LOG_THU_MUA_DIRECTORY_NAME },
 };
 
 // Constructor
@@ -86,7 +108,7 @@ void CServerLog::Output(LogType type, const std::string& text)
 	SYSTEMTIME currentTime;
 	GetLocalTime(&currentTime);
 
-	if (currentTime.wDay != logInfo.lastWrite.wDay || currentTime.wMonth != logInfo.lastWrite.wMonth ||	currentTime.wYear != logInfo.lastWrite.wYear)
+	if (currentTime.wDay != logInfo.lastWrite.wDay || currentTime.wMonth != logInfo.lastWrite.wMonth || currentTime.wYear != logInfo.lastWrite.wYear)
 	{
 		if (logInfo.file != INVALID_HANDLE_VALUE)
 		{

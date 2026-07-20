@@ -6,8 +6,8 @@
 class CLog
 {
 	public:
-		CLog();  // Constructor
-		virtual ~CLog(); // Destructor
+		CLog() = default;
+		~CLog() = default;
 
 		// Registra un mensaje en el archivo de log.
 		void ToFile(const char* text, ...);

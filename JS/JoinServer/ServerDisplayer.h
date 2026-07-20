@@ -1,8 +1,8 @@
 // ServerDisplayer.h
 #pragma once
+#include "CriticalSection.h"
 #include <strsafe.h>
 #include <Richedit.h>
-#include "CriticalSection.h"
 
 // Tamaño maximo en caracteres para cada linea individual de texto en la ventana de logs
 #define MAX_LOG_TEXT_SIZE 110
@@ -57,7 +57,6 @@ private:
 	int m_serverlistbottom;                     // Coordenada inferior limite asignada al bloque de la lista de servidores
 	int m_lineheight;                           // Altura en pixeles calculada para cada linea de texto renderizada
 	char m_displayertext[2][32];                // Buffers estaticos para almacenar strings informativos de corta longitud
-
 
 	// Protege m_log / m_count contra accesos concurrentes desde
 	// distintos hilos del servidor (ServerWorkerThread, AcceptThread, etc.)

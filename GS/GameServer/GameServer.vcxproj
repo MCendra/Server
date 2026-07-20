@@ -427,6 +427,7 @@
     <ClInclude Include="EventTvT.h" />
     <ClInclude Include="ExperienceTable.h" />
     <ClInclude Include="FakeOnline.h" />
+    <ClInclude Include="FileHandle.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="FilterRename.h" />
     <ClInclude Include="FlyingDragons.h" />
@@ -444,6 +445,7 @@
     <ClInclude Include="HackPacketCheck.h" />
     <ClInclude Include="HackSkillCheck.h" />
     <ClInclude Include="HackXDameCheck.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="HonChienClass.h" />
     <ClInclude Include="huyhieu.h" />
@@ -585,8 +587,10 @@
     <ClInclude Include="SachThuocTinh.h" />
     <ClInclude Include="ScheduleManager.h" />
     <ClInclude Include="SerialCheck.h" />
+    <ClInclude Include="ServerConfig.h" />
     <ClInclude Include="ServerDisplayer.h" />
     <ClInclude Include="ServerInfo.h" />
+    <ClInclude Include="ServerLog.h" />
     <ClInclude Include="SetItemOption.h" />
     <ClInclude Include="SetItemType.h" />
     <ClInclude Include="Shop.h" />
@@ -602,6 +606,7 @@
     <ClInclude Include="StatsAdvance.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SummonScroll.h" />
+    <ClInclude Include="TargetVer.h" />
     <ClInclude Include="TeleportMarlon.h" />
     <ClInclude Include="ThemidaSDK.h" />
     <ClInclude Include="ThueFlag.h" />
@@ -658,7 +663,9 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="Connection.cpp" />
-    <ClCompile Include="CriticalSection.cpp" />
+    <ClCompile Include="CriticalSection.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Crywolf.cpp" />
     <ClCompile Include="CrywolfAltar.cpp" />
     <ClCompile Include="CrywolfObjInfo.cpp" />
@@ -730,6 +737,9 @@
     <ClCompile Include="EventStart.cpp" />
     <ClCompile Include="EventTvT.cpp" />
     <ClCompile Include="ExperienceTable.cpp" />
+    <ClCompile Include="FileHandle.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="FilterRaname.cpp" />
     <ClCompile Include="FlyingDragons.cpp" />
@@ -803,7 +813,9 @@
     <ClCompile Include="MemScript.cpp" />
     <ClCompile Include="Mercenary.cpp" />
     <ClCompile Include="Message.cpp" />
-    <ClCompile Include="MiniDump.cpp" />
+    <ClCompile Include="MiniDump.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MiniMap.cpp" />
     <ClCompile Include="MiningSystem.cpp" />
     <ClCompile Include="MocNap.cpp" />
@@ -882,8 +894,10 @@
     <ClCompile Include="SachThuocTinh.cpp" />
     <ClCompile Include="ScheduleManager.cpp" />
     <ClCompile Include="SerialCheck.cpp" />
+    <ClCompile Include="ServerConfig.cpp" />
     <ClCompile Include="ServerDisplayer.cpp" />
     <ClCompile Include="ServerInfo.cpp" />
+    <ClCompile Include="ServerLog.cpp" />
     <ClCompile Include="SetItemOption.cpp" />
     <ClCompile Include="SetItemType.cpp" />
     <ClCompile Include="Shop.cpp" />

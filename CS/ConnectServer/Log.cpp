@@ -5,16 +5,6 @@
 // Definicion de la instancia global de ServerLog
 CLog Log;
 
-// Constructor de CServerLog
-CLog::CLog() {
-
-}
-
-// Destructor de CServerLog
-CLog::~CLog() {
-    // Destructor - libera cualquier recurso si es necesario
-}
-
 std::string CLog::FormatMessage(const char* text, va_list args) const {
     char buffer[1024];
     vsnprintf(buffer, sizeof(buffer), text, args);

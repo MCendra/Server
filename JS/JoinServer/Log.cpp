@@ -4,14 +4,6 @@
 
 CLog Log;
 
-// CLog no tiene estado propio: toda la persistencia a disco vive en
-// gServerLog y la visualizacion en gServerDisplayer.
-CLog::CLog()
-{}
-
-CLog::~CLog()
-{}
-
 std::string CLog::FormatMessage(const char* text, va_list args) const
 {
 	char buffer[1024];

@@ -11,8 +11,8 @@
 class CLog
 {
 public:
-	CLog();
-	virtual ~CLog();
+	CLog() = default;
+	~CLog() = default;
 
 	// Escribe a disco en el archivo correspondiente al tipo indicado.
 	// No muestra nada en pantalla.
