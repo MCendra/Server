@@ -146,7 +146,7 @@ int CClientManager::GetFreeClientIndex()
 // Busca slot libre previamente asignado que lleva mas tiempo sin reutilizarse.
 // IMPORTANTE:
 // Esta funcion debe ejecutarse con gClientArrayLock ya adquirido.
-int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG MaxTime)
+int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG MinTime)
 {
 	int index = -1;
 	ULONGLONG maxOfflineTime = 0;
@@ -157,7 +157,7 @@ int CClientManager::SearchFreeClientIndex(int MinIndex, int MaxIndex, ULONGLONG 
 		{
 			// CORRECCIÓN: Uso de CurOnlineTime - renombrado a curOfflineTime para reflejar mejor su proposito
 			ULONGLONG curOfflineTime = GetTickCount64() - gClientManager[n].m_LastStateChangeTime;
-			if (curOfflineTime < MaxTime && curOfflineTime > maxOfflineTime)
+			if (curOfflineTime > MinTime && curOfflineTime > maxOfflineTime)
 			{
 				index = n;
 				maxOfflineTime = curOfflineTime;

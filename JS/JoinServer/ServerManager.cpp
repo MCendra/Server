@@ -156,7 +156,7 @@ int CServerManager::GetFreeServerIndex()
 // Busca slot libre previamente asignado que lleva mas tiempo sin reutilizarse.
 // IMPORTANTE:
 // Esta funcion debe ejecutarse con gServerArrayLock ya adquirido.
-int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MaxTime)
+int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MinTime)
 {
 	int index = -1;
 	ULONGLONG maxOfflineTime = 0;
@@ -166,18 +166,17 @@ int CServerManager::SearchFreeServerIndex(int MinIndex, int MaxIndex, DWORD MaxT
 		if (gServerManager[n].m_state == SERVER_OFFLINE && gServerManager[n].CheckAlloc())
 		{
 			// CORRECCIÓN: Uso de CurOnlineTime - renombrado a curOfflineTime para reflejar mejor su proposito
-			ULONGLONG CurOfflineTime = GetTickCount64() - gServerManager[n].m_LastStateChangeTime;
-			if (CurOfflineTime < MaxTime && CurOfflineTime > maxOfflineTime)
+			ULONGLONG curOfflineTime = GetTickCount64() - gServerManager[n].m_LastStateChangeTime;
+			if (curOfflineTime > MinTime && curOfflineTime > maxOfflineTime)
 			{
 				index = n;
-				maxOfflineTime = CurOfflineTime;
+				maxOfflineTime = curOfflineTime;
 			}
 		}
 	}
 
 	return index;
 }
-
 
 // Recorre el array buscando el servidor activo con el código indicado.
 CServerManager* FindServerByCode(int ServerCode)

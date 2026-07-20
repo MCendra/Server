@@ -9,11 +9,11 @@ CAllowableIpList gAllowableIpList;
 
 void CAllowableIpList::Load(const char* path)
 {
-	CScriptParser gScriptParser;
+	CScriptParser scriptParser;
 
-	if (!gScriptParser.SetBuffer(path))
+	if (!scriptParser.SetBuffer(path))
 	{
-		Log.ToFile(LogType::GENERAL, gScriptParser.GetLastError());
+		Log.ToFile(LogType::GENERAL, scriptParser.GetLastError());
 		return;
 	}
 
@@ -21,38 +21,40 @@ void CAllowableIpList::Load(const char* path)
 
 	try
 	{
-		while (true)
+		while (scriptParser.GetToken() != TOKEN_END)
 		{
-			if (gScriptParser.GetToken() == TOKEN_END)
-			{
-				break;
-			}
+			const int section = scriptParser.GetNumber();
 
-			int section = gScriptParser.GetNumber();
+			if (section != 0)
+			{
+				continue;
+			}
 
 			while (true)
 			{
-				if (section != 0)
-				{
-					break;
-				}
-
-				if (strcmp("end", gScriptParser.GetAsString()) == 0)
+				if (strcmp("end", scriptParser.GetAsString()) == 0)
 				{
 					break;
 				}
 
 				ALLOWABLE_IP_INFO info{};
 
-				strcpy_s(info.IpAddr, gScriptParser.GetString());
+				const char* ip = scriptParser.GetString();
 
-				m_AllowableIpInfo.emplace(info.IpAddr, info);
+				if (ip[0] == '\0')
+				{
+					continue;
+				}
+
+				strcpy_s(info.IpAddr, ip);
+
+				m_AllowableIpInfo.try_emplace(info.IpAddr, info);
 			}
 		}
 	}
 	catch (...)
 	{
-		Log.ToFile(LogType::GENERAL, gScriptParser.GetLastError());
+		Log.ToFile(LogType::GENERAL, scriptParser.GetLastError());
 	}
 }
 

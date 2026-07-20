@@ -10,6 +10,7 @@ public:
 	virtual ~CQueryManager();
 	bool Connect(const char* odbc, const char* user, const char* pass);
 	void Disconnect();
+	bool Reconnect();
 	void Diagnostic(const char* query);
 	bool ExecQuery(const char* query, ...);
 	int GetAffectedRows();

@@ -98,38 +98,61 @@ void CQueryManager::Disconnect()
 	}
 }
 
+bool CQueryManager::Reconnect()
+{
+	Log.ToDisp(LOG_RED, "[QueryManager] Reconectando al servidor SQL...");
+
+	Disconnect();
+
+	if (Connect(m_odbc, m_user, m_pass) == 0)
+	{
+		Log.ToDisp(LOG_RED, "[QueryManager] Error al reconectar con SQL Server.");
+		return false;
+	}
+
+	Log.ToDisp(LOG_GREEN, "[QueryManager] Conexion SQL restablecida correctamente.");
+
+	return true;
+}
+
 // Ejecuta una consulta SQL de diagnóstico y muestra el resultado en la consola
 void CQueryManager::Diagnostic(const char* query)
 {
 	Log.ToDisp(LOG_BLACK, "%s", query);
 
-	SQLINTEGER NativeError = 0;
-	SQLSMALLINT BufferLength = 0;
-	SQLCHAR SqlState[6] = { 0 };
-	SQLCHAR MessageText[SQL_MAX_MESSAGE_LENGTH] = { 0 };
+	SQLINTEGER nativeError = 0;
+	SQLSMALLINT textLength = 0;
+	SQLCHAR sqlState[6] = {};
+	SQLCHAR message[SQL_MAX_MESSAGE_LENGTH] = {};
 
 	bool reconnect = false;
 
-	for (SQLSMALLINT RecNumber = 1;; RecNumber++)
+	for (SQLSMALLINT record = 1;; ++record)
 	{
-		SQLRETURN result = SQLGetDiagRec(
+		const SQLRETURN result = SQLGetDiagRec(
 			SQL_HANDLE_STMT,
 			m_STMT,
-			RecNumber,
-			SqlState,
-			&NativeError,
-			MessageText,
-			sizeof(MessageText),
-			&BufferLength);
+			record,
+			sqlState,
+			&nativeError,
+			message,
+			sizeof(message),
+			&textLength);
 
 		if (result == SQL_NO_DATA)
 		{
 			break;
 		}
 
-		Log.ToDisp(LOG_RED, "[QueryManager - Diagnostic] Estado (%s), Diagnostico: %s", SqlState, MessageText);
+		Log.ToDisp(
+			LOG_RED,
+			"[QueryManager] SQLSTATE=%s Native=%ld Message=%s",
+			sqlState,
+			static_cast<long>(nativeError),
+			message);
 
-		if (strcmp((char*)SqlState, "08S01") == 0)
+		// Toda la clase 08*** representa errores de conexión.
+		if (std::strncmp(reinterpret_cast<const char*>(sqlState), "08", 2) == 0)
 		{
 			reconnect = true;
 		}
@@ -137,25 +160,7 @@ void CQueryManager::Diagnostic(const char* query)
 
 	if (reconnect)
 	{
-		Log.ToDisp(
-			LOG_RED, "[QueryManager - Diagnostic] Falla en la conexion detectada. Reconectando...");
-
-		if (m_STMT != SQL_NULL_HANDLE)
-		{
-			SQLFreeHandle(SQL_HANDLE_STMT, m_STMT);
-			m_STMT = SQL_NULL_HANDLE;
-		}
-
-		if (m_SQLConnection != SQL_NULL_HANDLE)
-		{
-			SQLFreeHandle(SQL_HANDLE_DBC, m_SQLConnection);
-			m_SQLConnection = SQL_NULL_HANDLE;
-		}
-
-		if (Connect(m_odbc, m_user, m_pass) == 0)
-		{
-			Log.ToDisp(LOG_RED, "[QueryManager - Diagnostic] Fallo al reconectarse al servidor SQL.");
-		}
+		Reconnect();
 	}
 }
 

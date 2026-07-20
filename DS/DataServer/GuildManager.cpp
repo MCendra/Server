@@ -29,7 +29,7 @@ void CGuildManager::Init()
 
 			guildInfo.Score = gQueryManager.GetAsInteger("G_Score");
 
-#if (GUILDBOSSEVENT  == 1)
+#if (GUILDBOSSEVENT)
 			guildInfo.Score1 = gQueryManager.GetAsInteger("G_Score1");
 #endif
 
@@ -53,54 +53,54 @@ void CGuildManager::Init()
 	gQueryManager.Close();
 
 	if (gQueryManager.ExecQuery("SELECT * FROM GuildMember"))
-{
-	while (gQueryManager.Fetch() != SQL_NO_DATA)
 	{
-		char guildName[9] = {};
-
-		GUILD_MEMBER_INFO guildMemberInfo;
-		guildMemberInfo.Clear();
-
-		gQueryManager.GetAsString("Name", guildMemberInfo.GuildMember, sizeof(guildMemberInfo.GuildMember));
-		gQueryManager.GetAsString("G_Name", guildName, sizeof(guildName));
-
-		guildMemberInfo.Status = gQueryManager.GetAsInteger("G_Status");
-
-		GUILD_INFO* lpGuildInfo = GetGuildInfo(guildName);
-
-		if (lpGuildInfo == nullptr)
+		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
-			continue;
-		}
+			char guildName[9] = {};
 
-		GUILD_MEMBER_INFO* member = nullptr;
+			GUILD_MEMBER_INFO guildMemberInfo;
+			guildMemberInfo.Clear();
 
-		if (_stricmp(lpGuildInfo->Master, guildMemberInfo.GuildMember) == 0)
-		{
-			lpGuildInfo->GuildMember[0] = guildMemberInfo;
-			member = &lpGuildInfo->GuildMember[0];
-		}
-		else
-		{
-			for (size_t n = 1; n < MAX_GUILD_MEMBER; ++n)
+			gQueryManager.GetAsString("Name", guildMemberInfo.GuildMember, sizeof(guildMemberInfo.GuildMember));
+			gQueryManager.GetAsString("G_Name", guildName, sizeof(guildName));
+
+			guildMemberInfo.Status = gQueryManager.GetAsInteger("G_Status");
+
+			GUILD_INFO* lpGuildInfo = GetGuildInfo(guildName);
+
+			if (lpGuildInfo == nullptr)
 			{
-				if (lpGuildInfo->GuildMember[n].IsEmpty())
+				continue;
+			}
+
+			GUILD_MEMBER_INFO* member = nullptr;
+
+			if (_stricmp(lpGuildInfo->Master, guildMemberInfo.GuildMember) == 0)
+			{
+				lpGuildInfo->GuildMember[0] = guildMemberInfo;
+				member = &lpGuildInfo->GuildMember[0];
+			}
+			else
+			{
+				for (size_t n = 1; n < MAX_GUILD_MEMBER; ++n)
 				{
-					lpGuildInfo->GuildMember[n] = guildMemberInfo;
-					member = &lpGuildInfo->GuildMember[n];
-					break;
+					if (lpGuildInfo->GuildMember[n].IsEmpty())
+					{
+						lpGuildInfo->GuildMember[n] = guildMemberInfo;
+						member = &lpGuildInfo->GuildMember[n];
+						break;
+					}
 				}
 			}
-		}
 
-		if (member != nullptr)
-		{
-			m_GuildMembers.emplace(member->GuildMember, member);
+			if (member != nullptr)
+			{
+				m_GuildMembers.emplace(member->GuildMember, member);
+			}
 		}
 	}
-}
 
-gQueryManager.Close();
+	gQueryManager.Close();
 }
 
 GUILD_INFO* CGuildManager::GetGuildInfo(const char* Name)
@@ -147,7 +147,7 @@ GUILD_MEMBER_INFO* CGuildManager::GetGuildMemberInfo(const char* szGuildMember)
 
 BOOL CGuildManager::CheckGuildOnCS(const char* szGuildName)
 {
-	if (!gQueryManager.ExecQuery("WZ_CS_CheckSiegeGuildList '%s'", szGuildName) ||
+	if (!gQueryManager.ExecQuery("EXEC WZ_CS_CheckSiegeGuildList '%s'", szGuildName) ||
 		gQueryManager.Fetch() == SQL_NO_DATA)
 	{
 		gQueryManager.Close();

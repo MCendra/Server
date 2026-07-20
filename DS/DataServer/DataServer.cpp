@@ -86,8 +86,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		return false;
 	}
 
-	WORD DataServerPort = GetPrivateProfileInt("DataServerInfo","DataServerPort",55960,".\\DataServer.ini");
-
 	if (!gSocketManager.Init(DataServerPort))
 	{
 		Log.ToFile(LogType::GENERAL, ERROR_TCP_STARTUP, WSAGetLastError());
@@ -190,7 +188,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	if (!g_hWnd)
 	{
-		Log.ToFile(LogType::GENERAL, "[JS] CreateWindowA fallo. Codigo error: %d", GetLastError());
+		Log.ToFile(LogType::GENERAL, "[DS] CreateWindowA fallo. Codigo error: %d", GetLastError());
 		return false;
 	}
 

@@ -75,9 +75,6 @@
     <ClInclude Include="Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CastleDBSet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MiniDump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -216,9 +213,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CastleDBSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MiniDump.cpp">

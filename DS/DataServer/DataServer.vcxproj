@@ -166,7 +166,6 @@
     <ClInclude Include="BadSyntax.h" />
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="CashShop.h" />
-    <ClInclude Include="CastleDBSet.h" />
     <ClInclude Include="CastleSiege.h" />
     <ClInclude Include="CharacterManager.h" />
     <ClInclude Include="CommandManager.h" />
@@ -218,7 +217,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="CashShop.cpp" />
-    <ClCompile Include="CastleDBSet.cpp" />
     <ClCompile Include="CastleSiege.cpp" />
     <ClCompile Include="CharacterManager.cpp" />
     <ClCompile Include="CommandManager.cpp" />

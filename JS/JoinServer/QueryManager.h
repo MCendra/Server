@@ -9,6 +9,7 @@ public:
 	CQueryManager();
 	virtual ~CQueryManager();
 	bool Connect(const char* odbc, const char* user, const char* pass);
+	bool Reconnect();
 	void Disconnect();
 	void Diagnostic(const char* query);
 	bool ExecQuery(const char* query, ...);
