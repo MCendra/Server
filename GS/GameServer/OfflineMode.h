@@ -139,10 +139,10 @@ public:
 	void RenderAutoPote(int aIndex);
 	int PickUP(int aIndex);
 	//-- Protocolo
-	void CGPositionOfflineRecv(PMSG_POSITION_RECV* lpMsg, int aIndex); // OK
+	void CGPositionOfflineRecv(PMSG_POSITION_RECV* lpMsg, int aIndex);
 	//-- [/]Protocolo
-	void OnAttackSecondProcHelper(LPOBJ lpObj); // OK
-	void OnHelperpAlreadyConnected(LPOBJ lpObj); // OK
+	void OnAttackSecondProcHelper(LPOBJ lpObj);
+	void OnHelperpAlreadyConnected(LPOBJ lpObj);
 	void regresar(int aIndex);
 };
 // ----------------------------------------------------------------------------------------------

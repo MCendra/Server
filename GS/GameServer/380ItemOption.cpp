@@ -14,17 +14,17 @@ C380ItemOption g380ItemOption;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-C380ItemOption::C380ItemOption() // OK
+C380ItemOption::C380ItemOption()
 {
 	this->Init();
 }
 
-C380ItemOption::~C380ItemOption() // OK
+C380ItemOption::~C380ItemOption()
 {
 
 }
 
-void C380ItemOption::Init() // OK
+void C380ItemOption::Init()
 {
 	for(int n=0;n < MAX_380_ITEM_OPTION;n++)
 	{
@@ -32,7 +32,7 @@ void C380ItemOption::Init() // OK
 	}
 }
 
-void C380ItemOption::Load(char* path) // OK
+void C380ItemOption::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -86,7 +86,7 @@ void C380ItemOption::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void C380ItemOption::SetInfo(ITEM_380_OPTION_INFO info) // OK
+void C380ItemOption::SetInfo(ITEM_380_OPTION_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_380_ITEM_OPTION)
 	{
@@ -96,7 +96,7 @@ void C380ItemOption::SetInfo(ITEM_380_OPTION_INFO info) // OK
 	this->m_380ItemOptionInfo[info.Index] = info;
 }
 
-ITEM_380_OPTION_INFO* C380ItemOption::GetInfo(int index) // OK
+ITEM_380_OPTION_INFO* C380ItemOption::GetInfo(int index)
 {
 	if(index < 0 || index >= MAX_380_ITEM_OPTION)
 	{
@@ -111,7 +111,7 @@ ITEM_380_OPTION_INFO* C380ItemOption::GetInfo(int index) // OK
 	return &this->m_380ItemOptionInfo[index];
 }
 
-bool C380ItemOption::Is380Item(CItem* lpItem) // OK
+bool C380ItemOption::Is380Item(CItem* lpItem)
 {
 	if((lpItem->m_ItemOptionEx & 0x80) == 0)
 	{
@@ -121,7 +121,7 @@ bool C380ItemOption::Is380Item(CItem* lpItem) // OK
 	return 1;
 }
 
-void C380ItemOption::Calc380ItemOption(LPOBJ lpObj,bool flag) // OK
+void C380ItemOption::Calc380ItemOption(LPOBJ lpObj,bool flag)
 {
 	for(int n=0;n < INVENTORY_WEAR_SIZE;n++)
 	{
@@ -155,7 +155,7 @@ void C380ItemOption::Calc380ItemOption(LPOBJ lpObj,bool flag) // OK
 	}
 }
 
-void C380ItemOption::InsertOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void C380ItemOption::InsertOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	if(flag != 0)
 	{

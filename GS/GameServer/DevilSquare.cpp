@@ -29,7 +29,7 @@ CDevilSquare gDevilSquare;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDevilSquare::CDevilSquare() // OK
+CDevilSquare::CDevilSquare()
 {
 	for(int n=0;n < MAX_DS_LEVEL;n++)
 	{
@@ -56,12 +56,12 @@ CDevilSquare::CDevilSquare() // OK
 	memset(this->m_DevilSquareRewardMoney,0,sizeof(this->m_DevilSquareRewardMoney));
 }
 
-CDevilSquare::~CDevilSquare() // OK
+CDevilSquare::~CDevilSquare()
 {
 
 }
 
-void CDevilSquare::Init() // OK
+void CDevilSquare::Init()
 {
 	for(int n=0;n < MAX_DS_LEVEL;n++)
 	{
@@ -76,7 +76,7 @@ void CDevilSquare::Init() // OK
 	}
 }
 
-void CDevilSquare::Load(char* path) // OK
+void CDevilSquare::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -210,7 +210,7 @@ void CDevilSquare::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CDevilSquare::MainProc() // OK
+void CDevilSquare::MainProc()
 {
 	for(int n=0;n < MAX_DS_LEVEL;n++)
 	{
@@ -281,12 +281,12 @@ void CDevilSquare::MainProc() // OK
 	}
 }
 
-void CDevilSquare::ProcState_BLANK(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ProcState_BLANK(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 
 }
 
-void CDevilSquare::ProcState_EMPTY(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ProcState_EMPTY(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	if(lpLevel->RemainTime > 0 && lpLevel->RemainTime <= (this->m_WarningTime*60))
 	{
@@ -333,7 +333,7 @@ void CDevilSquare::ProcState_EMPTY(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::ProcState_STAND(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ProcState_STAND(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -365,7 +365,7 @@ void CDevilSquare::ProcState_STAND(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::ProcState_START(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ProcState_START(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -413,7 +413,7 @@ void CDevilSquare::ProcState_START(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::ProcState_CLEAN(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ProcState_CLEAN(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -423,7 +423,7 @@ void CDevilSquare::ProcState_CLEAN(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::SetState(DEVIL_SQUARE_LEVEL* lpLevel,int state) // OK
+void CDevilSquare::SetState(DEVIL_SQUARE_LEVEL* lpLevel,int state)
 {
 	lpLevel->State = state;
 
@@ -447,12 +447,12 @@ void CDevilSquare::SetState(DEVIL_SQUARE_LEVEL* lpLevel,int state) // OK
 	}
 }
 
-void CDevilSquare::SetState_BLANK(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetState_BLANK(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	//LogAdd(LOG_BLACK,"[Devil Square] (%d) SetState BLANK",(lpLevel->Level+1));
 }
 
-void CDevilSquare::SetState_EMPTY(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetState_EMPTY(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -468,7 +468,7 @@ void CDevilSquare::SetState_EMPTY(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Devil Square] (%d) SetState EMPTY",(lpLevel->Level+1));
 }
 
-void CDevilSquare::SetState_STAND(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetState_STAND(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -481,7 +481,7 @@ void CDevilSquare::SetState_STAND(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Devil Square] (%d) SetState STAND",(lpLevel->Level+1));
 }
 
-void CDevilSquare::SetState_START(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetState_START(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -526,7 +526,7 @@ void CDevilSquare::SetState_START(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Devil Square] (%d) SetState START",(lpLevel->Level+1));
 }
 
-void CDevilSquare::SetState_CLEAN(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetState_CLEAN(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -549,7 +549,7 @@ void CDevilSquare::SetState_CLEAN(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Devil Square] (%d) SetState CLEAN",(lpLevel->Level+1));
 }
 
-void CDevilSquare::SetStage0(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetStage0(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	if(((lpLevel->RemainTime*100)/(this->m_EventTime*60)) > 75)
 	{
@@ -591,7 +591,7 @@ void CDevilSquare::SetStage0(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::SetStage1(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetStage1(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	if(((lpLevel->RemainTime*100)/(this->m_EventTime*60)) > 50)
 	{
@@ -633,7 +633,7 @@ void CDevilSquare::SetStage1(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::SetStage2(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetStage2(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	if(((lpLevel->RemainTime*100)/(this->m_EventTime*60)) > 25)
 	{
@@ -668,12 +668,12 @@ void CDevilSquare::SetStage2(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::SetStage3(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::SetStage3(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 
 }
 
-void CDevilSquare::CheckSync(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::CheckSync(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	if(this->m_DevilSquareStartTime.empty() != 0)
 	{
@@ -703,7 +703,7 @@ void CDevilSquare::CheckSync(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Devil Square] (%d) Sync Start Time. [%d] min remain",(lpLevel->Level+1),(lpLevel->RemainTime/60));
 }
 
-int CDevilSquare::GetState(int level) // OK
+int CDevilSquare::GetState(int level)
 {
 	if(DS_LEVEL_RANGE(level) == 0)
 	{
@@ -713,7 +713,7 @@ int CDevilSquare::GetState(int level) // OK
 	return this->m_DevilSquareLevel[level].State;
 }
 
-int CDevilSquare::GetRemainTime(int level) // OK
+int CDevilSquare::GetRemainTime(int level)
 {
 	if(DS_LEVEL_RANGE(level) == 0)
 	{
@@ -744,7 +744,7 @@ int CDevilSquare::GetRemainTime(int level) // OK
 	return (((RemainTime%60)==0)?(RemainTime/60):((RemainTime/60)+1));
 }
 
-int CDevilSquare::GetEnterEnabled(int level) // OK
+int CDevilSquare::GetEnterEnabled(int level)
 {
 	if(DS_LEVEL_RANGE(level) == 0)
 	{
@@ -754,7 +754,7 @@ int CDevilSquare::GetEnterEnabled(int level) // OK
 	return this->m_DevilSquareLevel[level].EnterEnabled;
 }
 
-int CDevilSquare::GetEnteredUserCount(int level) // OK
+int CDevilSquare::GetEnteredUserCount(int level)
 {
 	if(DS_LEVEL_RANGE(level) == 0)
 	{
@@ -764,7 +764,7 @@ int CDevilSquare::GetEnteredUserCount(int level) // OK
 	return this->GetUserCount(&this->m_DevilSquareLevel[level]);
 }
 
-bool CDevilSquare::AddUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
+bool CDevilSquare::AddUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -794,7 +794,7 @@ bool CDevilSquare::AddUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CDevilSquare::DelUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
+bool CDevilSquare::DelUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -816,7 +816,7 @@ bool CDevilSquare::DelUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-DEVIL_SQUARE_USER* CDevilSquare::GetUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
+DEVIL_SQUARE_USER* CDevilSquare::GetUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -834,7 +834,7 @@ DEVIL_SQUARE_USER* CDevilSquare::GetUser(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 	return 0;
 }
 
-void CDevilSquare::CleanUser(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::CleanUser(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -846,7 +846,7 @@ void CDevilSquare::CleanUser(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::ClearUser(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ClearUser(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -865,7 +865,7 @@ void CDevilSquare::ClearUser(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::CheckUser(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::CheckUser(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -888,7 +888,7 @@ void CDevilSquare::CheckUser(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CDevilSquare::GetUserCount(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+int CDevilSquare::GetUserCount(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -903,7 +903,7 @@ int CDevilSquare::GetUserCount(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-int CDevilSquare::GetUserAbleLevel(LPOBJ lpObj) // OK
+int CDevilSquare::GetUserAbleLevel(LPOBJ lpObj)
 {
 	int level = -1;
 
@@ -979,7 +979,7 @@ int CDevilSquare::GetUserAbleLevel(LPOBJ lpObj) // OK
 	return level;
 }
 
-void CDevilSquare::CalcUserRank(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::CalcUserRank(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -1021,7 +1021,7 @@ void CDevilSquare::CalcUserRank(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::GiveUserRewardExperience(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::GiveUserRewardExperience(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -1053,7 +1053,7 @@ void CDevilSquare::GiveUserRewardExperience(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::GiveUserRewardMoney(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::GiveUserRewardMoney(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -1092,7 +1092,7 @@ void CDevilSquare::GiveUserRewardMoney(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-bool CDevilSquare::AddMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
+bool CDevilSquare::AddMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1118,7 +1118,7 @@ bool CDevilSquare::AddMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CDevilSquare::DelMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
+bool CDevilSquare::DelMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1136,7 +1136,7 @@ bool CDevilSquare::DelMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-int* CDevilSquare::GetMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
+int* CDevilSquare::GetMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1154,7 +1154,7 @@ int* CDevilSquare::GetMonster(DEVIL_SQUARE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-void CDevilSquare::CleanMonster(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::CleanMonster(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_MONSTER;n++)
 	{
@@ -1162,7 +1162,7 @@ void CDevilSquare::CleanMonster(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CDevilSquare::ClearMonster(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::ClearMonster(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_MONSTER;n++)
 	{
@@ -1174,7 +1174,7 @@ void CDevilSquare::ClearMonster(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CDevilSquare::GetMonsterCount(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+int CDevilSquare::GetMonsterCount(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -1189,7 +1189,7 @@ int CDevilSquare::GetMonsterCount(DEVIL_SQUARE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-void CDevilSquare::SetMonster(DEVIL_SQUARE_LEVEL* lpLevel,int MonsterClass) // OK
+void CDevilSquare::SetMonster(DEVIL_SQUARE_LEVEL* lpLevel,int MonsterClass)
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{
@@ -1231,7 +1231,7 @@ void CDevilSquare::SetMonster(DEVIL_SQUARE_LEVEL* lpLevel,int MonsterClass) // O
 	}
 }
 
-void CDevilSquare::NpcCharon(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CDevilSquare::NpcCharon(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(gServerInfo.m_DevilSquareEvent == 0)
 	{
@@ -1267,7 +1267,7 @@ void CDevilSquare::NpcCharon(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CDevilSquare::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CDevilSquare::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int level = this->GetUserAbleLevel(lpObj);
 
@@ -1289,7 +1289,7 @@ void CDevilSquare::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	this->DelUser(&this->m_DevilSquareLevel[level],lpObj->Index);
 }
 
-void CDevilSquare::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CDevilSquare::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 
@@ -1357,7 +1357,7 @@ void CDevilSquare::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	//======Devil VIP danh quai roi ngoc
 }
 
-void CDevilSquare::NoticeSendToAll(DEVIL_SQUARE_LEVEL* lpLevel,int type,char* message,...) // OK
+void CDevilSquare::NoticeSendToAll(DEVIL_SQUARE_LEVEL* lpLevel,int type,char* message,...)
 {
 	char buff[256];
 
@@ -1375,7 +1375,7 @@ void CDevilSquare::NoticeSendToAll(DEVIL_SQUARE_LEVEL* lpLevel,int type,char* me
 	}
 }
 
-void CDevilSquare::DataSendToAll(DEVIL_SQUARE_LEVEL* lpLevel,BYTE* lpMsg,int size) // OK
+void CDevilSquare::DataSendToAll(DEVIL_SQUARE_LEVEL* lpLevel,BYTE* lpMsg,int size)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{
@@ -1386,7 +1386,7 @@ void CDevilSquare::DataSendToAll(DEVIL_SQUARE_LEVEL* lpLevel,BYTE* lpMsg,int siz
 	}
 }
 
-void CDevilSquare::CGDevilSquareEnterRecv(PMSG_DEVIL_SQUARE_ENTER_RECV* lpMsg,int aIndex) // OK
+void CDevilSquare::CGDevilSquareEnterRecv(PMSG_DEVIL_SQUARE_ENTER_RECV* lpMsg,int aIndex)
 {
 	if(gServerInfo.m_DevilSquareEvent == 0)
 	{
@@ -1528,7 +1528,7 @@ void CDevilSquare::CGDevilSquareEnterRecv(PMSG_DEVIL_SQUARE_ENTER_RECV* lpMsg,in
 	}
 }
 
-void CDevilSquare::GCDevilSquareScoreSend(DEVIL_SQUARE_LEVEL* lpLevel) // OK
+void CDevilSquare::GCDevilSquareScoreSend(DEVIL_SQUARE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_DS_USER;n++)
 	{

@@ -10,17 +10,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIUnitInfo::CMonsterAIUnitInfo() // OK
+CMonsterAIUnitInfo::CMonsterAIUnitInfo()
 {
 	this->Reset();
 }
 
-CMonsterAIUnitInfo::~CMonsterAIUnitInfo() // OK
+CMonsterAIUnitInfo::~CMonsterAIUnitInfo()
 {
 
 }
 
-void CMonsterAIUnitInfo::Reset() // OK
+void CMonsterAIUnitInfo::Reset()
 {
 	memset(this->m_UnitName,0,sizeof(this->m_UnitName));
 
@@ -45,7 +45,7 @@ void CMonsterAIUnitInfo::Reset() // OK
 	this->m_AIClassMap[7] = 0;
 }
 
-BOOL CMonsterAIUnitInfo::RunAIUnitInfo(int aIndex) // OK
+BOOL CMonsterAIUnitInfo::RunAIUnitInfo(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

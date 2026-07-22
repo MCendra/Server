@@ -11,19 +11,19 @@ CSocketManagerUdp gSocketManagerUdp;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSocketManagerUdp::CSocketManagerUdp() // OK
+CSocketManagerUdp::CSocketManagerUdp()
 {
 	this->m_socket = INVALID_SOCKET;
 
 	this->m_ServerRecvThread = 0;
 }
 
-CSocketManagerUdp::~CSocketManagerUdp() // OK
+CSocketManagerUdp::~CSocketManagerUdp()
 {
 	this->Clean();
 }
 
-bool CSocketManagerUdp::Start(WORD port) // OK
+bool CSocketManagerUdp::Start(WORD port)
 {
 	if((this->m_socket=socket(AF_INET,SOCK_DGRAM,IPPROTO_IP)) == INVALID_SOCKET)
 	{
@@ -57,7 +57,7 @@ bool CSocketManagerUdp::Start(WORD port) // OK
 	return 1;
 }
 
-bool CSocketManagerUdp::Connect(char* IpAddress,WORD port) // OK
+bool CSocketManagerUdp::Connect(char* IpAddress,WORD port)
 {
 	if((this->m_socket=socket(AF_INET,SOCK_DGRAM,IPPROTO_IP)) == INVALID_SOCKET)
 	{
@@ -91,7 +91,7 @@ bool CSocketManagerUdp::Connect(char* IpAddress,WORD port) // OK
 	return 1;
 }
 
-void CSocketManagerUdp::Clean() // OK
+void CSocketManagerUdp::Clean()
 {
 	if(this->m_ServerRecvThread != 0)
 	{
@@ -107,7 +107,7 @@ void CSocketManagerUdp::Clean() // OK
 	}
 }
 
-bool CSocketManagerUdp::DataRecv() // OK
+bool CSocketManagerUdp::DataRecv()
 {
 	if(this->m_RecvSize < 3)
 	{
@@ -174,7 +174,7 @@ bool CSocketManagerUdp::DataRecv() // OK
 	return 1;
 }
 
-bool CSocketManagerUdp::DataSend(BYTE* lpMsg,int size) // OK
+bool CSocketManagerUdp::DataSend(BYTE* lpMsg,int size)
 {
 	if(this->m_socket == INVALID_SOCKET)
 	{
@@ -214,7 +214,7 @@ bool CSocketManagerUdp::DataSend(BYTE* lpMsg,int size) // OK
 	return 1;
 }
 
-DWORD WINAPI CSocketManagerUdp::ServerRecvThread(CSocketManagerUdp* lpSocketManagerUdp) // OK
+DWORD WINAPI CSocketManagerUdp::ServerRecvThread(CSocketManagerUdp* lpSocketManagerUdp)
 {
 	while(true)
 	{

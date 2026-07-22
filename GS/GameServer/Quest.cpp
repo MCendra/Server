@@ -20,7 +20,7 @@ CQuest gQuest;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQuest::CQuest() // OK
+CQuest::CQuest()
 {
 	this->m_count = 0;
 	//add omega
@@ -29,12 +29,12 @@ CQuest::CQuest() // OK
 		//final
 }
 
-CQuest::~CQuest() // OK
+CQuest::~CQuest()
 {
 
 }
 
-void CQuest::Load(char* path) // OK
+void CQuest::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -100,7 +100,7 @@ void CQuest::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CQuest::SetInfo(QUEST_INFO info) // OK
+void CQuest::SetInfo(QUEST_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_QUEST)
 	{
@@ -110,7 +110,7 @@ void CQuest::SetInfo(QUEST_INFO info) // OK
 	this->m_QuestInfo[this->m_count++] = info;
 }
 
-QUEST_INFO* CQuest::GetInfo(int index) // OK
+QUEST_INFO* CQuest::GetInfo(int index)
 {
 	if(index < 0 || index >= this->m_count)
 	{
@@ -120,7 +120,7 @@ QUEST_INFO* CQuest::GetInfo(int index) // OK
 	return &this->m_QuestInfo[index];
 }
 
-QUEST_INFO* CQuest::GetInfoByIndex(LPOBJ lpObj,int QuestIndex) // OK
+QUEST_INFO* CQuest::GetInfoByIndex(LPOBJ lpObj,int QuestIndex)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -147,7 +147,7 @@ QUEST_INFO* CQuest::GetInfoByIndex(LPOBJ lpObj,int QuestIndex) // OK
 	return 0;
 }
 
-bool CQuest::AddQuestList(LPOBJ lpObj,int QuestIndex,int QuestState) // OK
+bool CQuest::AddQuestList(LPOBJ lpObj,int QuestIndex,int QuestState)
 {
 	if(QuestIndex < 0 || QuestIndex >= MAX_QUEST_LIST)
 	{
@@ -159,7 +159,7 @@ bool CQuest::AddQuestList(LPOBJ lpObj,int QuestIndex,int QuestState) // OK
 	return 1;
 }
 
-BYTE CQuest::GetQuestList(LPOBJ lpObj,int QuestIndex) // OK
+BYTE CQuest::GetQuestList(LPOBJ lpObj,int QuestIndex)
 {
 	if(QuestIndex < 0 || QuestIndex >= MAX_QUEST_LIST)
 	{
@@ -169,7 +169,7 @@ BYTE CQuest::GetQuestList(LPOBJ lpObj,int QuestIndex) // OK
 	return lpObj->Quest[QuestIndex/4];
 }
 
-bool CQuest::CheckQuestRequisite(LPOBJ lpObj,QUEST_INFO* lpInfo) // OK
+bool CQuest::CheckQuestRequisite(LPOBJ lpObj,QUEST_INFO* lpInfo)
 {
 	if(this->CheckQuestListState(lpObj,lpInfo->Index,lpInfo->CurrentState) == 0)
 	{
@@ -199,7 +199,7 @@ bool CQuest::CheckQuestRequisite(LPOBJ lpObj,QUEST_INFO* lpInfo) // OK
 	return 1;
 }
 
-bool CQuest::CheckQuestListState(LPOBJ lpObj,int QuestIndex,int QuestState) // OK
+bool CQuest::CheckQuestListState(LPOBJ lpObj,int QuestIndex,int QuestState)
 {
 	if(QuestIndex < 0 || QuestIndex >= MAX_QUEST_LIST)
 	{
@@ -214,7 +214,7 @@ bool CQuest::CheckQuestListState(LPOBJ lpObj,int QuestIndex,int QuestState) // O
 	return 0;
 }
 
-long CQuest::GetQuestRewardLevelUpPoint(LPOBJ lpObj) // OK
+long CQuest::GetQuestRewardLevelUpPoint(LPOBJ lpObj)
 {
 	int point = 0;
 
@@ -229,7 +229,7 @@ long CQuest::GetQuestRewardLevelUpPoint(LPOBJ lpObj) // OK
 	return point;
 }
 
-bool CQuest::NpcTalk(LPOBJ lpNpc,LPOBJ lpObj) // OK
+bool CQuest::NpcTalk(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -269,7 +269,7 @@ bool CQuest::NpcTalk(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	return 0;
 }
 
-void CQuest::CGQuestInfoRecv(int aIndex) // OK
+void CQuest::CGQuestInfoRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -281,7 +281,7 @@ void CQuest::CGQuestInfoRecv(int aIndex) // OK
 	this->GCQuestInfoSend(aIndex);
 }
 
-void CQuest::CGQuestStateRecv(PMSG_QUEST_STATE_RECV* lpMsg,int aIndex) // OK
+void CQuest::CGQuestStateRecv(PMSG_QUEST_STATE_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -344,7 +344,7 @@ void CQuest::CGQuestStateRecv(PMSG_QUEST_STATE_RECV* lpMsg,int aIndex) // OK
 	}
 }
 
-void CQuest::CGQuestNpcWarewolfRecv(int aIndex) // OK
+void CQuest::CGQuestNpcWarewolfRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -369,7 +369,7 @@ void CQuest::CGQuestNpcWarewolfRecv(int aIndex) // OK
 	}
 }
 
-void CQuest::CGQuestNpcKeeperRecv(int aIndex) // OK
+void CQuest::CGQuestNpcKeeperRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -394,7 +394,7 @@ void CQuest::CGQuestNpcKeeperRecv(int aIndex) // OK
 	}
 }
 
-void CQuest::GCQuestInfoSend(int aIndex) // OK
+void CQuest::GCQuestInfoSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -417,7 +417,7 @@ void CQuest::GCQuestInfoSend(int aIndex) // OK
 
 }
 
-void CQuest::GCQuestStateSend(int aIndex,int QuestIndex) // OK
+void CQuest::GCQuestStateSend(int aIndex,int QuestIndex)
 {
 	this->GCQuestInfoSend(aIndex);
 
@@ -432,7 +432,7 @@ void CQuest::GCQuestStateSend(int aIndex,int QuestIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CQuest::GCQuestResultSend(int aIndex,int QuestIndex,int QuestResult,int QuestState) // OK
+void CQuest::GCQuestResultSend(int aIndex,int QuestIndex,int QuestResult,int QuestState)
 {
 	PMSG_QUEST_RESULT_SEND pMsg;
 
@@ -447,7 +447,7 @@ void CQuest::GCQuestResultSend(int aIndex,int QuestIndex,int QuestResult,int Que
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CQuest::GCQuestRewardSend(int aIndex,int QuestReward,int QuestAmount) // OK
+void CQuest::GCQuestRewardSend(int aIndex,int QuestReward,int QuestAmount)
 {
 	this->GCQuestInfoSend(aIndex);
 
@@ -472,7 +472,7 @@ void CQuest::GCQuestRewardSend(int aIndex,int QuestReward,int QuestAmount) // OK
 	MsgSendV2(&gObj[aIndex],(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CQuest::GCQuestKillCountSend(int aIndex,int QuestIndex) // OK
+void CQuest::GCQuestKillCountSend(int aIndex,int QuestIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -499,7 +499,7 @@ void CQuest::GCQuestKillCountSend(int aIndex,int QuestIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CQuest::DGQuestKillCountRecv(SDHP_QUEST_KILL_COUNT_RECV* lpMsg) // OK
+void CQuest::DGQuestKillCountRecv(SDHP_QUEST_KILL_COUNT_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -526,7 +526,7 @@ void CQuest::DGQuestKillCountRecv(SDHP_QUEST_KILL_COUNT_RECV* lpMsg) // OK
 	}
 }
 
-void CQuest::GDQuestKillCountSend(int aIndex) // OK
+void CQuest::GDQuestKillCountSend(int aIndex)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -551,7 +551,7 @@ void CQuest::GDQuestKillCountSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CQuest::GDQuestKillCountSaveSend(int aIndex) // OK
+void CQuest::GDQuestKillCountSaveSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

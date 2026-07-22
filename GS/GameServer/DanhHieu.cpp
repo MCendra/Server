@@ -17,15 +17,15 @@
 
 DanhHieu gDanhHieu;
 // -------------------------------------------------------------------------------
-DanhHieu::DanhHieu() // OK
+DanhHieu::DanhHieu()
 {
 }
 // -------------------------------------------------------------------------------
-DanhHieu::~DanhHieu() // OK
+DanhHieu::~DanhHieu()
 {
 }
 
-void DanhHieu::Init() // OK
+void DanhHieu::Init()
 {
 
 	this->m_DanhHieu.gemcount = 0;
@@ -40,7 +40,7 @@ void DanhHieu::Init() // OK
 	this->m_DanhHieu.GST = 0;
 }
 
-void DanhHieu::Load1(char* path) // OK
+void DanhHieu::Load1(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -107,7 +107,7 @@ void DanhHieu::Load1(char* path) // OK
 	delete lpMemScript;
 }
 
-int DanhHieu::GetCoint(LPOBJ lpObj) // OK
+int DanhHieu::GetCoint(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -126,7 +126,7 @@ int DanhHieu::GetCoint(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::GetMaxLv(LPOBJ lpObj) // OK
+int DanhHieu::GetMaxLv(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -145,7 +145,7 @@ int DanhHieu::GetMaxLv(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::GetCount(LPOBJ lpObj) // OK
+int DanhHieu::GetCount(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -164,7 +164,7 @@ int DanhHieu::GetCount(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::GetType(LPOBJ lpObj) // OK
+int DanhHieu::GetType(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -182,7 +182,7 @@ int DanhHieu::GetType(LPOBJ lpObj) // OK
 	}
 	return 0;
 }
-int DanhHieu::GetIndex(LPOBJ lpObj) // OK
+int DanhHieu::GetIndex(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -202,7 +202,7 @@ int DanhHieu::GetIndex(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::SatThuong(LPOBJ lpObj) // OK
+int DanhHieu::SatThuong(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -222,7 +222,7 @@ int DanhHieu::SatThuong(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::SatThuongX2(LPOBJ lpObj) // OK
+int DanhHieu::SatThuongX2(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -241,7 +241,7 @@ int DanhHieu::SatThuongX2(LPOBJ lpObj) // OK
 	}
 	return 0;
 }
-int DanhHieu::PhongThu(LPOBJ lpObj) // OK
+int DanhHieu::PhongThu(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -262,7 +262,7 @@ int DanhHieu::PhongThu(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::HP(LPOBJ lpObj) // OK
+int DanhHieu::HP(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -281,7 +281,7 @@ int DanhHieu::HP(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::GST(LPOBJ lpObj) // OK
+int DanhHieu::GST(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{
@@ -300,7 +300,7 @@ int DanhHieu::GST(LPOBJ lpObj) // OK
 	return 0;
 }
 
-int DanhHieu::SD(LPOBJ lpObj) // OK
+int DanhHieu::SD(LPOBJ lpObj)
 {
 	for (std::vector<DANH_HIEU_INFO>::iterator it = this->m_DanhHieuInfo.begin(); it != this->m_DanhHieuInfo.end(); it++)
 	{

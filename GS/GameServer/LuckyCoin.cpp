@@ -15,17 +15,17 @@ CLuckyCoin gLuckyCoin;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CLuckyCoin::CLuckyCoin() // OK
+CLuckyCoin::CLuckyCoin()
 {
 
 }
 
-CLuckyCoin::~CLuckyCoin() // OK
+CLuckyCoin::~CLuckyCoin()
 {
 
 }
 
-void CLuckyCoin::CGLuckyCoinCountRecv(PMSG_LUCKY_COIN_COUNT_RECV* lpMsg,int aIndex) // OK
+void CLuckyCoin::CGLuckyCoinCountRecv(PMSG_LUCKY_COIN_COUNT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -54,7 +54,7 @@ void CLuckyCoin::CGLuckyCoinCountRecv(PMSG_LUCKY_COIN_COUNT_RECV* lpMsg,int aInd
 	#endif
 }
 
-void CLuckyCoin::CGLuckyCoinRegisterRecv(PMSG_LUCKY_COIN_REGISTER_RECV* lpMsg,int aIndex) // OK
+void CLuckyCoin::CGLuckyCoinRegisterRecv(PMSG_LUCKY_COIN_REGISTER_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -85,7 +85,7 @@ void CLuckyCoin::CGLuckyCoinRegisterRecv(PMSG_LUCKY_COIN_REGISTER_RECV* lpMsg,in
 	#endif
 }
 
-void CLuckyCoin::CGLuckyCoinExchangeRecv(PMSG_LUCKY_COIN_EXCHANGE_RECV* lpMsg,int aIndex) // OK
+void CLuckyCoin::CGLuckyCoinExchangeRecv(PMSG_LUCKY_COIN_EXCHANGE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -116,7 +116,7 @@ void CLuckyCoin::CGLuckyCoinExchangeRecv(PMSG_LUCKY_COIN_EXCHANGE_RECV* lpMsg,in
 	#endif
 }
 
-void CLuckyCoin::DGLuckyCoinCountRecv(SDHP_LUCKY_COIN_COUNT_RECV* lpMsg) // OK
+void CLuckyCoin::DGLuckyCoinCountRecv(SDHP_LUCKY_COIN_COUNT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -142,7 +142,7 @@ void CLuckyCoin::DGLuckyCoinCountRecv(SDHP_LUCKY_COIN_COUNT_RECV* lpMsg) // OK
 	#endif
 }
 
-void CLuckyCoin::DGLuckyCoinRegisterRecv(SDHP_LUCKY_COIN_REGISTER_RECV* lpMsg) // OK
+void CLuckyCoin::DGLuckyCoinRegisterRecv(SDHP_LUCKY_COIN_REGISTER_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -190,7 +190,7 @@ void CLuckyCoin::DGLuckyCoinRegisterRecv(SDHP_LUCKY_COIN_REGISTER_RECV* lpMsg) /
 	#endif
 }
 
-void CLuckyCoin::DGLuckyCoinExchangeRecv(SDHP_LUCKY_COIN_EXCHANGE_RECV* lpMsg) // OK
+void CLuckyCoin::DGLuckyCoinExchangeRecv(SDHP_LUCKY_COIN_EXCHANGE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -275,7 +275,7 @@ void CLuckyCoin::DGLuckyCoinExchangeRecv(SDHP_LUCKY_COIN_EXCHANGE_RECV* lpMsg) /
 	#endif
 }
 
-void CLuckyCoin::GDLuckyCoinAddCountSaveSend(int aIndex,DWORD AddLuckyCoin) // OK
+void CLuckyCoin::GDLuckyCoinAddCountSaveSend(int aIndex,DWORD AddLuckyCoin)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -294,7 +294,7 @@ void CLuckyCoin::GDLuckyCoinAddCountSaveSend(int aIndex,DWORD AddLuckyCoin) // O
 	#endif
 }
 
-void CLuckyCoin::GDLuckyCoinSubCountSaveSend(int aIndex,DWORD SubLuckyCoin) // OK
+void CLuckyCoin::GDLuckyCoinSubCountSaveSend(int aIndex,DWORD SubLuckyCoin)
 {
 	#if(GAMESERVER_UPDATE>=402)
 

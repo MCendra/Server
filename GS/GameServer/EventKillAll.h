@@ -9,7 +9,7 @@
 
 struct EVENT_KILLALL_USER
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Index = -1;
 		this->Score = 0;

@@ -19,17 +19,17 @@ CCustomMove gCustomMove;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomMove::CCustomMove() // OK
+CCustomMove::CCustomMove()
 {
 	this->m_CustomMoveInfo.clear();
 }
 
-CCustomMove::~CCustomMove() // OK
+CCustomMove::~CCustomMove()
 {
 
 }
 
-void CCustomMove::Load(char* path) // OK
+void CCustomMove::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -101,7 +101,7 @@ void CCustomMove::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomMove::GetInfo(int index,CUSTOMMOVE_INFO* lpInfo) // OK
+bool CCustomMove::GetInfo(int index,CUSTOMMOVE_INFO* lpInfo)
 {
 	std::map<int,CUSTOMMOVE_INFO>::iterator it = this->m_CustomMoveInfo.find(index);
 
@@ -116,7 +116,7 @@ bool CCustomMove::GetInfo(int index,CUSTOMMOVE_INFO* lpInfo) // OK
 	}
 }
 
-bool CCustomMove::GetInfoByName(char* message,CUSTOMMOVE_INFO* lpInfo) // OK
+bool CCustomMove::GetInfoByName(char* message,CUSTOMMOVE_INFO* lpInfo)
 {
 	char command[32] = {0};
 
@@ -137,7 +137,7 @@ bool CCustomMove::GetInfoByName(char* message,CUSTOMMOVE_INFO* lpInfo) // OK
 	return 0;
 }
 
-void CCustomMove::GetMove(LPOBJ lpObj,int index) // OK
+void CCustomMove::GetMove(LPOBJ lpObj,int index)
 {
 	CUSTOMMOVE_INFO CustomMoveInfo;
 

@@ -9,6 +9,10 @@
 #define IO_RECV 0
 #define IO_SEND 1
 
+#define DEFAULT_TIME_WAIT 5000
+#define DEFAULT_BACKLOG 5
+
+#pragma pack(push,1)
 struct IO_RECV_BUFFER
 {
 	BYTE Buffer[MAX_RECV_PACKET_SIZE];
@@ -53,6 +57,7 @@ struct IO_SEND_CONTEXT
 	IO_SEND_BUFFER IoSendBuffer;
 	IO_SIDE_BUFFER IoSideBuffer;
 };
+#pragma pack(pop)
 
 class CSocketManager
 {
@@ -88,16 +93,16 @@ public:
 	static DWORD WINAPI ServerQueueThread(CSocketManager* lpSocketManager);
 	DWORD GetQueueSize();
 private:
-	SOCKET m_listen;
+	SOCKET m_Listen;
 	HANDLE m_CompletionPort;
-	WORD m_port;
+	WORD m_Port;
 	HANDLE m_ServerAcceptThread;
 	HANDLE m_ServerWorkerThread[MAX_SERVER_WORKER_THREAD];
 	DWORD m_ServerWorkerThreadCount;
 	CQueue m_ServerQueue;
 	HANDLE m_ServerQueueSemaphore;
 	HANDLE m_ServerQueueThread;
-	HANDLE m_shutdownEvent;
+	HANDLE m_ShutdownEvent;
 };
 
 extern CSocketManager gSocketManager;

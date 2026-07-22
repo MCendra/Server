@@ -36,9 +36,12 @@ public:
 	// No muestra nada en pantalla.
 	void ToFile(LogType type, const char* text, ...);
 
-	// Muestra en pantalla Y escribe en el log GENERAL a disco.
 	// Para eventos de operacion que el operador necesita ver en tiempo real.
+
+	// Muestra en pantalla Y escribe en el log GENERAL a disco.
 	void ToDisp(LogColor color, const char* text, ...);
+	// Muestra en pantalla Y escribe en el log determinado por LogType a disco.
+	void ToDispAndFile(LogColor color, LogType type, const char* text, ...);
 
 private:
 	std::string FormatMessage(const char* text, va_list args) const;

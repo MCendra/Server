@@ -15,17 +15,17 @@ CCrywolfStatue gCrywolfStatue;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCrywolfStatue::CCrywolfStatue() // OK
+CCrywolfStatue::CCrywolfStatue()
 {
 
 }
 
-CCrywolfStatue::~CCrywolfStatue() // OK
+CCrywolfStatue::~CCrywolfStatue()
 {
 
 }
 
-void CCrywolfStatue::CrywolfStatueAct(int aIndex) // OK
+void CCrywolfStatue::CrywolfStatueAct(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -85,7 +85,7 @@ void CCrywolfStatue::CrywolfStatueAct(int aIndex) // OK
 	this->m_Shield.m_PriestNumber = ContractedAlterCount;
 }
 
-void CCrywolfStatue::SetStatueViewState(LPOBJ lpObj,int PriestNumber) // OK
+void CCrywolfStatue::SetStatueViewState(LPOBJ lpObj,int PriestNumber)
 {
 	switch(PriestNumber)
 	{

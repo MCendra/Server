@@ -16,17 +16,17 @@
 
 CMocNap gMocNap;
 
-CMocNap::CMocNap() // OK
+CMocNap::CMocNap()
 {
 	this->Init();
 }
 
-CMocNap::~CMocNap() // OK
+CMocNap::~CMocNap()
 {
 
 }
 
-void CMocNap::Init() // OK
+void CMocNap::Init()
 {
 	for (int n = 0; n < MAX_CLASS; n++)
 	{
@@ -61,7 +61,7 @@ void CMocNap::Init() // OK
 	}
 }
 
-void CMocNap::Load(char* path) // OK
+void CMocNap::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

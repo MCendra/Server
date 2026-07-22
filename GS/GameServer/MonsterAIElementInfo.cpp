@@ -19,17 +19,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIElementInfo::CMonsterAIElementInfo() // OK
+CMonsterAIElementInfo::CMonsterAIElementInfo()
 {
 	this->Reset();
 }
 
-CMonsterAIElementInfo::~CMonsterAIElementInfo() // OK
+CMonsterAIElementInfo::~CMonsterAIElementInfo()
 {
 
 }
 
-void CMonsterAIElementInfo::Reset() // OK
+void CMonsterAIElementInfo::Reset()
 {
 	memset(this->m_ElementName,0,sizeof(this->m_ElementName));
 
@@ -43,7 +43,7 @@ void CMonsterAIElementInfo::Reset() // OK
 	this->m_Y = -1;
 }
 
-BOOL CMonsterAIElementInfo::ForceAIElementInfo(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+BOOL CMonsterAIElementInfo::ForceAIElementInfo(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -113,12 +113,12 @@ BOOL CMonsterAIElementInfo::ForceAIElementInfo(int aIndex,int bIndex,CMonsterAIS
 	return 1;
 }
 
-void CMonsterAIElementInfo::ApplyElementCommon(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementCommon(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 
 }
 
-void CMonsterAIElementInfo::ApplyElementMove(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementMove(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -140,7 +140,7 @@ void CMonsterAIElementInfo::ApplyElementMove(int aIndex,int bIndex,CMonsterAISta
 	}
 }
 
-void CMonsterAIElementInfo::ApplyElementMoveTarget(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementMoveTarget(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -169,7 +169,7 @@ void CMonsterAIElementInfo::ApplyElementMoveTarget(int aIndex,int bIndex,CMonste
 	lpObj->PathStartEnd = CMonsterAIUtil::FindPathToMoveMonster(lpObj,PathX,PathY,7,0);
 }
 
-void CMonsterAIElementInfo::ApplyElementGroupMove(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementGroupMove(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -205,7 +205,7 @@ void CMonsterAIElementInfo::ApplyElementGroupMove(int aIndex,int bIndex,CMonster
 	}
 }
 
-void CMonsterAIElementInfo::ApplyElementAttack(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementAttack(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -272,7 +272,7 @@ void CMonsterAIElementInfo::ApplyElementAttack(int aIndex,int bIndex,CMonsterAIS
 	}
 }
 
-void CMonsterAIElementInfo::ApplyElementAttackArea(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementAttackArea(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -303,7 +303,7 @@ void CMonsterAIElementInfo::ApplyElementAttackArea(int aIndex,int bIndex,CMonste
 	}
 }
 
-void CMonsterAIElementInfo::ApplyElementAttackPenetration(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementAttackPenetration(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -320,7 +320,7 @@ void CMonsterAIElementInfo::ApplyElementAttackPenetration(int aIndex,int bIndex,
 	CMonsterSkillManager::UseMonsterSkill(aIndex,lpObj->TargetNumber,2,-1,0);
 }
 
-void CMonsterAIElementInfo::ApplyElementAvoid(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementAvoid(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -332,7 +332,7 @@ void CMonsterAIElementInfo::ApplyElementAvoid(int aIndex,int bIndex,CMonsterAISt
 	CMonsterAIUtil::FindPathToMoveMonster(lpObj,lpObj->MTX,lpObj->MTY,5,1);
 }
 
-void CMonsterAIElementInfo::ApplyElementHealSelf(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementHealSelf(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -348,7 +348,7 @@ void CMonsterAIElementInfo::ApplyElementHealSelf(int aIndex,int bIndex,CMonsterA
 	GCMonsterSkillSend(lpObj,&gObj[aIndex],lpMonsterSkillUnitInfo->m_UnitNumber);
 }
 
-void CMonsterAIElementInfo::ApplyElementHealGroup(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementHealGroup(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -376,7 +376,7 @@ void CMonsterAIElementInfo::ApplyElementHealGroup(int aIndex,int bIndex,CMonster
 	GCMonsterSkillSend(lpObj,&gObj[lpMonsterAIGroupMember->m_ObjIndex],lpMonsterSkillUnitInfo->m_UnitNumber);
 }
 
-void CMonsterAIElementInfo::ApplyElementSupportHeal(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementSupportHeal(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -399,12 +399,12 @@ void CMonsterAIElementInfo::ApplyElementSupportHeal(int aIndex,int bIndex,CMonst
 	GCMonsterSkillSend(lpObj,&gObj[bIndex],lpMonsterSkillUnitInfo->m_UnitNumber);
 }
 
-void CMonsterAIElementInfo::ApplyElementSupportBuff(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementSupportBuff(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 
 }
 
-void CMonsterAIElementInfo::ApplyElementSpecialSommon(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementSpecialSommon(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -432,7 +432,7 @@ void CMonsterAIElementInfo::ApplyElementSpecialSommon(int aIndex,int bIndex,CMon
 	GCMonsterSkillSend(lpObj,&gObj[lpMonsterAIGroupMember->m_ObjIndex],lpMonsterSkillUnitInfo->m_UnitNumber);
 }
 
-void CMonsterAIElementInfo::ApplyElementSpecialImmune(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementSpecialImmune(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -445,7 +445,7 @@ void CMonsterAIElementInfo::ApplyElementSpecialImmune(int aIndex,int bIndex,CMon
 	gEffectManager.AddEffect(lpObj,0,EFFECT_MONSTER_MAGIC_DAMAGE_IMMUNITY,this->m_Y,0,0,0,0);
 }
 
-void CMonsterAIElementInfo::ApplyElementNightmareSummon(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementNightmareSummon(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -461,7 +461,7 @@ void CMonsterAIElementInfo::ApplyElementNightmareSummon(int aIndex,int bIndex,CM
 	gKanturuMonsterMng.SetKanturuMonster(6);
 }
 
-void CMonsterAIElementInfo::ApplyElementNightmareWarp(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementNightmareWarp(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -472,7 +472,7 @@ void CMonsterAIElementInfo::ApplyElementNightmareWarp(int aIndex,int bIndex,CMon
 	lpObj->TargetNumber = -1;
 }
 
-void CMonsterAIElementInfo::ApplyElementSkillAttack(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementSkillAttack(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -512,7 +512,7 @@ void CMonsterAIElementInfo::ApplyElementSkillAttack(int aIndex,int bIndex,CMonst
 	}
 }
 
-void CMonsterAIElementInfo::ApplyElementAIChange(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState) // OK
+void CMonsterAIElementInfo::ApplyElementAIChange(int aIndex,int bIndex,CMonsterAIState* lpMonsterAIState)
 {
 	CMonsterAIGroup::ChangeAIOrder(this->m_TargetType,this->m_X);
 }

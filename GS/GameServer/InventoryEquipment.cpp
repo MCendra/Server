@@ -13,17 +13,17 @@ CInventoryEquipment gInventoryEquipment;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CInventoryEquipment::CInventoryEquipment() // OK
+CInventoryEquipment::CInventoryEquipment()
 {
 
 }
 
-CInventoryEquipment::~CInventoryEquipment() // OK
+CInventoryEquipment::~CInventoryEquipment()
 {
 
 }
 
-void CInventoryEquipment::MainProc() // OK
+void CInventoryEquipment::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -59,7 +59,7 @@ void CInventoryEquipment::MainProc() // OK
 	#endif
 }
 
-bool CInventoryEquipment::CheckInventoryEquipment(LPOBJ lpObj,int ItemIndex) // OK
+bool CInventoryEquipment::CheckInventoryEquipment(LPOBJ lpObj,int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -86,7 +86,7 @@ bool CInventoryEquipment::CheckInventoryEquipment(LPOBJ lpObj,int ItemIndex) // 
 	#endif
 }
 
-void CInventoryEquipment::InsertInventoryEquipment(LPOBJ lpObj) // OK
+void CInventoryEquipment::InsertInventoryEquipment(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -115,7 +115,7 @@ void CInventoryEquipment::InsertInventoryEquipment(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CInventoryEquipment::CGInventoryEquipmentRecv(PMSG_INVENTORY_EQUIPMENT_RECV* lpMsg,int aIndex) // OK
+void CInventoryEquipment::CGInventoryEquipmentRecv(PMSG_INVENTORY_EQUIPMENT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 

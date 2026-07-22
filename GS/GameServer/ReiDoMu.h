@@ -52,7 +52,7 @@ struct SDHP_RANKING_KING_PLAYER_SAVE_SEND
 
 struct REI_GUILD
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Number = -1;
 		this->Owner = 0;
@@ -66,7 +66,7 @@ struct REI_GUILD
 
 struct REI_CHAR
 {
-	void Reset() // OK
+	void Reset()
 	{
 		memset(this->Name, 0, sizeof(this->Name));
 		this->Index = -1;

@@ -1,7 +1,43 @@
+// Protocol.h
 #pragma once
+#include "Header.h"
+
+// Tamaño máximo de paquetes de recepción y envío
+constexpr std::size_t MAX_RECV_PACKET_SIZE = 2048;		// Límite de seguridad de entrada: 1024 bytes
+constexpr std::size_t MAX_SEND_PACKET_SIZE = 4096;		// Límite de seguridad de salida: 2048 bytes en un unico paquete
+constexpr std::size_t MAX_SEND_SIDE_PACKET_SIZE = 8192;	// Límite de seguridad de salida: 8192 bytes en suma de partes de un paquete
+constexpr std::size_t MAX_UDP_PACKET_SIZE = 8192;		// Límite de seguridad de salida: 8192 bytes entrada y salida en un unico paquete UDP
+
+// Common Packet Offsets
+constexpr std::size_t PACKET_TYPE_OFFSET = 0;
+
+// Cabeceras C1 / C3 
+constexpr std::size_t C1_PACKET_SIZE_OFFSET = 1;
+constexpr std::size_t C1_PACKET_HEAD_OFFSET = 2;
+constexpr std::size_t C1_PACKET_DATA_OFFSET = 3;
+
+// Cabeceras C2 / C4
+constexpr std::size_t C2_PACKET_SIZEH_OFFSET = 1;
+constexpr std::size_t C2_PACKET_SIZEL_OFFSET = 2;
+constexpr std::size_t C2_PACKET_HEAD_OFFSET = 3;
+constexpr std::size_t C2_PACKET_DATA_OFFSET = 4;
+
+// Tipos de paquetes
+constexpr BYTE PACKET_C1 = 0xC1;
+constexpr BYTE PACKET_C2 = 0xC2;
+constexpr BYTE PACKET_C3 = 0xC3;
+constexpr BYTE PACKET_C4 = 0xC4;
+
+//Tamaño de cabeceras de paquetes
+constexpr std::size_t PACKET_C1_C3_HEADER_SIZE = 3;
+constexpr std::size_t PACKET_C2_C4_HEADER_SIZE = 4;
+
+// Tamaños maximos permitidos de paquetes
+constexpr std::size_t  PACKET_TYPE_C1_MAX_SIZE = 255;
+constexpr std::size_t  PACKET_TYPE_C2_MAX_SIZE = MAX_RECV_PACKET_SIZE;
 
 #if(GAMESERVER_UPDATE>=701)
-#include "..\\..\\Util\\mapm\\M_APM.h"
+#include "mapm\\M_APM.h"
 #endif
 #include "User.h"
 
@@ -47,21 +83,100 @@
 #define PROTOCOL_CODE4 0x1D
 #endif
 
-#define SET_NUMBERHB(x) ((BYTE)((DWORD)(x)>>(DWORD)8))
-#define SET_NUMBERLB(x) ((BYTE)((DWORD)(x)&0xFF))
-#define SET_NUMBERHW(x) ((WORD)((DWORD)(x)>>(DWORD)16))
-#define SET_NUMBERLW(x) ((WORD)((DWORD)(x)&0xFFFF))
-#define SET_NUMBERHDW(x) ((DWORD)((QWORD)(x)>>(QWORD)32))
-#define SET_NUMBERLDW(x) ((DWORD)((QWORD)(x)&0xFFFFFFFF))
+// Packet Base
+struct PBMSG_HEAD
+{
+	void set(BYTE packetHead, BYTE packetSize)
+	{
+		this->type = PACKET_C1;
+		this->size = packetSize;
+		this->head = packetHead;
+	}
 
-#define MAKE_NUMBERW(x,y) ((WORD)(((BYTE)((y)&0xFF))|((BYTE)((x)&0xFF)<<8)))
-#define MAKE_NUMBERDW(x,y) ((DWORD)(((WORD)((y)&0xFFFF))|((WORD)((x)&0xFFFF)<<16)))
-#define MAKE_NUMBERQW(x,y) ((QWORD)(((DWORD)((y)&0xFFFFFFFF))|((DWORD)((x)&0xFFFFFFFF)<<32)))
+	void setE(BYTE packetHead, BYTE packetSize)
+	{
+		this->type = PACKET_C3;
+		this->size = packetSize;
+		this->head = packetHead;
+	}
 
-//**********************************************//
-//************ Packet Base *********************//
-//**********************************************//
+	BYTE type;
+	BYTE size;
+	BYTE head;
+};
 
+struct PSBMSG_HEAD
+{
+	void set(BYTE packetHead, BYTE packetSubHead, BYTE packetSize)
+	{
+		this->type = PACKET_C1;
+		this->size = packetSize;
+		this->head = packetHead;
+		this->subh = packetSubHead;
+	}
+
+	void setE(BYTE packetHead, BYTE packetSubHead, BYTE packetSize)
+	{
+		this->type = PACKET_C3;
+		this->size = packetSize;
+		this->head = packetHead;
+		this->subh = packetSubHead;
+	}
+
+	BYTE type;
+	BYTE size;
+	BYTE head;
+	BYTE subh;
+};
+
+struct PWMSG_HEAD
+{
+	void set(BYTE packetHead, WORD packetSize)
+	{
+		this->type = PACKET_C2;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+	}
+
+	void setE(BYTE packetHead, WORD packetSize)
+	{
+		this->type = PACKET_C4;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+	}
+
+	BYTE type;
+	BYTE size[2];
+	BYTE head;
+};
+
+struct PSWMSG_HEAD
+{
+	void set(BYTE packetHead, BYTE packetSubHead, WORD packetSize)
+	{
+		this->type = PACKET_C2;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
+	}
+
+	void setE(BYTE packetHead, BYTE packetSubHead, WORD packetSize)
+	{
+		this->type = PACKET_C4;
+		this->size[0] = SET_NUMBERHB(packetSize);
+		this->size[1] = SET_NUMBERLB(packetSize);
+		this->head = packetHead;
+		this->subh = packetSubHead;
+	}
+
+	BYTE type;
+	BYTE size[2];
+	BYTE head;
+	BYTE subh;
+};
 
 struct PBMSG_HEAD2_Origin
 {
@@ -77,28 +192,6 @@ public:
 	BYTE size;
 	BYTE headcode;
 	BYTE subcode;
-};
-
-
-struct PBMSG_HEAD
-{
-	void set(BYTE head, BYTE size) // OK
-	{
-		this->type = 0xC1;
-		this->size = size;
-		this->head = head;
-	}
-
-	void setE(BYTE head, BYTE size) // OK
-	{
-		this->type = 0xC3;
-		this->size = size;
-		this->head = head;
-	}
-
-	BYTE type;
-	BYTE size;
-	BYTE head;
 };
 
 struct PBMSG_HEAD3	// Packet - Byte Type
@@ -140,79 +233,6 @@ public:
 	char Status;
 };
 
-struct PSBMSG_HEAD
-{
-	void set(BYTE head, BYTE subh, BYTE size) // OK
-	{
-		this->type = 0xC1;
-		this->size = size;
-		this->head = head;
-		this->subh = subh;
-	}
-
-	void setE(BYTE head, BYTE subh, BYTE size) // OK
-	{
-		this->type = 0xC3;
-		this->size = size;
-		this->head = head;
-		this->subh = subh;
-	}
-
-	BYTE type;
-	BYTE size;
-	BYTE head;
-	BYTE subh;
-};
-
-struct PWMSG_HEAD
-{
-	void set(BYTE head, WORD size) // OK
-	{
-		this->type = 0xC2;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-	}
-
-	void setE(BYTE head, WORD size) // OK
-	{
-		this->type = 0xC4;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-	}
-
-	BYTE type;
-	BYTE size[2];
-	BYTE head;
-};
-
-struct PSWMSG_HEAD
-{
-	void set(BYTE head, BYTE subh, WORD size) // OK
-	{
-		this->type = 0xC2;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-		this->subh = subh;
-	}
-
-	void setE(BYTE head, BYTE subh, WORD size) // OK
-	{
-		this->type = 0xC4;
-		this->size[0] = SET_NUMBERHB(size);
-		this->size[1] = SET_NUMBERLB(size);
-		this->head = head;
-		this->subh = subh;
-	}
-
-	BYTE type;
-	BYTE size[2];
-	BYTE head;
-	BYTE subh;
-};
-
 //struct PBMSG_HEAD2	// Packet - Byte Type
 //{
 //
@@ -232,9 +252,8 @@ struct PSWMSG_HEAD
 //	BYTE subh;
 //};
 
-//**********************************************//
-//************ Client -> GameServer ************//
-//**********************************************//
+// Client -> GameServer
+
 struct EXTRA_CPANEL_SENDINFO
 {
 	PSBMSG_HEAD h;	// C1:01

@@ -9,34 +9,34 @@
 class CKanturuBattleUser
 {
 public:
-	CKanturuBattleUser() // OK
+	CKanturuBattleUser()
 	{
 		this->ResetData();
 	}
 
-	virtual ~CKanturuBattleUser() // OK
+	virtual ~CKanturuBattleUser()
 	{
 
 	}
 	
-	void ResetData() // OK
+	void ResetData()
 	{
 		this->m_Index = -1;
 		this->m_IsUse = 0;
 	}
 
-	void SetIndex(int aIndex) // OK
+	void SetIndex(int aIndex)
 	{
 		this->m_Index = aIndex;
 		this->m_IsUse = 1;
 	}
 
-	int GetIndex() // OK
+	int GetIndex()
 	{
 		return this->m_Index;
 	}
 
-	int IsUseData() // OK
+	int IsUseData()
 	{
 		return this->m_IsUse;
 	}

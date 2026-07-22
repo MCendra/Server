@@ -12,19 +12,19 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CConnection::CConnection() // OK
+CConnection::CConnection()
 {
 	this->m_hwnd = 0;
 
 	this->m_socket = INVALID_SOCKET;
 }
 
-CConnection::~CConnection() // OK
+CConnection::~CConnection()
 {
 	this->Disconnect();
 }
 
-void CConnection::Init(HWND hwnd,void* function) // OK
+void CConnection::Init(HWND hwnd,void* function)
 {
 	this->m_hwnd = hwnd;
 
@@ -33,7 +33,7 @@ void CConnection::Init(HWND hwnd,void* function) // OK
 	this->wsProtocolCore = (void(*)(BYTE,BYTE*,int))function;
 }
 
-bool CConnection::Connect(char* IpAddress,WORD port,DWORD WinMsg) // OK
+bool CConnection::Connect(char* IpAddress,WORD port,DWORD WinMsg)
 {
 	if(this->m_socket == INVALID_SOCKET)
 	{
@@ -84,7 +84,7 @@ bool CConnection::Connect(char* IpAddress,WORD port,DWORD WinMsg) // OK
 	return 1;
 }
 
-void CConnection::Disconnect() // OK
+void CConnection::Disconnect()
 {
 	if(this->m_socket != INVALID_SOCKET)
 	{
@@ -93,12 +93,12 @@ void CConnection::Disconnect() // OK
 	}
 }
 
-bool CConnection::CheckState() // OK
+bool CConnection::CheckState()
 {
 	return ((this->m_socket==INVALID_SOCKET)?0:1);
 }
 
-bool CConnection::DataRecv() // OK
+bool CConnection::DataRecv()
 {
 	int count=0,size=0,result=0;
 
@@ -179,7 +179,7 @@ bool CConnection::DataRecv() // OK
 	return 1;
 }
 
-bool CConnection::DataSend(BYTE* lpMsg,int size) // OK
+bool CConnection::DataSend(BYTE* lpMsg,int size)
 {
 	this->m_critical.lock();
 
@@ -249,7 +249,7 @@ bool CConnection::DataSend(BYTE* lpMsg,int size) // OK
 	return 1;
 }
 
-bool CConnection::DataSendEx() // OK
+bool CConnection::DataSendEx()
 {
 	this->m_critical.lock();
 

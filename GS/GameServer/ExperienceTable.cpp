@@ -12,17 +12,17 @@ CExperienceTable gExperienceTable;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CExperienceTable::CExperienceTable() // OK
+CExperienceTable::CExperienceTable()
 {
 	this->m_ExperienceTableInfo.clear();
 }
 
-CExperienceTable::~CExperienceTable() // OK
+CExperienceTable::~CExperienceTable()
 {
 
 }
 
-void CExperienceTable::Load(char* path) // OK
+void CExperienceTable::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -86,7 +86,7 @@ void CExperienceTable::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-int CExperienceTable::GetExperienceRate(LPOBJ lpObj) // OK
+int CExperienceTable::GetExperienceRate(LPOBJ lpObj)
 {
 	for(std::vector<EXPERIENCE_TABLE_INFO>::iterator it=this->m_ExperienceTableInfo.begin();it != this->m_ExperienceTableInfo.end();it++)
 	{
@@ -126,7 +126,7 @@ int CExperienceTable::GetExperienceRate(LPOBJ lpObj) // OK
 	return 100;
 }
 
-int CExperienceTable::GetMasterExperienceRate(LPOBJ lpObj) // OK
+int CExperienceTable::GetMasterExperienceRate(LPOBJ lpObj)
 {
 	for(std::vector<EXPERIENCE_TABLE_INFO>::iterator it=this->m_ExperienceTableInfo.begin();it != this->m_ExperienceTableInfo.end();it++)
 	{

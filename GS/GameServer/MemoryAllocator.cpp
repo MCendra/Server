@@ -10,17 +10,17 @@ CMemoryAllocator gMemoryAllocator;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMemoryAllocator::CMemoryAllocator() // OK
+CMemoryAllocator::CMemoryAllocator()
 {
 	this->m_TempMemoryAllocatorInfo.m_Index = OBJECT_START_USER;
 }
 
-CMemoryAllocator::~CMemoryAllocator() // OK
+CMemoryAllocator::~CMemoryAllocator()
 {
 
 }
 
-bool CMemoryAllocator::GetMemoryAllocatorFree(int* index,int MinIndex,int MaxIndex,DWORD MinTime) // OK
+bool CMemoryAllocator::GetMemoryAllocatorFree(int* index,int MinIndex,int MaxIndex,DWORD MinTime)
 {
 	this->m_critical.lock();
 
@@ -44,7 +44,7 @@ bool CMemoryAllocator::GetMemoryAllocatorFree(int* index,int MinIndex,int MaxInd
 	return (((*index)==-1)?0:1);
 }
 
-bool CMemoryAllocator::GetMemoryAllocatorInfo(CMemoryAllocatorInfo* lpMemoryAllocatorInfo,int index) // OK
+bool CMemoryAllocator::GetMemoryAllocatorInfo(CMemoryAllocatorInfo* lpMemoryAllocatorInfo,int index)
 {
 	this->m_critical.lock();
 
@@ -66,7 +66,7 @@ bool CMemoryAllocator::GetMemoryAllocatorInfo(CMemoryAllocatorInfo* lpMemoryAllo
 	return 1;
 }
 
-void CMemoryAllocator::InsertMemoryAllocatorInfo(CMemoryAllocatorInfo MemoryAllocatorInfo) // OK
+void CMemoryAllocator::InsertMemoryAllocatorInfo(CMemoryAllocatorInfo MemoryAllocatorInfo)
 {
 	this->m_critical.lock();
 
@@ -81,7 +81,7 @@ void CMemoryAllocator::InsertMemoryAllocatorInfo(CMemoryAllocatorInfo MemoryAllo
 	this->m_critical.unlock();
 }
 
-void CMemoryAllocator::RemoveMemoryAllocatorInfo(CMemoryAllocatorInfo MemoryAllocatorInfo) // OK
+void CMemoryAllocator::RemoveMemoryAllocatorInfo(CMemoryAllocatorInfo MemoryAllocatorInfo)
 {
 	this->m_critical.lock();
 
@@ -96,7 +96,7 @@ void CMemoryAllocator::RemoveMemoryAllocatorInfo(CMemoryAllocatorInfo MemoryAllo
 	this->m_critical.unlock();
 }
 
-void CMemoryAllocator::BindMemoryAllocatorInfo(int index,CMemoryAllocatorInfo MemoryAllocatorInfo) // OK
+void CMemoryAllocator::BindMemoryAllocatorInfo(int index,CMemoryAllocatorInfo MemoryAllocatorInfo)
 {
 	if(OBJECT_RANGE(index) == 0)
 	{

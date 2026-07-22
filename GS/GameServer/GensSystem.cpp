@@ -20,17 +20,17 @@ CGensSystem gGensSystem;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGensSystem::CGensSystem() // OK
+CGensSystem::CGensSystem()
 {
 
 }
 
-CGensSystem::~CGensSystem() // OK
+CGensSystem::~CGensSystem()
 {
 
 }
 
-void CGensSystem::CalcGensMemberInfo(LPOBJ lpObj) // OK
+void CGensSystem::CalcGensMemberInfo(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -107,7 +107,7 @@ void CGensSystem::CalcGensMemberInfo(LPOBJ lpObj) // OK
 	#endif
 }
 
-int CGensSystem::GetGensRewardSymbol(int GensRank) // OK
+int CGensSystem::GetGensRewardSymbol(int GensRank)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -155,7 +155,7 @@ int CGensSystem::GetGensRewardSymbol(int GensRank) // OK
 	#endif
 }
 
-void CGensSystem::NpcGensDuprianSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CGensSystem::NpcGensDuprianSteward(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -184,7 +184,7 @@ void CGensSystem::NpcGensDuprianSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CGensSystem::NpcGensVarnertSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CGensSystem::NpcGensVarnertSteward(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -213,7 +213,7 @@ void CGensSystem::NpcGensVarnertSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-bool CGensSystem::VerifyGensVictimList(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CGensSystem::VerifyGensVictimList(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -243,7 +243,7 @@ bool CGensSystem::VerifyGensVictimList(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-bool CGensSystem::InsertGensVictimList(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CGensSystem::InsertGensVictimList(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -265,7 +265,7 @@ bool CGensSystem::InsertGensVictimList(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-bool CGensSystem::SearchGensVictimList(LPOBJ lpObj,LPOBJ lpTarget,GENS_SYSTEM_VICTIM_LIST** lpVictimList) // OK
+bool CGensSystem::SearchGensVictimList(LPOBJ lpObj,LPOBJ lpTarget,GENS_SYSTEM_VICTIM_LIST** lpVictimList)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -287,7 +287,7 @@ bool CGensSystem::SearchGensVictimList(LPOBJ lpObj,LPOBJ lpTarget,GENS_SYSTEM_VI
 	#endif
 }
 
-void CGensSystem::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CGensSystem::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -404,7 +404,7 @@ void CGensSystem::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-bool CGensSystem::CheckGens(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CGensSystem::CheckGens(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -437,7 +437,7 @@ bool CGensSystem::CheckGens(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-BYTE CGensSystem::GetGensMoveIndex(BYTE* GensMoveIndex) // OK
+BYTE CGensSystem::GetGensMoveIndex(BYTE* GensMoveIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -465,7 +465,7 @@ BYTE CGensSystem::GetGensMoveIndex(BYTE* GensMoveIndex) // OK
 	#endif
 }
 
-BYTE CGensSystem::GetGensBattleMap(BYTE* GensBattleMap) // OK
+BYTE CGensSystem::GetGensBattleMap(BYTE* GensBattleMap)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -491,7 +491,7 @@ BYTE CGensSystem::GetGensBattleMap(BYTE* GensBattleMap) // OK
 	#endif
 }
 
-void CGensSystem::CGGensSystemInsertRecv(PMSG_GENS_SYSTEM_INSERT_RECV* lpMsg,int aIndex) // OK
+void CGensSystem::CGGensSystemInsertRecv(PMSG_GENS_SYSTEM_INSERT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -553,7 +553,7 @@ void CGensSystem::CGGensSystemInsertRecv(PMSG_GENS_SYSTEM_INSERT_RECV* lpMsg,int
 	#endif
 }
 
-void CGensSystem::CGGensSystemDeleteRecv(PMSG_GENS_SYSTEM_DELETE_RECV* lpMsg,int aIndex) // OK
+void CGensSystem::CGGensSystemDeleteRecv(PMSG_GENS_SYSTEM_DELETE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -615,7 +615,7 @@ void CGensSystem::CGGensSystemDeleteRecv(PMSG_GENS_SYSTEM_DELETE_RECV* lpMsg,int
 	#endif
 }
 
-void CGensSystem::CGGensSystemRewardRecv(PMSG_GENS_SYSTEM_REWARD_RECV* lpMsg,int aIndex) // OK
+void CGensSystem::CGGensSystemRewardRecv(PMSG_GENS_SYSTEM_REWARD_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -663,7 +663,7 @@ void CGensSystem::CGGensSystemRewardRecv(PMSG_GENS_SYSTEM_REWARD_RECV* lpMsg,int
 	#endif
 }
 
-void CGensSystem::CGGensSystemMemberRecv(PMSG_GENS_SYSTEM_MEMBER_RECV* lpMsg,int aIndex) // OK
+void CGensSystem::CGGensSystemMemberRecv(PMSG_GENS_SYSTEM_MEMBER_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -684,7 +684,7 @@ void CGensSystem::CGGensSystemMemberRecv(PMSG_GENS_SYSTEM_MEMBER_RECV* lpMsg,int
 	#endif
 }
 
-void CGensSystem::GCGensSystemInsertSend(int aIndex,BYTE result,BYTE GensFamily) // OK
+void CGensSystem::GCGensSystemInsertSend(int aIndex,BYTE result,BYTE GensFamily)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -701,7 +701,7 @@ void CGensSystem::GCGensSystemInsertSend(int aIndex,BYTE result,BYTE GensFamily)
 	#endif
 }
 
-void CGensSystem::GCGensSystemDeleteSend(int aIndex,BYTE result) // OK
+void CGensSystem::GCGensSystemDeleteSend(int aIndex,BYTE result)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -716,7 +716,7 @@ void CGensSystem::GCGensSystemDeleteSend(int aIndex,BYTE result) // OK
 	#endif
 }
 
-void CGensSystem::GCGensSystemMemberSend(int aIndex) // OK
+void CGensSystem::GCGensSystemMemberSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -741,7 +741,7 @@ void CGensSystem::GCGensSystemMemberSend(int aIndex) // OK
 	#endif
 }
 
-void CGensSystem::GCGensSystemDisableMoveSend(int aIndex) // OK
+void CGensSystem::GCGensSystemDisableMoveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -756,7 +756,7 @@ void CGensSystem::GCGensSystemDisableMoveSend(int aIndex) // OK
 	#endif
 }
 
-void CGensSystem::GCGensSystemRewardSend(int aIndex,BYTE result) // OK
+void CGensSystem::GCGensSystemRewardSend(int aIndex,BYTE result)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -771,7 +771,7 @@ void CGensSystem::GCGensSystemRewardSend(int aIndex,BYTE result) // OK
 	#endif
 }
 
-void CGensSystem::DGGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg) // OK
+void CGensSystem::DGGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -804,7 +804,7 @@ void CGensSystem::DGGensSystemInsertRecv(SDHP_GENS_SYSTEM_INSERT_RECV* lpMsg) //
 	#endif
 }
 
-void CGensSystem::DGGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg) // OK
+void CGensSystem::DGGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -839,7 +839,7 @@ void CGensSystem::DGGensSystemDeleteRecv(SDHP_GENS_SYSTEM_DELETE_RECV* lpMsg) //
 	#endif
 }
 
-void CGensSystem::DGGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg) // OK
+void CGensSystem::DGGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -872,7 +872,7 @@ void CGensSystem::DGGensSystemMemberRecv(SDHP_GENS_SYSTEM_MEMBER_RECV* lpMsg) //
 	#endif
 }
 
-void CGensSystem::DGGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg) // OK
+void CGensSystem::DGGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -908,7 +908,7 @@ void CGensSystem::DGGensSystemUpdateRecv(SDHP_GENS_SYSTEM_UPDATE_RECV* lpMsg) //
 	#endif
 }
 
-void CGensSystem::DGGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg) // OK
+void CGensSystem::DGGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -951,7 +951,7 @@ void CGensSystem::DGGensSystemRewardRecv(SDHP_GENS_SYSTEM_REWARD_RECV* lpMsg) //
 	#endif
 }
 
-void CGensSystem::DGGensSystemCreateRecv(SDHP_GENS_SYSTEM_CREATE_RECV* lpMsg) // OK
+void CGensSystem::DGGensSystemCreateRecv(SDHP_GENS_SYSTEM_CREATE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -972,7 +972,7 @@ void CGensSystem::DGGensSystemCreateRecv(SDHP_GENS_SYSTEM_CREATE_RECV* lpMsg) //
 	#endif
 }
 
-void CGensSystem::GDGensSystemInsertSend(int aIndex,BYTE GensFamily) // OK
+void CGensSystem::GDGensSystemInsertSend(int aIndex,BYTE GensFamily)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -998,7 +998,7 @@ void CGensSystem::GDGensSystemInsertSend(int aIndex,BYTE GensFamily) // OK
 	#endif
 }
 
-void CGensSystem::GDGensSystemDeleteSend(int aIndex,BYTE GensFamily) // OK
+void CGensSystem::GDGensSystemDeleteSend(int aIndex,BYTE GensFamily)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1026,7 +1026,7 @@ void CGensSystem::GDGensSystemDeleteSend(int aIndex,BYTE GensFamily) // OK
 	#endif
 }
 
-void CGensSystem::GDGensSystemMemberSend(int aIndex) // OK
+void CGensSystem::GDGensSystemMemberSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1050,7 +1050,7 @@ void CGensSystem::GDGensSystemMemberSend(int aIndex) // OK
 	#endif
 }
 
-void CGensSystem::GDGensSystemUpdateSend(int aIndex) // OK
+void CGensSystem::GDGensSystemUpdateSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1085,7 +1085,7 @@ void CGensSystem::GDGensSystemUpdateSend(int aIndex) // OK
 	#endif
 }
 
-void CGensSystem::GDGensSystemRewardSend(int aIndex) // OK
+void CGensSystem::GDGensSystemRewardSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1111,7 +1111,7 @@ void CGensSystem::GDGensSystemRewardSend(int aIndex) // OK
 	#endif
 }
 
-void CGensSystem::GDGensSystemRewardSaveSend(int aIndex,DWORD GensRank,DWORD GensRewardStatus) // OK
+void CGensSystem::GDGensSystemRewardSaveSend(int aIndex,DWORD GensRank,DWORD GensRewardStatus)
 {
 	#if(GAMESERVER_UPDATE>=501)
 

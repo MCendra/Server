@@ -24,17 +24,17 @@ CViewport gViewport;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CViewport::CViewport() // OK
+CViewport::CViewport()
 {
 
 }
 
-CViewport::~CViewport() // OK
+CViewport::~CViewport()
 {
 
 }
 
-bool CViewport::CheckViewportObjectPosition(int aIndex,int map,int x,int y,int view) // OK
+bool CViewport::CheckViewportObjectPosition(int aIndex,int map,int x,int y,int view)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -51,7 +51,7 @@ bool CViewport::CheckViewportObjectPosition(int aIndex,int map,int x,int y,int v
 	return 1;
 }
 
-bool CViewport::CheckViewportObject1(int aIndex,int bIndex,int type) // OK
+bool CViewport::CheckViewportObject1(int aIndex,int bIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -66,7 +66,7 @@ bool CViewport::CheckViewportObject1(int aIndex,int bIndex,int type) // OK
 	return 1;
 }
 
-bool CViewport::CheckViewportObject2(int aIndex,int bIndex,int type) // OK
+bool CViewport::CheckViewportObject2(int aIndex,int bIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -81,7 +81,7 @@ bool CViewport::CheckViewportObject2(int aIndex,int bIndex,int type) // OK
 	return 1;
 }
 
-bool CViewport::CheckViewportObjectItem(int aIndex,int bIndex,int type) // OK
+bool CViewport::CheckViewportObjectItem(int aIndex,int bIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -96,7 +96,7 @@ bool CViewport::CheckViewportObjectItem(int aIndex,int bIndex,int type) // OK
 	return 1;
 }
 
-bool CViewport::AddViewportObject1(int aIndex,int bIndex,int type) // OK
+bool CViewport::AddViewportObject1(int aIndex,int bIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -121,7 +121,7 @@ bool CViewport::AddViewportObject1(int aIndex,int bIndex,int type) // OK
 	return 0;
 }
 
-bool CViewport::AddViewportObject2(int aIndex,int bIndex,int type) // OK
+bool CViewport::AddViewportObject2(int aIndex,int bIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -145,7 +145,7 @@ bool CViewport::AddViewportObject2(int aIndex,int bIndex,int type) // OK
 	return 0;
 }
 
-bool CViewport::AddViewportObjectItem(int aIndex,int bIndex,int type) // OK
+bool CViewport::AddViewportObjectItem(int aIndex,int bIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -169,7 +169,7 @@ bool CViewport::AddViewportObjectItem(int aIndex,int bIndex,int type) // OK
 	return 0;
 }
 
-void CViewport::AddViewportObjectAgro(int aIndex,int bIndex,int type) // OK
+void CViewport::AddViewportObjectAgro(int aIndex,int bIndex,int type)
 {
 	if(gObj[aIndex].Type == OBJECT_MONSTER && gObj[aIndex].CurrentAI != 0)
 	{
@@ -180,7 +180,7 @@ void CViewport::AddViewportObjectAgro(int aIndex,int bIndex,int type) // OK
 	}
 }
 
-void CViewport::DelViewportObjectAgro(int aIndex,int bIndex,int type) // OK
+void CViewport::DelViewportObjectAgro(int aIndex,int bIndex,int type)
 {
 	if(gObj[aIndex].Type == OBJECT_MONSTER && gObj[aIndex].CurrentAI != 0)
 	{
@@ -191,7 +191,7 @@ void CViewport::DelViewportObjectAgro(int aIndex,int bIndex,int type) // OK
 	}
 }
 
-void CViewport::DestroyViewportPlayer1(int aIndex) // OK
+void CViewport::DestroyViewportPlayer1(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -240,7 +240,7 @@ void CViewport::DestroyViewportPlayer1(int aIndex) // OK
 	}
 }
 
-void CViewport::DestroyViewportPlayer2(int aIndex) // OK
+void CViewport::DestroyViewportPlayer2(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -281,7 +281,7 @@ void CViewport::DestroyViewportPlayer2(int aIndex) // OK
 	}
 }
 
-void CViewport::DestroyViewportMonster1(int aIndex) // OK
+void CViewport::DestroyViewportMonster1(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -334,7 +334,7 @@ void CViewport::DestroyViewportMonster1(int aIndex) // OK
 	}
 }
 
-void CViewport::DestroyViewportMonster2(int aIndex) // OK
+void CViewport::DestroyViewportMonster2(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -375,7 +375,7 @@ void CViewport::DestroyViewportMonster2(int aIndex) // OK
 	}
 }
 
-void CViewport::DestroyViewportItem(int aIndex) // OK
+void CViewport::DestroyViewportItem(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -418,7 +418,7 @@ void CViewport::DestroyViewportItem(int aIndex) // OK
 	}
 }
 
-void CViewport::CreateViewportPlayer(int aIndex) // OK
+void CViewport::CreateViewportPlayer(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -452,7 +452,7 @@ void CViewport::CreateViewportPlayer(int aIndex) // OK
 	}
 }
 
-void CViewport::CreateViewportMonster(int aIndex) // OK
+void CViewport::CreateViewportMonster(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -481,7 +481,7 @@ void CViewport::CreateViewportMonster(int aIndex) // OK
 	}
 }
 
-void CViewport::CreateViewportItem(int aIndex) // OK
+void CViewport::CreateViewportItem(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -509,7 +509,7 @@ void CViewport::CreateViewportItem(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportDestroySend(int aIndex) // OK
+void CViewport::GCViewportDestroySend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -561,7 +561,7 @@ void CViewport::GCViewportDestroySend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportDestroyItemSend(int aIndex) // OK
+void CViewport::GCViewportDestroyItemSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -614,7 +614,7 @@ void CViewport::GCViewportDestroyItemSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportNewPetSend(int aIndex) // OK
+void CViewport::GCViewportNewPetSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -708,7 +708,7 @@ void CViewport::GCViewportNewPetSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportPlayerSend(int aIndex) // OK
+void CViewport::GCViewportPlayerSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -832,7 +832,7 @@ void CViewport::GCViewportPlayerSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportMonsterSend(int aIndex) // OK
+void CViewport::GCViewportMonsterSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -983,7 +983,7 @@ void CViewport::GCViewportMonsterSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportSummonSend(int aIndex) // OK
+void CViewport::GCViewportSummonSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1084,7 +1084,7 @@ void CViewport::GCViewportSummonSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportItemSend(int aIndex) // OK
+void CViewport::GCViewportItemSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1167,7 +1167,7 @@ void CViewport::GCViewportItemSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportChangeSend(int aIndex) // OK
+void CViewport::GCViewportChangeSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1294,7 +1294,7 @@ void CViewport::GCViewportChangeSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportGuildSend(int aIndex) // OK
+void CViewport::GCViewportGuildSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1401,7 +1401,7 @@ void CViewport::GCViewportGuildSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportUnionSend(int aIndex) // OK
+void CViewport::GCViewportUnionSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1482,7 +1482,7 @@ void CViewport::GCViewportUnionSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportCastleSiegeWeaponSend(int aIndex,int tx,int ty) // OK
+void CViewport::GCViewportCastleSiegeWeaponSend(int aIndex,int tx,int ty)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1566,7 +1566,7 @@ void CViewport::GCViewportCastleSiegeWeaponSend(int aIndex,int tx,int ty) // OK
 	}
 }
 
-void CViewport::GCViewportGensSystemSend(int aIndex) // OK
+void CViewport::GCViewportGensSystemSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1649,7 +1649,7 @@ void CViewport::GCViewportGensSystemSend(int aIndex) // OK
 	}
 }
 
-void CViewport::GCViewportSimpleDestroySend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleDestroySend(LPOBJ lpObj)
 {
 	BYTE send[256];
 
@@ -1679,7 +1679,7 @@ void CViewport::GCViewportSimpleDestroySend(LPOBJ lpObj) // OK
 }
 
 
-void CViewport::GCViewportSimplePetSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimplePetSend(LPOBJ lpObj)
 {
 
 #if(GAMESERVER_UPDATE>=402)
@@ -1729,7 +1729,7 @@ void CViewport::GCViewportSimplePetSend(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj, send, size);
 }
 
-void CViewport::GCViewportSimplePlayerSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimplePlayerSend(LPOBJ lpObj)
 {
 	if(gObjIsChangeSkin(lpObj->Index) != 0)
 	{
@@ -1829,7 +1829,7 @@ void CViewport::GCViewportSimplePlayerSend(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj,send,size);
 }
 
-void CViewport::GCViewportSimpleMonsterSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleMonsterSend(LPOBJ lpObj)
 {
 	if(OBJECT_RANGE(lpObj->SummonIndex) != 0)
 	{
@@ -1908,7 +1908,7 @@ void CViewport::GCViewportSimpleMonsterSend(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj,send,size);
 }
 
-void CViewport::GCViewportSimpleSummonSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleSummonSend(LPOBJ lpObj)
 {
 	if(OBJECT_RANGE(lpObj->SummonIndex) == 0)
 	{
@@ -1984,7 +1984,7 @@ void CViewport::GCViewportSimpleSummonSend(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj,send,size);
 }
 
-void CViewport::GCViewportSimpleChangeSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleChangeSend(LPOBJ lpObj)
 {
 	if(gObjIsChangeSkin(lpObj->Index) == 0)
 	{
@@ -2082,7 +2082,7 @@ void CViewport::GCViewportSimpleChangeSend(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj,send,size);
 }
 
-void CViewport::GCViewportSimpleGuildSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleGuildSend(LPOBJ lpObj)
 {
 	if(lpObj->Guild == 0)
 	{
@@ -2158,7 +2158,7 @@ void CViewport::GCViewportSimpleGuildSend(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj,send,size);
 }
 
-void CViewport::GCViewportSimpleUnionSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleUnionSend(LPOBJ lpObj)
 {
 	if(lpObj->Guild == 0)
 	{
@@ -2237,7 +2237,7 @@ void CViewport::GCViewportSimpleUnionSend(LPOBJ lpObj) // OK
 	}
 }
 
-void CViewport::GCViewportSimpleGensSystemSend(LPOBJ lpObj) // OK
+void CViewport::GCViewportSimpleGensSystemSend(LPOBJ lpObj)
 {
 	if(lpObj->GensFamily == GENS_FAMILY_NONE && (lpObj->QuestWorldMonsterClass != 543 && lpObj->QuestWorldMonsterClass != 544))
 	{

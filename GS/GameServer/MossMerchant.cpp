@@ -22,7 +22,7 @@ CMossMerchant gMossMerchant;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMossMerchant::CMossMerchant() // OK
+CMossMerchant::CMossMerchant()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -39,12 +39,12 @@ CMossMerchant::CMossMerchant() // OK
 	#endif
 }
 
-CMossMerchant::~CMossMerchant() // OK
+CMossMerchant::~CMossMerchant()
 {
 
 }
 
-void CMossMerchant::Init() // OK
+void CMossMerchant::Init()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -60,7 +60,7 @@ void CMossMerchant::Init() // OK
 	#endif
 }
 
-void CMossMerchant::Load(char* path) // OK
+void CMossMerchant::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -169,7 +169,7 @@ void CMossMerchant::Load(char* path) // OK
 	#endif
 }
 
-void CMossMerchant::MainProc() // OK
+void CMossMerchant::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -222,12 +222,12 @@ void CMossMerchant::MainProc() // OK
 	#endif
 }
 
-void CMossMerchant::ProcState_BLANK() // OK
+void CMossMerchant::ProcState_BLANK()
 {
 
 }
 
-void CMossMerchant::ProcState_EMPTY() // OK
+void CMossMerchant::ProcState_EMPTY()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -241,7 +241,7 @@ void CMossMerchant::ProcState_EMPTY() // OK
 	#endif
 }
 
-void CMossMerchant::ProcState_START() // OK
+void CMossMerchant::ProcState_START()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -255,7 +255,7 @@ void CMossMerchant::ProcState_START() // OK
 	#endif
 }
 
-void CMossMerchant::SetState(int state) // OK
+void CMossMerchant::SetState(int state)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -277,12 +277,12 @@ void CMossMerchant::SetState(int state) // OK
 	#endif
 }
 
-void CMossMerchant::SetState_BLANK() // OK
+void CMossMerchant::SetState_BLANK()
 {
 
 }
 
-void CMossMerchant::SetState_EMPTY() // OK
+void CMossMerchant::SetState_EMPTY()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -297,7 +297,7 @@ void CMossMerchant::SetState_EMPTY() // OK
 	#endif
 }
 
-void CMossMerchant::SetState_START() // OK
+void CMossMerchant::SetState_START()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -310,7 +310,7 @@ void CMossMerchant::SetState_START() // OK
 	#endif
 }
 
-void CMossMerchant::CheckSync() // OK
+void CMossMerchant::CheckSync()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -342,7 +342,7 @@ void CMossMerchant::CheckSync() // OK
 	#endif
 }
 
-void CMossMerchant::SetMossMerchant() // OK
+void CMossMerchant::SetMossMerchant()
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -386,7 +386,7 @@ void CMossMerchant::SetMossMerchant() // OK
 	#endif
 }
 
-bool CMossMerchant::GambleItem(LPOBJ lpObj,int group) // OK
+bool CMossMerchant::GambleItem(LPOBJ lpObj,int group)
 {
 	#if(GAMESERVER_UPDATE>=402)
 

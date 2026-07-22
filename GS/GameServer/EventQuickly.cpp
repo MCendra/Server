@@ -16,7 +16,7 @@
 
 CEventQuickly gEventQuickly;
 
-CEventQuickly::CEventQuickly() // OK
+CEventQuickly::CEventQuickly()
 {
 	this->m_NpcIndex = -1;
 	this->m_RemainTime = 0;
@@ -24,7 +24,7 @@ CEventQuickly::CEventQuickly() // OK
 	this->MinutesLeft = -1;
 }
 
-CEventQuickly::~CEventQuickly() // OK
+CEventQuickly::~CEventQuickly()
 {
 
 }
@@ -37,7 +37,7 @@ void CEventQuickly::Clear()
 	this->MinutesLeft = -1;
 }
 
-void CEventQuickly::MainProc() // OK
+void CEventQuickly::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -85,7 +85,7 @@ void CEventQuickly::MainProc() // OK
 
 }
 
-void CEventQuickly::CommandEventQuickly(LPOBJ lpObj,char* arg) // OK 
+void CEventQuickly::CommandEventQuickly(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_QuicklyEvent == 0)
@@ -192,7 +192,7 @@ void CEventQuickly::CommandEventQuickly(LPOBJ lpObj,char* arg) // OK
 	LogAdd(LOG_EVENT,"[QUICKLY EVENT] Start");
 }
 
-void CEventQuickly::ClickNPC(LPOBJ lpObj) // OK 
+void CEventQuickly::ClickNPC(LPOBJ lpObj) 
 {
 
 	gObjDel(this->m_NpcIndex);

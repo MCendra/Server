@@ -22,17 +22,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemBag::CItemBag() // OK
+CItemBag::CItemBag()
 {
 	this->Init();
 }
 
-CItemBag::~CItemBag() // OK
+CItemBag::~CItemBag()
 {
 
 }
 
-void CItemBag::Init() // OK
+void CItemBag::Init()
 {
 	memset(this->m_EventName,0,sizeof(this->m_EventName));
 
@@ -45,7 +45,7 @@ void CItemBag::Init() // OK
 	this->m_count = 0;
 }
 
-void CItemBag::Load(char* path) // OK
+void CItemBag::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -180,7 +180,7 @@ void CItemBag::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CItemBag::SetInfo(ITEM_BAG_INFO info) // OK
+void CItemBag::SetInfo(ITEM_BAG_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_BAG_ITEM)
 	{
@@ -190,7 +190,7 @@ void CItemBag::SetInfo(ITEM_BAG_INFO info) // OK
 	this->m_BagInfo[this->m_count++] = info;
 }
 
-ITEM_BAG_INFO* CItemBag::GetInfo(int index) // OK
+ITEM_BAG_INFO* CItemBag::GetInfo(int index)
 {
 	if(index < 0 || index >= this->m_count)
 	{
@@ -200,7 +200,7 @@ ITEM_BAG_INFO* CItemBag::GetInfo(int index) // OK
 	return &this->m_BagInfo[index];
 }
 
-int CItemBag::GetItemLevel(ITEM_BAG_INFO* lpInfo) // OK
+int CItemBag::GetItemLevel(ITEM_BAG_INFO* lpInfo)
 {
 	if(lpInfo->MinLevel >= lpInfo->MaxLevel)
 	{
@@ -211,7 +211,7 @@ int CItemBag::GetItemLevel(ITEM_BAG_INFO* lpInfo) // OK
 }
 
 #if(DROP_ITEMBAG)
-int CItemBag::GetItemNewOption(ITEM_BAG_INFO* lpInfo) // OK
+int CItemBag::GetItemNewOption(ITEM_BAG_INFO* lpInfo)
 {
 	int count = 0;
 
@@ -305,7 +305,7 @@ int CItemBag::GetItemNewOption(ITEM_BAG_INFO* lpInfo) // OK
 
 	return NewOption;
 }
-int CItemBag::GetItemSetOption(ITEM_BAG_INFO* lpInfo) // OK
+int CItemBag::GetItemSetOption(ITEM_BAG_INFO* lpInfo)
 {
 	if(lpInfo->SetOption == 0)
 	{
@@ -341,7 +341,7 @@ int CItemBag::GetItemSetOption(ITEM_BAG_INFO* lpInfo) // OK
 	return SetOption;
 }
 
-bool::CItemBag::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count) // OK
+bool::CItemBag::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count)
 {
 	int x = (*ox);
 	int y = (*oy);
@@ -363,7 +363,7 @@ bool::CItemBag::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,
 	return 0;
 }
 
-bool CItemBag::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
+bool CItemBag::GetItem(LPOBJ lpObj,CItem* lpItem)
 {
 	if(this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
 	{
@@ -443,7 +443,7 @@ bool CItemBag::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
 	return 1;
 }
 
-bool CItemBag::DropItem(LPOBJ lpObj,int map,int x,int y) // OK
+bool CItemBag::DropItem(LPOBJ lpObj,int map,int x,int y)
 {
 	if(this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
 	{
@@ -505,7 +505,7 @@ bool CItemBag::DropItem(LPOBJ lpObj,int map,int x,int y) // OK
 	return 1;
 }
 
-bool CItemBag::DropInventoryItem(LPOBJ lpObj,int map,int x,int y) // OK
+bool CItemBag::DropInventoryItem(LPOBJ lpObj,int map,int x,int y)
 {
 	if(this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
 	{

@@ -19,7 +19,7 @@ CKanturu gKanturu;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturu::CKanturu() // OK
+CKanturu::CKanturu()
 {
 	this->SetKanturuEnable(0);
 
@@ -30,12 +30,12 @@ CKanturu::CKanturu() // OK
 	this->ResetAllData();
 }
 
-CKanturu::~CKanturu() // OK
+CKanturu::~CKanturu()
 {
 
 }
 
-void CKanturu::ResetAllData() // OK
+void CKanturu::ResetAllData()
 {
 	this->m_FileDataLoad = 0;
 
@@ -47,7 +47,7 @@ void CKanturu::ResetAllData() // OK
 	this->m_StateInfoCount = 0;
 }
 
-void CKanturu::Load(char* path) // OK
+void CKanturu::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -137,7 +137,7 @@ void CKanturu::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CKanturu::MainProc() // OK
+void CKanturu::MainProc()
 {
 	if(gServerInfo.m_KanturuEvent == 0)
 	{
@@ -169,12 +169,12 @@ void CKanturu::MainProc() // OK
 	}
 }
 
-void CKanturu::ProcState_NONE() // OK
+void CKanturu::ProcState_NONE()
 {
 	this->SetState(KANTURU_STATE_BATTLE_STANTBY);
 }
 
-void CKanturu::ProcState_BATTLE_STANDBY() // OK
+void CKanturu::ProcState_BATTLE_STANDBY()
 {
 	if(this->m_BattleStanby.GetBattleStanbyState() == KANTURU_STANBY_END)
 	{
@@ -186,7 +186,7 @@ void CKanturu::ProcState_BATTLE_STANDBY() // OK
 	this->m_BattleStanby.MainProc();
 }
 
-void CKanturu::ProcState_BATTLE_OF_MAYA() // OK
+void CKanturu::ProcState_BATTLE_OF_MAYA()
 {
 	if(this->m_BattleOfMaya.GetBattleOfMayaState() == KANTURU_MAYA_ENDCYCLE)
 	{
@@ -198,7 +198,7 @@ void CKanturu::ProcState_BATTLE_OF_MAYA() // OK
 	this->m_BattleOfMaya.MainProc();
 }
 
-void CKanturu::ProcState_BATTLE_OF_NIGHTMARE() // OK
+void CKanturu::ProcState_BATTLE_OF_NIGHTMARE()
 {
 	if(this->m_BattleOfNightmare.GetBattleOfNightmareState() == KANTURU_NIGHTMARE_ENDCYCLE)
 	{
@@ -210,7 +210,7 @@ void CKanturu::ProcState_BATTLE_OF_NIGHTMARE() // OK
 	this->m_BattleOfNightmare.MainProc();
 }
 
-void CKanturu::ProcState_TOWER_OF_REFINEMENT() // OK
+void CKanturu::ProcState_TOWER_OF_REFINEMENT()
 {
 	if(this->m_TowerOfRefinement.GetTowerOfRefinementState() == KANTURU_TOWER_OF_REFINEMENT_END)
 	{
@@ -222,12 +222,12 @@ void CKanturu::ProcState_TOWER_OF_REFINEMENT() // OK
 	this->m_TowerOfRefinement.MainProc();
 }
 
-void CKanturu::ProcState_END() // OK
+void CKanturu::ProcState_END()
 {
 	this->SetState(KANTURU_STATE_NONE);
 }
 
-void CKanturu::SetState(int state) // OK
+void CKanturu::SetState(int state)
 {
 	this->m_StateInfo[state].SetConditionAppliedTime();
 
@@ -258,14 +258,14 @@ void CKanturu::SetState(int state) // OK
 	}
 }
 
-void CKanturu::SetState_NONE() // OK
+void CKanturu::SetState_NONE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ] State(%d) -> NONE",this->m_KanturuState);
 
 	this->SetKanturuState(KANTURU_STATE_NONE);
 }
 
-void CKanturu::SetState_BATTLE_STANDBY() // OK
+void CKanturu::SetState_BATTLE_STANDBY()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ] State(%d) -> STANDBY",this->m_KanturuState);
 
@@ -276,7 +276,7 @@ void CKanturu::SetState_BATTLE_STANDBY() // OK
 	this->m_BattleStanby.SetState(KANTURU_STANBY_START);
 }
 
-void CKanturu::SetState_BATTLE_OF_MAYA() // OK
+void CKanturu::SetState_BATTLE_OF_MAYA()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ] State(%d) -> BATTLE_OF_MAYA",this->m_KanturuState);
 
@@ -285,7 +285,7 @@ void CKanturu::SetState_BATTLE_OF_MAYA() // OK
 	this->m_BattleOfMaya.SetState(KANTURU_MAYA_STANBY1);
 }
 
-void CKanturu::SetState_BATTLE_OF_NIGHTMARE() // OK
+void CKanturu::SetState_BATTLE_OF_NIGHTMARE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ] State(%d) -> BATTLE_OF_NIGHTMARE",this->m_KanturuState);
 
@@ -294,7 +294,7 @@ void CKanturu::SetState_BATTLE_OF_NIGHTMARE() // OK
 	this->m_BattleOfNightmare.SetState(KANTURU_NIGHTMARE_IDLE);
 }
 
-void CKanturu::SetState_TOWER_OF_REFINEMENT() // OK
+void CKanturu::SetState_TOWER_OF_REFINEMENT()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ] State(%d) -> TOWER_OF_REFINEMENT",this->m_KanturuState);
 
@@ -305,7 +305,7 @@ void CKanturu::SetState_TOWER_OF_REFINEMENT() // OK
 	this->SetKanturuMapAttr(1);
 }
 
-void CKanturu::SetState_END() // OK
+void CKanturu::SetState_END()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ] State(%d) -> END",this->m_KanturuState);
 
@@ -314,7 +314,7 @@ void CKanturu::SetState_END() // OK
 	gKanturuBattleUserMng.ResetAllData();
 }
 
-void CKanturu::CheckStateTime() // OK
+void CKanturu::CheckStateTime()
 {
 	if(this->GetKanturuState() != KANTURU_STATE_NONE && this->m_StateInfo[this->GetKanturuState()].GetCondition() == 1 && this->m_StateInfo[this->GetKanturuState()].IsTimeOut() != 0)
 	{
@@ -322,7 +322,7 @@ void CKanturu::CheckStateTime() // OK
 	}
 }
 
-bool CKanturu::CheckEnterKanturu(int aIndex) // OK
+bool CKanturu::CheckEnterKanturu(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -382,7 +382,7 @@ bool CKanturu::CheckEnterKanturu(int aIndex) // OK
 	return 1;
 }
 
-bool CKanturu::CheckEnterKanturuRefinery(int aIndex) // OK
+bool CKanturu::CheckEnterKanturuRefinery(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -412,7 +412,7 @@ bool CKanturu::CheckEnterKanturuRefinery(int aIndex) // OK
 	return 1;
 }
 
-bool CKanturu::CheckCanEnterKanturuBattle() // OK
+bool CKanturu::CheckCanEnterKanturuBattle()
 {
 	if(this->GetKanturuState() == KANTURU_STATE_BATTLE_OF_MAYA && this->m_BattleOfMaya.GetEntrancePermit() != 0)
 	{
@@ -427,7 +427,7 @@ bool CKanturu::CheckCanEnterKanturuBattle() // OK
 	return 0;
 }
 
-bool CKanturu::CheckEquipmentMoonStone(int aIndex) // OK
+bool CKanturu::CheckEquipmentMoonStone(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -449,7 +449,7 @@ bool CKanturu::CheckEquipmentMoonStone(int aIndex) // OK
 	return 0;
 }
 
-void CKanturu::KanturuMonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CKanturu::KanturuMonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 
@@ -461,7 +461,7 @@ void CKanturu::KanturuMonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	gKanturuMonsterMng.MonsterDie(lpObj->Index);
 }
 
-void CKanturu::LoadKanturuMapAttr(char* path,int level) // OK
+void CKanturu::LoadKanturuMapAttr(char* path,int level)
 {
 	if(level < 0 || level >= MAX_KANTURU_MAP_LEVEL)
 	{
@@ -471,7 +471,7 @@ void CKanturu::LoadKanturuMapAttr(char* path,int level) // OK
 	this->m_KanturuMap[level].Load(path,MAP_KANTURU3);
 }
 
-void CKanturu::SetKanturuMapAttr(int level) // OK
+void CKanturu::SetKanturuMapAttr(int level)
 {
 	if(level < 0 || level >= MAX_KANTURU_MAP_LEVEL)
 	{
@@ -483,32 +483,32 @@ void CKanturu::SetKanturuMapAttr(int level) // OK
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ Map Attr Change ] Map(%d) State(%d) DetailState(%d)",level,this->GetKanturuState(),this->GetKanturuDetailState());
 }
 
-void CKanturu::SetKanturuEnable(int enable) // OK
+void CKanturu::SetKanturuEnable(int enable)
 {
 	this->m_KanturuEnable = enable;
 }
 
-void CKanturu::SetKanturuState(int state) // OK
+void CKanturu::SetKanturuState(int state)
 {
 	this->m_KanturuState = state;
 }
 
-void CKanturu::SetEnableCheckMoonStone(int enable) // OK
+void CKanturu::SetEnableCheckMoonStone(int enable)
 {
 	this->m_EnableCheckMoonStone = enable;
 }
 
-int CKanturu::GetKanturuEnable() // OK
+int CKanturu::GetKanturuEnable()
 {
 	return this->m_KanturuEnable;
 }
 
-int CKanturu::GetKanturuState() // OK
+int CKanturu::GetKanturuState()
 {
 	return this->m_KanturuState;
 }
 
-int CKanturu::GetKanturuDetailState() // OK
+int CKanturu::GetKanturuDetailState()
 {
 	switch(this->GetKanturuState())
 	{
@@ -529,7 +529,7 @@ int CKanturu::GetKanturuDetailState() // OK
 	return KANTURU_STATE_NONE;
 }
 
-int CKanturu::GetRemainTime() // OK
+int CKanturu::GetRemainTime()
 {
 	switch(this->GetKanturuState())
 	{
@@ -550,7 +550,7 @@ int CKanturu::GetRemainTime() // OK
 	return 0;
 }
 
-int CKanturu::GetEnableCheckMoonStone() // OK
+int CKanturu::GetEnableCheckMoonStone()
 {
 	return this->m_EnableCheckMoonStone;
 }

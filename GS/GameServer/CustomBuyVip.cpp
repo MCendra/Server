@@ -18,17 +18,17 @@ CCustomBuyVip gCustomBuyVip;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomBuyVip::CCustomBuyVip() // OK
+CCustomBuyVip::CCustomBuyVip()
 {
 	this->Init();
 }
 
-CCustomBuyVip::~CCustomBuyVip() // OK
+CCustomBuyVip::~CCustomBuyVip()
 {
 
 }
 
-void CCustomBuyVip::Init() // OK
+void CCustomBuyVip::Init()
 {
 	for(int n=0;n < MAX_CUSTOM_BUYVIP;n++)
 	{
@@ -36,7 +36,7 @@ void CCustomBuyVip::Init() // OK
 	}
 }
 
-void CCustomBuyVip::Load(char* path) // OK
+void CCustomBuyVip::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -102,7 +102,7 @@ void CCustomBuyVip::Load(char* path) // OK
 	//LogAdd(LOG_BLUE, "[ServerInfo] CustomBuyVip Info loaded successfully");
 }
 
-void CCustomBuyVip::SetInfo(CUSTOM_BUYVIP_INFO info) // OK
+void CCustomBuyVip::SetInfo(CUSTOM_BUYVIP_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_CUSTOM_BUYVIP)
 	{
@@ -112,7 +112,7 @@ void CCustomBuyVip::SetInfo(CUSTOM_BUYVIP_INFO info) // OK
 	this->m_CustomBuyVipInfo[info.Index] = info;
 }
 
-CUSTOM_BUYVIP_INFO* CCustomBuyVip::GetInfo(int index) // OK
+CUSTOM_BUYVIP_INFO* CCustomBuyVip::GetInfo(int index)
 {
 	if(index < 0 || index >= MAX_CUSTOM_BUYVIP)
 	{

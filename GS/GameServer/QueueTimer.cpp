@@ -10,21 +10,21 @@ CQueueTimer gQueueTimer;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQueueTimer::CQueueTimer() // OK
+CQueueTimer::CQueueTimer()
 {
 	this->m_QueueTimer = CreateTimerQueue();
 
 	this->m_QueueTimerInfo.clear();
 }
 
-CQueueTimer::~CQueueTimer() // OK
+CQueueTimer::~CQueueTimer()
 {
 	DeleteTimerQueue(this->m_QueueTimer);
 
 	this->m_QueueTimerInfo.clear();
 }
 
-void CQueueTimer::CreateTimer(int TimerIndex,int TimerDelay,WAITORTIMERCALLBACK CallbackFunction) // OK
+void CQueueTimer::CreateTimer(int TimerIndex,int TimerDelay,WAITORTIMERCALLBACK CallbackFunction)
 {
 	QUEUE_TIMER_INFO QueueTimerInfo;
 
@@ -35,7 +35,7 @@ void CQueueTimer::CreateTimer(int TimerIndex,int TimerDelay,WAITORTIMERCALLBACK 
 	this->m_QueueTimerInfo.insert(std::pair<int,QUEUE_TIMER_INFO>(QueueTimerInfo.TimerIndex,QueueTimerInfo));
 }
 
-void CQueueTimer::DeleteTimer(int TimerIndex) // OK
+void CQueueTimer::DeleteTimer(int TimerIndex)
 {
 	std::map<int,QUEUE_TIMER_INFO>::iterator it = this->m_QueueTimerInfo.find(TimerIndex);
 

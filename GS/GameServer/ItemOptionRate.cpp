@@ -18,7 +18,7 @@ CItemOptionRate gItemOptionRate;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemOptionRate::CItemOptionRate() // OK
+CItemOptionRate::CItemOptionRate()
 {
 	this->m_ItemOption0RateInfo.clear();
 
@@ -35,12 +35,12 @@ CItemOptionRate::CItemOptionRate() // OK
 	this->m_ItemOption6RateInfo.clear();
 }
 
-CItemOptionRate::~CItemOptionRate() // OK
+CItemOptionRate::~CItemOptionRate()
 {
 
 }
 
-void CItemOptionRate::Load(char* path) // OK
+void CItemOptionRate::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -225,7 +225,7 @@ void CItemOptionRate::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemOptionRate::GetItemOption0(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption0(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION0_RATE_INFO>::iterator it = this->m_ItemOption0RateInfo.find(index);
 
@@ -244,7 +244,7 @@ bool CItemOptionRate::GetItemOption0(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::GetItemOption1(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption1(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION1_RATE_INFO>::iterator it = this->m_ItemOption1RateInfo.find(index);
 
@@ -263,7 +263,7 @@ bool CItemOptionRate::GetItemOption1(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::GetItemOption2(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption2(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION2_RATE_INFO>::iterator it = this->m_ItemOption2RateInfo.find(index);
 
@@ -282,7 +282,7 @@ bool CItemOptionRate::GetItemOption2(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::GetItemOption3(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption3(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION3_RATE_INFO>::iterator it = this->m_ItemOption3RateInfo.find(index);
 
@@ -301,7 +301,7 @@ bool CItemOptionRate::GetItemOption3(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::GetItemOption4(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption4(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION4_RATE_INFO>::iterator it = this->m_ItemOption4RateInfo.find(index);
 
@@ -320,7 +320,7 @@ bool CItemOptionRate::GetItemOption4(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::GetItemOption5(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption5(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION5_RATE_INFO>::iterator it = this->m_ItemOption5RateInfo.find(index);
 
@@ -339,7 +339,7 @@ bool CItemOptionRate::GetItemOption5(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::GetItemOption6(int index,BYTE* option) // OK
+bool CItemOptionRate::GetItemOption6(int index,BYTE* option)
 {
 	std::map<int,ITEM_OPTION6_RATE_INFO>::iterator it = this->m_ItemOption6RateInfo.find(index);
 
@@ -358,7 +358,7 @@ bool CItemOptionRate::GetItemOption6(int index,BYTE* option) // OK
 	return RandomManager.GetRandomElement(option);
 }
 
-bool CItemOptionRate::MakeNewOption(int ItemIndex,int value,BYTE* option) // OK
+bool CItemOptionRate::MakeNewOption(int ItemIndex,int value,BYTE* option)
 {
 	(*option) = 0;
 
@@ -425,7 +425,7 @@ bool CItemOptionRate::MakeNewOption(int ItemIndex,int value,BYTE* option) // OK
 	return 1;
 }
 
-bool CItemOptionRate::MakeSetOption(int ItemIndex,int value,BYTE* option) // OK
+bool CItemOptionRate::MakeSetOption(int ItemIndex,int value,BYTE* option)
 {
 	if(gSetItemType.CheckSetItemType(ItemIndex) == 0 || value == 0)
 	{
@@ -448,7 +448,7 @@ bool CItemOptionRate::MakeSetOption(int ItemIndex,int value,BYTE* option) // OK
 	return 1;
 }
 
-bool CItemOptionRate::MakeSocketOption(int ItemIndex,int value,BYTE* option) // OK
+bool CItemOptionRate::MakeSocketOption(int ItemIndex,int value,BYTE* option)
 {
 	if((gSocketItemType.CheckSocketItemType(ItemIndex) == 0 && gPentagramSystem.IsPentagramItem(ItemIndex) == 0) || value == 0 || value == 0xFF)
 	{

@@ -21,7 +21,7 @@ CInvasionManager gInvasionManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CInvasionManager::CInvasionManager() // OK
+CInvasionManager::CInvasionManager()
 {
 	for (int n = 0; n < MAX_INVASION; n++)
 	{
@@ -37,12 +37,12 @@ CInvasionManager::CInvasionManager() // OK
 	}
 }
 
-CInvasionManager::~CInvasionManager() // OK
+CInvasionManager::~CInvasionManager()
 {
 
 }
 
-void CInvasionManager::Init() // OK
+void CInvasionManager::Init()
 {
 	for (int n = 0; n < MAX_INVASION; n++)
 	{
@@ -57,7 +57,7 @@ void CInvasionManager::Init() // OK
 	}
 }
 
-void CInvasionManager::Load(char* path) // OK
+void CInvasionManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -224,7 +224,7 @@ void CInvasionManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CInvasionManager::MainProc() // OK
+void CInvasionManager::MainProc()
 {
 	for (int n = 0; n < MAX_INVASION; n++)
 	{
@@ -287,12 +287,12 @@ void CInvasionManager::MainProc() // OK
 	}
 }
 
-void CInvasionManager::ProcState_BLANK(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::ProcState_BLANK(INVASION_INFO* lpInfo)
 {
 
 }
 
-void CInvasionManager::ProcState_EMPTY(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::ProcState_EMPTY(INVASION_INFO* lpInfo)
 {
 	//Igk Dev - Alarm Time <- Agregar este if
 	if (lpInfo->RemainTime > 0 && lpInfo->RemainTime <= (lpInfo->AlarmTime * 60))
@@ -316,7 +316,7 @@ void CInvasionManager::ProcState_EMPTY(INVASION_INFO* lpInfo) // OK
 	}
 }
 
-void CInvasionManager::ProcState_START(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::ProcState_START(INVASION_INFO* lpInfo)
 {
 	if (lpInfo->RemainTime <= 0)
 	{
@@ -329,7 +329,7 @@ void CInvasionManager::ProcState_START(INVASION_INFO* lpInfo) // OK
 	}
 }
 
-void CInvasionManager::SetState(INVASION_INFO* lpInfo, int state) // OK
+void CInvasionManager::SetState(INVASION_INFO* lpInfo, int state)
 {
 	lpInfo->State = state;
 
@@ -347,19 +347,19 @@ void CInvasionManager::SetState(INVASION_INFO* lpInfo, int state) // OK
 	}
 }
 
-void CInvasionManager::SetState_BLANK(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::SetState_BLANK(INVASION_INFO* lpInfo)
 {
 
 }
 
-void CInvasionManager::SetState_EMPTY(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::SetState_EMPTY(INVASION_INFO* lpInfo)
 {
 	this->ClearMonster(lpInfo);
 
 	this->CheckSync(lpInfo);
 }
 
-void CInvasionManager::SetState_START(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::SetState_START(INVASION_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_INVASION_RESPAWN_GROUP; n++)
 	{
@@ -382,7 +382,7 @@ void CInvasionManager::SetState_START(INVASION_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)(time(0) + lpInfo->RemainTime);
 }
 
-void CInvasionManager::CheckSync(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::CheckSync(INVASION_INFO* lpInfo)
 {
 	if (lpInfo->StartTime.empty() != 0)
 	{
@@ -410,7 +410,7 @@ void CInvasionManager::CheckSync(INVASION_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-int CInvasionManager::GetState(int index) // OK
+int CInvasionManager::GetState(int index)
 {
 	if (index < 0 || index >= MAX_INVASION)
 	{
@@ -420,7 +420,7 @@ int CInvasionManager::GetState(int index) // OK
 	return this->m_InvasionInfo[index].State;
 }
 
-int CInvasionManager::GetRemainTime(int index) // OK
+int CInvasionManager::GetRemainTime(int index)
 {
 	if (index < 0 || index >= MAX_INVASION)
 	{
@@ -453,7 +453,7 @@ int CInvasionManager::GetRemainTime(int index) // OK
 	return (((RemainTime % 60) == 0) ? (RemainTime / 60) : ((RemainTime / 60) + 1));
 }
 
-bool CInvasionManager::AddMonster(INVASION_INFO* lpInfo, int aIndex) // OK
+bool CInvasionManager::AddMonster(INVASION_INFO* lpInfo, int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -477,7 +477,7 @@ bool CInvasionManager::AddMonster(INVASION_INFO* lpInfo, int aIndex) // OK
 	return 0;
 }
 
-bool CInvasionManager::DelMonster(INVASION_INFO* lpInfo, int aIndex) // OK
+bool CInvasionManager::DelMonster(INVASION_INFO* lpInfo, int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -495,7 +495,7 @@ bool CInvasionManager::DelMonster(INVASION_INFO* lpInfo, int aIndex) // OK
 	return 1;
 }
 
-int* CInvasionManager::GetMonster(INVASION_INFO* lpInfo, int aIndex) // OK
+int* CInvasionManager::GetMonster(INVASION_INFO* lpInfo, int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -513,7 +513,7 @@ int* CInvasionManager::GetMonster(INVASION_INFO* lpInfo, int aIndex) // OK
 	return 0;
 }
 
-void CInvasionManager::CleanMonster(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::CleanMonster(INVASION_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_INVASION_MONSTER; n++)
 	{
@@ -521,7 +521,7 @@ void CInvasionManager::CleanMonster(INVASION_INFO* lpInfo) // OK
 	}
 }
 
-void CInvasionManager::ClearMonster(INVASION_INFO* lpInfo) // OK
+void CInvasionManager::ClearMonster(INVASION_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_INVASION_MONSTER; n++)
 	{
@@ -533,7 +533,7 @@ void CInvasionManager::ClearMonster(INVASION_INFO* lpInfo) // OK
 	}
 }
 
-int CInvasionManager::GetMonsterCount(INVASION_INFO* lpInfo) // OK
+int CInvasionManager::GetMonsterCount(INVASION_INFO* lpInfo)
 {
 	int count = 0;
 
@@ -548,7 +548,7 @@ int CInvasionManager::GetMonsterCount(INVASION_INFO* lpInfo) // OK
 	return count;
 }
 
-void CInvasionManager::SetMonster(INVASION_INFO* lpInfo, INVASION_RESPWAN_INFO* lpRespawnInfo, INVASION_MONSTER_INFO* lpMonsterInfo) // OK
+void CInvasionManager::SetMonster(INVASION_INFO* lpInfo, INVASION_RESPWAN_INFO* lpRespawnInfo, INVASION_MONSTER_INFO* lpMonsterInfo)
 {
 	for (int n = 0; n < gMonsterSetBase.m_count; n++)
 	{
@@ -606,7 +606,7 @@ void CInvasionManager::SetMonster(INVASION_INFO* lpInfo, INVASION_RESPWAN_INFO* 
 	}
 }
 
-void CInvasionManager::MonsterDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CInvasionManager::MonsterDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 

@@ -17,12 +17,12 @@
 
 SachThuocTinh gSachThuocTinh;
 
-SachThuocTinh::SachThuocTinh() // OK
+SachThuocTinh::SachThuocTinh()
 {
 
 }
 
-SachThuocTinh::~SachThuocTinh() // OK
+SachThuocTinh::~SachThuocTinh()
 {
 
 }

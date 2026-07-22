@@ -183,7 +183,7 @@ void GCPostItemProc(PMSG_POST_ITEM_RECV* lpMsg, int aIndex) //ok
 	}
 }
 
-void ProtocolCore(BYTE head, BYTE* lpMsg, int size, int aIndex, int encrypt, int serial) // OK
+void ProtocolCore(BYTE head, BYTE* lpMsg, int size, int aIndex, int encrypt, int serial)
 {
 	PROTECT_START
 
@@ -1651,7 +1651,7 @@ void ProtocolCore(BYTE head, BYTE* lpMsg, int size, int aIndex, int encrypt, int
 
 
 
-void CGChatRecv(PMSG_CHAT_RECV* lpMsg, int aIndex) // OK
+void CGChatRecv(PMSG_CHAT_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1778,7 +1778,7 @@ void CGChatRecv(PMSG_CHAT_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CGChatWhisperRecv(PMSG_CHAT_WHISPER_RECV* lpMsg, int aIndex) // OK
+void CGChatWhisperRecv(PMSG_CHAT_WHISPER_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1833,7 +1833,7 @@ void CGChatWhisperRecv(PMSG_CHAT_WHISPER_RECV* lpMsg, int aIndex) // OK
 }
 
 
-void CGMainCheckRecv(PMSG_MAIN_CHECK_RECV* lpMsg, int aIndex) // OK
+void CGMainCheckRecv(PMSG_MAIN_CHECK_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1857,7 +1857,7 @@ void CGMainCheckRecv(PMSG_MAIN_CHECK_RECV* lpMsg, int aIndex) // OK
 	lpObj->CheckSumTime = 0;
 }
 
-void CGLiveClientRecv(PMSG_LIVE_CLIENT_RECV* lpMsg, int aIndex) // OK
+void CGLiveClientRecv(PMSG_LIVE_CLIENT_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1890,7 +1890,7 @@ void CGLiveClientRecv(PMSG_LIVE_CLIENT_RECV* lpMsg, int aIndex) // OK
 	lpObj->ConnectTickCount = GetTickCount();
 }
 
-void CGPositionRecv(PMSG_POSITION_RECV* lpMsg, int aIndex) // OK
+void CGPositionRecv(PMSG_POSITION_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1959,7 +1959,7 @@ void CGPositionRecv(PMSG_POSITION_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CGActionRecv(PMSG_ACTION_RECV* lpMsg, int aIndex) // OK
+void CGActionRecv(PMSG_ACTION_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2016,7 +2016,7 @@ void CGActionRecv(PMSG_ACTION_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CGEventRemainTimeRecv(PMSG_EVENT_REMAIN_TIME_RECV* lpMsg, int aIndex) // OK
+void CGEventRemainTimeRecv(PMSG_EVENT_REMAIN_TIME_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2133,7 +2133,7 @@ void CGEventRemainTimeRecv(PMSG_EVENT_REMAIN_TIME_RECV* lpMsg, int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CGPetItemCommandRecv(PMSG_PET_ITEM_COMMAND_RECV* lpMsg, int aIndex) // OK
+void CGPetItemCommandRecv(PMSG_PET_ITEM_COMMAND_RECV* lpMsg, int aIndex)
 {
 	if (gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -2150,7 +2150,7 @@ void CGPetItemCommandRecv(PMSG_PET_ITEM_COMMAND_RECV* lpMsg, int aIndex) // OK
 	gDarkSpirit[aIndex].ChangeCommand(lpMsg->command, bIndex);
 }
 
-void CGPetItemInfoRecv(PMSG_PET_ITEM_INFO_RECV* lpMsg, int aIndex) // OK
+void CGPetItemInfoRecv(PMSG_PET_ITEM_INFO_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2254,7 +2254,7 @@ void CGPetItemInfoRecv(PMSG_PET_ITEM_INFO_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CGMapServerMoveAuthRecv(PMSG_MAP_SERVER_MOVE_AUTH_RECV* lpMsg, int aIndex) // OK
+void CGMapServerMoveAuthRecv(PMSG_MAP_SERVER_MOVE_AUTH_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2324,7 +2324,7 @@ bool CheckChonPhe(int AIndex, int BIndex) //
 	return 1;
 }
 #endif
-void CGMoveRecv(PMSG_MOVE_RECV* lpMsg, int aIndex) // OK
+void CGMoveRecv(PMSG_MOVE_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2561,7 +2561,7 @@ void CGMoveRecv(PMSG_MOVE_RECV* lpMsg, int aIndex) // OK
 }
 
 
-void CGConnectAccountRecv(PMSG_CONNECT_ACCOUNT_RECV* lpMsg, int aIndex) // OK
+void CGConnectAccountRecv(PMSG_CONNECT_ACCOUNT_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2721,7 +2721,7 @@ void CGRegisterAccountRecv(PMSG_REGISTER_ACCOUNT_RECV* lpMsg, int aIndex)
 	}
 }
 
-void CGCloseClientRecv(PMSG_CLOSE_CLIENT_RECV* lpMsg, int aIndex) // OK
+void CGCloseClientRecv(PMSG_CLOSE_CLIENT_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2733,7 +2733,7 @@ void CGCloseClientRecv(PMSG_CLOSE_CLIENT_RECV* lpMsg, int aIndex) // OK
 	gObjectManager.CharacterGameCloseSet(aIndex, lpMsg->type);
 }
 
-void CGCharacterListRecv(int aIndex) // OK
+void CGCharacterListRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2745,7 +2745,7 @@ void CGCharacterListRecv(int aIndex) // OK
 	GDCharacterListSend(aIndex);
 }
 
-void CGCharacterCreateRecv(PMSG_CHARACTER_CREATE_RECV* lpMsg, int aIndex) // OK
+void CGCharacterCreateRecv(PMSG_CHARACTER_CREATE_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2805,7 +2805,7 @@ void CGCharacterCreateRecv(PMSG_CHARACTER_CREATE_RECV* lpMsg, int aIndex) // OK
 	GDCharacterCreateSend(aIndex, name, lpMsg->Class);
 }
 
-void CGCharacterDeleteRecv(PMSG_CHARACTER_DELETE_RECV* lpMsg, int aIndex) // OK
+void CGCharacterDeleteRecv(PMSG_CHARACTER_DELETE_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2848,7 +2848,7 @@ void CGCharacterDeleteRecv(PMSG_CHARACTER_DELETE_RECV* lpMsg, int aIndex) // OK
 	GDCharacterDeleteSend(aIndex, name);
 }
 
-void CGCharacterInfoRecv(PMSG_CHARACTER_INFO_RECV* lpMsg, int aIndex) // OK
+void CGCharacterInfoRecv(PMSG_CHARACTER_INFO_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2866,7 +2866,7 @@ void CGCharacterInfoRecv(PMSG_CHARACTER_INFO_RECV* lpMsg, int aIndex) // OK
 	GDCharacterInfoSend(aIndex, name);
 }
 
-void CGLevelUpPointRecv(PMSG_LEVEL_UP_POINT_RECV* lpMsg, int aIndex) // OK
+void CGLevelUpPointRecv(PMSG_LEVEL_UP_POINT_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2916,7 +2916,7 @@ void CGLevelUpPointRecv(PMSG_LEVEL_UP_POINT_RECV* lpMsg, int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CGCharacterMoveViewportEnableRecv(int aIndex) // OK
+void CGCharacterMoveViewportEnableRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2928,7 +2928,7 @@ void CGCharacterMoveViewportEnableRecv(int aIndex) // OK
 	lpObj->RegenOk = ((lpObj->RegenOk == 1) ? 2 : lpObj->RegenOk);
 }
 
-void CGCharacterNameCheckRecv(PMSG_CHARACTER_NAME_CHECK_RECV* lpMsg, int aIndex) // OK
+void CGCharacterNameCheckRecv(PMSG_CHARACTER_NAME_CHECK_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=401)
 
@@ -2948,7 +2948,7 @@ void CGCharacterNameCheckRecv(PMSG_CHARACTER_NAME_CHECK_RECV* lpMsg, int aIndex)
 #endif
 }
 
-void CGCharacterNameChangeRecv(PMSG_CHARACTER_NAME_CHANGE_RECV* lpMsg, int aIndex) // OK
+void CGCharacterNameChangeRecv(PMSG_CHARACTER_NAME_CHANGE_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=401)
 
@@ -2972,7 +2972,7 @@ void CGCharacterNameChangeRecv(PMSG_CHARACTER_NAME_CHANGE_RECV* lpMsg, int aInde
 #endif
 }
 
-void CGOptionChangeSkinRecv(PMSG_OPTION_CHANGE_SKIN_RECV* lpMsg, int aIndex) // OK
+void CGOptionChangeSkinRecv(PMSG_OPTION_CHANGE_SKIN_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -2992,7 +2992,7 @@ void CGOptionChangeSkinRecv(PMSG_OPTION_CHANGE_SKIN_RECV* lpMsg, int aIndex) // 
 #endif
 }
 
-void CGOptionDataRecv(PMSG_OPTION_DATA_RECV* lpMsg, int aIndex) // OK
+void CGOptionDataRecv(PMSG_OPTION_DATA_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3007,7 +3007,7 @@ void CGOptionDataRecv(PMSG_OPTION_DATA_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CGClientSecurityBreachRecv(PMSG_CLIENT_SECURITY_BREACH_RECV* lpMsg, int aIndex) // OK
+void CGClientSecurityBreachRecv(PMSG_CLIENT_SECURITY_BREACH_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -3023,7 +3023,7 @@ void CGClientSecurityBreachRecv(PMSG_CLIENT_SECURITY_BREACH_RECV* lpMsg, int aIn
 #endif
 }
 
-void CGAcheronEnterRecv(int aIndex) // OK
+void CGAcheronEnterRecv(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -3052,7 +3052,7 @@ void CGAcheronEnterRecv(int aIndex) // OK
 #endif
 }
 
-void CGSNSDataRecv(PMSG_SNS_DATA_RECV* lpMsg, int aIndex) // OK
+void CGSNSDataRecv(PMSG_SNS_DATA_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=801)
 
@@ -3068,7 +3068,7 @@ void CGSNSDataRecv(PMSG_SNS_DATA_RECV* lpMsg, int aIndex) // OK
 #endif
 }
 
-void CGSNSDataLogRecv(PMSG_SNS_DATA_LOG_RECV* lpMsg, int aIndex) // OK
+void CGSNSDataLogRecv(PMSG_SNS_DATA_LOG_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=801)
 
@@ -3100,7 +3100,7 @@ void ChatSend(LPOBJ lpObj, char* szChat)
 }
 
 
-void GCChatTargetSend(LPOBJ lpObj, int aIndex, char* message) // OK
+void GCChatTargetSend(LPOBJ lpObj, int aIndex, char* message)
 {
 	int size = strlen(message);
 
@@ -3124,7 +3124,7 @@ void GCChatTargetSend(LPOBJ lpObj, int aIndex, char* message) // OK
 #endif
 }
 
-void GCChatTargetNewSend(LPOBJ lpObj, int aIndex, char* message, ...) // OK
+void GCChatTargetNewSend(LPOBJ lpObj, int aIndex, char* message, ...)
 {
 	char buff[256] = { 0 };
 
@@ -3152,7 +3152,7 @@ void GCChatTargetNewSend(LPOBJ lpObj, int aIndex, char* message, ...) // OK
 	DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCChatWhisperSend(int aIndex, char* name, char* message) // OK
+void GCChatWhisperSend(int aIndex, char* name, char* message)
 {
 	int size = strlen(message);
 
@@ -3171,7 +3171,7 @@ void GCChatWhisperSend(int aIndex, char* name, char* message) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMainCheckSend(int aIndex) // OK
+void GCMainCheckSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3188,7 +3188,7 @@ void GCMainCheckSend(int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCEventStateSend(int aIndex, BYTE state, BYTE event) // OK
+void GCEventStateSend(int aIndex, BYTE state, BYTE event)
 {
 	PMSG_EVENT_STATE_SEND pMsg;
 
@@ -3201,7 +3201,7 @@ void GCEventStateSend(int aIndex, BYTE state, BYTE event) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCEventStateSendToAll(BYTE state, BYTE event) // OK
+void GCEventStateSendToAll(BYTE state, BYTE event)
 {
 	PMSG_EVENT_STATE_SEND pMsg;
 
@@ -3214,7 +3214,7 @@ void GCEventStateSendToAll(BYTE state, BYTE event) // OK
 	DataSendAll((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCServerMsgSend(int aIndex, BYTE msg) // OK
+void GCServerMsgSend(int aIndex, BYTE msg)
 {
 	PMSG_SERVER_MSG_SEND pMsg;
 
@@ -3225,7 +3225,7 @@ void GCServerMsgSend(int aIndex, BYTE msg) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCWeatherSend(int aIndex, BYTE weather) // OK
+void GCWeatherSend(int aIndex, BYTE weather)
 {
 	PMSG_WEATHER_SEND pMsg;
 
@@ -3236,7 +3236,7 @@ void GCWeatherSend(int aIndex, BYTE weather) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCDamageSend(int aIndex, int bIndex, BYTE flag, int damage, int type, int ShieldDamage) // OK
+void GCDamageSend(int aIndex, int bIndex, BYTE flag, int damage, int type, int ShieldDamage)
 {
 	PMSG_DAMAGE_SEND pMsg;
 
@@ -3286,7 +3286,7 @@ void GCDamageSend(int aIndex, int bIndex, BYTE flag, int damage, int type, int S
 	}
 }
 
-void GCUserDieSend(LPOBJ lpObj, int aIndex, int skill, int bIndex) // OK
+void GCUserDieSend(LPOBJ lpObj, int aIndex, int skill, int bIndex)
 {
 	PMSG_USER_DIE_SEND pMsg;
 
@@ -3309,7 +3309,7 @@ void GCUserDieSend(LPOBJ lpObj, int aIndex, int skill, int bIndex) // OK
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCActionSend(LPOBJ lpObj, BYTE action, int aIndex, int bIndex) // OK
+void GCActionSend(LPOBJ lpObj, BYTE action, int aIndex, int bIndex)
 {
 	PMSG_ACTION_SEND pMsg;
 
@@ -3330,7 +3330,7 @@ void GCActionSend(LPOBJ lpObj, BYTE action, int aIndex, int bIndex) // OK
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMoneySend(int aIndex, DWORD money) // OK
+void GCMoneySend(int aIndex, DWORD money)
 {
 	PMSG_ITEM_GET_SEND pMsg;
 
@@ -3348,7 +3348,7 @@ void GCMoneySend(int aIndex, DWORD money) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCLifeSend(int aIndex, BYTE type, int life, int shield) // OK
+void GCLifeSend(int aIndex, BYTE type, int life, int shield)
 {
 	PMSG_LIFE_SEND pMsg;
 
@@ -3372,7 +3372,7 @@ void GCLifeSend(int aIndex, BYTE type, int life, int shield) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCManaSend(int aIndex, BYTE type, int mana, int bp) // OK
+void GCManaSend(int aIndex, BYTE type, int mana, int bp)
 {
 	PMSG_MANA_SEND pMsg;
 
@@ -3394,7 +3394,7 @@ void GCManaSend(int aIndex, BYTE type, int mana, int bp) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCItemUseSpecialTimeSend(int aIndex, BYTE number, int time) // OK
+void GCItemUseSpecialTimeSend(int aIndex, BYTE number, int time)
 {
 	PMSG_ITEM_SPECIAL_TIME_SEND pMsg;
 
@@ -3407,7 +3407,7 @@ void GCItemUseSpecialTimeSend(int aIndex, BYTE number, int time) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMapAttrSend(int aIndex, BYTE type, BYTE attr, BYTE flag, BYTE count, PMSG_MAP_ATTR* lpInfo) // OK
+void GCMapAttrSend(int aIndex, BYTE type, BYTE attr, BYTE flag, BYTE count, PMSG_MAP_ATTR* lpInfo)
 {
 	BYTE send[256];
 
@@ -3445,7 +3445,7 @@ void GCMapAttrSend(int aIndex, BYTE type, BYTE attr, BYTE flag, BYTE count, PMSG
 	DataSend(aIndex, send, size);
 }
 
-void GCPartyItemInfoSend(int aIndex, CItem* lpItem) // OK
+void GCPartyItemInfoSend(int aIndex, CItem* lpItem)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3506,7 +3506,7 @@ void GCPartyItemInfoSend(int aIndex, CItem* lpItem) // OK
 	}
 }
 
-void GCEffectInfoSend(int aIndex, BYTE effect) // OK
+void GCEffectInfoSend(int aIndex, BYTE effect)
 {
 	PMSG_EFFECT_INFO_SEND pMsg;
 
@@ -3525,7 +3525,7 @@ void GCEffectInfoSend(int aIndex, BYTE effect) // OK
 	MsgSendV2(&gObj[aIndex], (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCGuildMasterQuestionSend(int aIndex) // OK
+void GCGuildMasterQuestionSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3541,7 +3541,7 @@ void GCGuildMasterQuestionSend(int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.size);
 }
 
-void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, int skill) // OK
+void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, int skill)
 {
 	PMSG_MONSTER_SKILL_SEND pMsg;
 
@@ -3562,7 +3562,7 @@ void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, int skill) // OK
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMonsterDieSend(int aIndex, int bIndex, int experience, int damage, BYTE flag) // OK
+void GCMonsterDieSend(int aIndex, int bIndex, int experience, int damage, BYTE flag)
 {
 	PMSG_REWARD_EXPERIENCE_SEND pMsg;
 
@@ -3584,7 +3584,7 @@ void GCMonsterDieSend(int aIndex, int bIndex, int experience, int damage, BYTE f
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCRewardExperienceSend(int aIndex, int experience) // OK
+void GCRewardExperienceSend(int aIndex, int experience)
 {
 	PMSG_REWARD_EXPERIENCE_SEND pMsg;
 
@@ -3606,7 +3606,7 @@ void GCRewardExperienceSend(int aIndex, int experience) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCEventEnterCountSend(int aIndex, BYTE EventType, BYTE EnterCount) // OK
+void GCEventEnterCountSend(int aIndex, BYTE EventType, BYTE EnterCount)
 {
 	PMSG_EVENT_ENTER_COUNT_SEND pMsg;
 
@@ -3619,7 +3619,7 @@ void GCEventEnterCountSend(int aIndex, BYTE EventType, BYTE EnterCount) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCPetItemInfoSend(int aIndex, BYTE type, BYTE flag, BYTE slot, BYTE level, DWORD experience, BYTE durability) // OK
+void GCPetItemInfoSend(int aIndex, BYTE type, BYTE flag, BYTE slot, BYTE level, DWORD experience, BYTE durability)
 {
 	PMSG_PET_ITEM_INFO_SEND pMsg;
 
@@ -3644,7 +3644,7 @@ void GCPetItemInfoSend(int aIndex, BYTE type, BYTE flag, BYTE slot, BYTE level, 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMapServerMoveAuthSend(int aIndex, BYTE result) // OK
+void GCMapServerMoveAuthSend(int aIndex, BYTE result)
 {
 	PMSG_MAP_SERVER_MOVE_AUTH_SEND pMsg;
 
@@ -3655,7 +3655,7 @@ void GCMapServerMoveAuthSend(int aIndex, BYTE result) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCTaxInfoSend(int aIndex, BYTE type, BYTE rate) // OK
+void GCTaxInfoSend(int aIndex, BYTE type, BYTE rate)
 {
 	PMSG_TAX_INFO_SEND pMsg;
 
@@ -3668,7 +3668,7 @@ void GCTaxInfoSend(int aIndex, BYTE type, BYTE rate) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCCreationStateSend(int aIndex, BYTE state) // OK
+void GCCreationStateSend(int aIndex, BYTE state)
 {
 	PMSG_CREATION_STATE_SEND pMsg;
 
@@ -3683,7 +3683,7 @@ void GCCreationStateSend(int aIndex, BYTE state) // OK
 	MsgSendV2(&gObj[aIndex], (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMonsterAreaSkillSend(int aIndex, int MonsterClass, int sx, int sy, int tx, int ty) // OK
+void GCMonsterAreaSkillSend(int aIndex, int MonsterClass, int sx, int sy, int tx, int ty)
 {
 	PMSG_MONSTER_AREA_SKILL_SEND pMsg;
 
@@ -3704,7 +3704,7 @@ void GCMonsterAreaSkillSend(int aIndex, int MonsterClass, int sx, int sy, int tx
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCElementalDamageSend(int aIndex, int bIndex, BYTE attribute, int damage) // OK
+void GCElementalDamageSend(int aIndex, int bIndex, BYTE attribute, int damage)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -3738,7 +3738,7 @@ void GCElementalDamageSend(int aIndex, int bIndex, BYTE attribute, int damage) /
 #endif
 }
 
-void GCCharacterCreationEnableSend(int aIndex, BYTE flag, BYTE result) // OK
+void GCCharacterCreationEnableSend(int aIndex, BYTE flag, BYTE result)
 {
 	PMSG_CHARACTER_CREATION_ENABLE_SEND pMsg;
 
@@ -3751,7 +3751,7 @@ void GCCharacterCreationEnableSend(int aIndex, BYTE flag, BYTE result) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCLifeUpdateSend(LPOBJ lpObj) // OK
+void GCLifeUpdateSend(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -3782,7 +3782,7 @@ void GCLifeUpdateSend(LPOBJ lpObj) // OK
 #endif
 }
 
-void GCCharacterAttackSpeedSend(LPOBJ lpObj) // OK
+void GCCharacterAttackSpeedSend(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=801)
 
@@ -3799,7 +3799,7 @@ void GCCharacterAttackSpeedSend(LPOBJ lpObj) // OK
 #endif
 }
 
-void GCConnectClientSend(int aIndex, BYTE result) // OK
+void GCConnectClientSend(int aIndex, BYTE result)
 {
 	PMSG_CONNECT_CLIENT_SEND pMsg;
 
@@ -3825,7 +3825,7 @@ void GCConnectClientSend(int aIndex, BYTE result) // OK
 
 	gObj[aIndex].ConnectTickCount = GetTickCount();
 }
-void GCRegisterAccountSend(int aIndex, BYTE result) // OK
+void GCRegisterAccountSend(int aIndex, BYTE result)
 {
 	PMSG_CONNECT_ACCOUNT_SEND pMsg;
 
@@ -3835,7 +3835,7 @@ void GCRegisterAccountSend(int aIndex, BYTE result) // OK
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
-void GCConnectAccountSend(int aIndex, BYTE result) // OK
+void GCConnectAccountSend(int aIndex, BYTE result)
 {
 	PMSG_CONNECT_ACCOUNT_SEND pMsg;
 
@@ -3846,7 +3846,7 @@ void GCConnectAccountSend(int aIndex, BYTE result) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCConnectAccountSend(int aIndex, BYTE result, SOCKET socket) // OK
+void GCConnectAccountSend(int aIndex, BYTE result, SOCKET socket)
 {
 	PMSG_CONNECT_ACCOUNT_SEND pMsg;
 
@@ -3857,7 +3857,7 @@ void GCConnectAccountSend(int aIndex, BYTE result, SOCKET socket) // OK
 	DataSendSocket(socket, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCCloseClientSend(int aIndex, BYTE result) // OK
+void GCCloseClientSend(int aIndex, BYTE result)
 {
 	PMSG_CLOSE_CLIENT_SEND pMsg;
 
@@ -3868,7 +3868,7 @@ void GCCloseClientSend(int aIndex, BYTE result) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCCharacterRegenSend(LPOBJ lpObj) // OK
+void GCCharacterRegenSend(LPOBJ lpObj)
 {
 	PMSG_CHARACTER_REGEN_SEND pMsg;
 
@@ -3925,7 +3925,7 @@ void GCCharacterRegenSend(LPOBJ lpObj) // OK
 	DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCLevelUpSend(LPOBJ lpObj) // OK
+void GCLevelUpSend(LPOBJ lpObj)
 {
 	PMSG_LEVEL_UP_SEND pMsg;
 
@@ -3966,7 +3966,7 @@ void GCLevelUpSend(LPOBJ lpObj) // OK
 	GCEffectInfoSend(lpObj->Index, 16);
 }
 
-void GCMonsterDamageSend(int aIndex, int damage, int ShieldDamage) // OK
+void GCMonsterDamageSend(int aIndex, int damage, int ShieldDamage)
 {
 	PMSG_MONSTER_DAMAGE_SEND pMsg;
 
@@ -3993,7 +3993,7 @@ void GCMonsterDamageSend(int aIndex, int damage, int ShieldDamage) // OK
 	}
 }
 
-void GCPKLevelSend(int aIndex, int PKLevel) // OK
+void GCPKLevelSend(int aIndex, int PKLevel)
 {
 	PMSG_PK_LEVEL_SEND pMsg;
 
@@ -4008,7 +4008,7 @@ void GCPKLevelSend(int aIndex, int PKLevel) // OK
 	MsgSendV2(&gObj[aIndex], (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCSummonLifeSend(int aIndex, int life, int MaxLife) // OK
+void GCSummonLifeSend(int aIndex, int life, int MaxLife)
 {
 	if (MaxLife <= 0)
 	{
@@ -4024,7 +4024,7 @@ void GCSummonLifeSend(int aIndex, int life, int MaxLife) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCTimeViewSend(int aIndex, int time) // OK
+void GCTimeViewSend(int aIndex, int time)
 {
 	PMSG_TIME_VIEW_SEND pMsg;
 
@@ -4035,7 +4035,7 @@ void GCTimeViewSend(int aIndex, int time) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCMathAuthenticatorSend(int aIndex) // OK
+void GCMathAuthenticatorSend(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -4080,7 +4080,7 @@ void GCMathAuthenticatorSend(int aIndex) // OK
 #endif
 }
 
-void GCFireworksSend(LPOBJ lpObj, int x, int y) // OK
+void GCFireworksSend(LPOBJ lpObj, int x, int y)
 {
 	PMSG_FIREWORKS_SEND pMsg;
 
@@ -4096,7 +4096,7 @@ void GCFireworksSend(LPOBJ lpObj, int x, int y) // OK
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GCServerCommandSend(int aIndex, BYTE type, BYTE cmd1, BYTE cmd2) // OK
+void GCServerCommandSend(int aIndex, BYTE type, BYTE cmd1, BYTE cmd2)
 {
 	PMSG_SERVER_COMMAND_SEND pMsg;
 
@@ -4113,7 +4113,7 @@ void GCServerCommandSend(int aIndex, BYTE type, BYTE cmd1, BYTE cmd2) // OK
 
 
 
-void GCNewCharacterInfoSend(LPOBJ lpObj) // OK
+void GCNewCharacterInfoSend(LPOBJ lpObj)
 {
 #if(GAMESERVER_EXTRA==1)
 
@@ -4164,7 +4164,7 @@ void GCNewCharacterInfoSend(LPOBJ lpObj) // OK
 #endif
 }
 
-void GCNewCharacterCalcSend(LPOBJ lpObj) // OK
+void GCNewCharacterCalcSend(LPOBJ lpObj)
 {
 #if(GAMESERVER_EXTRA==1)
 
@@ -4249,7 +4249,7 @@ void ExtraCpanelSendInfo(int aIndex)
 	DataSend(aIndex, (BYTE*)&pInfo, pInfo.h.size);
 }
 
-void GCNewHealthBarSend(LPOBJ lpObj) // OK
+void GCNewHealthBarSend(LPOBJ lpObj)
 {
 	if (gServerInfo.m_MonsterHealthBarSwitch == 0 && gServerInfo.m_UserHealthBarSwitch == 0)
 	{
@@ -4387,7 +4387,7 @@ void GCNewHealthBarSend(LPOBJ lpObj) // OK
 	DataSend(lpObj->Index, send, size);
 }
 
-void GCNewGensBattleInfoSend(LPOBJ lpObj) // OK
+void GCNewGensBattleInfoSend(LPOBJ lpObj)
 {
 #if(GAMESERVER_EXTRA==1)
 
@@ -4408,7 +4408,7 @@ void GCNewGensBattleInfoSend(LPOBJ lpObj) // OK
 #endif
 }
 
-void GCNewMessageSend(LPOBJ lpObj, char* message) // OK
+void GCNewMessageSend(LPOBJ lpObj, char* message)
 {
 #if(GAMESERVER_EXTRA==1)
 

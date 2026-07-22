@@ -43,17 +43,17 @@ CSkillManager gSkillManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSkillManager::CSkillManager() // OK
+CSkillManager::CSkillManager()
 {
 	this->m_SkillInfo.clear();
 }
 
-CSkillManager::~CSkillManager() // OK
+CSkillManager::~CSkillManager()
 {
 
 }
 
-void CSkillManager::Load(char* path) // OK
+void CSkillManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -131,7 +131,7 @@ void CSkillManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CSkillManager::GetInfo(int index,SKILL_INFO* lpInfo) // OK
+bool CSkillManager::GetInfo(int index,SKILL_INFO* lpInfo)
 {
 	std::map<int,SKILL_INFO>::iterator it = this->m_SkillInfo.find(index);
 
@@ -146,7 +146,7 @@ bool CSkillManager::GetInfo(int index,SKILL_INFO* lpInfo) // OK
 	}
 }
 
-int CSkillManager::GetSkillDamage(int index) // OK
+int CSkillManager::GetSkillDamage(int index)
 {
 	std::map<int,SKILL_INFO>::iterator it = this->m_SkillInfo.find(index);
 
@@ -160,7 +160,7 @@ int CSkillManager::GetSkillDamage(int index) // OK
 	}
 }
 
-int CSkillManager::GetSkillMana(int index) // OK
+int CSkillManager::GetSkillMana(int index)
 {
 	std::map<int,SKILL_INFO>::iterator it = this->m_SkillInfo.find(index);
 
@@ -174,7 +174,7 @@ int CSkillManager::GetSkillMana(int index) // OK
 	}
 }
 
-int CSkillManager::GetSkillBP(int index) // OK
+int CSkillManager::GetSkillBP(int index)
 {
 	std::map<int,SKILL_INFO>::iterator it = this->m_SkillInfo.find(index);
 
@@ -188,7 +188,7 @@ int CSkillManager::GetSkillBP(int index) // OK
 	}
 }
 
-int CSkillManager::GetSkillType(int index) // OK
+int CSkillManager::GetSkillType(int index)
 {
 	std::map<int,SKILL_INFO>::iterator it = this->m_SkillInfo.find(index);
 
@@ -202,7 +202,7 @@ int CSkillManager::GetSkillType(int index) // OK
 	}
 }
 
-int CSkillManager::GetSkillEffect(int index) // OK
+int CSkillManager::GetSkillEffect(int index)
 {
 	std::map<int,SKILL_INFO>::iterator it = this->m_SkillInfo.find(index);
 
@@ -216,7 +216,7 @@ int CSkillManager::GetSkillEffect(int index) // OK
 	}
 }
 
-int CSkillManager::GetSkillAngle(int x,int y,int tx,int ty) // OK
+int CSkillManager::GetSkillAngle(int x,int y,int tx,int ty)
 {
 	float dx = (float)(x-tx);
 	float dy = (float)(y-ty);
@@ -228,7 +228,7 @@ int CSkillManager::GetSkillAngle(int x,int y,int tx,int ty) // OK
 	return ((angle<0)?(angle+360):angle);
 }
 
-int CSkillManager::GetSkillFrustrum(int* SkillFrustrumX,int* SkillFrustrumY,BYTE angle,int x,int y,float sx,float sy,float tx,float ty) // OK
+int CSkillManager::GetSkillFrustrum(int* SkillFrustrumX,int* SkillFrustrumY,BYTE angle,int x,int y,float sx,float sy,float tx,float ty)
 {
 	vec3_t p[4];
 
@@ -259,7 +259,7 @@ int CSkillManager::GetSkillFrustrum(int* SkillFrustrumX,int* SkillFrustrumY,BYTE
 	return 1;
 }
 
-int CSkillManager::GetSkillNumber(int index,int level) // OK
+int CSkillManager::GetSkillNumber(int index,int level)
 {
 	if(index >= GET_ITEM(15,0) && index <= GET_ITEM(15,15))
 	{
@@ -357,7 +357,7 @@ int CSkillManager::GetSkillNumber(int index,int level) // OK
 	return -1;
 }
 
-bool CSkillManager::CheckSkillMana(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillMana(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -376,7 +376,7 @@ bool CSkillManager::CheckSkillMana(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillBP(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillBP(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -395,7 +395,7 @@ bool CSkillManager::CheckSkillBP(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRange(int index,int x,int y,int tx,int ty) // OK
+bool CSkillManager::CheckSkillRange(int index,int x,int y,int tx,int ty)
 {
 	SKILL_INFO SkillInfo;
 
@@ -419,7 +419,7 @@ bool CSkillManager::CheckSkillRange(int index,int x,int y,int tx,int ty) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRadio(int index,int x,int y,int tx,int ty) // OK
+bool CSkillManager::CheckSkillRadio(int index,int x,int y,int tx,int ty)
 {
 	SKILL_INFO SkillInfo;
 
@@ -443,7 +443,7 @@ bool CSkillManager::CheckSkillRadio(int index,int x,int y,int tx,int ty) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillFrustrum(int* SkillFrustrumX,int* SkillFrustrumY,int x,int y) // OK
+bool CSkillManager::CheckSkillFrustrum(int* SkillFrustrumX,int* SkillFrustrumY,int x,int y)
 {
 	for(int n=0,i=3;n < 4;i=n,n++)
 	{
@@ -456,7 +456,7 @@ bool CSkillManager::CheckSkillFrustrum(int* SkillFrustrumX,int* SkillFrustrumY,i
 	return 1;
 }
 
-bool CSkillManager::CheckSkillDelay(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillDelay(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -479,7 +479,7 @@ bool CSkillManager::CheckSkillDelay(LPOBJ lpObj,int index) // OK
 	return 1;
 }
 
-bool CSkillManager::CheckSkillTarget(LPOBJ lpObj,int aIndex,int bIndex,int type) // OK
+bool CSkillManager::CheckSkillTarget(LPOBJ lpObj,int aIndex,int bIndex,int type)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -577,7 +577,7 @@ bool CSkillManager::CheckSkillTarget(LPOBJ lpObj,int aIndex,int bIndex,int type)
 	return 0;
 }
 
-bool CSkillManager::CheckSkillRequireLevel(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireLevel(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -596,7 +596,7 @@ bool CSkillManager::CheckSkillRequireLevel(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRequireEnergy(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireEnergy(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -615,7 +615,7 @@ bool CSkillManager::CheckSkillRequireEnergy(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRequireLeadership(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireLeadership(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -634,7 +634,7 @@ bool CSkillManager::CheckSkillRequireLeadership(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRequireKillPoint(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireKillPoint(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -653,7 +653,7 @@ bool CSkillManager::CheckSkillRequireKillPoint(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRequireGuildStatus(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireGuildStatus(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -672,7 +672,7 @@ bool CSkillManager::CheckSkillRequireGuildStatus(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRequireClass(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireClass(LPOBJ lpObj,int index)
 {
 	SKILL_INFO SkillInfo;
 
@@ -701,7 +701,7 @@ bool CSkillManager::CheckSkillRequireClass(LPOBJ lpObj,int index) // OK
 	}
 }
 
-bool CSkillManager::CheckSkillRequireWeapon(LPOBJ lpObj,int index) // OK
+bool CSkillManager::CheckSkillRequireWeapon(LPOBJ lpObj,int index)
 {
 	if(index != SKILL_DEFENSE && index != SKILL_FALLING_SLASH && index != SKILL_LUNGE && index != SKILL_UPPERCUT && index != SKILL_CYCLONE && index != SKILL_SLASH && index != SKILL_TRIPLE_SHOT && index != SKILL_FIRE_BREATH && index != SKILL_POWER_SLASH && index != SKILL_EARTHQUAKE && index != SKILL_PLASMA_STORM && index != SKILL_SAHAMUTT && index != SKILL_NEIL && index != SKILL_GHOST_PHANTOM && index != SKILL_LARGE_RING_BLOWER && index != SKILL_UPPER_BEAST && index != SKILL_PHOENIX_SHOT)
 	{
@@ -725,7 +725,7 @@ bool CSkillManager::CheckSkillRequireWeapon(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-int CSkillManager::AddSkillWeapon(LPOBJ lpObj,int index,int level) // OK
+int CSkillManager::AddSkillWeapon(LPOBJ lpObj,int index,int level)
 {
 	int slot=0,skill=0;
 
@@ -739,7 +739,7 @@ int CSkillManager::AddSkillWeapon(LPOBJ lpObj,int index,int level) // OK
 	}
 }
 
-int CSkillManager::DelSkillWeapon(LPOBJ lpObj,int index,int level) // OK
+int CSkillManager::DelSkillWeapon(LPOBJ lpObj,int index,int level)
 {
 	int slot=0,skill=0,count=0;
 
@@ -767,7 +767,7 @@ int CSkillManager::DelSkillWeapon(LPOBJ lpObj,int index,int level) // OK
 	}
 }
 
-int CSkillManager::AddSkill(LPOBJ lpObj,int index,int level) // OK
+int CSkillManager::AddSkill(LPOBJ lpObj,int index,int level)
 {
 	if(lpObj->Type == OBJECT_USER && (this->CheckSkillRequireLevel(lpObj,index) == 0 || this->CheckSkillRequireEnergy(lpObj,index) == 0 || this->CheckSkillRequireLeadership(lpObj,index) == 0 || this->CheckSkillRequireClass(lpObj,index) == 0))
 	{
@@ -790,7 +790,7 @@ int CSkillManager::AddSkill(LPOBJ lpObj,int index,int level) // OK
 	return -1;
 }
 
-int CSkillManager::DelSkill(LPOBJ lpObj,int index) // OK
+int CSkillManager::DelSkill(LPOBJ lpObj,int index)
 {
 	for(int n=0;n < MAX_SKILL_LIST;n++)
 	{
@@ -807,7 +807,7 @@ int CSkillManager::DelSkill(LPOBJ lpObj,int index) // OK
 	return -1;
 }
 
-CSkill* CSkillManager::GetSkill(LPOBJ lpObj,int index) // OK
+CSkill* CSkillManager::GetSkill(LPOBJ lpObj,int index)
 {
 	index = ((index==SKILL_NOVA_START)?SKILL_NOVA:index);
 
@@ -825,7 +825,7 @@ CSkill* CSkillManager::GetSkill(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-int CSkillManager::AddMasterSkill(LPOBJ lpObj,int index,int level) // OK
+int CSkillManager::AddMasterSkill(LPOBJ lpObj,int index,int level)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -856,7 +856,7 @@ int CSkillManager::AddMasterSkill(LPOBJ lpObj,int index,int level) // OK
 	#endif
 }
 
-int CSkillManager::DelMasterSkill(LPOBJ lpObj,int index) // OK
+int CSkillManager::DelMasterSkill(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -881,7 +881,7 @@ int CSkillManager::DelMasterSkill(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-CSkill* CSkillManager::GetMasterSkill(LPOBJ lpObj,int index) // OK
+CSkill* CSkillManager::GetMasterSkill(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -914,7 +914,7 @@ CSkill* CSkillManager::GetMasterSkill(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-bool CSkillManager::ConvertSkillByte(CSkill* lpSkill,BYTE* lpMsg) // OK
+bool CSkillManager::ConvertSkillByte(CSkill* lpSkill,BYTE* lpMsg)
 {
 	WORD index = MAKE_NUMBERW(((lpMsg[0]==0xFF&&lpMsg[2]==0x00)?0xFF:lpMsg[2]),lpMsg[0]);
 
@@ -929,14 +929,14 @@ bool CSkillManager::ConvertSkillByte(CSkill* lpSkill,BYTE* lpMsg) // OK
 	return 1;
 }
 
-void CSkillManager::SkillByteConvert(BYTE* lpMsg,CSkill* lpSkill) // OK
+void CSkillManager::SkillByteConvert(BYTE* lpMsg,CSkill* lpSkill)
 {
 	lpMsg[0] = SET_NUMBERLB(lpSkill->m_index);
 	lpMsg[1] = lpSkill->m_level;
 	lpMsg[2] = SET_NUMBERHB(lpSkill->m_index);
 }
 
-void CSkillManager::UseAttackSkill(int aIndex,int bIndex,CSkill* lpSkill) // OK
+void CSkillManager::UseAttackSkill(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1009,7 +1009,7 @@ void CSkillManager::UseAttackSkill(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	}
 }
 
-void CSkillManager::UseDurationSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,BYTE dir,BYTE angle) // OK
+void CSkillManager::UseDurationSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,BYTE dir,BYTE angle)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1085,7 +1085,7 @@ void CSkillManager::UseDurationSkillAttack(int aIndex,int bIndex,CSkill* lpSkill
 
 }
 
-bool CSkillManager::RunningSkill(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,BYTE angle,bool combo) // OK
+bool CSkillManager::RunningSkill(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,BYTE angle,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1292,7 +1292,7 @@ bool CSkillManager::RunningSkill(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BY
 	return 0;
 }
 
-bool CSkillManager::BasicSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::BasicSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1336,7 +1336,7 @@ bool CSkillManager::BasicSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	return 1;
 }
 
-bool CSkillManager::MultiSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::MultiSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1378,7 +1378,7 @@ bool CSkillManager::MultiSkillAttack(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	return 1;
 }
 
-bool CSkillManager::SkillChangeUse(int aIndex) // OK
+bool CSkillManager::SkillChangeUse(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1504,7 +1504,7 @@ bool CSkillManager::SkillChangeUse(int aIndex) // OK
 	}
 }
 
-bool CSkillManager::SkillEvilSpirit(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillEvilSpirit(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1545,7 +1545,7 @@ bool CSkillManager::SkillEvilSpirit(int aIndex,int bIndex,CSkill* lpSkill,bool c
 	return 1;
 }
 
-bool CSkillManager::SkillManaShield(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillManaShield(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpTarget = &gObj[bIndex];
 
@@ -1617,7 +1617,7 @@ bool CSkillManager::SkillManaShield(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillDefense(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillDefense(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1637,7 +1637,7 @@ bool CSkillManager::SkillDefense(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	return 0;
 }
 
-bool CSkillManager::SkillHeal(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillHeal(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpTarget = &gObj[bIndex];
 
@@ -1706,7 +1706,7 @@ bool CSkillManager::SkillHeal(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillGreaterDefense(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterDefense(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpTarget = &gObj[bIndex];
 
@@ -1771,7 +1771,7 @@ bool CSkillManager::SkillGreaterDefense(int aIndex,int bIndex,CSkill* lpSkill) /
 	return 1;
 }
 
-bool CSkillManager::SkillGreaterDamage(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterDamage(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpTarget = &gObj[bIndex];
 
@@ -1835,7 +1835,7 @@ bool CSkillManager::SkillGreaterDamage(int aIndex,int bIndex,CSkill* lpSkill) //
 	return 1;
 }
 
-bool CSkillManager::SkillSummon(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillSummon(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1924,7 +1924,7 @@ bool CSkillManager::SkillSummon(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillDecay(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo) // OK
+bool CSkillManager::SkillDecay(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1970,7 +1970,7 @@ bool CSkillManager::SkillDecay(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE
 	return 1;
 }
 
-bool CSkillManager::SkillIceStorm(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo) // OK
+bool CSkillManager::SkillIceStorm(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2016,7 +2016,7 @@ bool CSkillManager::SkillIceStorm(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,B
 	return 1;
 }
 
-bool CSkillManager::SkillNova(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillNova(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2087,7 +2087,7 @@ bool CSkillManager::SkillNova(int aIndex,int bIndex,CSkill* lpSkill,bool combo) 
 	return 1;
 }
 
-bool CSkillManager::SkillTwistingSlash(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillTwistingSlash(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2128,7 +2128,7 @@ bool CSkillManager::SkillTwistingSlash(int aIndex,int bIndex,CSkill* lpSkill,boo
 	return 1;
 }
 
-bool CSkillManager::SkillRagefulBlow(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillRagefulBlow(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2169,7 +2169,7 @@ bool CSkillManager::SkillRagefulBlow(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	return 1;
 }
 
-bool CSkillManager::SkillDeathStab(int aIndex, int bIndex, CSkill* lpSkill, bool combo) // OK
+bool CSkillManager::SkillDeathStab(int aIndex, int bIndex, CSkill* lpSkill, bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2245,7 +2245,7 @@ bool CSkillManager::SkillDeathStab(int aIndex, int bIndex, CSkill* lpSkill, bool
 	return 1;
 }
 
-bool CSkillManager::SkillGreaterLife(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterLife(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2321,7 +2321,7 @@ bool CSkillManager::SkillGreaterLife(int aIndex,int bIndex,CSkill* lpSkill) // O
 	return 1;
 }
 
-bool CSkillManager::SkillMonsterAreaAttack(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillMonsterAreaAttack(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2357,7 +2357,7 @@ bool CSkillManager::SkillMonsterAreaAttack(int aIndex,int bIndex,CSkill* lpSkill
 	return 1;
 }
 
-bool CSkillManager::SkillPowerSlash(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo) // OK
+bool CSkillManager::SkillPowerSlash(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2407,7 +2407,7 @@ bool CSkillManager::SkillPowerSlash(int aIndex,int bIndex,CSkill* lpSkill,BYTE a
 	return 1;
 }
 
-bool CSkillManager::SkillForce(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillForce(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2476,7 +2476,7 @@ bool CSkillManager::SkillForce(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 	return 1;
 }
 
-bool CSkillManager::SkillFireBurst(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillFireBurst(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2543,7 +2543,7 @@ bool CSkillManager::SkillFireBurst(int aIndex,int bIndex,CSkill* lpSkill,bool co
 	return 1;
 }
 
-bool CSkillManager::SkillEarthquake(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillEarthquake(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2584,7 +2584,7 @@ bool CSkillManager::SkillEarthquake(int aIndex,int bIndex,CSkill* lpSkill,bool c
 	return 1;
 }
 
-bool CSkillManager::SkillSummonParty(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillSummonParty(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2687,7 +2687,7 @@ bool CSkillManager::SkillSummonParty(int aIndex,int bIndex,CSkill* lpSkill) // O
 	return 1;
 }
 
-bool CSkillManager::SkillGreaterCriticalDamage(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterCriticalDamage(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2755,7 +2755,7 @@ bool CSkillManager::SkillGreaterCriticalDamage(int aIndex,int bIndex,CSkill* lpS
 	return 1;
 }
 
-bool CSkillManager::SkillElectricSpark(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo) // OK
+bool CSkillManager::SkillElectricSpark(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2801,7 +2801,7 @@ bool CSkillManager::SkillElectricSpark(int aIndex,int bIndex,CSkill* lpSkill,BYT
 	return 1;
 }
 
-bool CSkillManager::SkillCastleSiege(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillCastleSiege(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2846,7 +2846,7 @@ bool CSkillManager::SkillCastleSiege(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	return 1;
 }
 
-bool CSkillManager::SkillStern(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle) // OK
+bool CSkillManager::SkillStern(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2897,7 +2897,7 @@ bool CSkillManager::SkillStern(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle)
 	return 1;
 }
 
-bool CSkillManager::SkillRemoveStern(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillRemoveStern(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2935,7 +2935,7 @@ bool CSkillManager::SkillRemoveStern(int aIndex,int bIndex,CSkill* lpSkill) // O
 	return 1;
 }
 
-bool CSkillManager::SkillGreaterMana(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterMana(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2985,7 +2985,7 @@ bool CSkillManager::SkillGreaterMana(int aIndex,int bIndex,CSkill* lpSkill) // O
 	return 1;
 }
 
-bool CSkillManager::SkillInvisibility(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillInvisibility(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3019,7 +3019,7 @@ bool CSkillManager::SkillInvisibility(int aIndex,int bIndex,CSkill* lpSkill) // 
 	return 1;
 }
 
-bool CSkillManager::SkillRemoveInvisibility(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillRemoveInvisibility(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3057,7 +3057,7 @@ bool CSkillManager::SkillRemoveInvisibility(int aIndex,int bIndex,CSkill* lpSkil
 	return 1;
 }
 
-bool CSkillManager::SkillRemoveAllEffect(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillRemoveAllEffect(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3095,7 +3095,7 @@ bool CSkillManager::SkillRemoveAllEffect(int aIndex,int bIndex,CSkill* lpSkill) 
 	return 1;
 }
 
-bool CSkillManager::SkillBrand(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillBrand(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3135,7 +3135,7 @@ bool CSkillManager::SkillBrand(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillPlasmaStorm(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillPlasmaStorm(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3171,7 +3171,7 @@ bool CSkillManager::SkillPlasmaStorm(int aIndex,int bIndex,CSkill* lpSkill) // O
 	return 1;
 }
 
-bool CSkillManager::SkillInfinityArrow(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillInfinityArrow(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3198,7 +3198,7 @@ bool CSkillManager::SkillInfinityArrow(int aIndex,int bIndex,CSkill* lpSkill) //
 	return 1;
 }
 
-bool CSkillManager::SkillMonsterSummon(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillMonsterSummon(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3274,7 +3274,7 @@ bool CSkillManager::SkillMonsterSummon(int aIndex,int bIndex,CSkill* lpSkill) //
 	return success;
 }
 
-bool CSkillManager::SkillMagicDamageImmunity(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillMagicDamageImmunity(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3284,7 +3284,7 @@ bool CSkillManager::SkillMagicDamageImmunity(int aIndex,int bIndex,CSkill* lpSki
 	return 1;
 }
 
-bool CSkillManager::SkillPhysiDamageImmunity(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillPhysiDamageImmunity(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3294,7 +3294,7 @@ bool CSkillManager::SkillPhysiDamageImmunity(int aIndex,int bIndex,CSkill* lpSki
 	return 1;
 }
 
-bool CSkillManager::SkillOrderOfProtection(int aIndex,int bIndex) // OK
+bool CSkillManager::SkillOrderOfProtection(int aIndex,int bIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3308,7 +3308,7 @@ bool CSkillManager::SkillOrderOfProtection(int aIndex,int bIndex) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillOrderOfRestraint(int aIndex,int bIndex) // OK
+bool CSkillManager::SkillOrderOfRestraint(int aIndex,int bIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3324,7 +3324,7 @@ bool CSkillManager::SkillOrderOfRestraint(int aIndex,int bIndex) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillOrderOfTracking(int aIndex,int bIndex) // OK
+bool CSkillManager::SkillOrderOfTracking(int aIndex,int bIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3358,7 +3358,7 @@ bool CSkillManager::SkillOrderOfTracking(int aIndex,int bIndex) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillOrderOfWeaken(int aIndex,int bIndex) // OK
+bool CSkillManager::SkillOrderOfWeaken(int aIndex,int bIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3385,7 +3385,7 @@ bool CSkillManager::SkillOrderOfWeaken(int aIndex,int bIndex) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillChainLightning(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillChainLightning(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3483,7 +3483,7 @@ bool CSkillManager::SkillChainLightning(int aIndex,int bIndex,CSkill* lpSkill,bo
 	return 1;
 }
 
-bool CSkillManager::SkillDamageReflect(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillDamageReflect(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpTarget = &gObj[bIndex];
 
@@ -3523,7 +3523,7 @@ bool CSkillManager::SkillDamageReflect(int aIndex,int bIndex,CSkill* lpSkill) //
 	return 1;
 }
 
-bool CSkillManager::SkillSwordPower(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillSwordPower(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3558,7 +3558,7 @@ bool CSkillManager::SkillSwordPower(int aIndex,int bIndex,CSkill* lpSkill,bool c
 	return 1;
 }
 
-bool CSkillManager::SkillSwordPowerGetDefense(int aIndex,int* defense) // OK
+bool CSkillManager::SkillSwordPowerGetDefense(int aIndex,int* defense)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3574,7 +3574,7 @@ bool CSkillManager::SkillSwordPowerGetDefense(int aIndex,int* defense) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillSwordPowerGetPhysiDamage(int aIndex,int* DamageMin,int* DamageMax) // OK
+bool CSkillManager::SkillSwordPowerGetPhysiDamage(int aIndex,int* DamageMin,int* DamageMax)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3603,7 +3603,7 @@ bool CSkillManager::SkillSwordPowerGetPhysiDamage(int aIndex,int* DamageMin,int*
 	return 1;
 }
 
-bool CSkillManager::SkillSwordPowerGetMagicDamage(int aIndex,int* DamageMin,int* DamageMax) // OK
+bool CSkillManager::SkillSwordPowerGetMagicDamage(int aIndex,int* DamageMin,int* DamageMax)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3637,7 +3637,7 @@ bool CSkillManager::SkillSwordPowerGetMagicDamage(int aIndex,int* DamageMin,int*
 	return 1;
 }
 
-bool CSkillManager::SkillSwordPowerGetCurseDamage(int aIndex,int* DamageMin,int* DamageMax) // OK
+bool CSkillManager::SkillSwordPowerGetCurseDamage(int aIndex,int* DamageMin,int* DamageMax)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3671,7 +3671,7 @@ bool CSkillManager::SkillSwordPowerGetCurseDamage(int aIndex,int* DamageMin,int*
 	return 1;
 }
 
-bool CSkillManager::SkillSleep(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillSleep(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3735,7 +3735,7 @@ bool CSkillManager::SkillSleep(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	return 1;
 }
 
-bool CSkillManager::SkillLesserDefense(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillLesserDefense(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3789,7 +3789,7 @@ bool CSkillManager::SkillLesserDefense(int aIndex,int bIndex,CSkill* lpSkill) //
 	return 1;
 }
 
-bool CSkillManager::SkillLesserDamage(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillLesserDamage(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3843,7 +3843,7 @@ bool CSkillManager::SkillLesserDamage(int aIndex,int bIndex,CSkill* lpSkill) // 
 	return 1;
 }
 
-bool CSkillManager::SkillSahamutt(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo) // OK
+bool CSkillManager::SkillSahamutt(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3889,7 +3889,7 @@ bool CSkillManager::SkillSahamutt(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,B
 	return 1;
 }
 
-bool CSkillManager::SkillNeil(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y) // OK
+bool CSkillManager::SkillNeil(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3930,7 +3930,7 @@ bool CSkillManager::SkillNeil(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE 
 	return 1;
 }
 
-bool CSkillManager::SkillGhostPhantom(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y) // OK
+bool CSkillManager::SkillGhostPhantom(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3952,7 +3952,7 @@ bool CSkillManager::SkillGhostPhantom(int aIndex,int bIndex,CSkill* lpSkill,BYTE
 	return 1;
 }
 
-bool CSkillManager::SkillGhostPhantomAreaAttack(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y) // OK
+bool CSkillManager::SkillGhostPhantomAreaAttack(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3988,7 +3988,7 @@ bool CSkillManager::SkillGhostPhantomAreaAttack(int aIndex,int bIndex,CSkill* lp
 	return 1;
 }
 
-bool CSkillManager::SkillRedStorm(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillRedStorm(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4029,7 +4029,7 @@ bool CSkillManager::SkillRedStorm(int aIndex,int bIndex,CSkill* lpSkill,bool com
 	return 1;
 }
 
-bool CSkillManager::SkillFrozenStab(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo) // OK
+bool CSkillManager::SkillFrozenStab(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4075,7 +4075,7 @@ bool CSkillManager::SkillFrozenStab(int aIndex,int bIndex,CSkill* lpSkill,BYTE x
 	return 1;
 }
 
-bool CSkillManager::SkillMagicCircle(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillMagicCircle(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4108,7 +4108,7 @@ bool CSkillManager::SkillMagicCircle(int aIndex,int bIndex,CSkill* lpSkill) // O
 	return 1;
 }
 
-bool CSkillManager::SkillShieldRecover(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillShieldRecover(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpTarget = &gObj[bIndex];
 
@@ -4159,7 +4159,7 @@ bool CSkillManager::SkillShieldRecover(int aIndex,int bIndex,CSkill* lpSkill) //
 	return 1;
 }
 
-bool CSkillManager::SkillFiveShot(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo) // OK
+bool CSkillManager::SkillFiveShot(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4259,7 +4259,7 @@ bool CSkillManager::SkillFiveShot(int aIndex,int bIndex,CSkill* lpSkill,BYTE ang
 	return 1;
 }
 
-bool CSkillManager::SkillSwordSlash(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo) // OK
+bool CSkillManager::SkillSwordSlash(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4311,7 +4311,7 @@ bool CSkillManager::SkillSwordSlash(int aIndex,int bIndex,CSkill* lpSkill,BYTE a
 	return 1;
 }
 
-bool CSkillManager::SkillLightningStorm(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillLightningStorm(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4352,7 +4352,7 @@ bool CSkillManager::SkillLightningStorm(int aIndex,int bIndex,CSkill* lpSkill,bo
 	return 1;
 }
 
-bool CSkillManager::SkillBirds(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo) // OK
+bool CSkillManager::SkillBirds(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,bool combo)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4411,7 +4411,7 @@ bool CSkillManager::SkillBirds(int aIndex,int bIndex,CSkill* lpSkill,BYTE angle,
 	return 1;
 }
 
-bool CSkillManager::SkillSelfExplosion(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillSelfExplosion(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4453,7 +4453,7 @@ bool CSkillManager::SkillSelfExplosion(int aIndex,int bIndex,CSkill* lpSkill) //
 	return 1;
 }
 
-bool CSkillManager::SkillLargeRingBlower(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillLargeRingBlower(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4493,7 +4493,7 @@ bool CSkillManager::SkillLargeRingBlower(int aIndex,int bIndex,CSkill* lpSkill,b
 	#endif
 }
 
-bool CSkillManager::SkillUpperBeast(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillUpperBeast(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4530,7 +4530,7 @@ bool CSkillManager::SkillUpperBeast(int aIndex,int bIndex,CSkill* lpSkill,bool c
 	#endif
 }
 //Fix RF day lui
-bool CSkillManager::SkillChainDriver(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillChainDriver(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4573,7 +4573,7 @@ bool CSkillManager::SkillChainDriver(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	#endif
 }
 //Fix RF day lui
-//bool CSkillManager::SkillChainDriver(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+//bool CSkillManager::SkillChainDriver(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 //{
 //	#if(GAMESERVER_UPDATE>=601)
 //
@@ -4613,7 +4613,7 @@ bool CSkillManager::SkillChainDriver(int aIndex,int bIndex,CSkill* lpSkill,bool 
 //	#endif
 //}
 
-bool CSkillManager::SkillDarkSide(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillDarkSide(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4691,7 +4691,7 @@ bool CSkillManager::SkillDarkSide(int aIndex,int bIndex,CSkill* lpSkill,bool com
 	#endif
 }
 
-bool CSkillManager::SkillDarkSideGetTargetIndex(int aIndex,int bIndex,CSkill* lpSkill,WORD* target) // OK
+bool CSkillManager::SkillDarkSideGetTargetIndex(int aIndex,int bIndex,CSkill* lpSkill,WORD* target)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4741,7 +4741,7 @@ bool CSkillManager::SkillDarkSideGetTargetIndex(int aIndex,int bIndex,CSkill* lp
 	#endif
 }
 
-bool CSkillManager::SkillDragonLore(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillDragonLore(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4808,7 +4808,7 @@ bool CSkillManager::SkillDragonLore(int aIndex,int bIndex,CSkill* lpSkill,bool c
 	#endif
 }
 
-bool CSkillManager::SkillGreaterIgnoreDefenseRate(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterIgnoreDefenseRate(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4836,7 +4836,7 @@ bool CSkillManager::SkillGreaterIgnoreDefenseRate(int aIndex,int bIndex,CSkill* 
 	#endif
 }
 
-bool CSkillManager::SkillFitness(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillFitness(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4896,7 +4896,7 @@ bool CSkillManager::SkillFitness(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	#endif
 }
 
-bool CSkillManager::SkillGreaterDefenseSuccessRate(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillGreaterDefenseSuccessRate(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -4962,7 +4962,7 @@ bool CSkillManager::SkillGreaterDefenseSuccessRate(int aIndex,int bIndex,CSkill*
 	#endif
 }
 
-bool CSkillManager::SkillPhoenixShot(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillPhoenixShot(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -5029,7 +5029,7 @@ bool CSkillManager::SkillPhoenixShot(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	#endif
 }
 
-bool CSkillManager::SkillBloodStorm(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo) // OK
+bool CSkillManager::SkillBloodStorm(int aIndex,int bIndex,CSkill* lpSkill,BYTE x,BYTE y,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5085,7 +5085,7 @@ bool CSkillManager::SkillBloodStorm(int aIndex,int bIndex,CSkill* lpSkill,BYTE x
 	#endif
 }
 
-bool CSkillManager::SkillCure(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillCure(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5126,7 +5126,7 @@ bool CSkillManager::SkillCure(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	#endif
 }
 
-bool CSkillManager::SkillPartyHeal(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillPartyHeal(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5263,7 +5263,7 @@ bool CSkillManager::SkillPartyHeal(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	#endif
 }
 
-bool CSkillManager::SkillPoisonArrow(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillPoisonArrow(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5299,7 +5299,7 @@ bool CSkillManager::SkillPoisonArrow(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	#endif
 }
 
-bool CSkillManager::SkillBless(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillBless(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5353,7 +5353,7 @@ bool CSkillManager::SkillBless(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	#endif
 }
 
-bool CSkillManager::SkillBlind(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillBlind(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5415,7 +5415,7 @@ bool CSkillManager::SkillBlind(int aIndex,int bIndex,CSkill* lpSkill) // OK
 	#endif
 }
 
-bool CSkillManager::SkillEarthPrison(int aIndex,int bIndex,CSkill* lpSkill,bool combo) // OK
+bool CSkillManager::SkillEarthPrison(int aIndex,int bIndex,CSkill* lpSkill,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5466,7 +5466,7 @@ bool CSkillManager::SkillEarthPrison(int aIndex,int bIndex,CSkill* lpSkill,bool 
 	#endif
 }
 
-bool CSkillManager::SkillIronDefense(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillIronDefense(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5500,7 +5500,7 @@ bool CSkillManager::SkillIronDefense(int aIndex,int bIndex,CSkill* lpSkill) // O
 	#endif
 }
 
-bool CSkillManager::SkillBloodHowling(int aIndex,int bIndex,CSkill* lpSkill) // OK
+bool CSkillManager::SkillBloodHowling(int aIndex,int bIndex,CSkill* lpSkill)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5526,7 +5526,7 @@ bool CSkillManager::SkillBloodHowling(int aIndex,int bIndex,CSkill* lpSkill) // 
 	#endif
 }
 
-void CSkillManager::ApplyMeteoriteEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyMeteoriteEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5538,7 +5538,7 @@ void CSkillManager::ApplyMeteoriteEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSk
 	#endif
 }
 
-void CSkillManager::ApplyIceStormEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyIceStormEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5558,7 +5558,7 @@ void CSkillManager::ApplyIceStormEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSki
 	#endif
 }
 
-void CSkillManager::ApplyTwistingSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyTwistingSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5570,7 +5570,7 @@ void CSkillManager::ApplyTwistingSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* 
 	#endif
 }
 
-void CSkillManager::ApplyRagefulBlowEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyRagefulBlowEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5591,7 +5591,7 @@ void CSkillManager::ApplyRagefulBlowEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lp
 	#endif
 }
 
-void CSkillManager::ApplyDeathStabEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyDeathStabEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5608,7 +5608,7 @@ void CSkillManager::ApplyDeathStabEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSk
 	#endif
 }
 
-void CSkillManager::ApplyFireSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyFireSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	int value = gServerInfo.m_FireSlashConstA+((lpObj->Strength+lpObj->AddStrength)/gServerInfo.m_FireSlashConstB);
 
@@ -5625,7 +5625,7 @@ void CSkillManager::ApplyFireSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSk
 	gEffectManager.AddEffect(lpTarget,0,this->GetSkillEffect(lpSkill->m_index),count,value,0,0,0);
 }
 
-void CSkillManager::ApplyFireBurstEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyFireBurstEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5637,7 +5637,7 @@ void CSkillManager::ApplyFireBurstEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSk
 	#endif
 }
 
-void CSkillManager::ApplyPlasmaStormEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyPlasmaStormEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	if(lpObj->Type == OBJECT_USER && lpTarget->Type == OBJECT_USER)
 	{
@@ -5651,12 +5651,12 @@ void CSkillManager::ApplyPlasmaStormEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lp
 	}
 }
 
-void CSkillManager::ApplyFireScreamEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyFireScreamEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 
 }
 
-void CSkillManager::ApplyEarthquakeEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyEarthquakeEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5676,7 +5676,7 @@ void CSkillManager::ApplyEarthquakeEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpS
 	#endif
 }
 
-void CSkillManager::ApplyDrainLifeEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyDrainLifeEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	damage = ((damage*gServerInfo.m_DrainLifeConstA)/100)+((lpObj->Energy+lpObj->AddEnergy)/gServerInfo.m_DrainLifeConstB);
 
@@ -5702,7 +5702,7 @@ void CSkillManager::ApplyDrainLifeEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSk
 	#endif
 }
 
-void CSkillManager::ApplySahamuttEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplySahamuttEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	damage = (damage*gServerInfo.m_SahamuttConstA)/100;
 	#if(GAMESERVER_UPDATE>=602)
@@ -5711,7 +5711,7 @@ void CSkillManager::ApplySahamuttEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSki
 	gEffectManager.AddEffect(lpTarget,0,gSkillManager.GetSkillEffect(lpSkill->m_index),5,lpObj->Index,1,SET_NUMBERHW(damage),SET_NUMBERLW(damage));
 }
 
-void CSkillManager::ApplyNeilEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyNeilEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5726,7 +5726,7 @@ void CSkillManager::ApplyNeilEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,i
 	gEffectManager.AddEffect(lpTarget,0,gSkillManager.GetSkillEffect(lpSkill->m_index),5,lpObj->Index,1,SET_NUMBERHW(damage),SET_NUMBERLW(damage));
 }
 
-void CSkillManager::ApplyGhostPhantomEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyGhostPhantomEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5746,7 +5746,7 @@ void CSkillManager::ApplyGhostPhantomEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* l
 	#endif
 }
 
-void CSkillManager::ApplyFrozenStabEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyFrozenStabEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5771,7 +5771,7 @@ void CSkillManager::ApplyFrozenStabEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpS
 }
 
 #if(FIX_CHOANG_MUI_TEN_BANG)
-void CSkillManager::ApplyFiveShotEffect(LPOBJ lpObj, LPOBJ lpTarget, CSkill* lpSkill, int damage) // OK
+void CSkillManager::ApplyFiveShotEffect(LPOBJ lpObj, LPOBJ lpTarget, CSkill* lpSkill, int damage)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -5785,12 +5785,12 @@ void CSkillManager::ApplyFiveShotEffect(LPOBJ lpObj, LPOBJ lpTarget, CSkill* lpS
 #endif
 }
 #endif
-void CSkillManager::ApplySwordSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplySwordSlashEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	gEffectManager.AddEffect(lpTarget,0,gSkillManager.GetSkillEffect(lpSkill->m_index),1,0,0,0,0);
 }
 
-void CSkillManager::ApplyLargeRingBlowerEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyLargeRingBlowerEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -5813,7 +5813,7 @@ void CSkillManager::ApplyLargeRingBlowerEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill
 	#endif
 }
 
-void CSkillManager::ApplyUpperBeastEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyUpperBeastEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -5836,7 +5836,7 @@ void CSkillManager::ApplyUpperBeastEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpS
 	#endif
 }
 
-void CSkillManager::ApplyChainDriverEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyChainDriverEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -5861,7 +5861,7 @@ void CSkillManager::ApplyChainDriverEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lp
 	#endif
 }
 
-void CSkillManager::ApplyDragonLoreEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyDragonLoreEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5874,7 +5874,7 @@ void CSkillManager::ApplyDragonLoreEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpS
 	#endif
 }
 
-void CSkillManager::ApplyDragonSlayerEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyDragonSlayerEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -5921,7 +5921,7 @@ void CSkillManager::ApplyDragonSlayerEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* l
 	#endif
 }
 
-void CSkillManager::ApplyPhoenixShotEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyPhoenixShotEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -5930,7 +5930,7 @@ void CSkillManager::ApplyPhoenixShotEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lp
 	#endif
 }
 
-void CSkillManager::ApplyEarthPrisonEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
+void CSkillManager::ApplyEarthPrisonEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -5942,7 +5942,7 @@ void CSkillManager::ApplyEarthPrisonEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lp
 	#endif
 }
 
-void CSkillManager::CGMultiSkillAttackRecv(PMSG_MULTI_SKILL_ATTACK_RECV* lpMsg, int aIndex, bool type) // OK
+void CSkillManager::CGMultiSkillAttackRecv(PMSG_MULTI_SKILL_ATTACK_RECV* lpMsg, int aIndex, bool type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -6121,7 +6121,7 @@ void CSkillManager::CGMultiSkillAttackRecv(PMSG_MULTI_SKILL_ATTACK_RECV* lpMsg, 
 	}
 }
 
-void CSkillManager::CGSkillAttackRecv(PMSG_SKILL_ATTACK_RECV* lpMsg, int aIndex) // OK
+void CSkillManager::CGSkillAttackRecv(PMSG_SKILL_ATTACK_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -6275,7 +6275,7 @@ void CSkillManager::CGSkillAttackRecv(PMSG_SKILL_ATTACK_RECV* lpMsg, int aIndex)
 }
 
 
-void CSkillManager::CGDurationSkillAttackRecv(PMSG_DURATION_SKILL_ATTACK_RECV* lpMsg, int aIndex) // OK
+void CSkillManager::CGDurationSkillAttackRecv(PMSG_DURATION_SKILL_ATTACK_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -6459,7 +6459,7 @@ void CSkillManager::CGDurationSkillAttackRecv(PMSG_DURATION_SKILL_ATTACK_RECV* l
 
 }
 
-void CSkillManager::CGSkillCancelRecv(PMSG_SKILL_CANCEL_RECV* lpMsg,int aIndex) // OK
+void CSkillManager::CGSkillCancelRecv(PMSG_SKILL_CANCEL_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -6471,7 +6471,7 @@ void CSkillManager::CGSkillCancelRecv(PMSG_SKILL_CANCEL_RECV* lpMsg,int aIndex) 
 	gEffectManager.DelEffect(lpObj,this->GetSkillEffect(MAKE_NUMBERW(lpMsg->skill[0],lpMsg->skill[1])));
 }
 
-void CSkillManager::CGRageFighterSkillAttackRecv(PMSG_RAGE_FIGHTER_SKILL_ATTACK_RECV* lpMsg, int aIndex) // OK
+void CSkillManager::CGRageFighterSkillAttackRecv(PMSG_RAGE_FIGHTER_SKILL_ATTACK_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=601)
 
@@ -6562,7 +6562,7 @@ void CSkillManager::CGRageFighterSkillAttackRecv(PMSG_RAGE_FIGHTER_SKILL_ATTACK_
 #endif
 }
 
-void CSkillManager::CGSkillDarkSideRecv(PMSG_SKILL_DARK_SIDE_RECV* lpMsg, int aIndex) // OK
+void CSkillManager::CGSkillDarkSideRecv(PMSG_SKILL_DARK_SIDE_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=601)
 
@@ -6633,7 +6633,7 @@ void CSkillManager::CGSkillDarkSideRecv(PMSG_SKILL_DARK_SIDE_RECV* lpMsg, int aI
 #endif
 }
 
-void CSkillManager::CGSkillTeleportAllyRecv(PMSG_SKILL_TELEPORT_ALLY_RECV* lpMsg,int aIndex) // OK
+void CSkillManager::CGSkillTeleportAllyRecv(PMSG_SKILL_TELEPORT_ALLY_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -6725,7 +6725,7 @@ void CSkillManager::CGSkillTeleportAllyRecv(PMSG_SKILL_TELEPORT_ALLY_RECV* lpMsg
 	}
 }
 
-void CSkillManager::GCSkillAttackSend(LPOBJ lpObj,int skill,int aIndex,BYTE type) // OK
+void CSkillManager::GCSkillAttackSend(LPOBJ lpObj,int skill,int aIndex,BYTE type)
 {
 	PMSG_SKILL_ATTACK_SEND pMsg;
 
@@ -6749,7 +6749,7 @@ void CSkillManager::GCSkillAttackSend(LPOBJ lpObj,int skill,int aIndex,BYTE type
 
 }
 
-void CSkillManager::GCSkillCancelSend(LPOBJ lpObj,int skill) // OK
+void CSkillManager::GCSkillCancelSend(LPOBJ lpObj,int skill)
 {
 	PMSG_SKILL_CANCEL_SEND pMsg;
 
@@ -6769,7 +6769,7 @@ void CSkillManager::GCSkillCancelSend(LPOBJ lpObj,int skill) // OK
 	MsgSendV2(lpObj,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CSkillManager::GCDurationSkillAttackSend(LPOBJ lpObj,int skill,BYTE x,BYTE y,BYTE dir) // OK
+void CSkillManager::GCDurationSkillAttackSend(LPOBJ lpObj,int skill,BYTE x,BYTE y,BYTE dir)
 {
 	PMSG_DURATION_SKILL_ATTACK_SEND pMsg;
 
@@ -6805,7 +6805,7 @@ void CSkillManager::GCDurationSkillAttackSend(LPOBJ lpObj,int skill,BYTE x,BYTE 
 	MsgSendV2(lpObj,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CSkillManager::GCRageFighterSkillAttackSend(LPOBJ lpObj,int skill,int aIndex,BYTE type) // OK
+void CSkillManager::GCRageFighterSkillAttackSend(LPOBJ lpObj,int skill,int aIndex,BYTE type)
 {
 	#if(GAMESERVER_UPDATE>=601)
 
@@ -6832,7 +6832,7 @@ void CSkillManager::GCRageFighterSkillAttackSend(LPOBJ lpObj,int skill,int aInde
 	#endif
 }
 
-void CSkillManager::GCSkillAddSend(int aIndex,BYTE slot,int skill,BYTE level,BYTE type) // OK
+void CSkillManager::GCSkillAddSend(int aIndex,BYTE slot,int skill,BYTE level,BYTE type)
 {
 	BYTE send[256];
 
@@ -6864,7 +6864,7 @@ void CSkillManager::GCSkillAddSend(int aIndex,BYTE slot,int skill,BYTE level,BYT
 	DataSend(aIndex,send,size);
 }
 
-void CSkillManager::GCSkillDelSend(int aIndex,BYTE slot,int skill,BYTE level,BYTE type) // OK
+void CSkillManager::GCSkillDelSend(int aIndex,BYTE slot,int skill,BYTE level,BYTE type)
 {
 	BYTE send[256];
 
@@ -6896,7 +6896,7 @@ void CSkillManager::GCSkillDelSend(int aIndex,BYTE slot,int skill,BYTE level,BYT
 	DataSend(aIndex,send,size);
 }
 
-void CSkillManager::GCSkillListSend(LPOBJ lpObj,BYTE type) // OK
+void CSkillManager::GCSkillListSend(LPOBJ lpObj,BYTE type)
 {
 	BYTE send[1024];
 

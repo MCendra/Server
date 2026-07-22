@@ -182,12 +182,12 @@ bool CSocketManagerUdp::DataRecv(int recvSize)
 	BYTE header = lpMsg[0];
 	BYTE head = 0;
 
-	if (header == PACKET_HEADER_C1)
+	if (header == PACKET_C1)
 	{
 		size = lpMsg[1];
 		head = lpMsg[2];
 	}
-	else if (header == PACKET_HEADER_C2)
+	else if (header == PACKET_C2)
 	{
 		if (recvSize < 4)
 		{
@@ -202,7 +202,7 @@ bool CSocketManagerUdp::DataRecv(int recvSize)
 		return false;
 	}
 
-	int minSize = (header == PACKET_HEADER_C1) ? 3 : 4;
+	int minSize = (header == PACKET_C1) ? 3 : 4;
 
 	// En UDP, "size" SIEMPRE debe coincidir exactamente con lo que llegó
 	// en este datagrama. Si no coincide, no es un caso de "esperar más

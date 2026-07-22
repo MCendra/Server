@@ -12,17 +12,17 @@ CCannonTower gCannonTower;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCannonTower::CCannonTower() // OK
+CCannonTower::CCannonTower()
 {
 
 }
 
-CCannonTower::~CCannonTower() // OK
+CCannonTower::~CCannonTower()
 {
 
 }
 
-void CCannonTower::CannonTowerAct(int aIndex) // OK
+void CCannonTower::CannonTowerAct(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 

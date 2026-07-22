@@ -1,99 +1,125 @@
-// SocketManager.h: interface for the CSocketManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// SocketManager.h
 #pragma once
-
+#include "Protocol.h"
 #include "CriticalSection.h"
-#include "Queue.h"
+#include "QueueHandle.h"
 
-#define MAX_MAIN_PACKET_SIZE 8192
-#define MAX_SIDE_PACKET_SIZE 16384
 #define MAX_SERVER_WORKER_THREAD 8
 #define MAX_IO_OPERATION 2
 #define IO_RECV 0
 #define IO_SEND 1
 
-struct IO_MAIN_BUFFER
+#define DEFAULT_TIME_WAIT 5000
+#define DEFAULT_BACKLOG 5
+
+#pragma pack(push,1)
+struct IO_RECV_BUFFER
 {
-	BYTE buff[MAX_MAIN_PACKET_SIZE];
-	int size;
+	BYTE Buffer[MAX_RECV_PACKET_SIZE];
+	int Size;
+};
+
+struct IO_SEND_BUFFER
+{
+	BYTE Buffer[MAX_SEND_PACKET_SIZE];
+	int Size;
 };
 
 struct IO_SIDE_BUFFER
 {
-	BYTE buff[MAX_SIDE_PACKET_SIZE];
-	int size;
+	BYTE Buffer[MAX_SEND_SIDE_PACKET_SIZE];
+	int Size;
 };
 
 struct IO_CONTEXT
 {
-	WSAOVERLAPPED overlapped;
-	WSABUF wsabuf;
+	WSAOVERLAPPED OverLapped;
+	WSABUF WSAbuf;
 	int IoType;
 	int IoSize;
 };
 
 struct IO_RECV_CONTEXT
 {
-	WSAOVERLAPPED overlapped;
-	WSABUF wsabuf;
+	WSAOVERLAPPED OverLapped;
+	WSABUF WSAbuf;
 	int IoType;
 	int IoSize;
-	IO_MAIN_BUFFER IoMainBuffer;
+	IO_RECV_BUFFER IoRecvBuffer;
 };
 
 struct IO_SEND_CONTEXT
 {
-	WSAOVERLAPPED overlapped;
-	WSABUF wsabuf;
+	WSAOVERLAPPED OverLapped;
+	WSABUF WSAbuf;
 	int IoType;
 	int IoSize;
-	IO_MAIN_BUFFER IoMainBuffer;
+	IO_SEND_BUFFER IoSendBuffer;
 	IO_SIDE_BUFFER IoSideBuffer;
 };
 
 struct PER_SOCKET_CONTEXT
 {
+	CCriticalSection Lock;				//Mutex unico por conexion
 	SOCKET Socket;
-	int Index;
+	int Index;							// Puede ser cliente o servidor
 	IO_RECV_CONTEXT IoRecvContext;
 	IO_SEND_CONTEXT IoSendContext;
 };
+#pragma pack(pop)
+
+//struct PER_SOCKET_CONTEXT
+//{
+//	SOCKET Socket;
+//	int Index;
+//	IO_RECV_CONTEXT IoRecvContext;
+//	IO_SEND_CONTEXT IoSendContext;
+//};
 
 class CSocketManager
 {
 public:
 	CSocketManager();
 	virtual ~CSocketManager();
-	bool Start(WORD port);
-	void Clean();
+	bool Init(WORD port);
 	bool CreateListenSocket();
 	bool CreateCompletionPort();
 	bool CreateAcceptThread();
 	bool CreateWorkerThread();
 	bool CreateServerQueue();
-	bool DataRecv(int index,IO_MAIN_BUFFER* lpIoBuffer);
+	bool DataRecv(int index, IO_RECV_BUFFER* lpIoBuffer);
 	bool DataSend(int index,BYTE* lpMsg,int size);
 	void Disconnect(int index);
 	void OnRecv(int index,DWORD IoSize,IO_RECV_CONTEXT* lpIoContext);
 	void OnSend(int index,DWORD IoSize,IO_SEND_CONTEXT* lpIoContext);
-	static int CALLBACK ServerAcceptCondition(IN LPWSABUF lpCallerId,IN LPWSABUF lpCallerData,IN OUT LPQOS lpSQOS,IN OUT LPQOS lpGQOS,IN LPWSABUF lpCalleeId,OUT LPWSABUF lpCalleeData,OUT GROUP FAR* g,CSocketManager* lpSocketManager);
+	// FIX: el ultimo parametro pasa de "CSocketManager*" a "DWORD_PTR" para
+	// coincidir con el tipo real de dwCallbackData en WSAAccept y evitar
+	// truncamiento de puntero en compilaciones x64 (ver SocketManager.cpp).
+	static int CALLBACK ServerAcceptCondition(
+		IN LPWSABUF lpCallerId,
+		IN LPWSABUF lpCallerData,
+		IN OUT LPQOS lpSQOS,
+		IN OUT LPQOS lpGQOS,
+		IN LPWSABUF lpCalleeId,
+		OUT LPWSABUF lpCalleeData,
+		OUT GROUP FAR* g,
+		DWORD_PTR dwCallbackData);
 	static DWORD WINAPI ServerAcceptThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerWorkerThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerQueueThread(CSocketManager* lpSocketManager);
 	DWORD GetQueueSize();
+	void Clean();
 private:
-	SOCKET m_listen;
+	SOCKET m_Listen;
 	HANDLE m_CompletionPort;
-	WORD m_port;
+	WORD m_Port;
 	HANDLE m_ServerAcceptThread;
 	HANDLE m_ServerWorkerThread[MAX_SERVER_WORKER_THREAD];
 	DWORD m_ServerWorkerThreadCount;
 	CQueue m_ServerQueue;
 	HANDLE m_ServerQueueSemaphore;
 	HANDLE m_ServerQueueThread;
-	CCriticalSection m_critical;
+	HANDLE m_ShutdownEvent;
 };
 
 extern CSocketManager gSocketManager;

@@ -8,7 +8,7 @@
 
 struct HACK_PACKET_INFO
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Index = -1;
 		this->Value = -1;
@@ -28,12 +28,12 @@ struct HACK_PACKET_INFO
 
 struct HACK_PACKET_MAIN_INFO
 {
-	void ResetIndex() // OK
+	void ResetIndex()
 	{
 		this->IndexInfo.Reset();
 	}
 
-	void ResetValue() // OK
+	void ResetValue()
 	{
 		for(int n=0;n < MAX_HACK_PACKET_INFO;n++)
 		{

@@ -19,7 +19,7 @@ CHwidManager::~CHwidManager()
 
 }
 
-bool CHwidManager::CheckHwid(char* HardwarewId) // OK
+bool CHwidManager::CheckHwid(char* HardwarewId)
 {
 	std::map<std::string, HardwareId_INFO>::iterator it = this->m_HwidInfo.find(std::string(HardwarewId));
 
@@ -33,7 +33,7 @@ bool CHwidManager::CheckHwid(char* HardwarewId) // OK
 	}
 }
 
-void CHwidManager::InsertHwid(char* HardwarewId, int aIndex) // OK
+void CHwidManager::InsertHwid(char* HardwarewId, int aIndex)
 {
 	HardwareId_INFO info;
 
@@ -62,7 +62,7 @@ void CHwidManager::InsertHwid(char* HardwarewId, int aIndex) // OK
 	}
 }
 
-void CHwidManager::RemoveHwid(char* HardwarewId) // OK
+void CHwidManager::RemoveHwid(char* HardwarewId)
 {
 	std::map<std::string, HardwareId_INFO>::iterator it = this->m_HwidInfo.find(std::string(HardwarewId));
 

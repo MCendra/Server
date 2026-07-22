@@ -26,7 +26,7 @@ void HuyHieu::Init()
 	this->m_HuyHieu.dong5 = 0;
 }
 
-void HuyHieu::Load(char* path) // OK
+void HuyHieu::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

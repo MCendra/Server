@@ -14,17 +14,17 @@ CMapManager gMapManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMapManager::CMapManager() // OK
+CMapManager::CMapManager()
 {
 	this->m_MapManagerInfo.clear();
 }
 
-CMapManager::~CMapManager() // OK
+CMapManager::~CMapManager()
 {
 
 }
 
-void CMapManager::Load(char* path) // OK
+void CMapManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -126,7 +126,7 @@ void CMapManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-int CMapManager::GetMapNonPK(int index, LPOBJ lpObj, LPOBJ lpTarget) // OK
+int CMapManager::GetMapNonPK(int index, LPOBJ lpObj, LPOBJ lpTarget)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -153,7 +153,7 @@ int CMapManager::GetMapNonPK(int index, LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-int CMapManager::GetMapNonPK(int index) // OK
+int CMapManager::GetMapNonPK(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -167,7 +167,7 @@ int CMapManager::GetMapNonPK(int index) // OK
 	}
 }
 
-int CMapManager::GetMapNonOutlaw(int index) // OK
+int CMapManager::GetMapNonOutlaw(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -181,7 +181,7 @@ int CMapManager::GetMapNonOutlaw(int index) // OK
 	}
 }
 
-int CMapManager::GetMapViewRange(int index) // OK
+int CMapManager::GetMapViewRange(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -195,7 +195,7 @@ int CMapManager::GetMapViewRange(int index) // OK
 	}
 }
 
-int CMapManager::GetMapExperienceRate(int index) // OK
+int CMapManager::GetMapExperienceRate(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -209,7 +209,7 @@ int CMapManager::GetMapExperienceRate(int index) // OK
 	}
 }
 
-int CMapManager::GetMapMasterExperienceRate(int index) // OK
+int CMapManager::GetMapMasterExperienceRate(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -223,7 +223,7 @@ int CMapManager::GetMapMasterExperienceRate(int index) // OK
 	}
 }
 
-int CMapManager::GetMapItemDropRate(int index) // OK
+int CMapManager::GetMapItemDropRate(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -237,7 +237,7 @@ int CMapManager::GetMapItemDropRate(int index) // OK
 	}
 }
 
-int CMapManager::GetMapExcItemDropRate(int index) // OK
+int CMapManager::GetMapExcItemDropRate(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -251,7 +251,7 @@ int CMapManager::GetMapExcItemDropRate(int index) // OK
 	}
 }
 
-int CMapManager::GetMapSetItemDropRate(int index) // OK
+int CMapManager::GetMapSetItemDropRate(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -265,7 +265,7 @@ int CMapManager::GetMapSetItemDropRate(int index) // OK
 	}
 }
 
-int CMapManager::GetMapSocketItemDrop(int index) // OK
+int CMapManager::GetMapSocketItemDrop(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -279,7 +279,7 @@ int CMapManager::GetMapSocketItemDrop(int index) // OK
 	}
 }
 
-int CMapManager::GetMapHelperEnable(int index) // OK
+int CMapManager::GetMapHelperEnable(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -293,7 +293,7 @@ int CMapManager::GetMapHelperEnable(int index) // OK
 	}
 }
 
-int CMapManager::GetMapGensBattle(int index) // OK
+int CMapManager::GetMapGensBattle(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -307,7 +307,7 @@ int CMapManager::GetMapGensBattle(int index) // OK
 	}
 }
 
-int CMapManager::GetMapDisableCustomAttack(int index) // OK
+int CMapManager::GetMapDisableCustomAttack(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -322,7 +322,7 @@ int CMapManager::GetMapDisableCustomAttack(int index) // OK
 }
 
 
-int CMapManager::GetMapCustomStore(int index) // OK
+int CMapManager::GetMapCustomStore(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -336,7 +336,7 @@ int CMapManager::GetMapCustomStore(int index) // OK
 	}
 }
 
-int CMapManager::GetMapCustomPick(int index) // OK
+int CMapManager::GetMapCustomPick(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -350,7 +350,7 @@ int CMapManager::GetMapCustomPick(int index) // OK
 	}
 }
 
-int CMapManager::GetMapCommandHelp(int index) // OK
+int CMapManager::GetMapCommandHelp(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -364,7 +364,7 @@ int CMapManager::GetMapCommandHelp(int index) // OK
 	}
 }
 
-int CMapManager::GetMapCommandOffPvP(int index) // OK
+int CMapManager::GetMapCommandOffPvP(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -378,7 +378,7 @@ int CMapManager::GetMapCommandOffPvP(int index) // OK
 	}
 }
 
-int CMapManager::GetMapPkDropItem(int index) // OK
+int CMapManager::GetMapPkDropItem(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -392,7 +392,7 @@ int CMapManager::GetMapPkDropItem(int index) // OK
 	}
 }
 
-int CMapManager::GetMapAllowTrade(int index) // OK
+int CMapManager::GetMapAllowTrade(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -406,7 +406,7 @@ int CMapManager::GetMapAllowTrade(int index) // OK
 	}
 }
 
-int CMapManager::GetMapDeathGate(int index) // OK
+int CMapManager::GetMapDeathGate(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 
@@ -419,7 +419,7 @@ int CMapManager::GetMapDeathGate(int index) // OK
 		return ((it->second.DeathGate == -1) ? 0 : it->second.DeathGate);
 	}
 }
-char* CMapManager::GetMapName(int index) // OK
+char* CMapManager::GetMapName(int index)
 {
 	std::map<int, MAP_MANAGER_INFO>::iterator it = this->m_MapManagerInfo.find(index);
 

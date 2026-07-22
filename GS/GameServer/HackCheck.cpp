@@ -10,7 +10,7 @@ BYTE MHPEncDecKey1;
 BYTE MHPEncDecKey2;
 char MHPCustomerName[32];
 
-void DecryptData(BYTE* lpMsg,int size) // OK
+void DecryptData(BYTE* lpMsg,int size)
 {
 	if(MHPEncDecKey1 != 0 || MHPEncDecKey2 != 0)
 	{
@@ -23,7 +23,7 @@ void DecryptData(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void EncryptData(BYTE* lpMsg,int size) // OK
+void EncryptData(BYTE* lpMsg,int size)
 {
 	for(int n=0;n < size;n++)
 	{
@@ -36,7 +36,7 @@ void EncryptData(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void MHPDecryptData(BYTE* lpMsg,int size) // OK
+void MHPDecryptData(BYTE* lpMsg,int size)
 {
 	for(int n=0;n < size;n++)
 	{
@@ -44,7 +44,7 @@ void MHPDecryptData(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void MHPEncryptData(BYTE* lpMsg,int size) // OK
+void MHPEncryptData(BYTE* lpMsg,int size)
 {
 	for(int n=0;n < size;n++)
 	{
@@ -52,7 +52,7 @@ void MHPEncryptData(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void InitHackCheck() // OK
+void InitHackCheck()
 {
 	VM_START
 

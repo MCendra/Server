@@ -15,17 +15,17 @@ CPartyMatching gPartyMatching;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPartyMatching::CPartyMatching() // OK
+CPartyMatching::CPartyMatching()
 {
 
 }
 
-CPartyMatching::~CPartyMatching() // OK
+CPartyMatching::~CPartyMatching()
 {
 
 }
 
-void CPartyMatching::CGPartyMatchingInsertRecv(PMSG_PARTY_MATCHING_INSERT_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingInsertRecv(PMSG_PARTY_MATCHING_INSERT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -66,7 +66,7 @@ void CPartyMatching::CGPartyMatchingInsertRecv(PMSG_PARTY_MATCHING_INSERT_RECV* 
 	#endif
 }
 
-void CPartyMatching::CGPartyMatchingListRecv(PMSG_PARTY_MATCHING_LIST_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingListRecv(PMSG_PARTY_MATCHING_LIST_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -82,7 +82,7 @@ void CPartyMatching::CGPartyMatchingListRecv(PMSG_PARTY_MATCHING_LIST_RECV* lpMs
 	#endif
 }
 
-void CPartyMatching::CGPartyMatchingJoinInsertRecv(PMSG_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingJoinInsertRecv(PMSG_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -123,7 +123,7 @@ void CPartyMatching::CGPartyMatchingJoinInsertRecv(PMSG_PARTY_MATCHING_JOIN_INSE
 	#endif
 }
 
-void CPartyMatching::CGPartyMatchingJoinInfoRecv(PMSG_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingJoinInfoRecv(PMSG_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -139,7 +139,7 @@ void CPartyMatching::CGPartyMatchingJoinInfoRecv(PMSG_PARTY_MATCHING_JOIN_INFO_R
 	#endif
 }
 
-void CPartyMatching::CGPartyMatchingJoinListRecv(PMSG_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingJoinListRecv(PMSG_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -155,7 +155,7 @@ void CPartyMatching::CGPartyMatchingJoinListRecv(PMSG_PARTY_MATCHING_JOIN_LIST_R
 	#endif
 }
 
-void CPartyMatching::CGPartyMatchingJoinAcceptRecv(PMSG_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingJoinAcceptRecv(PMSG_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -201,7 +201,7 @@ void CPartyMatching::CGPartyMatchingJoinAcceptRecv(PMSG_PARTY_MATCHING_JOIN_ACCE
 	#endif
 }
 
-void CPartyMatching::CGPartyMatchingJoinCancelRecv(PMSG_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg,int aIndex) // OK
+void CPartyMatching::CGPartyMatchingJoinCancelRecv(PMSG_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -217,7 +217,7 @@ void CPartyMatching::CGPartyMatchingJoinCancelRecv(PMSG_PARTY_MATCHING_JOIN_CANC
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -243,7 +243,7 @@ void CPartyMatching::DGPartyMatchingInsertRecv(SDHP_PARTY_MATCHING_INSERT_RECV* 
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -320,7 +320,7 @@ void CPartyMatching::DGPartyMatchingListRecv(SDHP_PARTY_MATCHING_LIST_RECV* lpMs
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSERT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -346,7 +346,7 @@ void CPartyMatching::DGPartyMatchingJoinInsertRecv(SDHP_PARTY_MATCHING_JOIN_INSE
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -374,7 +374,7 @@ void CPartyMatching::DGPartyMatchingJoinInfoRecv(SDHP_PARTY_MATCHING_JOIN_INFO_R
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -427,7 +427,7 @@ void CPartyMatching::DGPartyMatchingJoinListRecv(SDHP_PARTY_MATCHING_JOIN_LIST_R
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCEPT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -457,7 +457,7 @@ void CPartyMatching::DGPartyMatchingJoinAcceptRecv(SDHP_PARTY_MATCHING_JOIN_ACCE
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANCEL_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -487,7 +487,7 @@ void CPartyMatching::DGPartyMatchingJoinCancelRecv(SDHP_PARTY_MATCHING_JOIN_CANC
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingNotifyRecv(SDHP_PARTY_MATCHING_NOTIFY_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingNotifyRecv(SDHP_PARTY_MATCHING_NOTIFY_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -528,7 +528,7 @@ void CPartyMatching::DGPartyMatchingNotifyRecv(SDHP_PARTY_MATCHING_NOTIFY_RECV* 
 	#endif
 }
 
-void CPartyMatching::DGPartyMatchingNotifyLeaderRecv(SDHP_PARTY_MATCHING_NOTIFY_LEADER_RECV* lpMsg) // OK
+void CPartyMatching::DGPartyMatchingNotifyLeaderRecv(SDHP_PARTY_MATCHING_NOTIFY_LEADER_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -550,7 +550,7 @@ void CPartyMatching::DGPartyMatchingNotifyLeaderRecv(SDHP_PARTY_MATCHING_NOTIFY_
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingInsertSend(int aIndex,char* text,char* password,WORD MinLevel,WORD MaxLevel,WORD HuntingGround,BYTE WantedClass,BYTE WantedClassDetailInfo[7],BYTE UsePassword,BYTE ApprovalType) // OK
+void CPartyMatching::GDPartyMatchingInsertSend(int aIndex,char* text,char* password,WORD MinLevel,WORD MaxLevel,WORD HuntingGround,BYTE WantedClass,BYTE WantedClassDetailInfo[7],BYTE UsePassword,BYTE ApprovalType)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -605,7 +605,7 @@ void CPartyMatching::GDPartyMatchingInsertSend(int aIndex,char* text,char* passw
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingListSend(int aIndex,DWORD page,char* SearchWord,BYTE UseSearchWord) // OK
+void CPartyMatching::GDPartyMatchingListSend(int aIndex,DWORD page,char* SearchWord,BYTE UseSearchWord)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -641,7 +641,7 @@ void CPartyMatching::GDPartyMatchingListSend(int aIndex,DWORD page,char* SearchW
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinInsertSend(int aIndex,char* LeaderName,char* password,BYTE UsePassword,BYTE UseRandomParty) // OK
+void CPartyMatching::GDPartyMatchingJoinInsertSend(int aIndex,char* LeaderName,char* password,BYTE UsePassword,BYTE UseRandomParty)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -684,7 +684,7 @@ void CPartyMatching::GDPartyMatchingJoinInsertSend(int aIndex,char* LeaderName,c
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinInfoSend(int aIndex) // OK
+void CPartyMatching::GDPartyMatchingJoinInfoSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -708,7 +708,7 @@ void CPartyMatching::GDPartyMatchingJoinInfoSend(int aIndex) // OK
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinListSend(int aIndex) // OK
+void CPartyMatching::GDPartyMatchingJoinListSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -732,7 +732,7 @@ void CPartyMatching::GDPartyMatchingJoinListSend(int aIndex) // OK
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinAcceptSend(int aIndex,char* MemberName,BYTE type) // OK
+void CPartyMatching::GDPartyMatchingJoinAcceptSend(int aIndex,char* MemberName,BYTE type)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -760,7 +760,7 @@ void CPartyMatching::GDPartyMatchingJoinAcceptSend(int aIndex,char* MemberName,B
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingJoinCancelSend(int aIndex,BYTE type,BYTE flag) // OK
+void CPartyMatching::GDPartyMatchingJoinCancelSend(int aIndex,BYTE type,BYTE flag)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -793,7 +793,7 @@ void CPartyMatching::GDPartyMatchingJoinCancelSend(int aIndex,BYTE type,BYTE fla
 	#endif
 }
 
-void CPartyMatching::GDPartyMatchingInsertSaveSend(int aIndex) // OK
+void CPartyMatching::GDPartyMatchingInsertSaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 

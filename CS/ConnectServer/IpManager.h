@@ -7,8 +7,8 @@
 class CIpManager
 {
 public:
-    CIpManager();
-    virtual ~CIpManager();
+	CIpManager() = default;
+    ~CIpManager() = default;
     bool CheckIpAddress(const std::string& IpAddress);
     void InsertIpAddress(const std::string& IpAddress);
     void RemoveIpAddress(const std::string& IpAddress);

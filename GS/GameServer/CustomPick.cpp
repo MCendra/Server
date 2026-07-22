@@ -21,17 +21,17 @@ CCustomPick gCustomPick;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomPick::CCustomPick() // OK
+CCustomPick::CCustomPick()
 {
 	this->m_CustomPickInfo.clear();
 }
 
-CCustomPick::~CCustomPick() // OK
+CCustomPick::~CCustomPick()
 {
 
 }
 
-void CCustomPick::Load(char* path) // OK
+void CCustomPick::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -85,7 +85,7 @@ void CCustomPick::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomPick::GetInfo(int index, CUSTOMPICK_INFO* lpInfo) // OK
+bool CCustomPick::GetInfo(int index, CUSTOMPICK_INFO* lpInfo)
 {
 	std::map<int, CUSTOMPICK_INFO>::iterator it = this->m_CustomPickInfo.find(index);
 
@@ -100,7 +100,7 @@ bool CCustomPick::GetInfo(int index, CUSTOMPICK_INFO* lpInfo) // OK
 	}
 }
 
-bool CCustomPick::GetInfoByName(char* message, CUSTOMPICK_INFO* lpInfo) // OK
+bool CCustomPick::GetInfoByName(char* message, CUSTOMPICK_INFO* lpInfo)
 {
 	char command[32] = { 0 };
 
@@ -121,7 +121,7 @@ bool CCustomPick::GetInfoByName(char* message, CUSTOMPICK_INFO* lpInfo) // OK
 	return 0;
 }
 
-void CCustomPick::ItemGet(LPOBJ lpObj) // OK
+void CCustomPick::ItemGet(LPOBJ lpObj)
 {
 	if (gObjIsConnectedGP(lpObj->Index) == 0)
 	{
@@ -384,7 +384,7 @@ void CCustomPick::ItemGet(LPOBJ lpObj) // OK
 }
 
 
-void CCustomPick::PickProc(LPOBJ lpObj) // OK
+void CCustomPick::PickProc(LPOBJ lpObj)
 {
 
 	if (lpObj->PickupEnable == 0)

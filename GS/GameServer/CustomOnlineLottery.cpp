@@ -20,7 +20,7 @@ CCustomOnlineLottery gCustomOnlineLottery;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomOnlineLottery::CCustomOnlineLottery() // OK
+CCustomOnlineLottery::CCustomOnlineLottery()
 {
 	for(int n=0;n < MAX_CUSTOM_ONLINE_LOTTERY;n++)
 	{
@@ -36,12 +36,12 @@ CCustomOnlineLottery::CCustomOnlineLottery() // OK
 	}
 }
 
-CCustomOnlineLottery::~CCustomOnlineLottery() // OK
+CCustomOnlineLottery::~CCustomOnlineLottery()
 {
 
 }
 
-void CCustomOnlineLottery::Init() // OK
+void CCustomOnlineLottery::Init()
 {
 	for(int n=0;n < MAX_CUSTOM_ONLINE_LOTTERY;n++)
 	{
@@ -56,7 +56,7 @@ void CCustomOnlineLottery::Init() // OK
 	}
 }
 
-void CCustomOnlineLottery::ReadCustomOnlineLotteryInfo(char* section,char* path) // OK
+void CCustomOnlineLottery::ReadCustomOnlineLotteryInfo(char* section,char* path)
 {
 	this->m_CustomOnlineLotterySwitch = GetPrivateProfileInt(section,"CustomOnlineLotterySwitch",0,path);
 
@@ -67,7 +67,7 @@ void CCustomOnlineLottery::ReadCustomOnlineLotteryInfo(char* section,char* path)
 	GetPrivateProfileString(section,"CustomOnlineLotteryText3","",this->m_CustomOnlineLotteryText3,sizeof(this->m_CustomOnlineLotteryText3),path);
 }
 
-void CCustomOnlineLottery::Load(char* path) // OK
+void CCustomOnlineLottery::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -178,7 +178,7 @@ void CCustomOnlineLottery::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomOnlineLottery::MainProc() // OK
+void CCustomOnlineLottery::MainProc()
 {
 	for(int n=0;n < MAX_CUSTOM_ONLINE_LOTTERY;n++)
 	{
@@ -232,12 +232,12 @@ void CCustomOnlineLottery::MainProc() // OK
 	}
 }
 
-void CCustomOnlineLottery::ProcState_BLANK(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::ProcState_BLANK(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 
 }
 
-void CCustomOnlineLottery::ProcState_EMPTY(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::ProcState_EMPTY(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 	if(lpInfo->RemainTime > 0 && lpInfo->RemainTime <= (lpInfo->RuleInfo.AlarmTime*60))
 	{
@@ -255,7 +255,7 @@ void CCustomOnlineLottery::ProcState_EMPTY(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) /
 	}
 }
 
-void CCustomOnlineLottery::ProcState_START(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::ProcState_START(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 	int Map = lpInfo->RuleInfo.Map;
 
@@ -299,7 +299,7 @@ void CCustomOnlineLottery::ProcState_START(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) /
 	}
 }
 
-void CCustomOnlineLottery::SetState(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo,int state) // OK
+void CCustomOnlineLottery::SetState(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo,int state)
 {
 	switch((lpInfo->State=state))
 	{
@@ -315,12 +315,12 @@ void CCustomOnlineLottery::SetState(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo,int state
 	}
 }
 
-void CCustomOnlineLottery::SetState_BLANK(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::SetState_BLANK(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 
 }
 
-void CCustomOnlineLottery::SetState_EMPTY(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::SetState_EMPTY(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 	lpInfo->AlarmMinSave = -1;
 	lpInfo->AlarmMinLeft = -1;
@@ -328,7 +328,7 @@ void CCustomOnlineLottery::SetState_EMPTY(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) //
 	this->CheckSync(lpInfo);
 }
 
-void CCustomOnlineLottery::SetState_START(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::SetState_START(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 	lpInfo->AlarmMinSave = -1;
 	lpInfo->AlarmMinLeft = -1;
@@ -338,7 +338,7 @@ void CCustomOnlineLottery::SetState_START(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) //
 	lpInfo->TargetTime = (int)(time(0)+lpInfo->RemainTime);
 }
 
-void CCustomOnlineLottery::CheckSync(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo) // OK
+void CCustomOnlineLottery::CheckSync(CUSTOM_ONLINE_LOTTERY_INFO* lpInfo)
 {
 	if(lpInfo->StartTime.empty() != 0)
 	{
@@ -408,7 +408,7 @@ int CCustomOnlineLottery::GetIndexSorted(int Map)
 	return 0;
 }
 
-void CCustomOnlineLottery::StartNow(int map) // OK
+void CCustomOnlineLottery::StartNow(int map)
 {
 	int Map = map;
 

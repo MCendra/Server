@@ -1,7 +1,7 @@
 // SocketManager.cpp
 //
 // Gestor de sockets basado en I/O Completion Ports (IOCP) para Mu Online
-// Season 6 Episodio 15 (ConnectServer / JoinServer).
+// Season 6 (ConnectServer).
 //
 // Responsabilidades principales:
 //   - Crear y configurar el socket de escucha (listen socket).
@@ -26,14 +26,14 @@ CSocketManager gSocketManager;
 // Construccion / Destruccion
 
 CSocketManager::CSocketManager()
-	: m_listen(INVALID_SOCKET),         // Socket de escucha invalido hasta CreateListenSocket().
+	: m_Listen(INVALID_SOCKET),         // Socket de escucha invalido hasta CreateListenSocket().
 	m_CompletionPort(nullptr),          // Puerto de finalizacion aun no creado.
-	m_port(0),                          // Puerto TCP, se asigna en Init().
+	m_Port(0),                          // Puerto TCP, se asigna en Init().
 	m_ServerAcceptThread(nullptr),      // Hilo de aceptacion, se crea en CreateAcceptThread().
 	m_ServerQueueSemaphore(nullptr),    // Semaforo de la cola, se crea en CreateServerQueue().
 	m_ServerQueueThread(nullptr),       // Hilo de la cola, se crea en CreateServerQueue().
 	m_ServerWorkerThreadCount(0),       // Cantidad real de hilos de trabajo (segun CPUs).
-	m_shutdownEvent(nullptr)            // Evento de apagado cooperativo (manual-reset).
+	m_ShutdownEvent(nullptr)            // Evento de apagado cooperativo (manual-reset).
 {
 	// Inicializa cada hilo del servidor en el array m_ServerWorkerThread a nullptr.
 	// Esto asegura que Clean() pueda iterar el array de forma segura sin
@@ -67,11 +67,11 @@ CSocketManager::~CSocketManager()
 // se haya alcanzado a crear y se retorna false.
 bool CSocketManager::Init(WORD port)
 {
-	m_port = port;
+	m_Port = port;
 
 	// Evento de parada manual-reset: una vez señalado (SetEvent), permanece
 	// señalado para todos los hilos que lo consulten (no se auto-resetea).
-	if ((m_shutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
+	if ((m_ShutdownEvent = CreateEvent(nullptr, true, false, nullptr)) == nullptr)
 	{
 		Log.ToDisp(LOG_RED, "[SocketManager - Init] Error al crear evento de shutdown: %d", GetLastError());
 		Clean();
@@ -114,7 +114,7 @@ bool CSocketManager::Init(WORD port)
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, "[SocketManager - Init] Servidor TCP iniciado en el puerto [%d]", m_port);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - Init] Servidor TCP iniciado en el puerto [%d]", m_Port);
 	return true;
 }
 
@@ -126,11 +126,11 @@ bool CSocketManager::Init(WORD port)
 //     inmediatamente despues de reiniciar el proceso (evita el tipico
 //     error "Only one usage of each socket address is normally permitted"
 //     cuando el socket anterior queda en TIME_WAIT).
-//   - bind() sobre INADDR_ANY:m_port.
+//   - bind() sobre INADDR_ANY:m_Port.
 //   - listen() con el backlog por defecto.
 bool CSocketManager::CreateListenSocket()
 {
-	if ((m_listen = WSASocket(AF_INET, SOCK_STREAM, 0, nullptr, 0, WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
+	if ((m_Listen = WSASocket(AF_INET, SOCK_STREAM, 0, nullptr, 0, WSA_FLAG_OVERLAPPED)) == INVALID_SOCKET)
 	{
 		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] WSASocket() fallo con el error: %d", WSAGetLastError());
 		return false;
@@ -140,7 +140,7 @@ bool CSocketManager::CreateListenSocket()
 	// inmediatamente despues de cerrar el servidor (muy util al recompilar
 	// y relanzar el servidor seguido durante el desarrollo en VS2026).
 	BOOL reuseAddr = true;
-	if (setsockopt(m_listen, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseAddr, sizeof(reuseAddr)) == SOCKET_ERROR)
+	if (setsockopt(m_Listen, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseAddr, sizeof(reuseAddr)) == SOCKET_ERROR)
 	{
 		// No es fatal: solo se informa y se continua.
 		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] setsockopt(SO_REUSEADDR) fallo con el error: %d", WSAGetLastError());
@@ -149,21 +149,21 @@ bool CSocketManager::CreateListenSocket()
 	SOCKADDR_IN SocketAddr {};
 	SocketAddr.sin_family = AF_INET;
 	SocketAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	SocketAddr.sin_port = htons(m_port);
+	SocketAddr.sin_port = htons(m_Port);
 
-	if (bind(m_listen, (sockaddr*)&SocketAddr, sizeof(SocketAddr)) == SOCKET_ERROR)
+	if (bind(m_Listen, (sockaddr*)&SocketAddr, sizeof(SocketAddr)) == SOCKET_ERROR)
 	{
-		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] bind() fallo en el puerto %d con el error: %d", m_port, WSAGetLastError());
+		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] bind() fallo en el puerto %d con el error: %d", m_Port, WSAGetLastError());
 		return false;
 	}
 
-	if (listen(m_listen, DEFAULT_BACKLOG) == SOCKET_ERROR)
+	if (listen(m_Listen, DEFAULT_BACKLOG) == SOCKET_ERROR)
 	{
 		Log.ToDisp(LOG_RED, "[SocketManager - CreateListenSocket] listen() fallo con el error: %d", WSAGetLastError());
 		return false;
 	}
 
-	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateListenSocket] Socket de escucha creado exitosamente en el puerto: %d", m_port);
+	Log.ToDisp(LOG_BLACK, "[SocketManager - CreateListenSocket] Socket de escucha creado exitosamente en el puerto: %d", m_Port);
 
 	return true;
 }
@@ -276,125 +276,6 @@ bool CSocketManager::CreateServerQueue()
 	return true;
 }
 
-
-// =====================================================================
-// Apagado / liberacion de recursos
-// =====================================================================
-
-// Libera de forma ordenada todos los recursos utilizados por el gestor
-// de sockets. Es seguro llamarla aunque Init() no haya llegado a
-// completarse (todos los miembros se chequean contra su valor "vacio").
-//
-// Secuencia de apagado cooperativo:
-//   1) Señaliza m_shutdownEvent: cualquier hilo que este esperando en el
-//      (ServerAcceptThread, ServerQueueThread) lo detecta y termina.
-//   2) Cierra el socket de escucha: hace que WSAAccept() falle de
-//      inmediato si ServerAcceptThread estaba bloqueado en el.
-//   3) Publica un paquete "vacio" por cada worker en el IOCP: cada
-//      ServerWorkerThread recibe IoSize=0/index=0/lpOverlapped=nullptr,
-//      lo reconoce como señal de apagado y termina.
-//   4) Libera el semaforo de la cola una vez para destrabar
-//      ServerQueueThread (que tambien esta esperando m_shutdownEvent).
-//   5) Espera (con timeout) a que cada hilo termine y cierra sus handles.
-//   6) Libera el semaforo, vacia la cola, cierra el IOCP y el evento.
-void CSocketManager::Clean()
-{
-	// 1) Señalizar parada cooperativa.
-	if (m_shutdownEvent != nullptr)
-	{
-		SetEvent(m_shutdownEvent);
-	}
-
-	// 2) Cerrar socket de escucha para hacer fallar WSAAccept y permitir
-	//    la salida del hilo de aceptacion.
-	if (m_listen != INVALID_SOCKET)
-	{
-		closesocket(m_listen);
-		m_listen = INVALID_SOCKET;
-	}
-
-	// 3) Despertar hilos worker publicando paquetes vacios en el completion port.
-	if (m_CompletionPort != nullptr)
-	{
-		for (DWORD n = 0; n < m_ServerWorkerThreadCount; ++n)
-		{
-			PostQueuedCompletionStatus(m_CompletionPort, 0, 0, nullptr);
-		}
-	}
-
-	// 4) Señalizar hilo de cola (el evento de parada tambien hara que
-	//    WaitForMultipleObjects termine, pero liberamos el semaforo por
-	//    si el hilo esta justo evaluando la cola).
-	if (m_ServerQueueSemaphore != nullptr)
-	{
-		ReleaseSemaphore(m_ServerQueueSemaphore, 1, nullptr);
-	}
-
-	// 5) Esperar a que los hilos terminen correctamente, en orden:
-	//    cola -> workers -> accept.
-	if (m_ServerQueueThread != nullptr)
-	{
-		if (WaitForSingleObject(m_ServerQueueThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
-		{
-			Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerQueueThread al detenerse.");
-		}
-		CloseHandle(m_ServerQueueThread);
-		m_ServerQueueThread = nullptr;
-	}
-
-	for (DWORD n = 0; n < m_ServerWorkerThreadCount; ++n)
-	{
-		if (m_ServerWorkerThread[n] != nullptr)
-		{
-			if (WaitForSingleObject(m_ServerWorkerThread[n], DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
-			{
-				Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerWorkerThread %lu al detenerse.", n);
-			}
-			CloseHandle(m_ServerWorkerThread[n]);
-			m_ServerWorkerThread[n] = nullptr;
-		}
-	}
-
-	if (m_ServerAcceptThread != nullptr)
-	{
-		if (WaitForSingleObject(m_ServerAcceptThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
-		{
-			Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerAcceptThread al detenerse.");
-		}
-		CloseHandle(m_ServerAcceptThread);
-		m_ServerAcceptThread = nullptr;
-	}
-
-	// 6) Liberar el resto de los recursos.
-	if (m_ServerQueueSemaphore != nullptr)
-	{
-		CloseHandle(m_ServerQueueSemaphore);
-		m_ServerQueueSemaphore = nullptr;
-	}
-
-	m_ServerQueue.ClearQueue();
-
-	if (m_CompletionPort != nullptr)
-	{
-		for (int n = 0; n < MAX_CLIENT; n++)
-		{
-			if (gClientManager[n].IsOnline())
-			{
-				Disconnect(n);
-			}
-		}
-		CloseHandle(m_CompletionPort);
-		m_CompletionPort = nullptr;
-	}
-
-	if (m_shutdownEvent != nullptr)
-	{
-		CloseHandle(m_shutdownEvent);
-		m_shutdownEvent = nullptr;
-	}
-}
-
-
 // =====================================================================
 // Recepcion / parsing del protocolo
 // =====================================================================
@@ -440,7 +321,7 @@ bool CSocketManager::DataRecv(int serverIndex, IO_RECV_BUFFER* lpIoBuffer)
 		int size = 0;
 		BYTE protocolhead = 0;
 
-		if (lpMsg[count] == PACKET_HEADER_C1)
+		if (lpMsg[count] == PACKET_C1)
 		{
 			// Cabecera C1: necesitamos al menos 3 bytes (header+size+head).
 			if (available < 3)
@@ -453,7 +334,7 @@ bool CSocketManager::DataRecv(int serverIndex, IO_RECV_BUFFER* lpIoBuffer)
 			size = lpMsg[count + 1];
 			protocolhead = lpMsg[count + 2];
 		}
-		else if (lpMsg[count] == PACKET_HEADER_C2)
+		else if (lpMsg[count] == PACKET_C2)
 		{
 			// Cabecera C2: necesitamos al menos 4 bytes (header+size_hi+size_lo+head).
 			if (available < 4)
@@ -482,7 +363,7 @@ bool CSocketManager::DataRecv(int serverIndex, IO_RECV_BUFFER* lpIoBuffer)
 		// minimo de 4 bytes para contener la cabecera completa
 		// (header + sizeH + sizeL + head); un "size" menor a 4 ni
 		// siquiera alcanza para la propia cabecera.
-		int minSize = (lpMsg[count] == PACKET_HEADER_C1) ? 3 : 4;
+		int minSize = (lpMsg[count] == PACKET_C1) ? 3 : 4;
 
 		if (size < minSize || size > MAX_RECV_PACKET_SIZE)
 		{
@@ -923,7 +804,7 @@ int CALLBACK CSocketManager::ServerAcceptCondition(IN LPWSABUF lpCallerId, IN LP
 // Hilo principal de aceptacion de conexiones.
 //
 // Bucle:
-//   1) Si m_shutdownEvent esta señalado, termina el hilo.
+//   1) Si m_ShutdownEvent esta señalado, termina el hilo.
 //   2) WSAAccept() (bloqueante) espera una nueva conexion, validandola
 //      con ServerAcceptCondition (filtro por IP).
 //   3) Si WSAAccept falla:
@@ -943,20 +824,20 @@ DWORD WINAPI CSocketManager::ServerAcceptThread(CSocketManager* lpSocketManager)
 
 	while (true)
 	{
-		if (lpSocketManager->m_shutdownEvent && WaitForSingleObject(lpSocketManager->m_shutdownEvent, 0) == WAIT_OBJECT_0)
+		if (lpSocketManager->m_ShutdownEvent && WaitForSingleObject(lpSocketManager->m_ShutdownEvent, 0) == WAIT_OBJECT_0)
 		{
 			break;
 		}
 
 		// FIX: se castea el puntero a DWORD_PTR (no DWORD) para que sea
 		// valido tanto en x86 como en x64.
-		SOCKET socket = WSAAccept(lpSocketManager->m_listen, (sockaddr*)&SocketAddr, &SocketAddrSize, (LPCONDITIONPROC)&lpSocketManager->ServerAcceptCondition, (DWORD_PTR)lpSocketManager);
+		SOCKET socket = WSAAccept(lpSocketManager->m_Listen, (sockaddr*)&SocketAddr, &SocketAddrSize, (LPCONDITIONPROC)&lpSocketManager->ServerAcceptCondition, (DWORD_PTR)lpSocketManager);
 
 		if (socket == INVALID_SOCKET)
 		{
 			// Si el listen socket fue cerrado durante el shutdown, WSAAccept
 			// falla de inmediato: comprobamos el evento de parada.
-			if (lpSocketManager->m_shutdownEvent && WaitForSingleObject(lpSocketManager->m_shutdownEvent, 0) == WAIT_OBJECT_0)
+			if (lpSocketManager->m_ShutdownEvent && WaitForSingleObject(lpSocketManager->m_ShutdownEvent, 0) == WAIT_OBJECT_0)
 			{
 				break;
 			}
@@ -1100,14 +981,14 @@ DWORD WINAPI CSocketManager::ServerWorkerThread(CSocketManager* lpSocketManager)
 // Espera simultaneamente (WaitForMultipleObjects) en dos handles:
 //   - m_ServerQueueSemaphore: se libera una vez por cada paquete
 //     encolado (y una vez mas durante Clean() para destrabar el hilo).
-//   - m_shutdownEvent: señal de apagado cooperativo.
+//   - m_ShutdownEvent: señal de apagado cooperativo.
 //
 // Si el handle señalado es el evento de parada, el hilo termina. En
 // caso contrario, intenta sacar un paquete de la cola y, si el cliente
 // asociado sigue conectado, lo procesa.
 DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 {
-	HANDLE handles[2] = { lpSocketManager->m_ServerQueueSemaphore, lpSocketManager->m_shutdownEvent };
+	HANDLE handles[2] = { lpSocketManager->m_ServerQueueSemaphore, lpSocketManager->m_ShutdownEvent };
 
 	while (true)
 	{
@@ -1158,4 +1039,121 @@ DWORD WINAPI CSocketManager::ServerQueueThread(CSocketManager* lpSocketManager)
 DWORD CSocketManager::GetQueueSize()
 {
 	return m_ServerQueue.GetQueueSize();
+}
+
+// =====================================================================
+// Apagado / liberacion de recursos
+// =====================================================================
+
+// Libera de forma ordenada todos los recursos utilizados por el gestor
+// de sockets. Es seguro llamarla aunque Init() no haya llegado a
+// completarse (todos los miembros se chequean contra su valor "vacio").
+//
+// Secuencia de apagado cooperativo:
+//   1) Señaliza m_ShutdownEvent: cualquier hilo que este esperando en el
+//      (ServerAcceptThread, ServerQueueThread) lo detecta y termina.
+//   2) Cierra el socket de escucha: hace que WSAAccept() falle de
+//      inmediato si ServerAcceptThread estaba bloqueado en el.
+//   3) Publica un paquete "vacio" por cada worker en el IOCP: cada
+//      ServerWorkerThread recibe IoSize=0/index=0/lpOverlapped=nullptr,
+//      lo reconoce como señal de apagado y termina.
+//   4) Libera el semaforo de la cola una vez para destrabar
+//      ServerQueueThread (que tambien esta esperando m_ShutdownEvent).
+//   5) Espera (con timeout) a que cada hilo termine y cierra sus handles.
+//   6) Libera el semaforo, vacia la cola, cierra el IOCP y el evento.
+void CSocketManager::Clean()
+{
+	// 1) Señalizar parada cooperativa.
+	if (m_ShutdownEvent != nullptr)
+	{
+		SetEvent(m_ShutdownEvent);
+	}
+
+	// 2) Cerrar socket de escucha para hacer fallar WSAAccept y permitir
+	//    la salida del hilo de aceptacion.
+	if (m_Listen != INVALID_SOCKET)
+	{
+		closesocket(m_Listen);
+		m_Listen = INVALID_SOCKET;
+	}
+
+	// 3) Despertar hilos worker publicando paquetes vacios en el completion port.
+	if (m_CompletionPort != nullptr)
+	{
+		for (DWORD n = 0; n < m_ServerWorkerThreadCount; ++n)
+		{
+			PostQueuedCompletionStatus(m_CompletionPort, 0, 0, nullptr);
+		}
+	}
+
+	// 4) Señalizar hilo de cola (el evento de parada tambien hara que
+	//    WaitForMultipleObjects termine, pero liberamos el semaforo por
+	//    si el hilo esta justo evaluando la cola).
+	if (m_ServerQueueSemaphore != nullptr)
+	{
+		ReleaseSemaphore(m_ServerQueueSemaphore, 1, nullptr);
+	}
+
+	// 5) Esperar a que los hilos terminen correctamente, en orden:
+	//    cola -> workers -> accept.
+	if (m_ServerQueueThread != nullptr)
+	{
+		if (WaitForSingleObject(m_ServerQueueThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+		{
+			Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerQueueThread al detenerse.");
+		}
+		CloseHandle(m_ServerQueueThread);
+		m_ServerQueueThread = nullptr;
+	}
+
+	for (DWORD n = 0; n < m_ServerWorkerThreadCount; ++n)
+	{
+		if (m_ServerWorkerThread[n] != nullptr)
+		{
+			if (WaitForSingleObject(m_ServerWorkerThread[n], DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+			{
+				Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerWorkerThread %lu al detenerse.", n);
+			}
+			CloseHandle(m_ServerWorkerThread[n]);
+			m_ServerWorkerThread[n] = nullptr;
+		}
+	}
+
+	if (m_ServerAcceptThread != nullptr)
+	{
+		if (WaitForSingleObject(m_ServerAcceptThread, DEFAULT_TIME_WAIT) == WAIT_TIMEOUT)
+		{
+			Log.ToDisp(LOG_RED, "[SocketManager - Clean] Timeout esperando ServerAcceptThread al detenerse.");
+		}
+		CloseHandle(m_ServerAcceptThread);
+		m_ServerAcceptThread = nullptr;
+	}
+
+	// 6) Liberar el resto de los recursos.
+	if (m_ServerQueueSemaphore != nullptr)
+	{
+		CloseHandle(m_ServerQueueSemaphore);
+		m_ServerQueueSemaphore = nullptr;
+	}
+
+	m_ServerQueue.ClearQueue();
+
+	if (m_CompletionPort != nullptr)
+	{
+		for (int n = 0; n < MAX_CLIENT; n++)
+		{
+			if (gClientManager[n].IsOnline())
+			{
+				Disconnect(n);
+			}
+		}
+		CloseHandle(m_CompletionPort);
+		m_CompletionPort = nullptr;
+	}
+
+	if (m_ShutdownEvent != nullptr)
+	{
+		CloseHandle(m_ShutdownEvent);
+		m_ShutdownEvent = nullptr;
+	}
 }

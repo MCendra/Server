@@ -32,7 +32,7 @@ bool License::CheckingGetComputerHardwareId(LPCSTR HDWID)
 	CLEAR_END
 
 }
-bool License::GetComputerHardwareId() // OK
+bool License::GetComputerHardwareId()
 {
 	CLEAR_START
 
@@ -79,7 +79,7 @@ bool License::GetComputerHardwareId() // OK
 	CLEAR_END
 }
 
-inline void License::ErrorMessageBox() // OK
+inline void License::ErrorMessageBox()
 {
 	CLEAR_START
 
@@ -97,7 +97,7 @@ inline void License::ErrorMessageBox() // OK
 
 }
 
-inline void License::SafeExitProcess() // OK
+inline void License::SafeExitProcess()
 {
 	CLEAR_START
 

@@ -73,7 +73,7 @@ void BCustomSkinModel::Load(char* FilePath)
 	LogAdd(LOG_BLUE, "[SkinModel] Enable (%d) Load Count %d Item Skin %d", this->m_Config->Enable, this->m_SkinModelData.size());
 }
 
-char* BCustomSkinModel::GetMessage(int index) // OK
+char* BCustomSkinModel::GetMessage(int index)
 {
 	std::map<int, CUSTOM_SKIN_MESSAGE>::iterator it = this->m_MessageInfoBP.find(index);
 

@@ -13,17 +13,17 @@ CKanturuBattleUserMng gKanturuBattleUserMng;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuBattleUserMng::CKanturuBattleUserMng() // OK
+CKanturuBattleUserMng::CKanturuBattleUserMng()
 {
 	this->ResetAllData();
 }
 
-CKanturuBattleUserMng::~CKanturuBattleUserMng() // OK
+CKanturuBattleUserMng::~CKanturuBattleUserMng()
 {
 
 }
 
-void CKanturuBattleUserMng::ResetAllData() // OK
+void CKanturuBattleUserMng::ResetAllData()
 {
 	for(int n=0;n < MAX_KANTURU_BATTLE_USER;n++)
 	{
@@ -35,7 +35,7 @@ void CKanturuBattleUserMng::ResetAllData() // OK
 	this->m_BattleMaxUser = MAX_KANTURU_BATTLE_USER;
 }
 
-bool CKanturuBattleUserMng::AddUserData(int aIndex) // OK
+bool CKanturuBattleUserMng::AddUserData(int aIndex)
 {
 	if(gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -62,7 +62,7 @@ bool CKanturuBattleUserMng::AddUserData(int aIndex) // OK
 	return 0;
 }
 
-bool CKanturuBattleUserMng::DelUserData(int aIndex) // OK
+bool CKanturuBattleUserMng::DelUserData(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -84,7 +84,7 @@ bool CKanturuBattleUserMng::DelUserData(int aIndex) // OK
 	return 0;
 }
 
-void CKanturuBattleUserMng::CheckUserState() // OK
+void CKanturuBattleUserMng::CheckUserState()
 {
 	for(int n=0;n < MAX_KANTURU_BATTLE_USER;n++)
 	{
@@ -109,7 +109,7 @@ void CKanturuBattleUserMng::CheckUserState() // OK
 	}
 }
 
-void CKanturuBattleUserMng::MoveAllUser(int gate) // OK
+void CKanturuBattleUserMng::MoveAllUser(int gate)
 {
 	for(int n=0;n < MAX_KANTURU_BATTLE_USER;n++)
 	{
@@ -121,22 +121,22 @@ void CKanturuBattleUserMng::MoveAllUser(int gate) // OK
 	}
 }
 
-int CKanturuBattleUserMng::GetUserCount() // OK
+int CKanturuBattleUserMng::GetUserCount()
 {
 	return this->m_BattleUserCount;
 }
 
-int CKanturuBattleUserMng::GetMaxUser() // OK
+int CKanturuBattleUserMng::GetMaxUser()
 {
 	return this->m_BattleMaxUser;
 }
 
-int CKanturuBattleUserMng::IsEmpty() // OK
+int CKanturuBattleUserMng::IsEmpty()
 {
 	return ((this->m_BattleUserCount==0)?1:0);
 }
 
-int CKanturuBattleUserMng::IsOverMaxUser() // OK
+int CKanturuBattleUserMng::IsOverMaxUser()
 {
 	return ((this->m_BattleUserCount>=MAX_KANTURU_BATTLE_USER)?1:0);
 }

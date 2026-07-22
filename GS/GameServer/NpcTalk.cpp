@@ -51,17 +51,17 @@ CNpcTalk gNpcTalk;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CNpcTalk::CNpcTalk() // OK
+CNpcTalk::CNpcTalk()
 {
 
 }
 
-CNpcTalk::~CNpcTalk() // OK
+CNpcTalk::~CNpcTalk()
 {
 
 }
 
-bool CNpcTalk::NpcTalk(LPOBJ lpNpc,LPOBJ lpObj) // OK
+bool CNpcTalk::NpcTalk(LPOBJ lpNpc,LPOBJ lpObj)
 {
 
 	if(lpObj->Interface.use != 0)
@@ -455,7 +455,7 @@ bool CNpcTalk::NpcTalk(LPOBJ lpNpc,LPOBJ lpObj) // OK
 }
 
 //------------
-void CNpcTalk::SpiritNixie(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::SpiritNixie(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	int nixie = 0;
 
@@ -482,12 +482,12 @@ void CNpcTalk::SpiritNixie(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	}
 }
 
-void CNpcTalk::NpcCrywolfAltar(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCrywolfAltar(LPOBJ lpNpc,LPOBJ lpObj)
 {
 
 }
 
-void CNpcTalk::NpcCastleSiegeCrown(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeCrown(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 	if ( gObjIsConnected(lpObj->Index) == FALSE )
@@ -558,7 +558,7 @@ void CNpcTalk::NpcCastleSiegeCrown(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcCastleSiegeCrownSwitch(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeCrownSwitch(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 	if(gObjIsConnected(lpObj->Index) == FALSE )
@@ -603,7 +603,7 @@ void CNpcTalk::NpcCastleSiegeCrownSwitch(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcCastleSiegeGateSwitch(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeGateSwitch(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -674,7 +674,7 @@ void CNpcTalk::NpcCastleSiegeGateSwitch(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcCastleSiegeGuard(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeGuard(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -723,17 +723,17 @@ void CNpcTalk::NpcCastleSiegeGuard(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcCastleSiegeWeaponOffense(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeWeaponOffense(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gCastleSiegeWeapon.NpcCastleSiegeWeaponOffense(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcCastleSiegeWeaponDefense(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeWeaponDefense(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gCastleSiegeWeapon.NpcCastleSiegeWeaponDefense(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcCastleSiegeSenior(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeSenior(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==0)
 
@@ -793,13 +793,13 @@ void CNpcTalk::NpcCastleSiegeSenior(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcGuardTalk(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcGuardTalk(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	GCChatTargetSend(lpObj,lpNpc->Index,gMessage.GetMessage(514));
 
 }
 
-void CNpcTalk::NpcCastleSiegeGuardsman(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCastleSiegeGuardsman(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -824,7 +824,7 @@ void CNpcTalk::NpcCastleSiegeGuardsman(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CNpcTalk::NpcTrainer(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcTrainer(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -850,17 +850,17 @@ void CNpcTalk::NpcTrainer(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcAngelKing(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcAngelKing(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gBloodCastle.NpcAngelKing(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcAngelMessenger(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcAngelMessenger(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gBloodCastle.NpcAngelMessenger(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcServerTransfer(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcServerTransfer(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->Guild != 0)
 	{
@@ -881,12 +881,12 @@ void CNpcTalk::NpcServerTransfer(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CNpcTalk::NpcCharon(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcCharon(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gDevilSquare.NpcCharon(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcChaosGoblin(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcChaosGoblin(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -912,7 +912,7 @@ void CNpcTalk::NpcChaosGoblin(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcWarehouse(LPOBJ lpNpc, LPOBJ lpObj) // OK
+void CNpcTalk::NpcWarehouse(LPOBJ lpNpc, LPOBJ lpObj)
 {
 	lpObj->Interface.use = 1;
 	lpObj->Interface.type = INTERFACE_WAREHOUSE;
@@ -935,7 +935,7 @@ void CNpcTalk::NpcWarehouse(LPOBJ lpNpc, LPOBJ lpObj) // OK
 	gWarehouse.GDWarehouseItemSend(lpObj->Index, lpObj->Account);
 }
 
-void CNpcTalk::NpcGuildMaster(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcGuildMaster(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->GuildNumber > 0)
 	{
@@ -968,7 +968,7 @@ void CNpcTalk::NpcGuildMaster(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	GCGuildMasterQuestionSend(lpObj->Index);
 }
 
-void CNpcTalk::NpcLehap(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcLehap(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	lpObj->Interface.use = 1;
 	lpObj->Interface.type = INTERFACE_COMMON;
@@ -983,7 +983,7 @@ void CNpcTalk::NpcLehap(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CNpcTalk::NpcElfBuffer(LPOBJ lpNpc, LPOBJ lpObj) // OK
+void CNpcTalk::NpcElfBuffer(LPOBJ lpNpc, LPOBJ lpObj)
 {
 
 #if(CHECK_ELF_BUFF_KHONG_QUA_2_LAN==1)
@@ -1023,12 +1023,12 @@ void CNpcTalk::NpcElfBuffer(LPOBJ lpNpc, LPOBJ lpObj) // OK
 }
 }
 
-void CNpcTalk::NpcKanturuGate(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcKanturuGate(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gKanturuEntranceNPC.CGKanturuEnterInfoRecv(lpObj->Index);
 }
 
-void CNpcTalk::NpcElpis(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcElpis(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -1054,7 +1054,7 @@ void CNpcTalk::NpcElpis(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcOsbourne(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcOsbourne(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -1080,7 +1080,7 @@ void CNpcTalk::NpcOsbourne(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcJerridon(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcJerridon(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -1106,7 +1106,7 @@ void CNpcTalk::NpcJerridon(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcLeoTheHelper(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcLeoTheHelper(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=202)
 
@@ -1115,7 +1115,7 @@ void CNpcTalk::NpcLeoTheHelper(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcChaosCardMaster(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcChaosCardMaster(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -1141,27 +1141,27 @@ void CNpcTalk::NpcChaosCardMaster(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcStoneStatue(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcStoneStatue(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gIllusionTemple.NpcStoneStatue(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcYellowStorage(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcYellowStorage(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gIllusionTemple.NpcYellowStorage(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcBlueStorage(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcBlueStorage(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gIllusionTemple.NpcBlueStorage(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcMirageTheMummy(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcMirageTheMummy(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gIllusionTemple.NpcMirageTheMummy(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcGovernorBlossom(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcGovernorBlossom(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(lpObj->PShopOpen != 0)
 	{
@@ -1187,7 +1187,7 @@ void CNpcTalk::NpcGovernorBlossom(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	gObjInventoryTransaction(lpObj->Index);
 }
 
-void CNpcTalk::NpcSeedMaster(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSeedMaster(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1221,7 +1221,7 @@ void CNpcTalk::NpcSeedMaster(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcSeedResearcher(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSeedResearcher(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1255,7 +1255,7 @@ void CNpcTalk::NpcSeedResearcher(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcSantaClaus(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSantaClaus(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1264,7 +1264,7 @@ void CNpcTalk::NpcSantaClaus(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcSnowman(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSnowman(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1273,7 +1273,7 @@ void CNpcTalk::NpcSnowman(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcChristmas(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcChristmas(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1316,7 +1316,7 @@ void CNpcTalk::NpcChristmas(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcDelgado(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcDelgado(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -1331,7 +1331,7 @@ void CNpcTalk::NpcDelgado(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcTitus(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcTitus(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=402)
 
@@ -1352,7 +1352,7 @@ void CNpcTalk::NpcTitus(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcJerryTheAdviser(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcJerryTheAdviser(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1361,7 +1361,7 @@ void CNpcTalk::NpcJerryTheAdviser(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcSartiganTheAngel(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSartiganTheAngel(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1370,7 +1370,7 @@ void CNpcTalk::NpcSartiganTheAngel(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcSilverRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSilverRewardChest(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1379,7 +1379,7 @@ void CNpcTalk::NpcSilverRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcGoldenRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcGoldenRewardChest(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1388,7 +1388,7 @@ void CNpcTalk::NpcGoldenRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcGensDuprianSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcGensDuprianSteward(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1397,7 +1397,7 @@ void CNpcTalk::NpcGensDuprianSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcGensVarnertSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcGensVarnertSteward(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1406,7 +1406,7 @@ void CNpcTalk::NpcGensVarnertSteward(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcRaul(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcRaul(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1425,7 +1425,7 @@ void CNpcTalk::NpcRaul(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcJulia(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcJulia(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1443,7 +1443,7 @@ void CNpcTalk::NpcJulia(LPOBJ lpNpc,LPOBJ lpObj) // OK
 //
 
 
-void CNpcTalk::NpcDavid(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcDavid(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -1473,7 +1473,7 @@ void CNpcTalk::NpcDavid(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcSloveCaptain(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcSloveCaptain(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1488,7 +1488,7 @@ void CNpcTalk::NpcSloveCaptain(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcAdniel(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcAdniel(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1518,12 +1518,12 @@ void CNpcTalk::NpcAdniel(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CNpcTalk::NpcLesnar(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcLesnar(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	gArcaBattle.NpcLesnar(lpNpc,lpObj);
 }
 
-void CNpcTalk::NpcTercia(LPOBJ lpNpc, LPOBJ lpObj) // OK
+void CNpcTalk::NpcTercia(LPOBJ lpNpc, LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -1545,7 +1545,7 @@ DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 #endif
 }
 
-void CNpcTalk::NpcVeina(LPOBJ lpNpc, LPOBJ lpObj) // OK
+void CNpcTalk::NpcVeina(LPOBJ lpNpc, LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -1567,7 +1567,7 @@ DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 #endif
 }
 
-void CNpcTalk::NpcZyro(LPOBJ lpNpc, LPOBJ lpObj) // OK
+void CNpcTalk::NpcZyro(LPOBJ lpNpc, LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -1613,7 +1613,7 @@ return;
 #endif
 }
 
-void CNpcTalk::NpcPersonalShopBoard(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CNpcTalk::NpcPersonalShopBoard(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1667,7 +1667,7 @@ void CNpcTalk::NpcShopRuud(LPOBJ lpNpc,LPOBJ lpObj)
 	g_RuudTokenSellTemplate.GCShopItemListSend( lpObj );
 }
 
-void CNpcTalk::CGNpcTalkRecv(PMSG_NPC_TALK_RECV* lpMsg,int aIndex) // OK
+void CNpcTalk::CGNpcTalkRecv(PMSG_NPC_TALK_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1757,7 +1757,7 @@ void CNpcTalk::CGNpcTalkRecv(PMSG_NPC_TALK_RECV* lpMsg,int aIndex) // OK
 
 //dupe hacker fix Different ways
 
-void CNpcTalk::CGNpcTalkCloseRecv(int aIndex) // OK
+void CNpcTalk::CGNpcTalkCloseRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1801,7 +1801,7 @@ void CNpcTalk::CGNpcTalkCloseRecv(int aIndex) // OK
 	lpObj->Interface.state = 0;
 }
 
-//void CNpcTalk::CGNpcTalkCloseRecv(int aIndex) // OK
+//void CNpcTalk::CGNpcTalkCloseRecv(int aIndex)
 //{
 //	LPOBJ lpObj = &gObj[aIndex];
 //
@@ -1841,7 +1841,7 @@ void CNpcTalk::CGNpcTalkCloseRecv(int aIndex) // OK
 //	lpObj->Interface.state = 0;
 //}
 
-void CNpcTalk::CGNpcLeoTheHelperRecv(int aIndex) // OK
+void CNpcTalk::CGNpcLeoTheHelperRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=202)
 
@@ -1857,7 +1857,7 @@ void CNpcTalk::CGNpcLeoTheHelperRecv(int aIndex) // OK
 	#endif
 }
 
-void CNpcTalk::CGNpcSnowmanRecv(int aIndex) // OK
+void CNpcTalk::CGNpcSnowmanRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1873,7 +1873,7 @@ void CNpcTalk::CGNpcSnowmanRecv(int aIndex) // OK
 	#endif
 }
 
-void CNpcTalk::CGNpcSantaClausRecv(int aIndex) // OK
+void CNpcTalk::CGNpcSantaClausRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1889,7 +1889,7 @@ void CNpcTalk::CGNpcSantaClausRecv(int aIndex) // OK
 	#endif
 }
 
-void CNpcTalk::CGNpcJuliaRecv(int aIndex) // OK
+void CNpcTalk::CGNpcJuliaRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1912,7 +1912,7 @@ void CNpcTalk::CGNpcJuliaRecv(int aIndex) // OK
 	#endif
 }
 
-void CNpcTalk::DGNpcLeoTheHelperRecv(SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg) // OK
+void CNpcTalk::DGNpcLeoTheHelperRecv(SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=202)
 
@@ -1938,7 +1938,7 @@ void CNpcTalk::DGNpcLeoTheHelperRecv(SDHP_NPC_LEO_THE_HELPER_RECV* lpMsg) // OK
 	#endif
 }
 
-void CNpcTalk::DGNpcSantaClausRecv(SDHP_NPC_SANTA_CLAUS_RECV* lpMsg) // OK
+void CNpcTalk::DGNpcSantaClausRecv(SDHP_NPC_SANTA_CLAUS_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1964,7 +1964,7 @@ void CNpcTalk::DGNpcSantaClausRecv(SDHP_NPC_SANTA_CLAUS_RECV* lpMsg) // OK
 	#endif
 }
 
-void CNpcTalk::GDNpcLeoTheHelperSend(int aIndex) // OK
+void CNpcTalk::GDNpcLeoTheHelperSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=202)
 
@@ -1988,7 +1988,7 @@ void CNpcTalk::GDNpcLeoTheHelperSend(int aIndex) // OK
 	#endif
 }
 
-void CNpcTalk::GDNpcSantaClausSend(int aIndex) // OK
+void CNpcTalk::GDNpcSantaClausSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2012,7 +2012,7 @@ void CNpcTalk::GDNpcSantaClausSend(int aIndex) // OK
 	#endif
 }
 
-void CNpcTalk::GDNpcLeoTheHelperSaveSend(int aIndex,BYTE status) // OK
+void CNpcTalk::GDNpcLeoTheHelperSaveSend(int aIndex,BYTE status)
 {
 	#if(GAMESERVER_UPDATE>=202)
 
@@ -2035,7 +2035,7 @@ void CNpcTalk::GDNpcLeoTheHelperSaveSend(int aIndex,BYTE status) // OK
 	#endif
 }
 
-void CNpcTalk::GDNpcSantaClausSaveSend(int aIndex,BYTE status) // OK
+void CNpcTalk::GDNpcSantaClausSaveSend(int aIndex,BYTE status)
 {
 	#if(GAMESERVER_UPDATE>=401)
 

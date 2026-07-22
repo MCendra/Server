@@ -19,17 +19,17 @@ CGuildMatching gGuildMatching;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGuildMatching::CGuildMatching() // OK
+CGuildMatching::CGuildMatching()
 {
 
 }
 
-CGuildMatching::~CGuildMatching() // OK
+CGuildMatching::~CGuildMatching()
 {
 
 }
 
-void CGuildMatching::CGGuildMatchingListRecv(PMSG_GUILD_MATCHING_LIST_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingListRecv(PMSG_GUILD_MATCHING_LIST_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -45,7 +45,7 @@ void CGuildMatching::CGGuildMatchingListRecv(PMSG_GUILD_MATCHING_LIST_RECV* lpMs
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingListSearchRecv(PMSG_GUILD_MATCHING_LIST_SEARCH_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingListSearchRecv(PMSG_GUILD_MATCHING_LIST_SEARCH_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -61,7 +61,7 @@ void CGuildMatching::CGGuildMatchingListSearchRecv(PMSG_GUILD_MATCHING_LIST_SEAR
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingInsertRecv(PMSG_GUILD_MATCHING_INSERT_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingInsertRecv(PMSG_GUILD_MATCHING_INSERT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -104,7 +104,7 @@ void CGuildMatching::CGGuildMatchingInsertRecv(PMSG_GUILD_MATCHING_INSERT_RECV* 
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingCancelRecv(PMSG_GUILD_MATCHING_CANCEL_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingCancelRecv(PMSG_GUILD_MATCHING_CANCEL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -140,7 +140,7 @@ void CGuildMatching::CGGuildMatchingCancelRecv(PMSG_GUILD_MATCHING_CANCEL_RECV* 
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingJoinInsertRecv(PMSG_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingJoinInsertRecv(PMSG_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -183,7 +183,7 @@ void CGuildMatching::CGGuildMatchingJoinInsertRecv(PMSG_GUILD_MATCHING_JOIN_INSE
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingJoinCancelRecv(PMSG_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingJoinCancelRecv(PMSG_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -199,7 +199,7 @@ void CGuildMatching::CGGuildMatchingJoinCancelRecv(PMSG_GUILD_MATCHING_JOIN_CANC
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingJoinAcceptRecv(PMSG_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingJoinAcceptRecv(PMSG_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -291,7 +291,7 @@ void CGuildMatching::CGGuildMatchingJoinAcceptRecv(PMSG_GUILD_MATCHING_JOIN_ACCE
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingJoinListRecv(PMSG_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingJoinListRecv(PMSG_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -329,7 +329,7 @@ void CGuildMatching::CGGuildMatchingJoinListRecv(PMSG_GUILD_MATCHING_JOIN_LIST_R
 	#endif
 }
 
-void CGuildMatching::CGGuildMatchingJoinInfoRecv(PMSG_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg,int aIndex) // OK
+void CGuildMatching::CGGuildMatchingJoinInfoRecv(PMSG_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -345,7 +345,7 @@ void CGuildMatching::CGGuildMatchingJoinInfoRecv(PMSG_GUILD_MATCHING_JOIN_INFO_R
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingListRecv(SDHP_GUILD_MATCHING_LIST_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingListRecv(SDHP_GUILD_MATCHING_LIST_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -420,7 +420,7 @@ void CGuildMatching::DGGuildMatchingListRecv(SDHP_GUILD_MATCHING_LIST_RECV* lpMs
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingInsertRecv(SDHP_GUILD_MATCHING_INSERT_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingInsertRecv(SDHP_GUILD_MATCHING_INSERT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -446,7 +446,7 @@ void CGuildMatching::DGGuildMatchingInsertRecv(SDHP_GUILD_MATCHING_INSERT_RECV* 
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingCancelRecv(SDHP_GUILD_MATCHING_CANCEL_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingCancelRecv(SDHP_GUILD_MATCHING_CANCEL_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -472,7 +472,7 @@ void CGuildMatching::DGGuildMatchingCancelRecv(SDHP_GUILD_MATCHING_CANCEL_RECV* 
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingJoinInsertRecv(SDHP_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingJoinInsertRecv(SDHP_GUILD_MATCHING_JOIN_INSERT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -498,7 +498,7 @@ void CGuildMatching::DGGuildMatchingJoinInsertRecv(SDHP_GUILD_MATCHING_JOIN_INSE
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingJoinCancelRecv(SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingJoinCancelRecv(SDHP_GUILD_MATCHING_JOIN_CANCEL_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -524,7 +524,7 @@ void CGuildMatching::DGGuildMatchingJoinCancelRecv(SDHP_GUILD_MATCHING_JOIN_CANC
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingJoinAcceptRecv(SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingJoinAcceptRecv(SDHP_GUILD_MATCHING_JOIN_ACCEPT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -554,7 +554,7 @@ void CGuildMatching::DGGuildMatchingJoinAcceptRecv(SDHP_GUILD_MATCHING_JOIN_ACCE
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingJoinListRecv(SDHP_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingJoinListRecv(SDHP_GUILD_MATCHING_JOIN_LIST_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -607,7 +607,7 @@ void CGuildMatching::DGGuildMatchingJoinListRecv(SDHP_GUILD_MATCHING_JOIN_LIST_R
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingJoinInfoRecv(SDHP_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingJoinInfoRecv(SDHP_GUILD_MATCHING_JOIN_INFO_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -635,7 +635,7 @@ void CGuildMatching::DGGuildMatchingJoinInfoRecv(SDHP_GUILD_MATCHING_JOIN_INFO_R
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingNotifyRecv(SDHP_GUILD_MATCHING_NOTIFY_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingNotifyRecv(SDHP_GUILD_MATCHING_NOTIFY_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -663,7 +663,7 @@ void CGuildMatching::DGGuildMatchingNotifyRecv(SDHP_GUILD_MATCHING_NOTIFY_RECV* 
 	#endif
 }
 
-void CGuildMatching::DGGuildMatchingNotifyMasterRecv(SDHP_GUILD_MATCHING_NOTIFY_MASTER_RECV* lpMsg) // OK
+void CGuildMatching::DGGuildMatchingNotifyMasterRecv(SDHP_GUILD_MATCHING_NOTIFY_MASTER_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -687,7 +687,7 @@ void CGuildMatching::DGGuildMatchingNotifyMasterRecv(SDHP_GUILD_MATCHING_NOTIFY_
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingListSend(int aIndex,DWORD page) // OK
+void CGuildMatching::GDGuildMatchingListSend(int aIndex,DWORD page)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -713,7 +713,7 @@ void CGuildMatching::GDGuildMatchingListSend(int aIndex,DWORD page) // OK
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingListSearchSend(int aIndex,DWORD page,char* SearchWord) // OK
+void CGuildMatching::GDGuildMatchingListSearchSend(int aIndex,DWORD page,char* SearchWord)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -741,7 +741,7 @@ void CGuildMatching::GDGuildMatchingListSearchSend(int aIndex,DWORD page,char* S
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingInsertSend(int aIndex,char* text,BYTE InterestType,BYTE LevelRange,BYTE ClassType) // OK
+void CGuildMatching::GDGuildMatchingInsertSend(int aIndex,char* text,BYTE InterestType,BYTE LevelRange,BYTE ClassType)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -790,7 +790,7 @@ void CGuildMatching::GDGuildMatchingInsertSend(int aIndex,char* text,BYTE Intere
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingCancelSend(int aIndex,BYTE flag) // OK
+void CGuildMatching::GDGuildMatchingCancelSend(int aIndex,BYTE flag)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -823,7 +823,7 @@ void CGuildMatching::GDGuildMatchingCancelSend(int aIndex,BYTE flag) // OK
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinInsertSend(int aIndex,char* GuildName) // OK
+void CGuildMatching::GDGuildMatchingJoinInsertSend(int aIndex,char* GuildName)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -858,7 +858,7 @@ void CGuildMatching::GDGuildMatchingJoinInsertSend(int aIndex,char* GuildName) /
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinCancelSend(int aIndex,BYTE flag) // OK
+void CGuildMatching::GDGuildMatchingJoinCancelSend(int aIndex,BYTE flag)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -889,7 +889,7 @@ void CGuildMatching::GDGuildMatchingJoinCancelSend(int aIndex,BYTE flag) // OK
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinAcceptSend(int aIndex,BYTE type,char* name) // OK
+void CGuildMatching::GDGuildMatchingJoinAcceptSend(int aIndex,BYTE type,char* name)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -919,7 +919,7 @@ void CGuildMatching::GDGuildMatchingJoinAcceptSend(int aIndex,BYTE type,char* na
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinListSend(int aIndex) // OK
+void CGuildMatching::GDGuildMatchingJoinListSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -945,7 +945,7 @@ void CGuildMatching::GDGuildMatchingJoinListSend(int aIndex) // OK
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingJoinInfoSend(int aIndex) // OK
+void CGuildMatching::GDGuildMatchingJoinInfoSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -969,7 +969,7 @@ void CGuildMatching::GDGuildMatchingJoinInfoSend(int aIndex) // OK
 	#endif
 }
 
-void CGuildMatching::GDGuildMatchingInsertSaveSend(int aIndex) // OK
+void CGuildMatching::GDGuildMatchingInsertSaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 

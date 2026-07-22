@@ -9,10 +9,13 @@ class CUtil
 public:
 	// Obtiene el path del ejecutable y lo convierte a formato extendido
 	void GetExecutablePath();
+	// Mensaje de error para terminar el proceso
+	void ErrorMessageBox(const char* message, ...);
 	//
 	// void SetLargeRand();
 	//
 	int GetLargeRand();
+
 };
 int SafeGetItem(int index);
 flt GetRoundValue(float value);
@@ -37,7 +40,7 @@ void PostMessageUserON(char* name, char* message);
 void PostMessageNew(char* name, char* message, char* text);
 
 
-void MsgBox(char* message, ...); // OK
+void MsgBox(char* message, ...);
 
 extern CUtil gUtil;
 extern short RoadPathTable[MAX_ROAD_PATH_TABLE];

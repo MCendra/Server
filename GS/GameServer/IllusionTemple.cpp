@@ -30,7 +30,7 @@ CIllusionTemple gIllusionTemple;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CIllusionTemple::CIllusionTemple() // OK
+CIllusionTemple::CIllusionTemple()
 {
 	for(int n=0;n < MAX_IT_LEVEL;n++)
 	{
@@ -67,12 +67,12 @@ CIllusionTemple::CIllusionTemple() // OK
 	memset(this->m_IllusionTempleExperienceTable,0,sizeof(this->m_IllusionTempleExperienceTable));
 }
 
-CIllusionTemple::~CIllusionTemple() // OK
+CIllusionTemple::~CIllusionTemple()
 {
 
 }
 
-void CIllusionTemple::Init() // OK
+void CIllusionTemple::Init()
 {
 	for(int n=0;n < MAX_IT_LEVEL;n++)
 	{
@@ -87,7 +87,7 @@ void CIllusionTemple::Init() // OK
 	}
 }
 
-void CIllusionTemple::Load(char* path) // OK
+void CIllusionTemple::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -204,7 +204,7 @@ void CIllusionTemple::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CIllusionTemple::MainProc() // OK
+void CIllusionTemple::MainProc()
 {
 	for(int n=0;n < MAX_IT_LEVEL;n++)
 	{
@@ -275,12 +275,12 @@ void CIllusionTemple::MainProc() // OK
 	}
 }
 
-void CIllusionTemple::ProcState_BLANK(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ProcState_BLANK(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 
 }
 
-void CIllusionTemple::ProcState_EMPTY(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ProcState_EMPTY(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	if(lpLevel->RemainTime > 0 && lpLevel->RemainTime <= (this->m_WarningTime*60))
 	{
@@ -327,7 +327,7 @@ void CIllusionTemple::ProcState_EMPTY(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CIllusionTemple::ProcState_STAND(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ProcState_STAND(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -361,7 +361,7 @@ void CIllusionTemple::ProcState_STAND(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	this->GCIllusionTempleBattleInfoSend(lpLevel);
 }
 
-void CIllusionTemple::ProcState_START(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ProcState_START(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -410,7 +410,7 @@ void CIllusionTemple::ProcState_START(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CIllusionTemple::ProcState_CLEAN(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ProcState_CLEAN(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -420,7 +420,7 @@ void CIllusionTemple::ProcState_CLEAN(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CIllusionTemple::SetState(ILLUSION_TEMPLE_LEVEL* lpLevel,int state) // OK
+void CIllusionTemple::SetState(ILLUSION_TEMPLE_LEVEL* lpLevel,int state)
 {
 	lpLevel->State = state;
 
@@ -444,12 +444,12 @@ void CIllusionTemple::SetState(ILLUSION_TEMPLE_LEVEL* lpLevel,int state) // OK
 	}
 }
 
-void CIllusionTemple::SetState_BLANK(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::SetState_BLANK(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	//LogAdd(LOG_BLACK,"[Illusion Temple] (%d) SetState BLANK",(lpLevel->Level+1));
 }
 
-void CIllusionTemple::SetState_EMPTY(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::SetState_EMPTY(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -493,7 +493,7 @@ void CIllusionTemple::SetState_EMPTY(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Illusion Temple] (%d) SetState EMPTY",(lpLevel->Level+1));
 }
 
-void CIllusionTemple::SetState_STAND(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::SetState_STAND(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -538,7 +538,7 @@ void CIllusionTemple::SetState_STAND(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Illusion Temple] (%d) SetState STAND",(lpLevel->Level+1));
 }
 
-void CIllusionTemple::SetState_START(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::SetState_START(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -590,7 +590,7 @@ void CIllusionTemple::SetState_START(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Illusion Temple] (%d) SetState START",(lpLevel->Level+1));
 }
 
-void CIllusionTemple::SetState_CLEAN(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::SetState_CLEAN(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -840,7 +840,7 @@ void CIllusionTemple::SetState_CLEAN(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Illusion Temple] (%d) SetState CLEAN",(lpLevel->Level+1));
 }
 
-void CIllusionTemple::CheckSync(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::CheckSync(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	if(this->m_IllusionTempleStartTime.empty() != 0)
 	{
@@ -870,7 +870,7 @@ void CIllusionTemple::CheckSync(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Illusion Temple] (%d) Sync Start Time. [%d] min remain",(lpLevel->Level+1),(lpLevel->RemainTime/60));
 }
 
-int CIllusionTemple::GetState(int level) // OK
+int CIllusionTemple::GetState(int level)
 {
 	if(IT_LEVEL_RANGE(level) == 0)
 	{
@@ -880,7 +880,7 @@ int CIllusionTemple::GetState(int level) // OK
 	return this->m_IllusionTempleLevel[level].State;
 }
 
-int CIllusionTemple::GetRemainTime(int level) // OK
+int CIllusionTemple::GetRemainTime(int level)
 {
 	if(IT_LEVEL_RANGE(level) == 0)
 	{
@@ -911,7 +911,7 @@ int CIllusionTemple::GetRemainTime(int level) // OK
 	return (((RemainTime%60)==0)?(RemainTime/60):((RemainTime/60)+1));
 }
 
-int CIllusionTemple::GetEnterEnabled(int level) // OK
+int CIllusionTemple::GetEnterEnabled(int level)
 {
 	if(IT_LEVEL_RANGE(level) == 0)
 	{
@@ -921,7 +921,7 @@ int CIllusionTemple::GetEnterEnabled(int level) // OK
 	return this->m_IllusionTempleLevel[level].EnterEnabled;
 }
 
-int CIllusionTemple::GetEnteredUserCount(int level) // OK
+int CIllusionTemple::GetEnteredUserCount(int level)
 {
 	if(IT_LEVEL_RANGE(level) == 0)
 	{
@@ -931,7 +931,7 @@ int CIllusionTemple::GetEnteredUserCount(int level) // OK
 	return this->GetUserCount(&this->m_IllusionTempleLevel[level],IT_TEAM_NONE);
 }
 
-bool CIllusionTemple::AddUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
+bool CIllusionTemple::AddUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -961,7 +961,7 @@ bool CIllusionTemple::AddUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CIllusionTemple::DelUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
+bool CIllusionTemple::DelUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1004,7 +1004,7 @@ bool CIllusionTemple::DelUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-ILLUSION_TEMPLE_USER* CIllusionTemple::GetUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
+ILLUSION_TEMPLE_USER* CIllusionTemple::GetUser(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1022,7 +1022,7 @@ ILLUSION_TEMPLE_USER* CIllusionTemple::GetUser(ILLUSION_TEMPLE_LEVEL* lpLevel,in
 	return 0;
 }
 
-void CIllusionTemple::CleanUser(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::CleanUser(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_IT_USER;n++)
 	{
@@ -1034,7 +1034,7 @@ void CIllusionTemple::CleanUser(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CIllusionTemple::ClearUser(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ClearUser(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_IT_USER;n++)
 	{
@@ -1059,7 +1059,7 @@ void CIllusionTemple::ClearUser(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CIllusionTemple::CheckUser(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::CheckUser(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_IT_USER;n++)
 	{
@@ -1082,7 +1082,7 @@ void CIllusionTemple::CheckUser(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CIllusionTemple::GetUserCount(ILLUSION_TEMPLE_LEVEL* lpLevel,int team) // OK
+int CIllusionTemple::GetUserCount(ILLUSION_TEMPLE_LEVEL* lpLevel,int team)
 {
 	int count = 0;
 
@@ -1102,7 +1102,7 @@ int CIllusionTemple::GetUserCount(ILLUSION_TEMPLE_LEVEL* lpLevel,int team) // OK
 	return count;
 }
 
-int CIllusionTemple::GetUserJoinTeam(LPOBJ lpObj) // OK
+int CIllusionTemple::GetUserJoinTeam(LPOBJ lpObj)
 {
 	int level = GET_IT_LEVEL(lpObj->Map);
 
@@ -1121,7 +1121,7 @@ int CIllusionTemple::GetUserJoinTeam(LPOBJ lpObj) // OK
 	return lpUser->Team;
 }
 
-int CIllusionTemple::GetUserAbleLevel(LPOBJ lpObj) // OK
+int CIllusionTemple::GetUserAbleLevel(LPOBJ lpObj)
 {
 	int level = -1;
 
@@ -1156,7 +1156,7 @@ int CIllusionTemple::GetUserAbleLevel(LPOBJ lpObj) // OK
 	return level;
 }
 
-bool CIllusionTemple::GetUserRespawnLocation(LPOBJ lpObj,int* gate,int* map,int* x,int* y,int* dir,int* level) // OK
+bool CIllusionTemple::GetUserRespawnLocation(LPOBJ lpObj,int* gate,int* map,int* x,int* y,int* dir,int* level)
 {
 	int IllusionTempleLevel = GET_IT_LEVEL(lpObj->Map);
 
@@ -1185,7 +1185,7 @@ bool CIllusionTemple::GetUserRespawnLocation(LPOBJ lpObj,int* gate,int* map,int*
 	return 1;
 }
 
-void CIllusionTemple::SearchUserDropEventItem(int aIndex) // OK
+void CIllusionTemple::SearchUserDropEventItem(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1242,7 +1242,7 @@ void CIllusionTemple::SearchUserDropEventItem(int aIndex) // OK
 	this->GCIllusionTempleEventItemOwnerS8Send(lpLevel, aIndex, 1);
 }
 
-void CIllusionTemple::SearchUserDeleteEventItem(int aIndex) // OK
+void CIllusionTemple::SearchUserDeleteEventItem(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1288,7 +1288,7 @@ void CIllusionTemple::SearchUserDeleteEventItem(int aIndex) // OK
 	lpLevel->EventItemLevel = -1;
 }
 
-void CIllusionTemple::GiveUserRewardExperience(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::GiveUserRewardExperience(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_IT_USER;n++)
 	{
@@ -1317,7 +1317,7 @@ void CIllusionTemple::GiveUserRewardExperience(ILLUSION_TEMPLE_LEVEL* lpLevel) /
 	}
 }
 
-bool CIllusionTemple::AddMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
+bool CIllusionTemple::AddMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1343,7 +1343,7 @@ bool CIllusionTemple::AddMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // O
 	return 0;
 }
 
-bool CIllusionTemple::DelMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
+bool CIllusionTemple::DelMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1361,7 +1361,7 @@ bool CIllusionTemple::DelMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // O
 	return 1;
 }
 
-int* CIllusionTemple::GetMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // OK
+int* CIllusionTemple::GetMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1379,7 +1379,7 @@ int* CIllusionTemple::GetMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int aIndex) // O
 	return 0;
 }
 
-void CIllusionTemple::CleanMonster(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::CleanMonster(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_IT_MONSTER;n++)
 	{
@@ -1387,7 +1387,7 @@ void CIllusionTemple::CleanMonster(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CIllusionTemple::ClearMonster(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::ClearMonster(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_IT_MONSTER;n++)
 	{
@@ -1399,7 +1399,7 @@ void CIllusionTemple::ClearMonster(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CIllusionTemple::GetMonsterCount(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+int CIllusionTemple::GetMonsterCount(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -1414,7 +1414,7 @@ int CIllusionTemple::GetMonsterCount(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-void CIllusionTemple::SetStoneStatue(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::SetStoneStatue(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 #if (GAMESERVER_UPDATE <= 603)
 	if(OBJECT_RANGE(lpLevel->StoneStatueIndex) != 0)
@@ -1471,7 +1471,7 @@ void CIllusionTemple::SetStoneStatue(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
 	//this->GCIllusionTempleStoneInfoSend(lpLevel,0,0);
 }
 
-void CIllusionTemple::SetMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int MonsterClass) // OK
+void CIllusionTemple::SetMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int MonsterClass)
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{
@@ -1513,7 +1513,7 @@ void CIllusionTemple::SetMonster(ILLUSION_TEMPLE_LEVEL* lpLevel,int MonsterClass
 	}
 }
 
-void CIllusionTemple::NpcStoneStatue(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CIllusionTemple::NpcStoneStatue(LPOBJ lpNpc,LPOBJ lpObj)
 {
 
 	if(gServerInfo.m_IllusionTempleEvent == 0)
@@ -1561,7 +1561,7 @@ void CIllusionTemple::NpcStoneStatue(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	lpLevel->StoneStatueIndex = -1;
 }
 
-void CIllusionTemple::NpcYellowStorage(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CIllusionTemple::NpcYellowStorage(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(gServerInfo.m_IllusionTempleEvent == 0)
 	{
@@ -1623,7 +1623,7 @@ void CIllusionTemple::NpcYellowStorage(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	this->SetStoneStatue(lpLevel);
 }
 
-void CIllusionTemple::NpcBlueStorage(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CIllusionTemple::NpcBlueStorage(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(gServerInfo.m_IllusionTempleEvent == 0)
 	{
@@ -1686,7 +1686,7 @@ void CIllusionTemple::NpcBlueStorage(LPOBJ lpNpc,LPOBJ lpObj) // OK
 
 }
 
-void CIllusionTemple::NpcMirageTheMummy(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CIllusionTemple::NpcMirageTheMummy(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(gServerInfo.m_IllusionTempleEvent == 0)
 	{
@@ -1720,7 +1720,7 @@ void CIllusionTemple::NpcMirageTheMummy(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-bool CIllusionTemple::CheckEventItemSerial(int map,CMapItem* lpItem) // OK
+bool CIllusionTemple::CheckEventItemSerial(int map,CMapItem* lpItem)
 {
 	int level = GET_IT_LEVEL(map);
 
@@ -1742,7 +1742,7 @@ bool CIllusionTemple::CheckEventItemSerial(int map,CMapItem* lpItem) // OK
 	return 0;
 }
 
-void CIllusionTemple::SetEventItemSerial(int map,int index,int serial) // OK
+void CIllusionTemple::SetEventItemSerial(int map,int index,int serial)
 {
 	int level = GET_IT_LEVEL(map);
 
@@ -1762,7 +1762,7 @@ void CIllusionTemple::SetEventItemSerial(int map,int index,int serial) // OK
 	}
 }
 
-void CIllusionTemple::DropEventItem(int map,int number,int aIndex) // OK
+void CIllusionTemple::DropEventItem(int map,int number,int aIndex)
 {
 	int level = GET_IT_LEVEL(map);
 
@@ -1786,7 +1786,7 @@ void CIllusionTemple::DropEventItem(int map,int number,int aIndex) // OK
 #endif
 }
 
-void CIllusionTemple::GetEventItem(int map,int aIndex,CMapItem* lpItem) // OK
+void CIllusionTemple::GetEventItem(int map,int aIndex,CMapItem* lpItem)
 {
 	int level = GET_IT_LEVEL(map);
 
@@ -1808,7 +1808,7 @@ void CIllusionTemple::GetEventItem(int map,int aIndex,CMapItem* lpItem) // OK
 	this->NoticeSendToAll(&this->m_IllusionTempleLevel[level],0,gMessage.GetMessage(184),gObj[aIndex].Name);
 }
 
-void CIllusionTemple::DestroyEventItem(int map,CMapItem* lpItem) // OK
+void CIllusionTemple::DestroyEventItem(int map,CMapItem* lpItem)
 {
 	int level = GET_IT_LEVEL(map);
 
@@ -1832,7 +1832,7 @@ void CIllusionTemple::DestroyEventItem(int map,CMapItem* lpItem) // OK
 	this->SetStoneStatue(&this->m_IllusionTempleLevel[level]);
 }
 
-void CIllusionTemple::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CIllusionTemple::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int level = GET_IT_LEVEL(lpObj->Map);
 
@@ -1892,7 +1892,7 @@ void CIllusionTemple::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 #endif
 }
 
-void CIllusionTemple::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CIllusionTemple::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 #if (GAMESERVER_UPDATE <= 603)
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
@@ -1944,7 +1944,7 @@ void CIllusionTemple::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 #endif
 }
 
-bool CIllusionTemple::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CIllusionTemple::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int level = GET_IT_LEVEL(lpObj->Map);
 
@@ -1980,7 +1980,7 @@ bool CIllusionTemple::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	return 1;
 }
 
-void CIllusionTemple::NoticeSendToAll(ILLUSION_TEMPLE_LEVEL* lpLevel,int type,char* message,...) // OK
+void CIllusionTemple::NoticeSendToAll(ILLUSION_TEMPLE_LEVEL* lpLevel,int type,char* message,...)
 {
 	char buff[256];
 
@@ -1998,7 +1998,7 @@ void CIllusionTemple::NoticeSendToAll(ILLUSION_TEMPLE_LEVEL* lpLevel,int type,ch
 	}
 }
 
-void CIllusionTemple::DataSendToAll(ILLUSION_TEMPLE_LEVEL* lpLevel,BYTE* lpMsg,int size) // OK
+void CIllusionTemple::DataSendToAll(ILLUSION_TEMPLE_LEVEL* lpLevel,BYTE* lpMsg,int size)
 {
 	for(int n=0;n < MAX_IT_USER;n++)
 	{
@@ -2009,7 +2009,7 @@ void CIllusionTemple::DataSendToAll(ILLUSION_TEMPLE_LEVEL* lpLevel,BYTE* lpMsg,i
 	}
 }
 
-void CIllusionTemple::CGIllusionTempleEnterRecv(PMSG_ILLUSION_TEMPLE_ENTER_RECV* lpMsg,int aIndex) // OK
+void CIllusionTemple::CGIllusionTempleEnterRecv(PMSG_ILLUSION_TEMPLE_ENTER_RECV* lpMsg,int aIndex)
 {
 	if(gServerInfo.m_IllusionTempleEvent == 0)
 	{
@@ -2173,7 +2173,7 @@ void CIllusionTemple::CGIllusionTempleEnterRecv(PMSG_ILLUSION_TEMPLE_ENTER_RECV*
 	this->GCIllusionTempleChangeScenarioSend(lpLevel,0,aIndex);
 }
 
-void CIllusionTemple::CGIllusionTempleSkillRecv(PMSG_ILLUSION_TEMPLE_SKILL_RECV* lpMsg,int aIndex) // OK
+void CIllusionTemple::CGIllusionTempleSkillRecv(PMSG_ILLUSION_TEMPLE_SKILL_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2248,7 +2248,7 @@ void CIllusionTemple::CGIllusionTempleSkillRecv(PMSG_ILLUSION_TEMPLE_SKILL_RECV*
 	}
 }
 
-void CIllusionTemple::CGIllusionTempleButtonClickRecv(int aIndex) // OK
+void CIllusionTemple::CGIllusionTempleButtonClickRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2313,7 +2313,7 @@ void CIllusionTemple::CGIllusionTempleButtonClickRecv(int aIndex) // OK
 	}
 }
 
-void CIllusionTemple::GCIllusionTempleBattleInfoSend(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::GCIllusionTempleBattleInfoSend(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 #if GAMESERVER_UPDATE <= 603
 	for(int n=0;n < MAX_IT_USER;n++)
@@ -2411,7 +2411,7 @@ void CIllusionTemple::GCIllusionTempleBattleInfoSend(ILLUSION_TEMPLE_LEVEL* lpLe
 #endif
 }
 
-void CIllusionTemple::GCIllusionTempleAddSkillSend(int aIndex,int result,int skill,int bIndex) // OK
+void CIllusionTemple::GCIllusionTempleAddSkillSend(int aIndex,int result,int skill,int bIndex)
 {
 	PMSG_ILLUSION_TEMPLE_ADD_SKILL_SEND pMsg;
 
@@ -2435,7 +2435,7 @@ void CIllusionTemple::GCIllusionTempleAddSkillSend(int aIndex,int result,int ski
 	}
 }
 
-void CIllusionTemple::GCIllusionTempleRewardScoreSend(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::GCIllusionTempleRewardScoreSend(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 #if GAMESERVER_UPDATE <= 603
 	BYTE send[256];
@@ -2571,7 +2571,7 @@ void CIllusionTemple::GCIllusionTempleRewardScoreSend(ILLUSION_TEMPLE_LEVEL* lpL
 #endif
 }
 
-void CIllusionTemple::GCIllusionTempleKillPointSend(int aIndex,int point) // OK
+void CIllusionTemple::GCIllusionTempleKillPointSend(int aIndex,int point)
 {
 #if GAMESERVER_UPDATE <= 603
 	PMSG_ILLUSION_TEMPLE_KILL_POINT_SEND pMsg;
@@ -2584,7 +2584,7 @@ void CIllusionTemple::GCIllusionTempleKillPointSend(int aIndex,int point) // OK
 #endif
 }
 
-void CIllusionTemple::GCIllusionTempleDelSkillSend(int aIndex,int skill) // OK
+void CIllusionTemple::GCIllusionTempleDelSkillSend(int aIndex,int skill)
 {
 #if (GAMESERVER_UPDATE <= 603)
 	PMSG_ILLUSION_TEMPLE_DEL_SKILL_SEND pMsg;
@@ -2615,7 +2615,7 @@ void CIllusionTemple::GCIllusionTempleDelSkillSend(int aIndex,int skill) // OK
 #endif
 }
 
-void CIllusionTemple::GCIllusionTempleEventItemOwnerSend(ILLUSION_TEMPLE_LEVEL* lpLevel) // OK
+void CIllusionTemple::GCIllusionTempleEventItemOwnerSend(ILLUSION_TEMPLE_LEVEL* lpLevel)
 {
 #if (GAMESERVER_UPDATE <= 603)
 	PMSG_ILLUSION_TEMPLE_EVENT_ITEM_OWNER_SEND pMsg;
@@ -2630,7 +2630,7 @@ void CIllusionTemple::GCIllusionTempleEventItemOwnerSend(ILLUSION_TEMPLE_LEVEL* 
 #endif
 }
 
-void CIllusionTemple::GCIllusionTempleEventItemOwnerS8Send(ILLUSION_TEMPLE_LEVEL* lpLevel, int Index, int byGet) // OK
+void CIllusionTemple::GCIllusionTempleEventItemOwnerS8Send(ILLUSION_TEMPLE_LEVEL* lpLevel, int Index, int byGet)
 {
 #if (GAMESERVER_UPDATE >= 803)
 	PMSG_ILLUSION_TEMPLE_EVENT_ITEM_OWNER_SEND pMsg;
@@ -2647,7 +2647,7 @@ void CIllusionTemple::GCIllusionTempleEventItemOwnerS8Send(ILLUSION_TEMPLE_LEVEL
 #endif
 }
 
-void CIllusionTemple::GCIllusionTempleChangeScenarioSend(ILLUSION_TEMPLE_LEVEL* lpLevel,int state,int aIndex) // OK
+void CIllusionTemple::GCIllusionTempleChangeScenarioSend(ILLUSION_TEMPLE_LEVEL* lpLevel,int state,int aIndex)
 {
 #if GAMESERVER_UPDATE <= 603
 	PMSG_ILLUSION_TEMPLE_CHANGE_SCENARIO_SEND pMsg;
@@ -2728,7 +2728,7 @@ void CIllusionTemple::StartIT()
 	this->Init();
 }
 
-void CIllusionTemple::GCIllusionTempleStoneInfoSend(ILLUSION_TEMPLE_LEVEL* lpLevel,int type,int state) // OK
+void CIllusionTemple::GCIllusionTempleStoneInfoSend(ILLUSION_TEMPLE_LEVEL* lpLevel,int type,int state)
 {
 #if (GAMESERVER_UPDATE >= 803)
 	for(int n=0;n < MAX_IT_USER;n++)

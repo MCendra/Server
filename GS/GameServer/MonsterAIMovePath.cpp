@@ -11,17 +11,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIMovePath::CMonsterAIMovePath() // OK
+CMonsterAIMovePath::CMonsterAIMovePath()
 {
 	this->DelAllAIMonsterMovePath();
 }
 
-CMonsterAIMovePath::~CMonsterAIMovePath() // OK
+CMonsterAIMovePath::~CMonsterAIMovePath()
 {
 
 }
 
-void CMonsterAIMovePath::LoadData(char* path) // OK
+void CMonsterAIMovePath::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -92,7 +92,7 @@ void CMonsterAIMovePath::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterAIMovePath::DelAllAIMonsterMovePath() // OK
+void CMonsterAIMovePath::DelAllAIMonsterMovePath()
 {
 	this->m_DataLoad = 0;
 
@@ -104,7 +104,7 @@ void CMonsterAIMovePath::DelAllAIMonsterMovePath() // OK
 	this->m_MonsterAIMovePathInfoCount = 0;
 }
 
-void CMonsterAIMovePath::GetMonsterNearestPath(int sx,int sy,int tx,int ty,int* ox,int* oy,int NearestDistance) // OK
+void CMonsterAIMovePath::GetMonsterNearestPath(int sx,int sy,int tx,int ty,int* ox,int* oy,int NearestDistance)
 {
 	for(int n=0;n < this->m_MonsterAIMovePathInfoCount;n++)
 	{

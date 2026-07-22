@@ -13,17 +13,17 @@ CJewelOfHarmonyType gJewelOfHarmonyType;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CJewelOfHarmonyType::CJewelOfHarmonyType() // OK
+CJewelOfHarmonyType::CJewelOfHarmonyType()
 {
 	this->Init();
 }
 
-CJewelOfHarmonyType::~CJewelOfHarmonyType() // OK
+CJewelOfHarmonyType::~CJewelOfHarmonyType()
 {
 
 }
 
-void CJewelOfHarmonyType::Init() // OK
+void CJewelOfHarmonyType::Init()
 {
 	for(int n=0;n < MAX_JEWEL_OF_HARMONY_TYPE;n++)
 	{
@@ -33,7 +33,7 @@ void CJewelOfHarmonyType::Init() // OK
 	this->m_count = 0;
 }
 
-void CJewelOfHarmonyType::Load(char* path) // OK
+void CJewelOfHarmonyType::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -83,7 +83,7 @@ void CJewelOfHarmonyType::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CJewelOfHarmonyType::SetInfo(JEWEL_OF_HARMONY_TYPE_INFO info) // OK
+void CJewelOfHarmonyType::SetInfo(JEWEL_OF_HARMONY_TYPE_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_JEWEL_OF_HARMONY_TYPE)
 	{
@@ -93,7 +93,7 @@ void CJewelOfHarmonyType::SetInfo(JEWEL_OF_HARMONY_TYPE_INFO info) // OK
 	this->m_JewelOfHarmonyTypeInfo[this->m_count++] = info;
 }
 
-JEWEL_OF_HARMONY_TYPE_INFO* CJewelOfHarmonyType::GetInfo(int index) // OK
+JEWEL_OF_HARMONY_TYPE_INFO* CJewelOfHarmonyType::GetInfo(int index)
 {
 	for(int n=0;n < MAX_JEWEL_OF_HARMONY_TYPE;n++)
 	{
@@ -111,7 +111,7 @@ JEWEL_OF_HARMONY_TYPE_INFO* CJewelOfHarmonyType::GetInfo(int index) // OK
 	return 0;
 };
 
-bool CJewelOfHarmonyType::CheckJewelOfHarmonyItemType(CItem* lpItem) // OK
+bool CJewelOfHarmonyType::CheckJewelOfHarmonyItemType(CItem* lpItem)
 {
 	JEWEL_OF_HARMONY_TYPE_INFO* lpInfo = this->GetInfo(lpItem->m_Index);
 

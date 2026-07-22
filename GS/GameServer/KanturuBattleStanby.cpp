@@ -17,7 +17,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuBattleStanby::CKanturuBattleStanby() // OK
+CKanturuBattleStanby::CKanturuBattleStanby()
 {
 	this->SetBattleStanbyState(KANTURU_STANBY_NONE);
 
@@ -26,12 +26,12 @@ CKanturuBattleStanby::CKanturuBattleStanby() // OK
 	this->ResetAllData();
 }
 
-CKanturuBattleStanby::~CKanturuBattleStanby() // OK
+CKanturuBattleStanby::~CKanturuBattleStanby()
 {
 
 }
 
-void CKanturuBattleStanby::ResetAllData() // OK
+void CKanturuBattleStanby::ResetAllData()
 {
 	this->m_FileDataLoad = 0;
 
@@ -43,7 +43,7 @@ void CKanturuBattleStanby::ResetAllData() // OK
 	this->m_StateInfoCount = 0;
 }
 
-void CKanturuBattleStanby::Load(char* path) // OK
+void CKanturuBattleStanby::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -116,7 +116,7 @@ void CKanturuBattleStanby::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CKanturuBattleStanby::MainProc() // OK
+void CKanturuBattleStanby::MainProc()
 {
 	this->CheckStateTime();
 
@@ -137,27 +137,27 @@ void CKanturuBattleStanby::MainProc() // OK
 	}
 }
 
-void CKanturuBattleStanby::ProcState_NONE() // OK
+void CKanturuBattleStanby::ProcState_NONE()
 {
 
 }
 
-void CKanturuBattleStanby::ProcState_START() // OK
+void CKanturuBattleStanby::ProcState_START()
 {
 
 }
 
-void CKanturuBattleStanby::ProcState_NOTIFY() // OK
+void CKanturuBattleStanby::ProcState_NOTIFY()
 {
 
 }
 
-void CKanturuBattleStanby::ProcState_END() // OK
+void CKanturuBattleStanby::ProcState_END()
 {
 
 }
 
-void CKanturuBattleStanby::SetState(int state) // OK
+void CKanturuBattleStanby::SetState(int state)
 {
 	this->m_StateInfo[state].SetConditionAppliedTime();
 
@@ -182,21 +182,21 @@ void CKanturuBattleStanby::SetState(int state) // OK
 	gKanturuUtil.NotifyKanturuChangeState(KANTURU_STATE_BATTLE_STANTBY,this->m_BattleStanbyState);
 }
 
-void CKanturuBattleStanby::SetState_NONE() // OK
+void CKanturuBattleStanby::SetState_NONE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleStanby ] State(%d) -> NONE",this->m_BattleStanbyState);
 
 	this->SetBattleStanbyState(KANTURU_STANBY_NONE);
 }
 
-void CKanturuBattleStanby::SetState_START() // OK
+void CKanturuBattleStanby::SetState_START()
 {
 	////LogAdd(LOG_BLACK,"[ KANTURU ][ BattleStanby ] State(%d) -> START",this->m_BattleStanbyState);
 
 	this->SetBattleStanbyState(KANTURU_STANBY_START);
 }
 
-void CKanturuBattleStanby::SetState_NOTIFY() // OK
+void CKanturuBattleStanby::SetState_NOTIFY()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleStanby ] State(%d) -> NOTIFY",this->m_BattleStanbyState);
 
@@ -205,14 +205,14 @@ void CKanturuBattleStanby::SetState_NOTIFY() // OK
 	gNotice.GCNoticeSendToAll(0,0,0,0,0,0,gMessage.GetMessage(338));
 }
 
-void CKanturuBattleStanby::SetState_END() // OK
+void CKanturuBattleStanby::SetState_END()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleStanby ] State(%d) -> END",this->m_BattleStanbyState);
 
 	this->SetBattleStanbyState(KANTURU_STANBY_END);
 }
 
-void CKanturuBattleStanby::CheckStateTime() // OK
+void CKanturuBattleStanby::CheckStateTime()
 {
 	if(this->GetBattleStanbyState() != KANTURU_STANBY_NONE && this->m_StateInfo[this->GetBattleStanbyState()].GetCondition() == 1 && this->m_StateInfo[this->GetBattleStanbyState()].IsTimeOut() != 0)
 	{
@@ -220,22 +220,22 @@ void CKanturuBattleStanby::CheckStateTime() // OK
 	}
 }
 
-void CKanturuBattleStanby::SetBattleStanbyState(int state) // OK
+void CKanturuBattleStanby::SetBattleStanbyState(int state)
 {
 	this->m_BattleStanbyState = state;
 }
 
-void CKanturuBattleStanby::SetSuccessValue(int success) // OK
+void CKanturuBattleStanby::SetSuccessValue(int success)
 {
 	this->m_IsSucccess = success;
 }
 
-int CKanturuBattleStanby::GetBattleStanbyState() // OK
+int CKanturuBattleStanby::GetBattleStanbyState()
 {
 	return this->m_BattleStanbyState;
 }
 
-int CKanturuBattleStanby::GetRemainTime() // OK
+int CKanturuBattleStanby::GetRemainTime()
 {
 	return this->m_StateInfo[this->GetBattleStanbyState()].GetRemainTime();
 }

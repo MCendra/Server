@@ -12,19 +12,19 @@ CMessage gMessage;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMessage::CMessage() // OK
+CMessage::CMessage()
 {
 	memset(this->m_DefaultMessage,0,sizeof(this->m_DefaultMessage));
 
 	this->m_MessageInfo.clear();
 }
 
-CMessage::~CMessage() // OK
+CMessage::~CMessage()
 {
 
 }
 
-void CMessage::Load(char* path) // OK
+void CMessage::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -74,7 +74,7 @@ void CMessage::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-char* CMessage::GetMessage(int index) // OK
+char* CMessage::GetMessage(int index)
 {
 	std::map<int,MESSAGE_INFO>::iterator it = this->m_MessageInfo.find(index);
 

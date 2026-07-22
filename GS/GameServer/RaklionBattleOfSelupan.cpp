@@ -15,17 +15,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklionBattleOfSelupan::CRaklionBattleOfSelupan() // OK
+CRaklionBattleOfSelupan::CRaklionBattleOfSelupan()
 {
 	this->ResetAllData();
 }
 
-CRaklionBattleOfSelupan::~CRaklionBattleOfSelupan() // OK
+CRaklionBattleOfSelupan::~CRaklionBattleOfSelupan()
 {
 
 }
 
-void CRaklionBattleOfSelupan::ResetAllData() // OK
+void CRaklionBattleOfSelupan::ResetAllData()
 {
 	this->m_IsUsed = 0;
 	this->m_SkillDelay = 0;
@@ -88,7 +88,7 @@ void CRaklionBattleOfSelupan::ResetAllData() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_NONE);
 }
 
-void CRaklionBattleOfSelupan::Run() // OK
+void CRaklionBattleOfSelupan::Run()
 {
 	if((OBJECT_RANGE(this->m_RaklionSelupan.GetSelupanObjIndex()) == 0 || this->m_RaklionSelupan.GetSelupanLife() <= 0) && this->GetBattleOfSelupanState() != SELUPAN_STATE_DIE)
 	{
@@ -131,17 +131,17 @@ void CRaklionBattleOfSelupan::Run() // OK
 	}
 }
 
-void CRaklionBattleOfSelupan::ProcState_NONE() // OK
+void CRaklionBattleOfSelupan::ProcState_NONE()
 {
 
 }
 
-void CRaklionBattleOfSelupan::ProcState_STANDBY() // OK
+void CRaklionBattleOfSelupan::ProcState_STANDBY()
 {
 
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN1() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN1()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -158,7 +158,7 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN1() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN2() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN2()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -175,7 +175,7 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN2() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN3() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN3()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -192,7 +192,7 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN3() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN4() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN4()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -209,7 +209,7 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN4() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN5() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN5()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -226,7 +226,7 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN5() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN6() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN6()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -243,7 +243,7 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN6() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_PATTERN7() // OK
+void CRaklionBattleOfSelupan::ProcState_PATTERN7()
 {
 	if(this->m_SkillDelay > (GetTickCount()-this->m_SkillDelayTick))
 	{
@@ -260,12 +260,12 @@ void CRaklionBattleOfSelupan::ProcState_PATTERN7() // OK
 	this->PatternStateSkillUseProc(skill);
 }
 
-void CRaklionBattleOfSelupan::ProcState_DIE() // OK
+void CRaklionBattleOfSelupan::ProcState_DIE()
 {
 
 }
 
-void CRaklionBattleOfSelupan::SetState(int state) // OK
+void CRaklionBattleOfSelupan::SetState(int state)
 {
 	switch(state)
 	{
@@ -304,7 +304,7 @@ void CRaklionBattleOfSelupan::SetState(int state) // OK
 	gRaklionUtil.NotifyRaklionChangeState(11,this->GetBattleOfSelupanState());
 }
 
-void CRaklionBattleOfSelupan::SetState_NONE() // OK
+void CRaklionBattleOfSelupan::SetState_NONE()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> NONE",this->m_BattleOfSelupanState);
 
@@ -313,7 +313,7 @@ void CRaklionBattleOfSelupan::SetState_NONE() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_NONE);
 }
 
-void CRaklionBattleOfSelupan::SetState_STANDBY() // OK
+void CRaklionBattleOfSelupan::SetState_STANDBY()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> STANDBY",this->m_BattleOfSelupanState);
 
@@ -324,7 +324,7 @@ void CRaklionBattleOfSelupan::SetState_STANDBY() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_STANDBY);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN1() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN1()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN1 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -333,7 +333,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN1() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN1);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN2() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN2()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN2 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -342,7 +342,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN2() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN2);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN3() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN3()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN3 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -351,7 +351,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN3() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN3);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN4() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN4()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN4 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -360,7 +360,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN4() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN4);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN5() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN5()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN5 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -369,7 +369,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN5() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN5);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN6() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN6()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN6 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -378,7 +378,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN6() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN6);
 }
 
-void CRaklionBattleOfSelupan::SetState_PATTERN7() // OK
+void CRaklionBattleOfSelupan::SetState_PATTERN7()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> PATTERN7 // Life(%d/%d)",this->m_BattleOfSelupanState,this->m_RaklionSelupan.GetSelupanLife(),this->m_RaklionSelupan.GetSelupanMaxLife());
 
@@ -387,7 +387,7 @@ void CRaklionBattleOfSelupan::SetState_PATTERN7() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_PATTERN7);
 }
 
-void CRaklionBattleOfSelupan::SetState_DIE() // OK
+void CRaklionBattleOfSelupan::SetState_DIE()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ BattleOfSelupan ] State(%d) -> DIE",this->m_BattleOfSelupanState);
 
@@ -396,7 +396,7 @@ void CRaklionBattleOfSelupan::SetState_DIE() // OK
 	this->SetBattleOfSelupanState(SELUPAN_STATE_DIE);
 }
 
-void CRaklionBattleOfSelupan::PatternStateSkillUseProc(int skill) // OK
+void CRaklionBattleOfSelupan::PatternStateSkillUseProc(int skill)
 {
 	if(OBJECT_RANGE(this->m_RaklionSelupan.GetSelupanObjIndex()) == 0)
 	{
@@ -446,7 +446,7 @@ void CRaklionBattleOfSelupan::PatternStateSkillUseProc(int skill) // OK
 	this->m_SkillDelayTick = GetTickCount();
 }
 
-void CRaklionBattleOfSelupan::SetPatternCondition(int pattern,int condition) // OK
+void CRaklionBattleOfSelupan::SetPatternCondition(int pattern,int condition)
 {
 	if(pattern < 0 || condition < 0)
 	{
@@ -457,7 +457,7 @@ void CRaklionBattleOfSelupan::SetPatternCondition(int pattern,int condition) // 
 	this->m_PatternCondition[pattern] = condition;
 }
 
-void CRaklionBattleOfSelupan::SelupanLifeCheck() // OK
+void CRaklionBattleOfSelupan::SelupanLifeCheck()
 {
 	if(OBJECT_RANGE(this->m_RaklionSelupan.GetSelupanObjIndex()) == 0)
 	{
@@ -582,57 +582,57 @@ void CRaklionBattleOfSelupan::SelupanLifeCheck() // OK
 	}
 }
 
-void CRaklionBattleOfSelupan::CreateSelupan() // OK
+void CRaklionBattleOfSelupan::CreateSelupan()
 {
 	this->m_RaklionSelupan.CreateSelupan();
 }
 
-void CRaklionBattleOfSelupan::DeleteSelupan() // OK
+void CRaklionBattleOfSelupan::DeleteSelupan()
 {
 	this->m_RaklionSelupan.DeleteSelupan();
 }
 
-void CRaklionBattleOfSelupan::DeleteSummonMonster() // OK
+void CRaklionBattleOfSelupan::DeleteSummonMonster()
 {
 	this->m_RaklionSelupan.DeleteSummonMonster();
 }
 
-void CRaklionBattleOfSelupan::SetSelupanObjIndex(int index) // OK
+void CRaklionBattleOfSelupan::SetSelupanObjIndex(int index)
 {
 	this->m_RaklionSelupan.SetSelupanObjIndex(index);
 }
 
-void CRaklionBattleOfSelupan::SetSelupanSkillDelay(int delay) // OK
+void CRaklionBattleOfSelupan::SetSelupanSkillDelay(int delay)
 {
 	this->m_RaklionSelupan.SetSelupanSkillDelay(delay);
 }
 
-void CRaklionBattleOfSelupan::SetBattleOfSelupanState(int state) // OK
+void CRaklionBattleOfSelupan::SetBattleOfSelupanState(int state)
 {
 	this->m_BattleOfSelupanState = state;
 }
 
-void CRaklionBattleOfSelupan::SetSuccessValue(int success) // OK
+void CRaklionBattleOfSelupan::SetSuccessValue(int success)
 {
 	this->m_IsSucccess = success;
 }
 
-int CRaklionBattleOfSelupan::GetSuccessValue() // OK
+int CRaklionBattleOfSelupan::GetSuccessValue()
 {
 	return this->m_IsSucccess;
 }
 
-int CRaklionBattleOfSelupan::GetBattleUserCount() // OK
+int CRaklionBattleOfSelupan::GetBattleUserCount()
 {
 	return gRaklionBattleUserMng.GetBattleUserCount();
 }
 
-int CRaklionBattleOfSelupan::GetSelupanObjIndex() // OK
+int CRaklionBattleOfSelupan::GetSelupanObjIndex()
 {
 	return this->m_RaklionSelupan.GetSelupanObjIndex();
 }
 
-int CRaklionBattleOfSelupan::GetBattleOfSelupanState() // OK
+int CRaklionBattleOfSelupan::GetBattleOfSelupanState()
 {
 	return this->m_BattleOfSelupanState;
 }

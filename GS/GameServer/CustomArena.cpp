@@ -28,7 +28,7 @@ CCustomArena gCustomArena;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomArena::CCustomArena() // OK
+CCustomArena::CCustomArena()
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA; n++)
 	{
@@ -47,12 +47,12 @@ CCustomArena::CCustomArena() // OK
 	}
 }
 
-CCustomArena::~CCustomArena() // OK
+CCustomArena::~CCustomArena()
 {
 
 }
 
-void CCustomArena::Init() // OK
+void CCustomArena::Init()
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA; n++)
 	{
@@ -67,7 +67,7 @@ void CCustomArena::Init() // OK
 	}
 }
 
-void CCustomArena::ReadCustomArenaInfo(char* section, char* path) // OK
+void CCustomArena::ReadCustomArenaInfo(char* section, char* path)
 {
 	this->m_CustomArenaSwitch = GetPrivateProfileInt(section, "CustomArenaSwitch", 0, path);
 
@@ -114,7 +114,7 @@ void CCustomArena::ReadCustomArenaInfo(char* section, char* path) // OK
 	GetPrivateProfileString(section, "CustomArenaText19", "", this->m_CustomArenaText19, sizeof(this->m_CustomArenaText19), path);
 }
 
-void CCustomArena::Load(char* path) // OK
+void CCustomArena::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -278,7 +278,7 @@ void CCustomArena::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomArena::MainProc() // OK
+void CCustomArena::MainProc()
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA; n++)
 	{
@@ -367,12 +367,12 @@ void CCustomArena::MainProc() // OK
 	}
 }
 
-void CCustomArena::ProcState_BLANK(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::ProcState_BLANK(CUSTOM_ARENA_INFO* lpInfo)
 {
 
 }
 
-void CCustomArena::ProcState_EMPTY(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::ProcState_EMPTY(CUSTOM_ARENA_INFO* lpInfo)
 {
 	if (lpInfo->RemainTime > 0 && lpInfo->RemainTime <= (lpInfo->RuleInfo.AlarmTime * 60))
 	{
@@ -396,7 +396,7 @@ void CCustomArena::ProcState_EMPTY(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomArena::ProcState_STAND(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::ProcState_STAND(CUSTOM_ARENA_INFO* lpInfo)
 {
 	this->CheckUser(lpInfo);
 
@@ -413,7 +413,7 @@ void CCustomArena::ProcState_STAND(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomArena::ProcState_START(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::ProcState_START(CUSTOM_ARENA_INFO* lpInfo)
 {
 	this->CheckUser(lpInfo);
 
@@ -469,7 +469,7 @@ void CCustomArena::ProcState_START(CUSTOM_ARENA_INFO* lpInfo) // OK
 
 }
 
-LONG CCustomArena::GetDummyUserIndex() // OK
+LONG CCustomArena::GetDummyUserIndex()
 {
 	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 	{
@@ -482,7 +482,7 @@ LONG CCustomArena::GetDummyUserIndex() // OK
 	return OBJECT_START_USER;
 }
 
-bool::CCustomArena::GetRandomItemDropLocation(int map, int* ox, int* oy, int tx, int ty, int count) // OK
+bool::CCustomArena::GetRandomItemDropLocation(int map, int* ox, int* oy, int tx, int ty, int count)
 {
 	int x = (*ox);
 	int y = (*oy);
@@ -504,7 +504,7 @@ bool::CCustomArena::GetRandomItemDropLocation(int map, int* ox, int* oy, int tx,
 	return 0;
 }
 
-void CCustomArena::GCFireworksSendToNearUser(int map, int x, int y) // OK
+void CCustomArena::GCFireworksSendToNearUser(int map, int x, int y)
 {
 	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 	{
@@ -529,7 +529,7 @@ void CCustomArena::GCFireworksSendToNearUser(int map, int x, int y) // OK
 }
 
 
-void CCustomArena::ProcState_CLEAN(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::ProcState_CLEAN(CUSTOM_ARENA_INFO* lpInfo)
 {
 	this->CheckUser(lpInfo);
 
@@ -539,7 +539,7 @@ void CCustomArena::ProcState_CLEAN(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomArena::SetState(CUSTOM_ARENA_INFO* lpInfo, int state) // OK
+void CCustomArena::SetState(CUSTOM_ARENA_INFO* lpInfo, int state)
 {
 	switch ((lpInfo->State = state))
 	{
@@ -561,12 +561,12 @@ void CCustomArena::SetState(CUSTOM_ARENA_INFO* lpInfo, int state) // OK
 	}
 }
 
-void CCustomArena::SetState_BLANK(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::SetState_BLANK(CUSTOM_ARENA_INFO* lpInfo)
 {
 
 }
 
-void CCustomArena::SetState_EMPTY(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::SetState_EMPTY(CUSTOM_ARENA_INFO* lpInfo)
 {
 	lpInfo->EnterEnabled = 0;
 	lpInfo->AlarmMinSave = -1;
@@ -582,7 +582,7 @@ void CCustomArena::SetState_EMPTY(CUSTOM_ARENA_INFO* lpInfo) // OK
 	this->CheckSync(lpInfo);
 }
 
-void CCustomArena::SetState_STAND(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::SetState_STAND(CUSTOM_ARENA_INFO* lpInfo)
 {
 	lpInfo->EnterEnabled = 0;
 	lpInfo->AlarmMinSave = -1;
@@ -593,7 +593,7 @@ void CCustomArena::SetState_STAND(CUSTOM_ARENA_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)(time(0) + lpInfo->RemainTime);
 }
 
-void CCustomArena::SetState_START(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::SetState_START(CUSTOM_ARENA_INFO* lpInfo)
 {
 	lpInfo->EnterEnabled = 0;
 	lpInfo->AlarmMinSave = -1;
@@ -606,7 +606,7 @@ void CCustomArena::SetState_START(CUSTOM_ARENA_INFO* lpInfo) // OK
 
 }
 
-void CCustomArena::SetState_CLEAN(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::SetState_CLEAN(CUSTOM_ARENA_INFO* lpInfo)
 {
 	lpInfo->EnterEnabled = 0;
 	lpInfo->AlarmMinSave = -1;
@@ -640,7 +640,7 @@ void CCustomArena::SetState_CLEAN(CUSTOM_ARENA_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)(time(0) + lpInfo->RemainTime);
 }
 
-void CCustomArena::CheckSync(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::CheckSync(CUSTOM_ARENA_INFO* lpInfo)
 {
 	if (lpInfo->StartTime.empty() != 0)
 	{
@@ -668,7 +668,7 @@ void CCustomArena::CheckSync(CUSTOM_ARENA_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-int CCustomArena::GetState(int index) // OK
+int CCustomArena::GetState(int index)
 {
 	if (index < 0 || index >= MAX_CUSTOM_ARENA)
 	{
@@ -678,7 +678,7 @@ int CCustomArena::GetState(int index) // OK
 	return this->m_CustomArenaInfo[index].State;
 }
 
-int CCustomArena::GetRemainTime(int index) // OK
+int CCustomArena::GetRemainTime(int index)
 {
 	if (index < 0 || index >= MAX_CUSTOM_ARENA)
 	{
@@ -711,7 +711,7 @@ int CCustomArena::GetRemainTime(int index) // OK
 	return (((RemainTime % 60) == 0) ? (RemainTime / 60) : ((RemainTime / 60) + 1));
 }
 
-int CCustomArena::GetEnterEnabled(int index) // OK
+int CCustomArena::GetEnterEnabled(int index)
 {
 	if (index < 0 || index >= MAX_CUSTOM_ARENA)
 	{
@@ -721,7 +721,7 @@ int CCustomArena::GetEnterEnabled(int index) // OK
 	return this->m_CustomArenaInfo[index].EnterEnabled;
 }
 
-int CCustomArena::GetEnteredUserCount(int index) // OK
+int CCustomArena::GetEnteredUserCount(int index)
 {
 	if (index < 0 || index >= MAX_CUSTOM_ARENA)
 	{
@@ -731,7 +731,7 @@ int CCustomArena::GetEnteredUserCount(int index) // OK
 	return this->GetUserCount(&this->m_CustomArenaInfo[index]);
 }
 
-bool CCustomArena::CheckEnteredUser(int index, int aIndex) // OK
+bool CCustomArena::CheckEnteredUser(int index, int aIndex)
 {
 	if (index < 0 || index >= MAX_CUSTOM_ARENA)
 	{
@@ -741,7 +741,7 @@ bool CCustomArena::CheckEnteredUser(int index, int aIndex) // OK
 	return ((this->GetUser(&this->m_CustomArenaInfo[index], aIndex) == 0) ? 0 : 1);
 }
 
-bool CCustomArena::CheckEnterEnabled(LPOBJ lpObj, int gate) // OK
+bool CCustomArena::CheckEnterEnabled(LPOBJ lpObj, int gate)
 {
 	if (OBJECT_RANGE(lpObj->PartyNumber) != 0)
 	{
@@ -862,7 +862,7 @@ bool CCustomArena::CheckEnterEnabled(LPOBJ lpObj, int gate) // OK
 	return 0;
 }
 
-bool CCustomArena::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CCustomArena::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (CA_MAP_RANGE(lpObj->Map) != 0)
 	{
@@ -881,7 +881,7 @@ bool CCustomArena::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	return 0;
 }
 
-bool CCustomArena::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CCustomArena::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (CA_MAP_RANGE(lpObj->Map) != 0)
 	{
@@ -901,7 +901,7 @@ bool CCustomArena::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget) // OK
 }
 
 
-bool CCustomArena::KhoiPhucDataChar(int aIndex) // OK
+bool CCustomArena::KhoiPhucDataChar(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -953,7 +953,7 @@ bool CCustomArena::KhoiPhucDataChar(int aIndex) // OK
 
 	return 1;
 }
-bool CCustomArena::BackUpDataChar(int aIndex) // OK
+bool CCustomArena::BackUpDataChar(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1101,7 +1101,7 @@ void CCustomArena::CacheUserState(int aIndex, int TypeState)
 
 }
 
-bool CCustomArena::AddUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex) // OK
+bool CCustomArena::AddUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1134,7 +1134,7 @@ bool CCustomArena::AddUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex) // OK
 	return 0;
 }
 
-bool CCustomArena::DelUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex) // OK
+bool CCustomArena::DelUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1152,7 +1152,7 @@ bool CCustomArena::DelUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex) // OK
 	return 1;
 }
 
-CUSTOM_ARENA_USER* CCustomArena::GetUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex) // OK
+CUSTOM_ARENA_USER* CCustomArena::GetUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1170,7 +1170,7 @@ CUSTOM_ARENA_USER* CCustomArena::GetUser(CUSTOM_ARENA_INFO* lpInfo, int aIndex) 
 	return 0;
 }
 
-void CCustomArena::CleanUser(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::CleanUser(CUSTOM_ARENA_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA_USER; n++)
 	{
@@ -1178,7 +1178,7 @@ void CCustomArena::CleanUser(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomArena::ClearUser(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::ClearUser(CUSTOM_ARENA_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA_USER; n++)
 	{
@@ -1193,7 +1193,7 @@ void CCustomArena::ClearUser(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomArena::CheckUser(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::CheckUser(CUSTOM_ARENA_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA_USER; n++)
 	{
@@ -1216,7 +1216,7 @@ void CCustomArena::CheckUser(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-int CCustomArena::GetUserCount(CUSTOM_ARENA_INFO* lpInfo) // OK
+int CCustomArena::GetUserCount(CUSTOM_ARENA_INFO* lpInfo)
 {
 	int count = 0;
 
@@ -1231,7 +1231,7 @@ int CCustomArena::GetUserCount(CUSTOM_ARENA_INFO* lpInfo) // OK
 	return count;
 }
 
-void CCustomArena::CalcUserRank(CUSTOM_ARENA_INFO* lpInfo) // OK
+void CCustomArena::CalcUserRank(CUSTOM_ARENA_INFO* lpInfo)
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA_USER; n++)
 	{
@@ -1274,7 +1274,7 @@ void CCustomArena::CalcUserRank(CUSTOM_ARENA_INFO* lpInfo) // OK
 	}
 }
 
-bool CCustomArena::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level) // OK
+bool CCustomArena::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level)
 {
 	if (this->m_CustomArenaSwitch == 0)
 	{
@@ -1318,7 +1318,7 @@ bool CCustomArena::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int*
 	return 0;
 }
 
-void CCustomArena::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CCustomArena::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->m_CustomArenaSwitch == 0)
 	{
@@ -1377,7 +1377,7 @@ void CCustomArena::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-void CCustomArena::NoticeSendToAll(CUSTOM_ARENA_INFO* lpInfo, int type, char* message, ...) // OK
+void CCustomArena::NoticeSendToAll(CUSTOM_ARENA_INFO* lpInfo, int type, char* message, ...)
 {
 	char buff[256];
 
@@ -1395,7 +1395,7 @@ void CCustomArena::NoticeSendToAll(CUSTOM_ARENA_INFO* lpInfo, int type, char* me
 	}
 }
 
-void CCustomArena::DataSendToAll(CUSTOM_ARENA_INFO* lpInfo, BYTE* lpMsg, int size) // OK
+void CCustomArena::DataSendToAll(CUSTOM_ARENA_INFO* lpInfo, BYTE* lpMsg, int size)
 {
 	for (int n = 0; n < MAX_CUSTOM_ARENA_USER; n++)
 	{
@@ -1442,7 +1442,7 @@ void CCustomArena::StartCustomArena(int index)
 	this->SetState(&this->m_CustomArenaInfo[index], CUSTOM_ARENA_STATE_EMPTY);
 }
 
-char* CCustomArena::GetArenaName(int index) // OK
+char* CCustomArena::GetArenaName(int index)
 {
 	return this->m_CustomArenaInfo[index].RuleInfo.Name;
 }

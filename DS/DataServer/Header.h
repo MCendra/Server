@@ -127,37 +127,41 @@ extern char DataServerPASS[32];
 extern BOOL AdvancedLog;
 extern WORD RSTimeCTC;
 
-//==============================================================
-// Common Packet Offsets
-//==============================================================
+constexpr BYTE SET_NUMBERHB(DWORD x) {
+	return static_cast<BYTE>(x >> 8);
+}
 
-constexpr std::size_t PACKET_TYPE_OFFSET = 0;
+constexpr BYTE SET_NUMBERLB(DWORD x) {
+	return static_cast<BYTE>(x & 0xFF);
+}
 
-//==============================================================
-// C1 / C3 Header
-//==============================================================
+constexpr WORD SET_NUMBERHW(DWORD x) {
+	return static_cast<WORD>(x >> 16);
+}
 
-constexpr std::size_t C1_PACKET_SIZE_OFFSET = 1;
-constexpr std::size_t C1_PACKET_HEAD_OFFSET = 2;
-constexpr std::size_t C1_PACKET_DATA_OFFSET = 3;
+constexpr WORD SET_NUMBERLW(DWORD x) {
+	return static_cast<WORD>(x & 0xFFFF);
+}
 
-//==============================================================
-// C2 / C4 Header
-//==============================================================
+constexpr DWORD SET_NUMBERHDW(QWORD x) {
+	return static_cast<DWORD>(x >> 32);
+}
 
-constexpr std::size_t C2_PACKET_SIZEH_OFFSET = 1;
-constexpr std::size_t C2_PACKET_SIZEL_OFFSET = 2;
-constexpr std::size_t C2_PACKET_HEAD_OFFSET = 3;
-constexpr std::size_t C2_PACKET_DATA_OFFSET = 4;
+constexpr DWORD SET_NUMBERLDW(QWORD x) {
+	return static_cast<DWORD>(x & 0xFFFFFFFF);
+}
 
-//==============================================================
-// Packet Types
-//==============================================================
+constexpr WORD MAKE_NUMBERW(BYTE x, BYTE y) {
+	return static_cast<WORD>((static_cast<WORD>(y) & 0xFF) | (static_cast<WORD>(x) << 8));
+}
 
-constexpr BYTE PACKET_C1 = 0xC1;
-constexpr BYTE PACKET_C2 = 0xC2;
-constexpr BYTE PACKET_C3 = 0xC3;
-constexpr BYTE PACKET_C4 = 0xC4;
+constexpr DWORD MAKE_NUMBERDW(WORD x, WORD y) {
+	return static_cast<DWORD>((static_cast<DWORD>(y) & 0xFFFF) | (static_cast<DWORD>(x) << 16));
+}
+
+constexpr QWORD MAKE_NUMBERQW(DWORD x, DWORD y) {
+	return (static_cast<QWORD>(y) & 0xFFFFFFFF) | (static_cast<QWORD>(x) << 32);
+}
 
 //==============================================================
 // Main Heads

@@ -41,7 +41,7 @@ void DataServerProtocolCore(int serverIndex, const BYTE protocolHead, const BYTE
 
 	switch (packetType)
 	{
-		case PACKET_HEADER_C1:
+		case PACKET_C1:
 		{
 			// Un paquete C1 debe contener como mínimo su cabecera completa.
 			if (size < static_cast<int>(sizeof(PBMSG_HEAD)))
@@ -67,7 +67,7 @@ void DataServerProtocolCore(int serverIndex, const BYTE protocolHead, const BYTE
 			}
 		}
 		break;
-		case PACKET_HEADER_C2:
+		case PACKET_C2:
 		{
 			// Un paquete C2 debe contener como mínimo su cabecera completa.
 			if (size < static_cast<int>(sizeof(PWMSG_HEAD)))
@@ -2355,7 +2355,7 @@ void GDCustomRankingRecv(const SDHP_CUSTOM_RANKING_RECV* lpMsg, int serverIndex,
 
 	CUSTOM_RANKING_DATA info{};
 
-	if (gQueryManager.ExecQuery("EXEC WZ_CustomRanking %d", lpMsg->type))
+	if (gQueryManager.ExecQuery("EXEC WZ_CustomRanking %d", lpMsg->Type))
 	{
 		while (gQueryManager.Fetch() != SQL_NO_DATA)
 		{
@@ -2393,7 +2393,7 @@ void CharacterRanking(const GDTop* lpMsg, int serverIndex, int size)
 
 	DGCharTop pMsg{};
 
-	pMsg.Header.set(HEAD_CUSTOM_EXTENSIONS, SUB_SKIN_SAVE, sizeof(pMsg));
+	pMsg.Header.set(HEAD_CUSTOM_EXTENSIONS, SUB_CHARACTER_RANKING, sizeof(pMsg));
 
 	int characterCount = 0;
 
@@ -2722,7 +2722,7 @@ void GDCustomNpcQuestSaveRecv(const SDHP_CUSTOMNPCQUEST_SAVE_RECV* lpMsg, int se
 	{
 		gQueryManager.ExecQuery(
 			"UPDATE CustomNpcQuest "
-			"SET Count=Count+1,MonsterCount=99999 "
+			"SET Count=Count+1,MonsterCount=99999 " // Revisar
 			"WHERE Name='%s' AND Quest=%d",
 			lpMsg->CharacterName,
 			lpMsg->Quest);
@@ -2940,10 +2940,6 @@ void GDCustomGHRSRecv(const SDHP_CUSTOM_GHRS_RECV* lpMsg, int serverIndex, int s
 
 	PMSG_CUSTOM_GHRS_SEND pMsg{};
 
-	pMsg.Header.set(SUB_CUSTOM_GHRS_SEND, 0);
-
-	int sendSize = sizeof(pMsg);
-
 	pMsg.Time = lpMsg->Time;
 	pMsg.Resets = 0;
 	pMsg.Grand = 0;
@@ -2999,16 +2995,10 @@ void GDCustomGHRSRecv(const SDHP_CUSTOM_GHRS_RECV* lpMsg, int serverIndex, int s
 #endif
 	}
 
-	std::memcpy(send, &pMsg, sizeof(pMsg));
+	const int sendSize = static_cast<int>(sizeof(pMsg));
+	pMsg.Header.set(SUB_CUSTOM_GHRS_SEND, static_cast<WORD>(sendSize));
 
-	sendSize = sizeof(pMsg);
-
-	pMsg.Header.size[0] = SET_NUMBERHB(sendSize);
-	pMsg.Header.size[1] = SET_NUMBERLB(sendSize);
-
-	std::memcpy(send, &pMsg, sizeof(pMsg));
-
-	gSocketManager.DataSend(serverIndex, send, sendSize);
+	gSocketManager.DataSend(serverIndex, reinterpret_cast<BYTE*>(&pMsg), sendSize);
 }
 #endif
 
@@ -3425,7 +3415,7 @@ void GDCharacterMocNapSaveRecv(const MOCNAP_GD_SAVE_DATA* lpMsg, int serverIndex
 // Helper
 inline BYTE GetProtocolSubHead(const BYTE* lpMsg)
 {
-	return (lpMsg[PACKET_TYPE_OFFSET] == PACKET_HEADER_C1)
+	return (lpMsg[PACKET_TYPE_OFFSET] == PACKET_C1)
 		? lpMsg[C1_PACKET_DATA_OFFSET]
 		: lpMsg[C2_PACKET_DATA_OFFSET];
 }

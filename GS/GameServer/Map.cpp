@@ -17,7 +17,7 @@ CMap gMap[MAX_MAP];
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMap::CMap() // OK
+CMap::CMap()
 {
 	this->m_Weather = 0;
 	this->m_WeatherTimer = GetTickCount();
@@ -42,12 +42,12 @@ CMap::CMap() // OK
 	SetRect(&this->m_MapRespawn[51], 40, 214, 43, 224);
 }
 
-CMap::~CMap() // OK
+CMap::~CMap()
 {
 
 }
 
-void CMap::Load(char* path, int map) // OK
+void CMap::Load(char* path, int map)
 {
 	HANDLE file = CreateFile(path, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_ARCHIVE, 0);
 
@@ -128,7 +128,7 @@ void CMap::Load(char* path, int map) // OK
 	CloseHandle(file);
 }
 
-BYTE CMap::GetAttr(int x, int y) // OK
+BYTE CMap::GetAttr(int x, int y)
 {
 	if (x < 0 || x >= this->m_width || y < 0 || y >= this->m_height)
 	{
@@ -138,7 +138,7 @@ BYTE CMap::GetAttr(int x, int y) // OK
 	return this->m_MapAttr[(y*this->m_height) + x];
 }
 
-bool CMap::CheckAttr(int x, int y, BYTE attr) // OK
+bool CMap::CheckAttr(int x, int y, BYTE attr)
 {
 	if ((this->GetAttr(x, y) & attr) != 0)
 	{
@@ -148,7 +148,7 @@ bool CMap::CheckAttr(int x, int y, BYTE attr) // OK
 	return 0;
 }
 
-void CMap::SetAttr(int x, int y, BYTE attr) // OK
+void CMap::SetAttr(int x, int y, BYTE attr)
 {
 	if (x < 0 || x >= this->m_width || y < 0 || y >= this->m_height)
 	{
@@ -158,7 +158,7 @@ void CMap::SetAttr(int x, int y, BYTE attr) // OK
 	this->m_MapAttr[(y*this->m_height) + x] |= attr;
 }
 
-void CMap::DelAttr(int x, int y, BYTE attr) // OK
+void CMap::DelAttr(int x, int y, BYTE attr)
 {
 	if (x < 0 || x >= this->m_width || y < 0 || y >= this->m_height)
 	{
@@ -168,7 +168,7 @@ void CMap::DelAttr(int x, int y, BYTE attr) // OK
 	this->m_MapAttr[(y*this->m_height) + x] &= ~attr;
 }
 
-bool CMap::CheckStandAttr(int x, int y) // OK
+bool CMap::CheckStandAttr(int x, int y)
 {
 	if (this->CheckAttr(x, y, 2) != 0)
 	{
@@ -188,7 +188,7 @@ bool CMap::CheckStandAttr(int x, int y) // OK
 	return 1;
 }
 
-void CMap::SetStandAttr(int x, int y) // OK
+void CMap::SetStandAttr(int x, int y)
 {
 	if (x < 0 || x >= this->m_width || y < 0 || y >= this->m_height)
 	{
@@ -198,7 +198,7 @@ void CMap::SetStandAttr(int x, int y) // OK
 	this->m_MapAttr[(y*this->m_height) + x] |= 2;
 }
 
-void CMap::DelStandAttr(int x, int y) // OK
+void CMap::DelStandAttr(int x, int y)
 {
 	if (x < 0 || x >= this->m_width || y < 0 || y >= this->m_height)
 	{
@@ -208,19 +208,19 @@ void CMap::DelStandAttr(int x, int y) // OK
 	this->m_MapAttr[(y*this->m_height) + x] &= ~2;
 }
 
-BYTE CMap::GetWeather() // OK
+BYTE CMap::GetWeather()
 {
 	return ((this->m_Weather * 16) | this->m_WeatherVariation);
 }
 
-void CMap::SetWeather(BYTE weather, BYTE variation) // OK
+void CMap::SetWeather(BYTE weather, BYTE variation)
 {
 	this->m_Weather = weather;
 	this->m_WeatherVariation = variation;
 	this->WeatherAllSend(this->GetWeather());
 }
 
-void CMap::WeatherVariationProcess() // OK
+void CMap::WeatherVariationProcess()
 {
 	if ((GetTickCount() - this->m_WeatherTimer) > this->m_NextWeatherTimer)
 	{
@@ -232,7 +232,7 @@ void CMap::WeatherVariationProcess() // OK
 	}
 }
 
-void CMap::WeatherAllSend(BYTE weather) // OK
+void CMap::WeatherAllSend(BYTE weather)
 {
 	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 	{
@@ -243,7 +243,7 @@ void CMap::WeatherAllSend(BYTE weather) // OK
 	}
 }
 
-void CMap::GetMapPos(int map, short* ox, short* oy) // OK
+void CMap::GetMapPos(int map, short* ox, short* oy)
 {
 	if (map != MAP_LORENCIA && map != MAP_DUNGEON && map != MAP_DEVIAS && map != MAP_NORIA && map != MAP_LOST_TOWER && map != MAP_ATLANS && map != MAP_TARKAN && map != MAP_AIDA && map != MAP_CRYWOLF && map != MAP_ELBELAND)
 	{
@@ -264,7 +264,7 @@ void CMap::GetMapPos(int map, short* ox, short* oy) // OK
 	}
 }
 
-void CMap::GetMapRandomPos(short* ox, short* oy, int size) // OK
+void CMap::GetMapRandomPos(short* ox, short* oy, int size)
 {
 	for (int n = 0; n < 50; n++)
 	{
@@ -286,7 +286,7 @@ void CMap::GetMapRandomPos(short* ox, short* oy, int size) // OK
 	}
 }
 
-bool CMap::MoneyItemDrop(int money, int x, int y) // OK
+bool CMap::MoneyItemDrop(int money, int x, int y)
 {
 	if (this->CheckAttr(x, y, 4) != 0 || this->CheckAttr(x, y, 8) != 0)
 	{
@@ -323,7 +323,7 @@ bool CMap::MoneyItemDrop(int money, int x, int y) // OK
 	return 0;
 }
 
-bool CMap::MonsterItemDrop(int index, int level, float dur, int x, int y, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption, int aIndex, DWORD serial, BYTE JewelOfHarmonyOption, BYTE ItemOptionEx, BYTE SocketOption[MAX_SOCKET_OPTION], BYTE SocketOptionBonus, DWORD duration) // OK
+bool CMap::MonsterItemDrop(int index, int level, float dur, int x, int y, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption, int aIndex, DWORD serial, BYTE JewelOfHarmonyOption, BYTE ItemOptionEx, BYTE SocketOption[MAX_SOCKET_OPTION], BYTE SocketOptionBonus, DWORD duration)
 {
 	if (this->CheckAttr(x, y, 4) != 0 || this->CheckAttr(x, y, 8) != 0)
 	{
@@ -350,7 +350,7 @@ bool CMap::MonsterItemDrop(int index, int level, float dur, int x, int y, BYTE O
 	return 0;
 }
 
-bool CMap::ItemDrop(int index, int level, float dur, int x, int y, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption, DWORD serial, int aIndex, int PetLevel, int PetExp, BYTE JewelOfHarmonyOption, BYTE ItemOptionEx, BYTE SocketOption[MAX_SOCKET_OPTION], BYTE SocketOptionBonus, DWORD duration) // OK
+bool CMap::ItemDrop(int index, int level, float dur, int x, int y, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption, DWORD serial, int aIndex, int PetLevel, int PetExp, BYTE JewelOfHarmonyOption, BYTE ItemOptionEx, BYTE SocketOption[MAX_SOCKET_OPTION], BYTE SocketOptionBonus, DWORD duration)
 {
 	if (this->CheckAttr(x, y, 4) != 0 || this->CheckAttr(x, y, 8) != 0)
 	{
@@ -388,7 +388,7 @@ bool CMap::ItemDrop(int index, int level, float dur, int x, int y, BYTE Option1,
 	return 0;
 }
 
-bool CMap::CheckItemGive(int aIndex, int index) // OK
+bool CMap::CheckItemGive(int aIndex, int index)
 {
 	if (MAP_ITEM_RANGE(index) == 0)
 	{
@@ -454,7 +454,7 @@ bool CMap::CheckItemGive(int aIndex, int index) // OK
 	return 1;
 }
 
-void CMap::ItemGive(int aIndex, int index) // OK
+void CMap::ItemGive(int aIndex, int index)
 {
 	if (MAP_ITEM_RANGE(index) == 0)
 	{
@@ -466,7 +466,7 @@ void CMap::ItemGive(int aIndex, int index) // OK
 	this->m_Item[index].m_State = OBJECT_DIECMD;
 }
 
-void CMap::StateSetDestroy() // OK
+void CMap::StateSetDestroy()
 {
 	for (int n = 0; n < MAX_MAP_ITEM; n++)
 	{
@@ -502,7 +502,7 @@ void CMap::StateSetDestroy() // OK
 	}
 }
 
-BOOL CMap::CheckWall(int sx, int sy, int tx, int ty) // OK
+BOOL CMap::CheckWall(int sx, int sy, int tx, int ty)
 {
 	int sx1 = sx, sy1 = sy, sx2 = tx, sy2 = ty;
 	int Index = ((BYTE)sy1 * 256 + (BYTE)sx1);
@@ -576,7 +576,7 @@ BOOL CMap::CheckWall(int sx, int sy, int tx, int ty) // OK
 	return TRUE;
 }
 
-BYTE CMap::CheckWall2(int sx, int sy, int tx, int ty) // OK
+BYTE CMap::CheckWall2(int sx, int sy, int tx, int ty)
 {
 	int sx1 = sx, sy1 = sy, sx2 = tx, sy2 = ty;
 	int Index = ((BYTE)sy1 * 256 + (BYTE)sx1);
@@ -663,7 +663,7 @@ BYTE CMap::CheckWall2(int sx, int sy, int tx, int ty) // OK
 	return 1;
 }
 
-bool CMap::PathFinding2(int sx, int sy, int tx, int ty, PATH_INFO* path) // OK
+bool CMap::PathFinding2(int sx, int sy, int tx, int ty, PATH_INFO* path)
 {
 	PATH_INFO* a = path;
 
@@ -699,7 +699,7 @@ bool CMap::PathFinding2(int sx, int sy, int tx, int ty, PATH_INFO* path) // OK
 	return false;
 }
 
-bool CMap::PathFinding3(int sx, int sy, int tx, int ty, PATH_INFO* path) // OK
+bool CMap::PathFinding3(int sx, int sy, int tx, int ty, PATH_INFO* path)
 {
 	PATH_INFO* a = path;
 
@@ -735,7 +735,7 @@ bool CMap::PathFinding3(int sx, int sy, int tx, int ty, PATH_INFO* path) // OK
 	return false;
 }
 
-bool CMap::PathFinding4(int sx, int sy, int tx, int ty, PATH_INFO* path) // OK
+bool CMap::PathFinding4(int sx, int sy, int tx, int ty, PATH_INFO* path)
 {
 	PATH_INFO* a = path;
 

@@ -12,7 +12,7 @@ CNotice gNotice;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CNotice::CNotice() // OK
+CNotice::CNotice()
 {
 	this->m_count = 0;
 
@@ -21,12 +21,12 @@ CNotice::CNotice() // OK
 	this->m_NoticeTime = GetTickCount();
 }
 
-CNotice::~CNotice() // OK
+CNotice::~CNotice()
 {
 
 }
 
-void CNotice::Load(char* path) // OK
+void CNotice::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -90,7 +90,7 @@ void CNotice::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CNotice::SetInfo(NOTICE_INFO info) // OK
+void CNotice::SetInfo(NOTICE_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_NOTICE)
 	{
@@ -100,7 +100,7 @@ void CNotice::SetInfo(NOTICE_INFO info) // OK
 	this->m_NoticeInfo[this->m_count++] = info;
 }
 
-void CNotice::MainProc() // OK
+void CNotice::MainProc()
 {
 	if(this->m_count == 0)
 	{
@@ -117,7 +117,7 @@ void CNotice::MainProc() // OK
 	}
 }
 
-void CNotice::GCNoticeSend(int aIndex,BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...) // OK
+void CNotice::GCNoticeSend(int aIndex,BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...)
 {
 	char buff[256] = {0};
 
@@ -153,7 +153,7 @@ void CNotice::GCNoticeSend(int aIndex,BYTE type,BYTE count,BYTE opacity,WORD del
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CNotice::GCNoticeSendToAll(BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...) // OK
+void CNotice::GCNoticeSendToAll(BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...)
 {
 	char buff[256] = {0};
 
@@ -198,7 +198,7 @@ void CNotice::GCNoticeSendToAll(BYTE type,BYTE count,BYTE opacity,WORD delay,DWO
 }
 
 // SCF BOT 
-void CNotice::NewMessageDevTeam(int aIndex,char* message,...) // OK
+void CNotice::NewMessageDevTeam(int aIndex,char* message,...)
 {
 	char buff[256] = {0};
 
@@ -223,7 +223,7 @@ void CNotice::NewMessageDevTeam(int aIndex,char* message,...) // OK
 
 }
 
-void CNotice::NewNoticeSend(int aIndex,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...) // OK
+void CNotice::NewNoticeSend(int aIndex,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message,...)
 {
 	char buff[256] = {0};
 

@@ -12,17 +12,17 @@ CFilter gFilter;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CFilter::CFilter() // OK
+CFilter::CFilter()
 {
 	this->m_count = 0;
 }
 
-CFilter::~CFilter() // OK
+CFilter::~CFilter()
 {
 
 }
 
-void CFilter::Load(char* path) // OK
+void CFilter::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -72,7 +72,7 @@ void CFilter::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CFilter::SetInfo(FILTER_INFO info) // OK
+void CFilter::SetInfo(FILTER_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_FILTER_SYNTAX)
 	{
@@ -82,7 +82,7 @@ void CFilter::SetInfo(FILTER_INFO info) // OK
 	this->m_FilterInfo[this->m_count++] = info;
 }
 
-void CFilter::CheckSyntax(char* text) // OK
+void CFilter::CheckSyntax(char* text)
 {
 	for(int n=0;n < this->m_count;n++)
 	{

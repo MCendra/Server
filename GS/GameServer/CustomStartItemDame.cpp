@@ -14,17 +14,17 @@
 
 CCustomStartItemDame gCustomStartItemDame;
 
-CCustomStartItemDame::CCustomStartItemDame() // OK
+CCustomStartItemDame::CCustomStartItemDame()
 {
 	this->Init();
 }
 
-CCustomStartItemDame::~CCustomStartItemDame() // OK
+CCustomStartItemDame::~CCustomStartItemDame()
 {
 
 }
 
-void CCustomStartItemDame::Init() // OK
+void CCustomStartItemDame::Init()
 {
 	for (int n = 0; n < MAX_CLASS; n++)
 	{
@@ -33,7 +33,7 @@ void CCustomStartItemDame::Init() // OK
 	}
 }
 
-void CCustomStartItemDame::LoadItemDame(char* path) // OK
+void CCustomStartItemDame::LoadItemDame(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -128,7 +128,7 @@ void CCustomStartItemDame::LoadItemDame(char* path) // OK
 
 
 
-bool CCustomStartItemDame::CheckSkillEffectDame(int m_index) // OK
+bool CCustomStartItemDame::CheckSkillEffectDame(int m_index)
 {
 	bool skill = false;
 	switch (m_index)

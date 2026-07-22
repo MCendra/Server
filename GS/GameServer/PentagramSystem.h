@@ -331,7 +331,7 @@ struct SDHP_PENTAGRAM_JEWEL_DELETE_SAVE_SEND
 
 struct PENTAGRAM_JEWEL_INFO
 {
-	void Clear() // OK
+	void Clear()
 	{
 		this->Type = -1;
 		this->Index = -1;

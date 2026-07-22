@@ -1,48 +1,36 @@
-// SerialCheck.cpp: implementation of the CSerialCheck class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+#include "Header.h"
 #include "SerialCheck.h"
 
 CSerialCheck gSerialCheck[MAX_OBJECT];
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CSerialCheck::CSerialCheck() // OK
+CSerialCheck::CSerialCheck()
 {
-	this->Init();
+	Init();
 }
 
-CSerialCheck::~CSerialCheck() // OK
+void CSerialCheck::Init()
 {
-
+	m_RecvSerial = 0xFF;
+	m_SendSerial = 0;
 }
 
-void CSerialCheck::Init() // OK
+bool CSerialCheck::CheckSerial(BYTE serial)
 {
-	this->m_RecvSerial = (BYTE)-1;
-	this->m_SendSerial = 0;
-}
-
-bool CSerialCheck::CheckSerial(BYTE serial) // OK
-{
-	if((BYTE)(this->m_RecvSerial+1) == serial)
+	if (static_cast<BYTE>(m_RecvSerial + 1) == serial)
 	{
-		this->m_RecvSerial++;
-		return 1;
+		++m_RecvSerial;
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-BYTE CSerialCheck::GetRecvSerial() // OK
+BYTE CSerialCheck::GetRecvSerial()
 {
-	return this->m_RecvSerial;
+	return m_RecvSerial;
 }
 
-BYTE CSerialCheck::GetSendSerial() // OK
+BYTE CSerialCheck::GetSendSerial()
 {
-	return this->m_SendSerial++;
+	return m_SendSerial++;
 }

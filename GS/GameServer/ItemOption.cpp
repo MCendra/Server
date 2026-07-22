@@ -13,17 +13,17 @@ CItemOption gItemOption;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemOption::CItemOption() // OK
+CItemOption::CItemOption()
 {
 	this->m_ItemOptionInfo.clear();
 }
 
-CItemOption::~CItemOption() // OK
+CItemOption::~CItemOption()
 {
 
 }
 
-void CItemOption::Load(char* path) // OK
+void CItemOption::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -96,7 +96,7 @@ void CItemOption::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemOption::GetItemOption(int index,CItem* lpItem) // OK
+bool CItemOption::GetItemOption(int index,CItem* lpItem)
 {
 	bool result = 0;
 
@@ -156,7 +156,7 @@ bool CItemOption::GetItemOption(int index,CItem* lpItem) // OK
 	return result;
 }
 
-void CItemOption::CalcItemCommonOption(LPOBJ lpObj,bool flag) // OK
+void CItemOption::CalcItemCommonOption(LPOBJ lpObj,bool flag)
 {
 	for(int n=0; n < INVENTORY_WEAR_SIZE; n++)
 	{
@@ -167,7 +167,7 @@ void CItemOption::CalcItemCommonOption(LPOBJ lpObj,bool flag) // OK
 	}
 }
 
-void CItemOption::InsertOption(LPOBJ lpObj, CItem* lpItem,bool flag) // OK
+void CItemOption::InsertOption(LPOBJ lpObj, CItem* lpItem,bool flag)
 {
 	for(int n=0; n < MAX_SPECIAL; n++)
 	{

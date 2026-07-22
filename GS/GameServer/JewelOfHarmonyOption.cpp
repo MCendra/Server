@@ -16,17 +16,17 @@ CJewelOfHarmonyOption gJewelOfHarmonyOption;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CJewelOfHarmonyOption::CJewelOfHarmonyOption() // OK
+CJewelOfHarmonyOption::CJewelOfHarmonyOption()
 {
 	this->Init();
 }
 
-CJewelOfHarmonyOption::~CJewelOfHarmonyOption() // OK
+CJewelOfHarmonyOption::~CJewelOfHarmonyOption()
 {
 
 }
 
-void CJewelOfHarmonyOption::Init() // OK
+void CJewelOfHarmonyOption::Init()
 {
 	for (int n = 0; n < MAX_JEWEL_OF_HARMONY_OPTION_TYPE; n++)for (int i = 0; i < MAX_JEWEL_OF_HARMONY_OPTION; i++)
 	{
@@ -34,7 +34,7 @@ void CJewelOfHarmonyOption::Init() // OK
 	}
 }
 
-void CJewelOfHarmonyOption::Load(char* path) // OK
+void CJewelOfHarmonyOption::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -109,7 +109,7 @@ void CJewelOfHarmonyOption::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CJewelOfHarmonyOption::SetInfo(int type, JEWEL_OF_HARMONY_OPTION_INFO info) // OK
+void CJewelOfHarmonyOption::SetInfo(int type, JEWEL_OF_HARMONY_OPTION_INFO info)
 {
 	if (type < 0 || type >= MAX_JEWEL_OF_HARMONY_OPTION_TYPE)
 	{
@@ -124,7 +124,7 @@ void CJewelOfHarmonyOption::SetInfo(int type, JEWEL_OF_HARMONY_OPTION_INFO info)
 	this->m_JewelOfHarmonyOptionInfo[type][info.Index] = info;
 }
 
-JEWEL_OF_HARMONY_OPTION_INFO* CJewelOfHarmonyOption::GetInfo(int type, int index) // OK
+JEWEL_OF_HARMONY_OPTION_INFO* CJewelOfHarmonyOption::GetInfo(int type, int index)
 {
 	if (type < 0 || type >= MAX_JEWEL_OF_HARMONY_OPTION_TYPE)
 	{
@@ -144,7 +144,7 @@ JEWEL_OF_HARMONY_OPTION_INFO* CJewelOfHarmonyOption::GetInfo(int type, int index
 	return &this->m_JewelOfHarmonyOptionInfo[type][index];
 }
 
-bool CJewelOfHarmonyOption::IsJewelOfHarmonyItem(CItem* lpItem) // OK
+bool CJewelOfHarmonyOption::IsJewelOfHarmonyItem(CItem* lpItem)
 {
 	if (lpItem->IsSocketItem() != 0)
 	{
@@ -159,7 +159,7 @@ bool CJewelOfHarmonyOption::IsJewelOfHarmonyItem(CItem* lpItem) // OK
 	return 0;
 }
 
-int CJewelOfHarmonyOption::GetJewelOfHarmonyItemOptionType(CItem* lpItem) // OK
+int CJewelOfHarmonyOption::GetJewelOfHarmonyItemOptionType(CItem* lpItem)
 {
 	int type = JEWEL_OF_HARMONY_ITEM_OPTION_TYPE_NONE;
 
@@ -179,7 +179,7 @@ int CJewelOfHarmonyOption::GetJewelOfHarmonyItemOptionType(CItem* lpItem) // OK
 	return type;
 }
 
-int CJewelOfHarmonyOption::GetJewelOfHarmonyItemRestoreMoney(CItem* lpItem) // OK
+int CJewelOfHarmonyOption::GetJewelOfHarmonyItemRestoreMoney(CItem* lpItem)
 {
 	int ItemOptionType = this->GetJewelOfHarmonyItemOptionType(lpItem);
 
@@ -205,7 +205,7 @@ int CJewelOfHarmonyOption::GetJewelOfHarmonyItemRestoreMoney(CItem* lpItem) // O
 	return lpInfo->MoneyTable[(lpItem->m_JewelOfHarmonyOption & 0x0F)];
 }
 
-int CJewelOfHarmonyOption::GetJewelOfHarmonyRandomOption(CItem* lpItem) // OK
+int CJewelOfHarmonyOption::GetJewelOfHarmonyRandomOption(CItem* lpItem)
 {
 	int ItemOptionType = this->GetJewelOfHarmonyItemOptionType(lpItem);
 
@@ -265,7 +265,7 @@ int CJewelOfHarmonyOption::GetJewelOfHarmonyRandomOption(CItem* lpItem) // OK
 	}
 }
 
-int CJewelOfHarmonyOption::GetJewelOfHarmonySubRequireStrOption(CItem* lpItem) // OK
+int CJewelOfHarmonyOption::GetJewelOfHarmonySubRequireStrOption(CItem* lpItem)
 {
 	if (this->IsJewelOfHarmonyItem(lpItem) == 0)
 	{
@@ -313,7 +313,7 @@ int CJewelOfHarmonyOption::GetJewelOfHarmonySubRequireStrOption(CItem* lpItem) /
 	return 0;
 }
 
-int CJewelOfHarmonyOption::GetJewelOfHarmonySubRequireDexOption(CItem* lpItem) // OK
+int CJewelOfHarmonyOption::GetJewelOfHarmonySubRequireDexOption(CItem* lpItem)
 {
 	if (this->IsJewelOfHarmonyItem(lpItem) == 0)
 	{
@@ -361,7 +361,7 @@ int CJewelOfHarmonyOption::GetJewelOfHarmonySubRequireDexOption(CItem* lpItem) /
 	return 0;
 }
 
-bool CJewelOfHarmonyOption::AddJewelOfHarmonyOption(LPOBJ lpObj, int SourceSlot, int TargetSlot) // OK
+bool CJewelOfHarmonyOption::AddJewelOfHarmonyOption(LPOBJ lpObj, int SourceSlot, int TargetSlot)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -440,7 +440,7 @@ bool CJewelOfHarmonyOption::AddJewelOfHarmonyOption(LPOBJ lpObj, int SourceSlot,
 	return 1;
 }
 
-bool CJewelOfHarmonyOption::AddSmeltStoneOption(LPOBJ lpObj, int SourceSlot, int TargetSlot) // OK
+bool CJewelOfHarmonyOption::AddSmeltStoneOption(LPOBJ lpObj, int SourceSlot, int TargetSlot)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -521,7 +521,7 @@ bool CJewelOfHarmonyOption::AddSmeltStoneOption(LPOBJ lpObj, int SourceSlot, int
 	return 1;
 }
 
-bool CJewelOfHarmonyOption::AddJewelOfElevationOption(LPOBJ lpObj, int SourceSlot, int TargetSlot) // OK
+bool CJewelOfHarmonyOption::AddJewelOfElevationOption(LPOBJ lpObj, int SourceSlot, int TargetSlot)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -602,7 +602,7 @@ bool CJewelOfHarmonyOption::AddJewelOfElevationOption(LPOBJ lpObj, int SourceSlo
 	return 1;
 }
 
-void CJewelOfHarmonyOption::CalcJewelOfHarmonyOption(LPOBJ lpObj, bool flag) // OK
+void CJewelOfHarmonyOption::CalcJewelOfHarmonyOption(LPOBJ lpObj, bool flag)
 {
 	for (int n = 0; n < INVENTORY_WEAR_SIZE; n++)
 	{
@@ -643,7 +643,7 @@ void CJewelOfHarmonyOption::CalcJewelOfHarmonyOption(LPOBJ lpObj, bool flag) // 
 	}
 }
 
-void CJewelOfHarmonyOption::InsertOption(LPOBJ lpObj, int type, int index, int value, bool flag) // OK
+void CJewelOfHarmonyOption::InsertOption(LPOBJ lpObj, int type, int index, int value, bool flag)
 {
 	if (flag == 0)
 	{

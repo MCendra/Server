@@ -233,7 +233,7 @@ struct SDHP_GENS_SYSTEM_REWARD_SAVE_SEND
 
 struct GENS_SYSTEM_VICTIM_LIST
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Time = 0;
 
@@ -242,7 +242,7 @@ struct GENS_SYSTEM_VICTIM_LIST
 		memset(this->Name,0,sizeof(this->Name));
 	}
 
-	void Set(char* name) // OK
+	void Set(char* name)
 	{
 		this->Time = GetTickCount();
 

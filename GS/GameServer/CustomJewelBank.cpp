@@ -21,17 +21,17 @@ void CCustomJewelBank::Load()
 {
 	this->Enable = GetPrivateProfileInt("HieuDaiCa", "Enable", 0, JEWELSBANK_DIR);
 }
-CCustomJewelBank::CCustomJewelBank() // OK
+CCustomJewelBank::CCustomJewelBank()
 {
 
 }
 
-CCustomJewelBank::~CCustomJewelBank() // OK
+CCustomJewelBank::~CCustomJewelBank()
 {
 
 }
 
-int CCustomJewelBank::GetJewelSimpleType(int ItemIndex) // OK
+int CCustomJewelBank::GetJewelSimpleType(int ItemIndex)
 {  // if(!this->Enable) return;
 	switch (ItemIndex)
 	{
@@ -80,7 +80,7 @@ int CCustomJewelBank::GetJewelSimpleType(int ItemIndex) // OK
 	return -1;
 }
 
-int CCustomJewelBank::GetJewelSimpleIndex(int type) // OK
+int CCustomJewelBank::GetJewelSimpleIndex(int type)
 {  //if(!this->Enable) return;
 	switch (type)
 	{
@@ -109,7 +109,7 @@ int CCustomJewelBank::GetJewelSimpleIndex(int type) // OK
 	return -1;
 }
 
-int CCustomJewelBank::GetJewelBundleIndex(int type) // OK
+int CCustomJewelBank::GetJewelBundleIndex(int type)
 {
 	switch (type)
 	{

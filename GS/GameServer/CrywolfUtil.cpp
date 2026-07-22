@@ -15,17 +15,17 @@ CCrywolfUtil gCrywolfUtil;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCrywolfUtil::CCrywolfUtil() // OK
+CCrywolfUtil::CCrywolfUtil()
 {
 
 }
 
-CCrywolfUtil::~CCrywolfUtil() // OK
+CCrywolfUtil::~CCrywolfUtil()
 {
 
 }
 
-void CCrywolfUtil::SendMapServerGroupMsg(char* lpMsg,...) // OK
+void CCrywolfUtil::SendMapServerGroupMsg(char* lpMsg,...)
 {
 	if(lpMsg == 0)
 	{
@@ -42,7 +42,7 @@ void CCrywolfUtil::SendMapServerGroupMsg(char* lpMsg,...) // OK
 	GDGlobalNoticeSend(gMapServerManager.GetMapServerGroup(),0,0,0,0,0,0,buff);
 }
 
-void CCrywolfUtil::SendAllUserAnyData(BYTE* lpMsg,int size) // OK
+void CCrywolfUtil::SendAllUserAnyData(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -53,7 +53,7 @@ void CCrywolfUtil::SendAllUserAnyData(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void CCrywolfUtil::SendAllUserAnyMsg(int type,char* lpMsg,...) // OK
+void CCrywolfUtil::SendAllUserAnyMsg(int type,char* lpMsg,...)
 {
 	if(lpMsg == 0)
 	{
@@ -70,7 +70,7 @@ void CCrywolfUtil::SendAllUserAnyMsg(int type,char* lpMsg,...) // OK
 	gNotice.GCNoticeSendToAll(type,0,0,0,0,0,buff);
 }
 
-void CCrywolfUtil::SendCrywolfUserAnyData(BYTE* lpMsg,int size) // OK
+void CCrywolfUtil::SendCrywolfUserAnyData(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -81,7 +81,7 @@ void CCrywolfUtil::SendCrywolfUserAnyData(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void CCrywolfUtil::SendCrywolfUserAnyMsg(int type,char* lpMsg,...) // OK
+void CCrywolfUtil::SendCrywolfUserAnyMsg(int type,char* lpMsg,...)
 {
 	if(lpMsg == 0)
 	{
@@ -104,7 +104,7 @@ void CCrywolfUtil::SendCrywolfUserAnyMsg(int type,char* lpMsg,...) // OK
 	}
 }
 
-bool CCrywolfUtil::CrywolfAllUserScoreSort(LPOBJ const &lpObj,LPOBJ const &lpTarget) // OK
+bool CCrywolfUtil::CrywolfAllUserScoreSort(LPOBJ const &lpObj,LPOBJ const &lpTarget)
 {
 	return ((lpObj->CrywolfMVPScore>=lpTarget->CrywolfMVPScore)?1:0);
 }

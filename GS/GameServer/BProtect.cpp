@@ -22,7 +22,7 @@ CBProtect gBProtect;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CBProtect::CBProtect() // OK
+CBProtect::CBProtect()
 {
 	ZeroMemory(Speed, sizeof(Speed));
 	ZeroMemory(Animation, sizeof(Animation));
@@ -47,7 +47,7 @@ CBProtect::CBProtect() // OK
 	ZeroMemory(SetTimeAnimation, sizeof(SetTimeAnimation));
 }
 
-CBProtect::~CBProtect() // OK
+CBProtect::~CBProtect()
 {
 
 }
@@ -179,7 +179,7 @@ void CBProtect::LoadConfig(char* path)
 }
 
 
-bool CBProtect::GetAttackDelayBySpeed(int Speed, ANTIATTACKDELAY_DATA* lpInfo) // OK
+bool CBProtect::GetAttackDelayBySpeed(int Speed, ANTIATTACKDELAY_DATA* lpInfo)
 {
 	for (std::map<int, ANTIATTACKDELAY_DATA>::iterator it = this->m_AntiAttackDelay.begin(); it != this->m_AntiAttackDelay.end(); it++)
 	{
@@ -193,7 +193,7 @@ bool CBProtect::GetAttackDelayBySpeed(int Speed, ANTIATTACKDELAY_DATA* lpInfo) /
 	return 0;
 }
 //===Animation
-bool CBProtect::GetAnimationBySkill(int SkillIndex, ANTIANIMATION_DATA* lpInfo) // OK
+bool CBProtect::GetAnimationBySkill(int SkillIndex, ANTIANIMATION_DATA* lpInfo)
 {
 	for (std::map<int, ANTIANIMATION_DATA>::iterator it = this->m_AntiAnimation.begin(); it != this->m_AntiAnimation.end(); it++)
 	{
@@ -207,7 +207,7 @@ bool CBProtect::GetAnimationBySkill(int SkillIndex, ANTIANIMATION_DATA* lpInfo) 
 	return 0;
 }
 
-int CBProtect::GetAttackMS(int aIndex, int Number) // OK
+int CBProtect::GetAttackMS(int aIndex, int Number)
 {
 	int ALLMSTime = 0;
 	for (std::map<int, CalSpeedNew>::iterator it = this->m_AttackDamageSize[Number].begin(); it != this->m_AttackDamageSize[Number].end(); it++)

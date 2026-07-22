@@ -23,17 +23,17 @@ constexpr int DEFAULT_TCP_PORT = 44405;
 constexpr int DEFAULT_UDP_PORT = 55557;
 constexpr int DEFAULT_MAX_IP_CONNECTION = 1;
 
-constexpr char DEFAULT_CONFIG[] = "[ConnectServerInfo]\n"
-"CustomerName=\n"
-"CustomerHardwareId=\n"
-"ConnectServerPortTCP=%d\n"
-"ConnectServerPortUDP=%d\n"
-"MaxIpConnection=%ld\n";
+constexpr char DEFAULT_CONFIG[] = R"ini([ConnectServerInfo]
+CustomerName=
+CustomerHardwareId=
+ConnectServerPortTCP=44405
+ConnectServerPortUDP=55557
+MaxIpConnection=1)ini";
 
-constexpr char DEFAULT_SERVER_LIST[] = "\\\\ServerCode\tServerName\tServerAddress\t\tServerPort\tServerType\n"
-"0\t\tServerA\t\t127.0.0.1\t\t55901\t\tSHOW\n"
-"19\t\tServer-CS\t\t127.1.0.1\t\t55919\t\tSHOW\n"
-"end\n";
+constexpr char DEFAULT_SERVER_LIST[] = R"ini(\\ServerCode	ServerName	ServerAddress	ServerPort	ServerVisibility
+0	Sala-1	127.0.0.1	55901	SHOW
+19	Castle-Siege	127.1.0.1	55919	SHOW
+end)ini";
 
 // Definicion de las variables externas
 char ConfigFilePath[MAX_PATH];
@@ -68,7 +68,7 @@ bool CServerConfig::EnsureConfigFileExists() {
 			FileHandle file(ConfigFilePath, GENERIC_WRITE, CREATE_ALWAYS);
 			if (file.getHandle() != INVALID_HANDLE_VALUE) {
 				char buffer[2048];
-				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG, DEFAULT_TCP_PORT, DEFAULT_UDP_PORT, DEFAULT_MAX_IP_CONNECTION);
+				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG);
 
 				DWORD bytesWritten;
 				if (file.write(buffer, static_cast<DWORD>(strlen(buffer)), bytesWritten)) {

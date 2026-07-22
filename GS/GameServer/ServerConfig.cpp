@@ -16,7 +16,7 @@ constexpr char COMMAND_CONFIG_FILE_NAME[] = "GameServerInfo - Command.ini";
 
 constexpr char ALLOWABLE_IP_LIST_FILE_NAME[] = "AllowableIpList.txt";
 
-constexpr char SECTION_JOIN_SERVER_INFO[] = "GameServerInfo";
+constexpr char SECTION_GAME_SERVER_INFO[] = "GameServerInfo";
 
 constexpr char KEY_CUSTOMER_NAME[] = "CustomerName";
 constexpr char KEY_CUSTOMER_HARDWARE_ID[] = "CustomerHardwareId";
@@ -27,18 +27,22 @@ constexpr char KEY_SERVER_PORT[] = "ServerPort";
 constexpr char KEY_SERVER_VERSION[] = "ServerVersion";
 constexpr char KEY_SERVER_SERIAL[] = "ServerSerial";
 constexpr char KEY_SERVER_MAX_USER_NUMBER[] = "ServerMaxUserNumber";
-constexpr char KEY_MD5_ENCRYPTIONS[] = "MD5Encryption";
+constexpr char KEY_SERVER_MIN_LEVEL[] = "ServerMinLevel";
+constexpr char KEY_SERVER_MAX_LEVEL[] = "ServerMaxLevel";
+constexpr char KEY_SERVER_MIN_RESET[] = "ServerMinReset";
+constexpr char KEY_SERVER_MAX_RESET[] = "ServerMaxReset";
+constexpr char KEY_SERVER_MIN_MASTER_RESET[] = "ServerMinMasterReset";
+constexpr char KEY_SERVER_MAX_MASTER_RESET[] = "ServerMaxMasterReset";
 constexpr char KEY_SERVER_GUARD_MESSSAGE[] = "GuardMessage";
 
-constexpr char DEFAULT_CONNECT_SERVER_ADDRESS[] = "127.0.0.1";
-constexpr int DEFAULT_CONNECT_SERVER_PORT_UDP = 55557;
-constexpr int DEFAULT_JOIN_SERVER_TCP_PORT = 55970;
-constexpr char DEFAULT_JOIN_SERVER_ODBC[] = "MuOnlineS6";
-constexpr char DEFAULT_JOIN_SERVER_USER[] = "sa";
-constexpr char DEFAULT_JOIN_SERVER_PASS[] = "$Magda314$$$";
-constexpr char DEFAULT_GLOBAL_PASSWORD[] = "";
-constexpr int DEFAULT_CASE_SENSITIVE = 1;
-constexpr int DEFAULT_MD5_ENCRYPTIONS = 1;
+constexpr char KEY_CONNECTSERVER_ADDRESS[] = "ConnectServerAddress";
+constexpr char KEY_CONNECTSERVER_PORT[] = "ConnectServerPort";
+constexpr char KEY_JOINSERVER_ADDRESS[] = "JoinServerAddress";
+constexpr char KEY_JOINSERVER_PORT[] = "JoinServerPort";
+constexpr char KEY_DATASERVER_ADDRESS[] = "DataServerAddress";
+constexpr char KEY_DATASERVER_PORT[] = "DataServerPort";
+
+constexpr char STRING_MUTEX[] = "WZ_MU_GS_MUTEX_%d";
 
 constexpr char COMMON_DEFAULT_CONFIG[] = R"ini([GameServerInfo]
 ;==================================================
@@ -49,7 +53,7 @@ CustomerHardwareId=
 ;==================================================
 ; Configuracion del servidor
 ;==================================================
-ServerName=Sub-1
+ServerName=Sala-1
 ServerCode=0
 ServerLock=0
 ServerPort=55901
@@ -68,12 +72,12 @@ GuardMessage=Bienvenido al continente de Mu
 ;==================================================
 ; Configuracion de conexion
 ;==================================================
-DataServerAddress=127.0.0.1
-DataServerPort=55960
-JoinServerAddress=127.0.0.1
-JoinServerPort=55972
 ConnectServerAddress=127.0.0.1
 ConnectServerPort=55559
+JoinServerAddress=127.0.0.1
+JoinServerPort=55972
+DataServerAddress=127.0.0.1
+DataServerPort=55960
 ;==================================================
 ; Activar/Desactivar registro de logs del Sub
 ;==================================================
@@ -277,15 +281,23 @@ char AllowableIpListFilePath[MAX_PATH];
 char CustomerName[32];
 char CustomerHardwareId[36];
 char ConnectServerAddress[16];
-WORD ConnectServerPortUDP;
-WORD JoinServerPort;
-char JoinServerODBC[32];
-char JoinServerUSER[32];
-char JoinServerPASS[32];
-char GlobalPassword[32];
-BOOL CaseSensitive;
-BOOL MD5Encryption;
-
+char ServerName[32];
+int ServerCode;
+int ServerLock;
+int ServerPort;
+char ServerMutex[32];
+char ServerVersion[6];
+char ServerSerial[17];
+int ServerMaxUserNumber;
+int ServerMinLevel;
+int ServerMaxLevel;
+int ServerMinReset;
+int ServerMaxReset;
+int ServerMinMasterReset;
+int ServerMaxMasterReset;
+#if(GUARDMESSAGE)
+char GuardMessage[64];
+#endif
 // Construction/Destruction
 
 bool CServerConfig::Init() {
@@ -336,8 +348,7 @@ bool CServerConfig::LoadConfig() {
 
 	bool allValuesLoaded = true;
 
-	// Leer CustomerName directamente en CustomerName
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_CUSTOMER_NAME, "", CustomerName, sizeof(CustomerName), CommonConfigFilePath) > 0) {
+	if (GetPrivateProfileStringA(SECTION_GAME_SERVER_INFO, KEY_CUSTOMER_NAME, "", CustomerName, sizeof(CustomerName), CommonConfigFilePath) > 0) {
 		Log.ToDisp(LOG_BLACK, "[InitConfig] CustomerName: %s", CustomerName);
 	}
 	else {
@@ -345,8 +356,7 @@ bool CServerConfig::LoadConfig() {
 		allValuesLoaded = false;
 	}
 
-	// Leer CustomerHardwareId directamente en CustomerHardwareId
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_CUSTOMER_HARDWARE_ID, "", CustomerHardwareId, sizeof(CustomerHardwareId), ConfigFilePath) > 0) {
+	if (GetPrivateProfileStringA(SECTION_GAME_SERVER_INFO, KEY_CUSTOMER_HARDWARE_ID, "", CustomerHardwareId, sizeof(CustomerHardwareId), CommonConfigFilePath) > 0) {
 		Log.ToDisp(LOG_BLACK, "[InitConfig] CustomerHardwareId: %s", CustomerHardwareId);
 	}
 	else {
@@ -354,79 +364,149 @@ bool CServerConfig::LoadConfig() {
 		allValuesLoaded = false;
 	}
 
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_CONNECT_SERVER_ADDRESS, "", ConnectServerAddress, sizeof(ConnectServerAddress), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Direccion IP de ConnectServer: %s", ConnectServerAddress);
+	if (GetPrivateProfileStringA(SECTION_GAME_SERVER_INFO, KEY_SERVER_NAME, "", ServerName, sizeof(ServerName), CommonConfigFilePath) > 0) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Nombre del GameServer: %s", ServerName);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ConnectServerAddress desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerName desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	ConnectServerPortUDP = static_cast<WORD>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_CONNECT_SERVER_PORT_UDP, 0, ConfigFilePath));
-	if (ConnectServerPortUDP > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Puerto UDP: %d", ConnectServerPortUDP);
+	ServerCode = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_CODE, 0, CommonConfigFilePath));
+	if (ServerCode > 0) {
+		sprintf_s(ServerMutex, STRING_MUTEX, ServerCode);
+
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Codigo del GameServer: %d", ServerCode);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ConnectServerPortUDP desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerCode desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	JoinServerPort = static_cast<WORD>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_JOIN_SERVER_PORT, 0, ConfigFilePath));
-	if (JoinServerPort > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Puerto servidor de cuentas: %d", JoinServerPort);
+	ServerLock = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_LOCK, 0, CommonConfigFilePath));
+	if (ServerLock == 0 || ServerLock == 1) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] GameServer bloqueado para ingresos: %s", (ServerLock == 1) ? "SI" : "NO");
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerPort desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerLock desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_JOIN_SERVER_ODBC, "", JoinServerODBC, sizeof(JoinServerODBC), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Conectividad abierta de para la base datos: %s", JoinServerODBC);
+	ServerPort = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_PORT, 0, CommonConfigFilePath));
+	if (ServerPort > 0) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig]  Puerto TCP: %d", ServerCode);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerODBC desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerPort desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_JOIN_SERVER_USER, "", JoinServerUSER, sizeof(JoinServerUSER), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Usuario para la base datos: %s", JoinServerUSER);
+	if (GetPrivateProfileStringA(SECTION_GAME_SERVER_INFO, KEY_SERVER_VERSION, "", ServerVersion, sizeof(ServerVersion), CommonConfigFilePath) > 0) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Version GameServer: %s", ServerVersion);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerUSER desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerVersion desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_JOIN_SERVER_PASS, "", JoinServerPASS, sizeof(JoinServerPASS), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Password para la base datos leida correctamente.");
+	if (GetPrivateProfileStringA(SECTION_GAME_SERVER_INFO, KEY_SERVER_SERIAL, "", ServerSerial, sizeof(ServerSerial), CommonConfigFilePath) > 0) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Serial: %s", ServerSerial);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar JoinServerPASS desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerSerial desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	if (GetPrivateProfileStringA(SECTION_JOIN_SERVER_INFO, KEY_GLOBAL_PASSWORD, "", GlobalPassword, sizeof(GlobalPassword), ConfigFilePath) > 0) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Password global para la base datos leida correctamente.");
+	ServerMaxUserNumber = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MAX_USER_NUMBER, 0, CommonConfigFilePath));
+	if (ServerMaxUserNumber > 0) {
+		Log.ToDisp(LOG_BLACK, "[InitConfig] Cantidad de usuarios maxima: %d", ServerMaxUserNumber);
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar GlobalPassword desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMaxUserNumber desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	CaseSensitive = static_cast<BYTE>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_CASE_SENSITIVE, 0, ConfigFilePath));
-	if (CaseSensitive == 0 || CaseSensitive == 1) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Sensible a mayusculas y minusculas: %s", (CaseSensitive == 1) ? "SI" : "NO");
+	ServerMinLevel = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MIN_LEVEL, 0, CommonConfigFilePath));
+	if (ServerMinLevel >= 0) {
+		if (ServerLock == 0) {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Nivel minimo para entrar al servidor: ninguno");
+		}
+		else {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Nivel minimo para entrar al servidor: %d", ServerMinLevel);
+		}
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar CaseSensitive desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMinLevel desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
-	MD5Encryption = static_cast<BYTE>(GetPrivateProfileIntA(SECTION_JOIN_SERVER_INFO, KEY_MD5_ENCRYPTIONS, 0, ConfigFilePath));
-	if (MD5Encryption == 0 || MD5Encryption == 1) {
-		Log.ToDisp(LOG_BLACK, "[InitConfig] Encriptacion MD5: %s", (MD5Encryption == 1) ? "SI" : "NO");
+	ServerMaxLevel = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MAX_LEVEL, 0, CommonConfigFilePath));
+	if (ServerMaxLevel >= 0) {
+		if (ServerMaxLevel == 0) {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Nivel maximo para entrar al servidor: ninguno");
+		}
+		else {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Nivel maximo para entrar al servidor: %d", ServerMaxLevel);
+		}
 	}
 	else {
-		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar MD5Encryption desde %s.", COMMON_CONFIG_FILE_NAME);
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMaxLevel desde %s.", COMMON_CONFIG_FILE_NAME);
+		allValuesLoaded = false;
+	}
+
+	ServerMinReset = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MIN_RESET, 0, CommonConfigFilePath));
+	if (ServerMinReset >= 0) {
+		if (ServerMinReset == 0) {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Resets minimos para entrar al servidor: ninguno");
+		}
+		else {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Resets minimos para entrar al servidor: %d", ServerMinReset);
+		}
+	}
+	else {
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMinReset desde %s.", COMMON_CONFIG_FILE_NAME);
+		allValuesLoaded = false;
+	}
+
+	ServerMaxReset = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MAX_RESET, 0, CommonConfigFilePath));
+	if (ServerMaxReset >= 0) {
+		if (ServerMaxReset == 0) {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Resets maximos para entrar al servidor: ninguno");
+		}
+		else {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Resets maximos para entrar al servidor: %d", ServerMaxReset);
+		}
+	}
+	else {
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMaxReset desde %s.", COMMON_CONFIG_FILE_NAME);
+		allValuesLoaded = false;
+	}
+
+	ServerMinMasterReset = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MIN_MASTER_RESET, 0, CommonConfigFilePath));
+	if (ServerMinMasterReset >= 0) {
+		if (ServerMinMasterReset == 0) {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Master reset minimo: ninguno");
+		}
+		else {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Master reset minimo: %d", ServerMinMasterReset);
+		}
+	}
+	else {
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMinMasterReset desde %s.", COMMON_CONFIG_FILE_NAME);
+		allValuesLoaded = false;
+	}
+
+	ServerMaxMasterReset = static_cast<int>(GetPrivateProfileIntA(SECTION_GAME_SERVER_INFO, KEY_SERVER_MAX_MASTER_RESET, 0, CommonConfigFilePath));
+	if (ServerMaxMasterReset >= 0) {
+		if (ServerMaxMasterReset == 0) {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Master reset maximo: ninguno");
+		}
+		else {
+			Log.ToDisp(LOG_BLACK, "[InitConfig] Master reset maximo: %d", ServerMaxMasterReset);
+		}
+	}
+	else {
+		Log.ToDisp(LOG_RED, "[InitConfig] Error al cargar ServerMaxMasterReset desde %s.", COMMON_CONFIG_FILE_NAME);
 		allValuesLoaded = false;
 	}
 
@@ -468,7 +548,7 @@ bool CServerConfig::EnsureServerListFileExists() {
 }
 
 const char* CServerConfig::getIniPath() {
-	return ConfigFilePath;
+	return CommonConfigFilePath;
 }
 
 const char* CServerConfig::getServerListPath() {

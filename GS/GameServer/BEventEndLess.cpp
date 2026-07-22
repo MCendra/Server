@@ -170,7 +170,7 @@ void CBEventEndLess::LoadFileXML(char* FilePath)
 	LogAdd(LOG_BLUE, "[EndLessEvent] Load OK Enable = %d", this->Enable);
 }
 
-char* CBEventEndLess::GetMessage(int index) // OK
+char* CBEventEndLess::GetMessage(int index)
 {
 	std::map<int, MESSAGE_INFO_ENDLESS>::iterator it = this->m_MessageInfoBP.find(index);
 
@@ -393,7 +393,7 @@ void CBEventEndLess::TraoThuongEvent()
 
 
 }
-bool CBEventEndLess::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CBEventEndLess::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->Enable == 0)
 	{
@@ -663,7 +663,7 @@ void CBEventEndLess::SetMonterWave()
 	this->CacheWaveCount++;
 	this->NoticeSendToAll(0, this->GetMessage(9), this->CacheWaveCount);//tb ra Wave
 }
-void CBEventEndLess::NoticeSendToAll(int type, char* message, ...) // OK
+void CBEventEndLess::NoticeSendToAll(int type, char* message, ...)
 {
 	char buff[256];
 
@@ -857,7 +857,7 @@ bool CBEventEndLess::GetPosRandom(int* x, int* y)
 	return 0;
 }
 
-bool CBEventEndLess::KhoiPhucDataChar(int aIndex) // OK
+bool CBEventEndLess::KhoiPhucDataChar(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -905,7 +905,7 @@ bool CBEventEndLess::KhoiPhucDataChar(int aIndex) // OK
 
 	return 1;
 }
-bool CBEventEndLess::BackUpDataChar(int aIndex) // OK
+bool CBEventEndLess::BackUpDataChar(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1052,7 +1052,7 @@ void CBEventEndLess::CacheUserState(int aIndex, int TypeState)
 	}
 
 }
-bool CBEventEndLess::AddUser(int aIndex) // OK
+bool CBEventEndLess::AddUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1085,7 +1085,7 @@ bool CBEventEndLess::AddUser(int aIndex) // OK
 	}
 	return 0;
 }
-bool CBEventEndLess::DelUser(int aIndex) // OK
+bool CBEventEndLess::DelUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1110,12 +1110,12 @@ bool CBEventEndLess::DelUser(int aIndex) // OK
 	GDCharacterInfoSaveSend(aIndex);
 	return 1;
 }
-bool CBEventEndLess::CheckUserInEvent(int aIndex) // OK
+bool CBEventEndLess::CheckUserInEvent(int aIndex)
 {
 
 	return ((this->GetUser(aIndex) == 0) ? 0 : 1);
 }
-ENDLESS_USER * CBEventEndLess::GetUser(int aIndex) // OK
+ENDLESS_USER * CBEventEndLess::GetUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1131,7 +1131,7 @@ ENDLESS_USER * CBEventEndLess::GetUser(int aIndex) // OK
 	}
 	return 0;
 }
-void CBEventEndLess::ClearAllUser() // OK
+void CBEventEndLess::ClearAllUser()
 {
 	for (int n = 0; n < MAX_ENDLESS_USER; n++)
 	{
@@ -1155,7 +1155,7 @@ void CBEventEndLess::ClearAllUser() // OK
 
 
 }
-void CBEventEndLess::CheckUserIsEvent() // OK
+void CBEventEndLess::CheckUserIsEvent()
 {
 
 	int CountUserDie = 0;
@@ -1216,7 +1216,7 @@ void CBEventEndLess::CheckUserIsEvent() // OK
 	}
 
 }
-void CBEventEndLess::DataSendToAll(BYTE * lpMsg, int size) // OK
+void CBEventEndLess::DataSendToAll(BYTE * lpMsg, int size)
 {
 	for (int n = 0; n < MAX_ENDLESS_USER; n++)
 	{

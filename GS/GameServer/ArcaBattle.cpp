@@ -19,17 +19,17 @@ CArcaBattle gArcaBattle;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CArcaBattle::CArcaBattle() // OK
+CArcaBattle::CArcaBattle()
 {
 
 }
 
-CArcaBattle::~CArcaBattle() // OK
+CArcaBattle::~CArcaBattle()
 {
 
 }
 
-void CArcaBattle::Init() // OK
+void CArcaBattle::Init()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -38,7 +38,7 @@ void CArcaBattle::Init() // OK
 	#endif
 }
 
-void CArcaBattle::Load(char* path) // OK
+void CArcaBattle::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -162,7 +162,7 @@ void CArcaBattle::Load(char* path) // OK
 	#endif
 }
 
-void CArcaBattle::MainProc() // OK
+void CArcaBattle::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -210,12 +210,12 @@ void CArcaBattle::MainProc() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_BLANK() // OK
+void CArcaBattle::ProcState_BLANK()
 {
 
 }
 
-void CArcaBattle::ProcState_EMPTY() // OK
+void CArcaBattle::ProcState_EMPTY()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -229,7 +229,7 @@ void CArcaBattle::ProcState_EMPTY() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_SIGN1() // OK
+void CArcaBattle::ProcState_SIGN1()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -245,7 +245,7 @@ void CArcaBattle::ProcState_SIGN1() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_SIGN2() // OK
+void CArcaBattle::ProcState_SIGN2()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -261,7 +261,7 @@ void CArcaBattle::ProcState_SIGN2() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_READY() // OK
+void CArcaBattle::ProcState_READY()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -277,7 +277,7 @@ void CArcaBattle::ProcState_READY() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_PARTY() // OK
+void CArcaBattle::ProcState_PARTY()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -293,7 +293,7 @@ void CArcaBattle::ProcState_PARTY() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_START() // OK
+void CArcaBattle::ProcState_START()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -313,7 +313,7 @@ void CArcaBattle::ProcState_START() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_CLOSE() // OK
+void CArcaBattle::ProcState_CLOSE()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -329,7 +329,7 @@ void CArcaBattle::ProcState_CLOSE() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_CLEAN() // OK
+void CArcaBattle::ProcState_CLEAN()
 {
 	//NOTIFY SHIT
 
@@ -345,7 +345,7 @@ void CArcaBattle::ProcState_CLEAN() // OK
 	#endif
 }
 
-void CArcaBattle::ProcState_CLEAR() // OK
+void CArcaBattle::ProcState_CLEAR()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -359,7 +359,7 @@ void CArcaBattle::ProcState_CLEAR() // OK
 	#endif
 }
 
-void CArcaBattle::SetState(int state) // OK
+void CArcaBattle::SetState(int state)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -400,12 +400,12 @@ void CArcaBattle::SetState(int state) // OK
 	#endif
 }
 
-void CArcaBattle::SetState_BLANK() // OK
+void CArcaBattle::SetState_BLANK()
 {
 
 }
 
-void CArcaBattle::SetState_EMPTY() // OK
+void CArcaBattle::SetState_EMPTY()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -416,7 +416,7 @@ void CArcaBattle::SetState_EMPTY() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_SIGN1() // OK
+void CArcaBattle::SetState_SIGN1()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -431,7 +431,7 @@ void CArcaBattle::SetState_SIGN1() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_SIGN2() // OK
+void CArcaBattle::SetState_SIGN2()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -442,7 +442,7 @@ void CArcaBattle::SetState_SIGN2() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_READY() // OK
+void CArcaBattle::SetState_READY()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -453,7 +453,7 @@ void CArcaBattle::SetState_READY() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_PARTY() // OK
+void CArcaBattle::SetState_PARTY()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -464,7 +464,7 @@ void CArcaBattle::SetState_PARTY() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_START() // OK
+void CArcaBattle::SetState_START()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -477,7 +477,7 @@ void CArcaBattle::SetState_START() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_CLOSE() // OK
+void CArcaBattle::SetState_CLOSE()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -491,7 +491,7 @@ void CArcaBattle::SetState_CLOSE() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_CLEAN() // OK
+void CArcaBattle::SetState_CLEAN()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -536,7 +536,7 @@ void CArcaBattle::SetState_CLEAN() // OK
 	#endif
 }
 
-void CArcaBattle::SetState_CLEAR() // OK
+void CArcaBattle::SetState_CLEAR()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -563,7 +563,7 @@ void CArcaBattle::SetState_CLEAR() // OK
 	#endif
 }
 
-void CArcaBattle::CheckSync() // OK
+void CArcaBattle::CheckSync()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -595,7 +595,7 @@ void CArcaBattle::CheckSync() // OK
 	#endif
 }
 
-void CArcaBattle::SetObelisk() // OK
+void CArcaBattle::SetObelisk()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -646,7 +646,7 @@ void CArcaBattle::SetObelisk() // OK
 	#endif
 }
 
-void CArcaBattle::SetObeliskAura(int group) // OK
+void CArcaBattle::SetObeliskAura(int group)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -695,7 +695,7 @@ void CArcaBattle::SetObeliskAura(int group) // OK
 	#endif
 }
 
-void CArcaBattle::ChkAuraUserHover() // OK
+void CArcaBattle::ChkAuraUserHover()
 {
 	int iHoverUserIndex_2; //ebp-24
 	int iAurReleaseCnt; //ebp-28
@@ -954,7 +954,7 @@ bool CArcaBattle::IsPkEnable(LPOBJ lpObj,LPOBJ lpTarget)
 	return true;
 }
 
-void CArcaBattle::NpcLesnar(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CArcaBattle::NpcLesnar(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -969,12 +969,12 @@ void CArcaBattle::NpcLesnar(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CArcaBattle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CArcaBattle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 
 }
 
-void CArcaBattle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CArcaBattle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -988,7 +988,7 @@ void CArcaBattle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CArcaBattle::NoticeSendToAll(int type,char* message,...) // OK
+void CArcaBattle::NoticeSendToAll(int type,char* message,...)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -1013,7 +1013,7 @@ void CArcaBattle::NoticeSendToAll(int type,char* message,...) // OK
 	#endif
 }
 
-void CArcaBattle::DataSendToAll(BYTE* lpMsg,int size) // OK
+void CArcaBattle::DataSendToAll(BYTE* lpMsg,int size)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -1031,7 +1031,7 @@ void CArcaBattle::DataSendToAll(BYTE* lpMsg,int size) // OK
 	#endif
 }
 
-void CArcaBattle::CGArcaBattleGuildMasterRegisterRecv(int aIndex) // OK
+void CArcaBattle::CGArcaBattleGuildMasterRegisterRecv(int aIndex)
 {
 	//register guild
 
@@ -1073,7 +1073,7 @@ void CArcaBattle::CGArcaBattleGuildMasterRegisterRecv(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CArcaBattle::CGArcaBattleGuildMemberRegisterRecv(int aIndex) // OK
+void CArcaBattle::CGArcaBattleGuildMemberRegisterRecv(int aIndex)
 {
 	//0 = join
 	//7 = not guild member
@@ -1101,7 +1101,7 @@ void CArcaBattle::CGArcaBattleGuildMemberRegisterRecv(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CArcaBattle::CGArcaBattleEnterRecv(int aIndex) // OK
+void CArcaBattle::CGArcaBattleEnterRecv(int aIndex)
 {
 	//DGAnsArcaBattleEnter
 
@@ -1121,7 +1121,7 @@ void CArcaBattle::CGArcaBattleEnterRecv(int aIndex) // OK
 	*/
 }
 
-void CArcaBattle::CGArcaBattleRegisterMarkRecv(int aIndex) // OK
+void CArcaBattle::CGArcaBattleRegisterMarkRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1167,7 +1167,7 @@ void CArcaBattle::CGArcaBattleRegisterMarkRecv(int aIndex) // OK
 	}
 }
 
-void CArcaBattle::GCArcaBattleStateSend(int state,int aIndex) // OK
+void CArcaBattle::GCArcaBattleStateSend(int state,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -1189,7 +1189,7 @@ void CArcaBattle::GCArcaBattleStateSend(int state,int aIndex) // OK
 	#endif
 }
 
-void CArcaBattle::GCArcaBattleInfoSend(int aIndex,int GuildGroupNum) // OK
+void CArcaBattle::GCArcaBattleInfoSend(int aIndex,int GuildGroupNum)
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -1224,7 +1224,7 @@ void CArcaBattle::GCArcaBattleInfoSend(int aIndex,int GuildGroupNum) // OK
 	#endif
 }
 
-void CArcaBattle::GCArcaBattleObeliskStateSend() // OK
+void CArcaBattle::GCArcaBattleObeliskStateSend()
 {
 	#if(GAMESERVER_UPDATE>=702)
 
@@ -1270,7 +1270,7 @@ void CArcaBattle::GCArcaBattleObeliskStateSend() // OK
 	#endif
 }
 
-void CArcaBattle::GCArcaBattleOccupyGuildSend(LPOBJ lpObj,int gate) // OK
+void CArcaBattle::GCArcaBattleOccupyGuildSend(LPOBJ lpObj,int gate)
 {
 	PMSG_ARCA_BATTLE_OCCUPY_GUILD_SEND pMsg;
 
@@ -1290,7 +1290,7 @@ void CArcaBattle::GCArcaBattleOccupyGuildSend(LPOBJ lpObj,int gate) // OK
 	}
 }
 
-void CArcaBattle::GCArcaBattleObeliskLifeSend() // OK
+void CArcaBattle::GCArcaBattleObeliskLifeSend()
 {
 	#if(GAMESERVER_UPDATE>=702)
 

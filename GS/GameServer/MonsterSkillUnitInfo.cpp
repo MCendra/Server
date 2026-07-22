@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillUnitInfo::CMonsterSkillUnitInfo() // OK
+CMonsterSkillUnitInfo::CMonsterSkillUnitInfo()
 {
 	this->Reset();
 }
 
-CMonsterSkillUnitInfo::~CMonsterSkillUnitInfo() // OK
+CMonsterSkillUnitInfo::~CMonsterSkillUnitInfo()
 {
 
 }
 
-void CMonsterSkillUnitInfo::Reset() // OK
+void CMonsterSkillUnitInfo::Reset()
 {
 	memset(this->m_UnitName,0,sizeof(this->m_UnitName));
 
@@ -36,7 +36,7 @@ void CMonsterSkillUnitInfo::Reset() // OK
 	this->m_ElementsSlot[4] = 0;
 }
 
-void CMonsterSkillUnitInfo::RunSkill(int aIndex,int bIndex) // OK
+void CMonsterSkillUnitInfo::RunSkill(int aIndex,int bIndex)
 {
 	for(int n=0;n < MAX_MONSTER_SKILL_ELEMENT;n++)
 	{

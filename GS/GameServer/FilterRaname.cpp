@@ -12,17 +12,17 @@ CFilterRename gFilterRename;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CFilterRename::CFilterRename() // OK
+CFilterRename::CFilterRename()
 {
 	this->m_count = 0;
 }
 
-CFilterRename::~CFilterRename() // OK
+CFilterRename::~CFilterRename()
 {
 
 }
 
-void CFilterRename::Load(char* path) // OK
+void CFilterRename::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -72,7 +72,7 @@ void CFilterRename::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CFilterRename::SetInfo(FILTERRENAME_INFO info) // OK
+void CFilterRename::SetInfo(FILTERRENAME_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_FILTERRENAME_SYNTAX)
 	{
@@ -82,7 +82,7 @@ void CFilterRename::SetInfo(FILTERRENAME_INFO info) // OK
 	this->m_FilterInfo[this->m_count++] = info;
 }
 
-bool CFilterRename::CheckFilter(char* text) // OK
+bool CFilterRename::CheckFilter(char* text)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 	for(int n=0;n < this->m_count;n++)

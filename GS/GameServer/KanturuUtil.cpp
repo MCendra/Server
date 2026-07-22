@@ -13,17 +13,17 @@ CKanturuUtil gKanturuUtil;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuUtil::CKanturuUtil() // OK
+CKanturuUtil::CKanturuUtil()
 {
 
 }
 
-CKanturuUtil::~CKanturuUtil() // OK
+CKanturuUtil::~CKanturuUtil()
 {
 
 }
 
-void CKanturuUtil::NotifyKanturuEnter(int aIndex,int result) // OK
+void CKanturuUtil::NotifyKanturuEnter(int aIndex,int result)
 {
 	PMSG_KANTURU_ENTER_SEND pMsg;
 
@@ -34,7 +34,7 @@ void CKanturuUtil::NotifyKanturuEnter(int aIndex,int result) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::NotifyKanturuState(int aIndex,int state,int DetailState) // OK
+void CKanturuUtil::NotifyKanturuState(int aIndex,int state,int DetailState)
 {
 	PMSG_KANTURU_STATE_SEND pMsg;
 
@@ -47,7 +47,7 @@ void CKanturuUtil::NotifyKanturuState(int aIndex,int state,int DetailState) // O
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::NotifyKanturuChangeState(int state,int DetailState) // OK
+void CKanturuUtil::NotifyKanturuChangeState(int state,int DetailState)
 {
 	PMSG_KANTURU_STATE_CHANGE_SEND pMsg;
 
@@ -60,7 +60,7 @@ void CKanturuUtil::NotifyKanturuChangeState(int state,int DetailState) // OK
 	this->SendDataKanturuBossMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::NotifyKanturuResult(int result) // OK
+void CKanturuUtil::NotifyKanturuResult(int result)
 {
 	PMSG_KANTURU_SUCCESS_SEND pMsg;
 
@@ -71,7 +71,7 @@ void CKanturuUtil::NotifyKanturuResult(int result) // OK
 	this->SendDataKanturuBossMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::NotifyKanturuBattleTime(int time) // OK
+void CKanturuUtil::NotifyKanturuBattleTime(int time)
 {
 	PMSG_KANTURU_BATTLE_TIME_SEND pMsg;
 
@@ -82,7 +82,7 @@ void CKanturuUtil::NotifyKanturuBattleTime(int time) // OK
 	this->SendDataKanturuBossMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::NotifyKanturuAreaAttack(int aIndex,int bIndex,int type) // OK
+void CKanturuUtil::NotifyKanturuAreaAttack(int aIndex,int bIndex,int type)
 {
 	PMSG_KANTURU_AREA_ATTACK_SEND pMsg;
 
@@ -97,7 +97,7 @@ void CKanturuUtil::NotifyKanturuAreaAttack(int aIndex,int bIndex,int type) // OK
 	DataSend(bIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::NotifyKanturuObjectCount(int MonsterCount,int UserCount) // OK
+void CKanturuUtil::NotifyKanturuObjectCount(int MonsterCount,int UserCount)
 {
 	PMSG_KANTURU_OBJECT_COUNT_SEND pMsg;
 
@@ -110,7 +110,7 @@ void CKanturuUtil::NotifyKanturuObjectCount(int MonsterCount,int UserCount) // O
 	this->SendDataKanturuBossMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CKanturuUtil::SendMsgKanturuMapUser(char* message,...) // OK
+void CKanturuUtil::SendMsgKanturuMapUser(char* message,...)
 {
 	char buff[256];
 
@@ -128,7 +128,7 @@ void CKanturuUtil::SendMsgKanturuMapUser(char* message,...) // OK
 	}
 }
 
-void CKanturuUtil::SendMsgKanturuBossMapUser(char* message,...) // OK
+void CKanturuUtil::SendMsgKanturuBossMapUser(char* message,...)
 {
 	char buff[256];
 
@@ -146,7 +146,7 @@ void CKanturuUtil::SendMsgKanturuBossMapUser(char* message,...) // OK
 	}
 }
 
-void CKanturuUtil::SendDataKanturuMapUser(BYTE* lpMsg,int size) // OK
+void CKanturuUtil::SendDataKanturuMapUser(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -157,7 +157,7 @@ void CKanturuUtil::SendDataKanturuMapUser(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void CKanturuUtil::SendDataKanturuBossMapUser(BYTE* lpMsg,int size) // OK
+void CKanturuUtil::SendDataKanturuBossMapUser(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{

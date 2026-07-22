@@ -9,12 +9,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIMovePathInfo::CMonsterAIMovePathInfo() // OK
+CMonsterAIMovePathInfo::CMonsterAIMovePathInfo()
 {
 	this->Reset();
 }
 
-void CMonsterAIMovePathInfo::Reset() // OK
+void CMonsterAIMovePathInfo::Reset()
 {
 	this->m_Type = -1;
 	this->m_MapNumber = -1;

@@ -7,7 +7,7 @@
 // ---
 struct CUSTOM_RANK_USER_DATA
 {
-	void Clear() // OK
+	void Clear()
 	{
 		memset(this->m_Name, 0, sizeof(this->m_Name));
 		this->m_iResetMin = 0;

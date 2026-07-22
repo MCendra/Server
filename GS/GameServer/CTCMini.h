@@ -73,7 +73,7 @@ struct SDHP_RANKING_CTC_PLAYER_SAVE_SEND
 
 struct CTC_CHAR
 {
-	void Reset() // OK
+	void Reset()
 	{
 		memset(this->Name, 0, sizeof(this->Name));
 		this->Index = -1;
@@ -175,8 +175,8 @@ private:
 	int X;
 	int Y;
 	int MinPlayer;
-	bool CCTCmini::DelUser(int aIndex); // OK
-	CTC_CHAR* CCTCmini::GetUser(int aIndex); // OK
+	bool CCTCmini::DelUser(int aIndex);
+	CTC_CHAR* CCTCmini::GetUser(int aIndex);
 	int TotalPlayer;
 };
 

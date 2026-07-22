@@ -18,7 +18,7 @@ CPentagramSystem gPentagramSystem;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPentagramSystem::CPentagramSystem() // OK
+CPentagramSystem::CPentagramSystem()
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -37,12 +37,12 @@ CPentagramSystem::CPentagramSystem() // OK
 	#endif
 }
 
-CPentagramSystem::~CPentagramSystem() // OK
+CPentagramSystem::~CPentagramSystem()
 {
 
 }
 
-void CPentagramSystem::Load(char* path) // OK
+void CPentagramSystem::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -138,7 +138,7 @@ void CPentagramSystem::Load(char* path) // OK
 	#endif
 }
 
-void CPentagramSystem::LoadJewel(char* path) // OK
+void CPentagramSystem::LoadJewel(char* path)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -217,7 +217,7 @@ void CPentagramSystem::LoadJewel(char* path) // OK
 	#endif
 }
 
-void CPentagramSystem::LoadMixRate(char* path) // OK
+void CPentagramSystem::LoadMixRate(char* path)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -327,7 +327,7 @@ void CPentagramSystem::LoadMixRate(char* path) // OK
 	#endif
 }
 
-bool CPentagramSystem::IsPentagramItem(int ItemIndex) // OK
+bool CPentagramSystem::IsPentagramItem(int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -345,7 +345,7 @@ bool CPentagramSystem::IsPentagramItem(int ItemIndex) // OK
 	#endif
 }
 
-bool CPentagramSystem::IsPentagramItem(CItem* lpItem) // OK
+bool CPentagramSystem::IsPentagramItem(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -363,7 +363,7 @@ bool CPentagramSystem::IsPentagramItem(CItem* lpItem) // OK
 	#endif
 }
 
-bool CPentagramSystem::IsPentagramJewel(int ItemIndex) // OK
+bool CPentagramSystem::IsPentagramJewel(int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -381,7 +381,7 @@ bool CPentagramSystem::IsPentagramJewel(int ItemIndex) // OK
 	#endif
 }
 
-bool CPentagramSystem::IsPentagramJewel(CItem* lpItem) // OK
+bool CPentagramSystem::IsPentagramJewel(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -399,7 +399,7 @@ bool CPentagramSystem::IsPentagramJewel(CItem* lpItem) // OK
 	#endif
 }
 
-bool CPentagramSystem::IsPentagramMithril(int ItemIndex) // OK
+bool CPentagramSystem::IsPentagramMithril(int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -417,7 +417,7 @@ bool CPentagramSystem::IsPentagramMithril(int ItemIndex) // OK
 	#endif
 }
 
-bool CPentagramSystem::IsPentagramMithril(CItem* lpItem) // OK
+bool CPentagramSystem::IsPentagramMithril(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -435,7 +435,7 @@ bool CPentagramSystem::IsPentagramMithril(CItem* lpItem) // OK
 	#endif
 }
 
-PENTAGRAM_JEWEL_INFO* CPentagramSystem::GetPentagramJewelInfo(LPOBJ lpObj,int index,int type) // OK
+PENTAGRAM_JEWEL_INFO* CPentagramSystem::GetPentagramJewelInfo(LPOBJ lpObj,int index,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -468,7 +468,7 @@ PENTAGRAM_JEWEL_INFO* CPentagramSystem::GetPentagramJewelInfo(LPOBJ lpObj,int in
 	#endif
 }
 
-PENTAGRAM_JEWEL_INFO* CPentagramSystem::AddPentagramJewelInfo(LPOBJ lpObj,CItem* lpItem,int type) // OK
+PENTAGRAM_JEWEL_INFO* CPentagramSystem::AddPentagramJewelInfo(LPOBJ lpObj,CItem* lpItem,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -504,7 +504,7 @@ PENTAGRAM_JEWEL_INFO* CPentagramSystem::AddPentagramJewelInfo(LPOBJ lpObj,CItem*
 	return 0;
 }
 
-PENTAGRAM_JEWEL_INFO* CPentagramSystem::AddPentagramJewelInfo(LPOBJ lpObj,PENTAGRAM_JEWEL_INFO* lpInfo,int type) // OK
+PENTAGRAM_JEWEL_INFO* CPentagramSystem::AddPentagramJewelInfo(LPOBJ lpObj,PENTAGRAM_JEWEL_INFO* lpInfo,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -540,7 +540,7 @@ PENTAGRAM_JEWEL_INFO* CPentagramSystem::AddPentagramJewelInfo(LPOBJ lpObj,PENTAG
 	return 0;
 }
 
-void CPentagramSystem::DelPentagramJewelInfo(LPOBJ lpObj,int index,int type) // OK
+void CPentagramSystem::DelPentagramJewelInfo(LPOBJ lpObj,int index,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -569,7 +569,7 @@ void CPentagramSystem::DelPentagramJewelInfo(LPOBJ lpObj,int index,int type) // 
 	#endif
 }
 
-void CPentagramSystem::DelAllPentagramJewelInfo(LPOBJ lpObj,CItem* lpItem,int type) // OK
+void CPentagramSystem::DelAllPentagramJewelInfo(LPOBJ lpObj,CItem* lpItem,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -584,7 +584,7 @@ void CPentagramSystem::DelAllPentagramJewelInfo(LPOBJ lpObj,CItem* lpItem,int ty
 	#endif
 }
 
-bool CPentagramSystem::CheckExchangePentagramItem(LPOBJ lpObj) // OK
+bool CPentagramSystem::CheckExchangePentagramItem(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -608,7 +608,7 @@ bool CPentagramSystem::CheckExchangePentagramItem(LPOBJ lpObj) // OK
 	#endif
 }
 
-bool CPentagramSystem::CheckExchangePentagramItem(LPOBJ lpObj,CItem* lpItem) // OK
+bool CPentagramSystem::CheckExchangePentagramItem(LPOBJ lpObj,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -629,7 +629,7 @@ bool CPentagramSystem::CheckExchangePentagramItem(LPOBJ lpObj,CItem* lpItem) // 
 	#endif
 }
 
-bool CPentagramSystem::CheckPentagramOption(LPOBJ lpObj,PENTAGRAM_OPTION_INFO* lpInfo) // OK
+bool CPentagramSystem::CheckPentagramOption(LPOBJ lpObj,PENTAGRAM_OPTION_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -665,7 +665,7 @@ bool CPentagramSystem::CheckPentagramOption(LPOBJ lpObj,PENTAGRAM_OPTION_INFO* l
 	#endif
 }
 
-void CPentagramSystem::MovePentagramToInventoryFromWarehouse(LPOBJ lpObj,CItem* lpItem) // OK
+void CPentagramSystem::MovePentagramToInventoryFromWarehouse(LPOBJ lpObj,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -705,7 +705,7 @@ void CPentagramSystem::MovePentagramToInventoryFromWarehouse(LPOBJ lpObj,CItem* 
 	#endif
 }
 
-void CPentagramSystem::MovePentagramToWarehouseFromInventory(LPOBJ lpObj,CItem* lpItem) // OK
+void CPentagramSystem::MovePentagramToWarehouseFromInventory(LPOBJ lpObj,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -745,7 +745,7 @@ void CPentagramSystem::MovePentagramToWarehouseFromInventory(LPOBJ lpObj,CItem* 
 	#endif
 }
 
-void CPentagramSystem::ExchangePentagramItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CPentagramSystem::ExchangePentagramItem(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -786,7 +786,7 @@ void CPentagramSystem::ExchangePentagramItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CPentagramSystem::ExchangePentagramItem(LPOBJ lpObj,LPOBJ lpTarget,CItem* lpItem) // OK
+void CPentagramSystem::ExchangePentagramItem(LPOBJ lpObj,LPOBJ lpTarget,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -826,7 +826,7 @@ void CPentagramSystem::ExchangePentagramItem(LPOBJ lpObj,LPOBJ lpTarget,CItem* l
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramTypeInfo(int index,PENTAGRAM_TYPE_INFO* lpInfo) // OK
+bool CPentagramSystem::GetPentagramTypeInfo(int index,PENTAGRAM_TYPE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -849,7 +849,7 @@ bool CPentagramSystem::GetPentagramTypeInfo(int index,PENTAGRAM_TYPE_INFO* lpInf
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramOptionInfo(int index,PENTAGRAM_OPTION_INFO* lpInfo) // OK
+bool CPentagramSystem::GetPentagramOptionInfo(int index,PENTAGRAM_OPTION_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -872,7 +872,7 @@ bool CPentagramSystem::GetPentagramOptionInfo(int index,PENTAGRAM_OPTION_INFO* l
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramJewelOptionInfo(int ItemIndex,int RankNumber,int RankOption,PENTAGRAM_JEWEL_OPTION_INFO* lpInfo) // OK
+bool CPentagramSystem::GetPentagramJewelOptionInfo(int ItemIndex,int RankNumber,int RankOption,PENTAGRAM_JEWEL_OPTION_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -900,7 +900,7 @@ bool CPentagramSystem::GetPentagramJewelOptionInfo(int ItemIndex,int RankNumber,
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramJewelRemoveInfo(int index,PENTAGRAM_JEWEL_REMOVE_INFO* lpInfo) // OK
+bool CPentagramSystem::GetPentagramJewelRemoveInfo(int index,PENTAGRAM_JEWEL_REMOVE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -923,7 +923,7 @@ bool CPentagramSystem::GetPentagramJewelRemoveInfo(int index,PENTAGRAM_JEWEL_REM
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramJewelUpgradeRankInfo(int index,PENTAGRAM_JEWEL_UPGRADE_RANK_INFO* lpInfo) // OK
+bool CPentagramSystem::GetPentagramJewelUpgradeRankInfo(int index,PENTAGRAM_JEWEL_UPGRADE_RANK_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -946,7 +946,7 @@ bool CPentagramSystem::GetPentagramJewelUpgradeRankInfo(int index,PENTAGRAM_JEWE
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramJewelUpgradeLevelInfo(int index,PENTAGRAM_JEWEL_UPGRADE_LEVEL_INFO* lpInfo) // OK
+bool CPentagramSystem::GetPentagramJewelUpgradeLevelInfo(int index,PENTAGRAM_JEWEL_UPGRADE_LEVEL_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -971,7 +971,7 @@ bool CPentagramSystem::GetPentagramJewelUpgradeLevelInfo(int index,PENTAGRAM_JEW
 	#endif
 }
 
-bool CPentagramSystem::GetPentagramRandomJewelOption(int ItemIndex,int RankNumber,BYTE* option) // OK
+bool CPentagramSystem::GetPentagramRandomJewelOption(int ItemIndex,int RankNumber,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -997,7 +997,7 @@ bool CPentagramSystem::GetPentagramRandomJewelOption(int ItemIndex,int RankNumbe
 	#endif
 }
 
-void CPentagramSystem::GetPentagramRelationshipDamage(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
+void CPentagramSystem::GetPentagramRelationshipDamage(LPOBJ lpObj,LPOBJ lpTarget,int* damage)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1056,7 +1056,7 @@ void CPentagramSystem::GetPentagramRelationshipDamage(LPOBJ lpObj,LPOBJ lpTarget
 	#endif
 }
 
-void CPentagramSystem::GetPentagramRelationshipDefense(LPOBJ lpObj,LPOBJ lpTarget,int* defense) // OK
+void CPentagramSystem::GetPentagramRelationshipDefense(LPOBJ lpObj,LPOBJ lpTarget,int* defense)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1115,7 +1115,7 @@ void CPentagramSystem::GetPentagramRelationshipDefense(LPOBJ lpObj,LPOBJ lpTarge
 	#endif
 }
 
-void CPentagramSystem::CalcPentagramOption(LPOBJ lpObj,bool flag) // OK
+void CPentagramSystem::CalcPentagramOption(LPOBJ lpObj,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1150,7 +1150,7 @@ void CPentagramSystem::CalcPentagramOption(LPOBJ lpObj,bool flag) // OK
 	#endif
 }
 
-void CPentagramSystem::CalcPentagramJewelOption(LPOBJ lpObj,bool flag) // OK
+void CPentagramSystem::CalcPentagramJewelOption(LPOBJ lpObj,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1197,7 +1197,7 @@ void CPentagramSystem::CalcPentagramJewelOption(LPOBJ lpObj,bool flag) // OK
 	#endif
 }
 
-bool CPentagramSystem::CheckPentagramSocket(LPOBJ lpObj,CItem* lpItem) // OK
+bool CPentagramSystem::CheckPentagramSocket(LPOBJ lpObj,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1241,7 +1241,7 @@ bool CPentagramSystem::CheckPentagramSocket(LPOBJ lpObj,CItem* lpItem) // OK
 	return 0;
 }
 
-void CPentagramSystem::InsertOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CPentagramSystem::InsertOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1278,7 +1278,7 @@ void CPentagramSystem::InsertOption(LPOBJ lpObj,int index,int value,bool flag) /
 	#endif
 }
 
-void CPentagramSystem::InsertJewelOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CPentagramSystem::InsertJewelOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1484,7 +1484,7 @@ void CPentagramSystem::InsertJewelOption(LPOBJ lpObj,int index,int value,bool fl
 	#endif
 }
 
-void CPentagramSystem::CGPentagramJewelInsertRecv(PMSG_PENTAGRAM_JEWEL_INSERT_RECV* lpMsg,int aIndex) // OK
+void CPentagramSystem::CGPentagramJewelInsertRecv(PMSG_PENTAGRAM_JEWEL_INSERT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1584,7 +1584,7 @@ void CPentagramSystem::CGPentagramJewelInsertRecv(PMSG_PENTAGRAM_JEWEL_INSERT_RE
 	#endif
 }
 
-void CPentagramSystem::CGPentagramJewelRemoveRecv(PMSG_PENTAGRAM_JEWEL_REMOVE_RECV* lpMsg,int aIndex) // OK
+void CPentagramSystem::CGPentagramJewelRemoveRecv(PMSG_PENTAGRAM_JEWEL_REMOVE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1709,7 +1709,7 @@ void CPentagramSystem::CGPentagramJewelRemoveRecv(PMSG_PENTAGRAM_JEWEL_REMOVE_RE
 	#endif
 }
 
-void CPentagramSystem::CGPentagramJewelRefineRecv(PMSG_PENTAGRAM_JEWEL_REFINE_RECV* lpMsg,int aIndex) // OK
+void CPentagramSystem::CGPentagramJewelRefineRecv(PMSG_PENTAGRAM_JEWEL_REFINE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1799,7 +1799,7 @@ void CPentagramSystem::CGPentagramJewelRefineRecv(PMSG_PENTAGRAM_JEWEL_REFINE_RE
 	#endif
 }
 
-void CPentagramSystem::CGPentagramJewelUpgradeRecv(PMSG_PENTAGRAM_JEWEL_UPGRADE_RECV* lpMsg,int aIndex) // OK
+void CPentagramSystem::CGPentagramJewelUpgradeRecv(PMSG_PENTAGRAM_JEWEL_UPGRADE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1841,7 +1841,7 @@ void CPentagramSystem::CGPentagramJewelUpgradeRecv(PMSG_PENTAGRAM_JEWEL_UPGRADE_
 	#endif
 }
 
-void CPentagramSystem::GCPentagramJewelResultSend(int aIndex,int result) // OK
+void CPentagramSystem::GCPentagramJewelResultSend(int aIndex,int result)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1856,7 +1856,7 @@ void CPentagramSystem::GCPentagramJewelResultSend(int aIndex,int result) // OK
 	#endif
 }
 
-void CPentagramSystem::GCPentagramJewelInfoSend(int aIndex,int type) // OK
+void CPentagramSystem::GCPentagramJewelInfoSend(int aIndex,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1905,7 +1905,7 @@ void CPentagramSystem::GCPentagramJewelInfoSend(int aIndex,int type) // OK
 	#endif
 }
 
-void CPentagramSystem::GCPentagramJewelTradeInfoSend(int aIndex,int bIndex,CItem* lpItem) // OK
+void CPentagramSystem::GCPentagramJewelTradeInfoSend(int aIndex,int bIndex,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1962,7 +1962,7 @@ void CPentagramSystem::GCPentagramJewelTradeInfoSend(int aIndex,int bIndex,CItem
 	#endif
 }
 
-void CPentagramSystem::GCPentagramJewelPShopInfoSend(int aIndex,int bIndex) // OK
+void CPentagramSystem::GCPentagramJewelPShopInfoSend(int aIndex,int bIndex)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2020,7 +2020,7 @@ void CPentagramSystem::GCPentagramJewelPShopInfoSend(int aIndex,int bIndex) // O
 	#endif
 }
 
-void CPentagramSystem::DGPentagramJewelInfoRecv(SDHP_PENTAGRAM_JEWEL_INFO_RECV* lpMsg) // OK
+void CPentagramSystem::DGPentagramJewelInfoRecv(SDHP_PENTAGRAM_JEWEL_INFO_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2072,7 +2072,7 @@ void CPentagramSystem::DGPentagramJewelInfoRecv(SDHP_PENTAGRAM_JEWEL_INFO_RECV* 
 	#endif
 }
 
-void CPentagramSystem::GDPentagramJewelInfoSend(int aIndex,int type) // OK
+void CPentagramSystem::GDPentagramJewelInfoSend(int aIndex,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2098,7 +2098,7 @@ void CPentagramSystem::GDPentagramJewelInfoSend(int aIndex,int type) // OK
 	#endif
 }
 
-void CPentagramSystem::GDPentagramJewelInfoSaveSend(int aIndex,int type) // OK
+void CPentagramSystem::GDPentagramJewelInfoSaveSend(int aIndex,int type)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2165,7 +2165,7 @@ void CPentagramSystem::GDPentagramJewelInfoSaveSend(int aIndex,int type) // OK
 	#endif
 }
 
-void CPentagramSystem::GDPentagramJewelInsertSaveSend(int aIndex,PENTAGRAM_JEWEL_INFO* lpInfo) // OK
+void CPentagramSystem::GDPentagramJewelInsertSaveSend(int aIndex,PENTAGRAM_JEWEL_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2216,7 +2216,7 @@ void CPentagramSystem::GDPentagramJewelInsertSaveSend(int aIndex,PENTAGRAM_JEWEL
 	#endif
 }
 
-void CPentagramSystem::GDPentagramJewelDeleteSaveSend(int aIndex,int type,int index) // OK
+void CPentagramSystem::GDPentagramJewelDeleteSaveSend(int aIndex,int type,int index)
 {
 	#if(GAMESERVER_UPDATE>=701)
 

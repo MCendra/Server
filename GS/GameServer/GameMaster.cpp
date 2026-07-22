@@ -12,17 +12,17 @@ CGameMaster gGameMaster;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGameMaster::CGameMaster() // OK
+CGameMaster::CGameMaster()
 {
 	this->m_count = 0;
 }
 
-CGameMaster::~CGameMaster() // OK
+CGameMaster::~CGameMaster()
 {
 
 }
 
-void CGameMaster::Load(char* path) // OK
+void CGameMaster::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -76,7 +76,7 @@ void CGameMaster::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CGameMaster::SetInfo(GAME_MASTER_INFO info) // OK
+void CGameMaster::SetInfo(GAME_MASTER_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_GAME_MASTER)
 	{
@@ -86,7 +86,7 @@ void CGameMaster::SetInfo(GAME_MASTER_INFO info) // OK
 	this->m_GameMasterInfo[this->m_count++] = info;
 }
 
-void CGameMaster::SetGameMasterLevel(LPOBJ lpObj,int level) // OK
+void CGameMaster::SetGameMasterLevel(LPOBJ lpObj,int level)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -107,7 +107,7 @@ void CGameMaster::SetGameMasterLevel(LPOBJ lpObj,int level) // OK
 	this->SetInfo(info);
 }
 
-bool CGameMaster::CheckGameMasterLevel(LPOBJ lpObj,int level) // OK
+bool CGameMaster::CheckGameMasterLevel(LPOBJ lpObj,int level)
 {
 	for(int n=0;n < this->m_count;n++)
 	{

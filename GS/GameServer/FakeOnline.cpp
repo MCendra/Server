@@ -41,7 +41,7 @@
 //========================================================================================================================
 CFakeOnline s_FakeOnline;
 
-CFakeOnline::CFakeOnline() // OK
+CFakeOnline::CFakeOnline()
 {
 	this->m_Data.clear();
 	this->IndexMsgMax = 0;
@@ -348,7 +348,7 @@ void FakeAutoRepair(int aIndex)
 	}
 }
 
-void CFakeOnline::FakeAttackProc(LPOBJ lpObj) // OK
+void CFakeOnline::FakeAttackProc(LPOBJ lpObj)
 {
 	if (lpObj->IsFakeOnline != 0)
 	{
@@ -356,7 +356,7 @@ void CFakeOnline::FakeAttackProc(LPOBJ lpObj) // OK
 		lpObj->ConnectTickCount = GetTickCount();
 	}
 }
-void CFakeOnline::OnAttackAlreadyConnected(LPOBJ lpObj) // OK
+void CFakeOnline::OnAttackAlreadyConnected(LPOBJ lpObj)
 {
 	if (lpObj->IsFakeOnline != 0)
 	{
@@ -939,7 +939,7 @@ void CFakeOnline::TuDongBuffSkill(int aIndex)	//-- OK
 }
 
 
-bool CFakeOnline::GetTargetMonster(LPOBJ lpObj, int SkillNumber, int* MonsterIndex) // OK
+bool CFakeOnline::GetTargetMonster(LPOBJ lpObj, int SkillNumber, int* MonsterIndex)
 {
 	int NearestDistance = 100;
 
@@ -978,7 +978,7 @@ bool CFakeOnline::GetTargetMonster(LPOBJ lpObj, int SkillNumber, int* MonsterInd
 	return ((NearestDistance == 100) ? 0 : 1);
 }
 
-bool CFakeOnline::GetTargetPlayer(LPOBJ lpObj, int SkillNumber, int* MonsterIndex) // OK
+bool CFakeOnline::GetTargetPlayer(LPOBJ lpObj, int SkillNumber, int* MonsterIndex)
 {
 	int NearestDistance = 100;
 	for (int n = 0; n < MAX_VIEWPORT; n++)
@@ -1428,7 +1428,7 @@ void CFakeOnline::TuDongDanhSkill(int aIndex)	//-- INCOMPLETO
 }
 //================ Attack Custom
 
-void CFakeOnline::SendSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber) // OK
+void CFakeOnline::SendSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber)
 {
 	PMSG_SKILL_ATTACK_RECV pMsg;
 
@@ -1461,7 +1461,7 @@ void CFakeOnline::SendSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber) // O
 	gSkillManager.CGSkillAttackRecv(&pMsg, lpObj->Index);
 }
 
-void CFakeOnline::SendMultiSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber) // OK
+void CFakeOnline::SendMultiSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber)
 {
 	this->SendDurationSkillAttack(lpObj, aIndex, SkillNumber);
 
@@ -1548,7 +1548,7 @@ void CFakeOnline::SendMultiSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber)
 	gSkillManager.CGMultiSkillAttackRecv((PMSG_MULTI_SKILL_ATTACK_RECV*)send, lpObj->Index, 0);
 }
 
-void CFakeOnline::SendDurationSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber) // OK
+void CFakeOnline::SendDurationSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber)
 {
 	PMSG_DURATION_SKILL_ATTACK_RECV pMsg;
 
@@ -1597,7 +1597,7 @@ void CFakeOnline::SendDurationSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumb
 	gSkillManager.CGDurationSkillAttackRecv(&pMsg, lpObj->Index);
 }
 
-void CFakeOnline::SendRFSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber) // OK
+void CFakeOnline::SendRFSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber)
 {
 	PMSG_SKILL_DARK_SIDE_RECV Msg;
 
@@ -1645,7 +1645,7 @@ void CFakeOnline::SendRFSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber) //
 	this->SendDurationSkillAttack(lpObj, aIndex, SkillNumber);
 }
 
-void CFakeOnline::GuiYCParty(int aIndex, int bIndex) // OK
+void CFakeOnline::GuiYCParty(int aIndex, int bIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

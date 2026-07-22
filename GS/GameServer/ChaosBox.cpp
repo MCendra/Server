@@ -32,7 +32,7 @@ CChaosBox gChaosBox;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChaosBox::CChaosBox() // OK
+CChaosBox::CChaosBox()
 {
 	this->m_SeniorMixLimitDay = 0;
 
@@ -41,12 +41,12 @@ CChaosBox::CChaosBox() // OK
 	this->m_SeniorMixLimitYear = 0;
 }
 
-CChaosBox::~CChaosBox() // OK
+CChaosBox::~CChaosBox()
 {
 
 }
 
-void CChaosBox::ChaosBoxInit(LPOBJ lpObj) // OK
+void CChaosBox::ChaosBoxInit(LPOBJ lpObj)
 {
 	for (int n = 0; n < CHAOS_BOX_SIZE; n++)
 	{
@@ -55,7 +55,7 @@ void CChaosBox::ChaosBoxInit(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::ChaosBoxItemDown(LPOBJ lpObj, int slot) // OK
+void CChaosBox::ChaosBoxItemDown(LPOBJ lpObj, int slot)
 {
 	for (int n = 0; n < CHAOS_BOX_SIZE; n++)
 	{
@@ -78,7 +78,7 @@ void CChaosBox::ChaosBoxItemDown(LPOBJ lpObj, int slot) // OK
 	}
 }
 
-void CChaosBox::ChaosBoxItemKeep(LPOBJ lpObj, int slot) // OK
+void CChaosBox::ChaosBoxItemKeep(LPOBJ lpObj, int slot)
 {
 	for (int n = 0; n < CHAOS_BOX_SIZE; n++)
 	{
@@ -91,7 +91,7 @@ void CChaosBox::ChaosBoxItemKeep(LPOBJ lpObj, int slot) // OK
 	}
 }
 
-void CChaosBox::ChaosBoxItemSave(LPOBJ lpObj) // OK
+void CChaosBox::ChaosBoxItemSave(LPOBJ lpObj)
 {
 	if (gObjInventoryCommit(lpObj->Index) != 0)
 	{
@@ -105,7 +105,7 @@ void CChaosBox::ChaosBoxItemSave(LPOBJ lpObj) // OK
 	}
 }
 
-bool CChaosBox::GetTalismanOfLuckRate(LPOBJ lpObj, int* rate) // OK
+bool CChaosBox::GetTalismanOfLuckRate(LPOBJ lpObj, int* rate)
 {
 	int count = 0;
 
@@ -127,7 +127,7 @@ bool CChaosBox::GetTalismanOfLuckRate(LPOBJ lpObj, int* rate) // OK
 	return ((count>MAX_TALISMAN_OF_LUCK) ? 0 : 1);
 }
 
-bool CChaosBox::GetElementalTalismanOfLuckRate(LPOBJ lpObj, int* rate) // OK
+bool CChaosBox::GetElementalTalismanOfLuckRate(LPOBJ lpObj, int* rate)
 {
 	int count = 0;
 
@@ -149,7 +149,7 @@ bool CChaosBox::GetElementalTalismanOfLuckRate(LPOBJ lpObj, int* rate) // OK
 	return ((count>MAX_TALISMAN_OF_LUCK) ? 0 : 1);
 }
 
-void CChaosBox::ChaosItemMix(LPOBJ lpObj) // OK
+void CChaosBox::ChaosItemMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int ItemCount = 0;
@@ -264,7 +264,7 @@ void CChaosBox::ChaosItemMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::DevilSquareMix(LPOBJ lpObj) // OK
+void CChaosBox::DevilSquareMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int EyeCount = 0;
@@ -381,7 +381,7 @@ void CChaosBox::DevilSquareMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::PlusItemLevelMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::PlusItemLevelMix(LPOBJ lpObj, int type)
 {
 	int ChaosCount = 0;
 	int BlessCount = 0;
@@ -563,7 +563,7 @@ void CChaosBox::PlusItemLevelMix(LPOBJ lpObj, int type) // OK
 
 
 //Qoay Qoái Điểu
-void CChaosBox::DinorantMix(LPOBJ lpObj) // OK
+void CChaosBox::DinorantMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int UniriaCount = 0;
@@ -648,7 +648,7 @@ void CChaosBox::DinorantMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::FruitMix(LPOBJ lpObj) // OK
+void CChaosBox::FruitMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int CreationCount = 0;
@@ -724,7 +724,7 @@ void CChaosBox::FruitMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::Wing2Mix(LPOBJ lpObj, int type) // OK
+void CChaosBox::Wing2Mix(LPOBJ lpObj, int type)
 {
 	int ChaosCount = 0;
 	int FeatherCount = 0;
@@ -946,7 +946,7 @@ void CChaosBox::Wing2Mix(LPOBJ lpObj, int type) // OK
 	}
 }
 
-void CChaosBox::BloodCastleMix(LPOBJ lpObj) // OK
+void CChaosBox::BloodCastleMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int ScrollCount = 0;
@@ -1067,7 +1067,7 @@ void CChaosBox::BloodCastleMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::Wing1Mix(LPOBJ lpObj) // OK
+void CChaosBox::Wing1Mix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int ChaosItem = 0;
@@ -1222,7 +1222,7 @@ void CChaosBox::Wing1Mix(LPOBJ lpObj) // OK
 }
 
 //Qoay Linh Hồn Chiến Mã + Qụa Tinh
-void CChaosBox::PetMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::PetMix(LPOBJ lpObj, int type)
 {
 	int ChaosCount = 0;
 	int SoulOfDarkHorseCount = 0;
@@ -1318,7 +1318,7 @@ void CChaosBox::PetMix(LPOBJ lpObj, int type) // OK
 	}
 }
 
-void CChaosBox::SiegePotionMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::SiegePotionMix(LPOBJ lpObj, int type)
 {
 	int BlessCount = 0;
 	int SoulCount = 0;
@@ -1369,7 +1369,7 @@ void CChaosBox::SiegePotionMix(LPOBJ lpObj, int type) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[SiegePotionMix][Thành Công] Account:[%s] Name:[%s] - (Type: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, type, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::LifeStoneMix(LPOBJ lpObj) // OK
+void CChaosBox::LifeStoneMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int BlessCount = 0;
@@ -1430,7 +1430,7 @@ void CChaosBox::LifeStoneMix(LPOBJ lpObj) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[LifeStoneMix][Thành Công] Account:[%s] Name:[%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::SeniorMix(LPOBJ lpObj) // OK
+void CChaosBox::SeniorMix(LPOBJ lpObj)
 {
 	if (gCastleSiegeSync.CheckCastleOwnerMember(lpObj->Index) == 0 || lpObj->GuildStatus != 0x80)
 	{
@@ -1510,7 +1510,7 @@ void CChaosBox::SeniorMix(LPOBJ lpObj) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[SeniorMix][Thành Công] Account:[%s] Name:[%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::PieceOfHornMix(LPOBJ lpObj) // OK
+void CChaosBox::PieceOfHornMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int SplinterOfArmorCount = 0;
@@ -1574,7 +1574,7 @@ void CChaosBox::PieceOfHornMix(LPOBJ lpObj) // OK
 }
 
 //Qoay Sừng Gẫy
-void CChaosBox::BrokenHornMix(LPOBJ lpObj) // OK
+void CChaosBox::BrokenHornMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int ClawOfBeastCount = 0;
@@ -1639,7 +1639,7 @@ void CChaosBox::BrokenHornMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::HornOfFenrirMix(LPOBJ lpObj) // OK
+void CChaosBox::HornOfFenrirMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int BrokenHornCount = 0;
@@ -1722,7 +1722,7 @@ void CChaosBox::HornOfFenrirMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::HornOfFenrirUpgradeMix(LPOBJ lpObj) // OK
+void CChaosBox::HornOfFenrirUpgradeMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int HornOfFenrirCount = 0;
@@ -1836,7 +1836,7 @@ void CChaosBox::HornOfFenrirUpgradeMix(LPOBJ lpObj) // OK
 }
 
 //Qoay Sói Hoàng Kim
-void CChaosBox::HornOfFenrirGoldMix(LPOBJ lpObj) // OK
+void CChaosBox::HornOfFenrirGoldMix(LPOBJ lpObj)
 {
 	int FenrirThuong = 0;
 	int FenrirTC = 0;
@@ -1921,7 +1921,7 @@ void CChaosBox::HornOfFenrirGoldMix(LPOBJ lpObj) // OK
 
 
 
-void CChaosBox::ShieldPotionMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::ShieldPotionMix(LPOBJ lpObj, int type)
 {
 	int LargeHealingPotionCount = 0;
 	int SmallCompoundPotionCount = 0;
@@ -2011,7 +2011,7 @@ void CChaosBox::ShieldPotionMix(LPOBJ lpObj, int type) // OK
 	}
 }
 
-void CChaosBox::JewelOfHarmonyItemPurityMix(LPOBJ lpObj) // OK
+void CChaosBox::JewelOfHarmonyItemPurityMix(LPOBJ lpObj)
 {
 	int GemStoneCount = 0;
 
@@ -2056,7 +2056,7 @@ void CChaosBox::JewelOfHarmonyItemPurityMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::JewelOfHarmonyItemSmeltMix(LPOBJ lpObj) // OK
+void CChaosBox::JewelOfHarmonyItemSmeltMix(LPOBJ lpObj)
 {
 	int ItemCount = 0;
 	int ItemSlot = 0;
@@ -2110,7 +2110,7 @@ void CChaosBox::JewelOfHarmonyItemSmeltMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::JewelOfHarmonyItemRestoreMix(LPOBJ lpObj) // OK
+void CChaosBox::JewelOfHarmonyItemRestoreMix(LPOBJ lpObj)
 {
 	int ItemCount = 0;
 	int ItemSlot = 0;
@@ -2172,7 +2172,7 @@ void CChaosBox::JewelOfHarmonyItemRestoreMix(LPOBJ lpObj) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[JewelOfHarmonyItemRestoreMix][Thành Công] Account:[%s] Name:[%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::Item380Mix(LPOBJ lpObj) // OK
+void CChaosBox::Item380Mix(LPOBJ lpObj)
 {
 	int GuardianCount = 0;
 	int HarmonyCount = 0;
@@ -2268,7 +2268,7 @@ void CChaosBox::Item380Mix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::IllusionTempleMix(LPOBJ lpObj) // OK
+void CChaosBox::IllusionTempleMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int ScrollCount = 0;
@@ -2381,7 +2381,7 @@ void CChaosBox::IllusionTempleMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::FeatherOfCondorMix(LPOBJ lpObj) // OK
+void CChaosBox::FeatherOfCondorMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int CreationCount = 0;
@@ -2486,7 +2486,7 @@ void CChaosBox::FeatherOfCondorMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::Wing3Mix(LPOBJ lpObj) // OK
+void CChaosBox::Wing3Mix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int CreationCount = 0;
@@ -2661,7 +2661,7 @@ void CChaosBox::Wing3Mix(LPOBJ lpObj) // OK
 
 //----------------------------------------------------------------------------------
 #if(CUSTOM_MIX_WING_CUSTOM)
-void CChaosBox::WingCustomMix(LPOBJ lpObj) // OK
+void CChaosBox::WingCustomMix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -2837,7 +2837,7 @@ void CChaosBox::WingCustomMix(LPOBJ lpObj) // OK
 #endif
 //----------------------------------------------------------------------------------
 #if(CUSTOM_MIX_WING_SEASON13)
-void CChaosBox::WingSeason13Mix(LPOBJ lpObj) // OK
+void CChaosBox::WingSeason13Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -2986,7 +2986,7 @@ void CChaosBox::WingSeason13Mix(LPOBJ lpObj) // OK
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
 #if(CUSTOM_MIX_WING_SEASON8)
-void CChaosBox::WingSeason8Mix(LPOBJ lpObj) // OK
+void CChaosBox::WingSeason8Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3125,7 +3125,7 @@ void CChaosBox::WingSeason8Mix(LPOBJ lpObj) // OK
 //----------------------------------------------------------------------------------
 
 #if(CUSTOM_MIX_WING_VIP)
-void CChaosBox::WingVipMix(LPOBJ lpObj) // OK
+void CChaosBox::WingVipMix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3311,7 +3311,7 @@ void CChaosBox::WingVipMix(LPOBJ lpObj) // OK
 #endif
 //----------------------------------------------------------------------------------
 #if(CUSTOM_MIX_PET_CAP2)
-void CChaosBox::Muun2Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun2Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3439,7 +3439,7 @@ void CChaosBox::Muun2Mix(LPOBJ lpObj) // OK
 //
 #endif
 #if(CUSTOM_MIX_PET_CAP3)
-void CChaosBox::Muun3Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun3Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3573,7 +3573,7 @@ void CChaosBox::Muun3Mix(LPOBJ lpObj) // OK
 
 //
 #if(CUSTOM_MIX_PET_CAP4)
-void CChaosBox::Muun4Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun4Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3707,7 +3707,7 @@ void CChaosBox::Muun4Mix(LPOBJ lpObj) // OK
 #endif
 
 #if(CUSTOM_MIX_PET_CAP5)
-void CChaosBox::Muun5Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun5Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3834,7 +3834,7 @@ void CChaosBox::Muun5Mix(LPOBJ lpObj) // OK
 #endif
 
 #if(CUSTOM_MIX_PET_CAP6)
-void CChaosBox::Muun6Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun6Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -3963,7 +3963,7 @@ void CChaosBox::Muun6Mix(LPOBJ lpObj) // OK
 #endif
 
 #if(CUSTOM_MIX_PET_CAP7)
-void CChaosBox::Muun7Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun7Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -4089,7 +4089,7 @@ void CChaosBox::Muun7Mix(LPOBJ lpObj) // OK
 #endif
 
 #if(CUSTOM_MIX_PET_CAP8)
-void CChaosBox::Muun8Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun8Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -4215,7 +4215,7 @@ void CChaosBox::Muun8Mix(LPOBJ lpObj) // OK
 
 
 #if(CUSTOM_MIX_PET_CAP9)
-void CChaosBox::Muun9Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun9Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -4340,7 +4340,7 @@ void CChaosBox::Muun9Mix(LPOBJ lpObj) // OK
 #endif
 
 #if(CUSTOM_MIX_PET_CAP10)
-void CChaosBox::Muun10Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun10Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -4478,7 +4478,7 @@ void CChaosBox::Muun10Mix(LPOBJ lpObj) // OK
 
 
 #if(CUSTOM_MIX_PET_CAP11)
-void CChaosBox::Muun11Mix(LPOBJ lpObj) // OK
+void CChaosBox::Muun11Mix(LPOBJ lpObj)
 {
 	int ChaosPack30 = 0;
 	int CreationPack30 = 0;
@@ -4639,7 +4639,7 @@ void CChaosBox::Muun11Mix(LPOBJ lpObj) // OK
 #endif
 
 //CustomMix
-void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode) // OK
+void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode)
 {
 	CUSTOM_MIX* CustomMix = gCustomMix.GetCustomMix(HeadCode);
 
@@ -4858,7 +4858,7 @@ void CChaosBox::CustomItemMix(LPOBJ lpObj, int HeadCode) // OK
 }
 //=================================================================================================
 
-void CChaosBox::ChaosCardMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::ChaosCardMix(LPOBJ lpObj, int type)
 {
 	int ChaosCardCount = 0;
 	int ChaosCardGoldCount = 0;
@@ -4913,7 +4913,7 @@ void CChaosBox::ChaosCardMix(LPOBJ lpObj, int type) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[ChaosCardMix][Thành Công] Account:[%s] Name:[%s] - (Type: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, type, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::CherryBlossomMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::CherryBlossomMix(LPOBJ lpObj, int type)
 {
 	int WhiteCherryBlossomCount = 0;
 	int RedCherryBlossomCount = 0;
@@ -4962,7 +4962,7 @@ void CChaosBox::CherryBlossomMix(LPOBJ lpObj, int type) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[CherryBlossomMix][Thành Công] Account:[%s] Name:[%s] - (Type: %d, ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, type, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::SocketItemCreateSeedMix(LPOBJ lpObj) // OK
+void CChaosBox::SocketItemCreateSeedMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int CreationCount = 0;
@@ -5074,7 +5074,7 @@ void CChaosBox::SocketItemCreateSeedMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::SocketItemCreateSeedSphereMix(LPOBJ lpObj) // OK
+void CChaosBox::SocketItemCreateSeedSphereMix(LPOBJ lpObj)
 {
 	int ChaosCount = 0;
 	int CreationCount = 0;
@@ -5175,7 +5175,7 @@ void CChaosBox::SocketItemCreateSeedSphereMix(LPOBJ lpObj) // OK
 	}
 }
 
-void CChaosBox::SocketItemMountSeedSphereMix(LPOBJ lpObj, BYTE info) // OK
+void CChaosBox::SocketItemMountSeedSphereMix(LPOBJ lpObj, BYTE info)
 {
 	if (info >= MAX_SOCKET_ITEM_OPTION_TABLE)
 	{
@@ -5275,7 +5275,7 @@ void CChaosBox::SocketItemMountSeedSphereMix(LPOBJ lpObj, BYTE info) // OK
 	gLog.Output(LOG_CHAOS_MIX, "[SocketItemMountSeedSphereMix][Thành Công] Account:[%s] Name:[%s] - (ChaosSuccessRate: %d, ChaosMoney: %d)", lpObj->Account, lpObj->Name, lpObj->ChaosSuccessRate, lpObj->ChaosMoney);
 }
 
-void CChaosBox::SocketItemUnMountSeedSphereMix(LPOBJ lpObj, BYTE info) // OK
+void CChaosBox::SocketItemUnMountSeedSphereMix(LPOBJ lpObj, BYTE info)
 {
 	if (info >= MAX_SOCKET_ITEM_OPTION_TABLE)
 	{
@@ -5337,7 +5337,7 @@ void CChaosBox::SocketItemUnMountSeedSphereMix(LPOBJ lpObj, BYTE info) // OK
 	this->GCChaosMixSend(lpObj->Index, 1, &item);
 }
 
-void CChaosBox::ImperialGuardianMix(LPOBJ lpObj) // OK
+void CChaosBox::ImperialGuardianMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=501)
 
@@ -5412,7 +5412,7 @@ void CChaosBox::ImperialGuardianMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::ChestMix(LPOBJ lpObj) // OK
+void CChaosBox::ChestMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=501)
 
@@ -5459,7 +5459,7 @@ void CChaosBox::ChestMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::SummonScrollMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::SummonScrollMix(LPOBJ lpObj, int type)
 {
 #if(GAMESERVER_UPDATE>=801)
 
@@ -5557,7 +5557,7 @@ void CChaosBox::SummonScrollMix(LPOBJ lpObj, int type) // OK
 #endif
 }
 
-void CChaosBox::LuckyItemCreateMix(LPOBJ lpObj) // OK
+void CChaosBox::LuckyItemCreateMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -5682,7 +5682,7 @@ void CChaosBox::LuckyItemCreateMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::LuckyItemRefineMix(LPOBJ lpObj) // OK
+void CChaosBox::LuckyItemRefineMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -5740,7 +5740,7 @@ void CChaosBox::LuckyItemRefineMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
+void CChaosBox::MonsterWingMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -5893,7 +5893,7 @@ void CChaosBox::MonsterWingMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::SocketWeaponMix(LPOBJ lpObj) // OK
+void CChaosBox::SocketWeaponMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6082,7 +6082,7 @@ void CChaosBox::SocketWeaponMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::PentagramMithrilMix(LPOBJ lpObj) // OK
+void CChaosBox::PentagramMithrilMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6166,7 +6166,7 @@ void CChaosBox::PentagramMithrilMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::PentagramElixirMix(LPOBJ lpObj) // OK
+void CChaosBox::PentagramElixirMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6242,7 +6242,7 @@ void CChaosBox::PentagramElixirMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::PentagramJewelMix(LPOBJ lpObj) // OK
+void CChaosBox::PentagramJewelMix(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6351,7 +6351,7 @@ void CChaosBox::PentagramJewelMix(LPOBJ lpObj) // OK
 #endif
 }
 
-void CChaosBox::PentagramDecompositeMix(LPOBJ lpObj, int type) // OK
+void CChaosBox::PentagramDecompositeMix(LPOBJ lpObj, int type)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6457,7 +6457,7 @@ void CChaosBox::PentagramDecompositeMix(LPOBJ lpObj, int type) // OK
 #endif
 }
 
-void CChaosBox::PentagramJewelUpgradeLevelMix(LPOBJ lpObj, BYTE info) // OK
+void CChaosBox::PentagramJewelUpgradeLevelMix(LPOBJ lpObj, BYTE info)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6590,7 +6590,7 @@ void CChaosBox::PentagramJewelUpgradeLevelMix(LPOBJ lpObj, BYTE info) // OK
 #endif
 }
 
-void CChaosBox::PentagramJewelUpgradeRankMix(LPOBJ lpObj, BYTE info) // OK
+void CChaosBox::PentagramJewelUpgradeRankMix(LPOBJ lpObj, BYTE info)
 {
 #if(GAMESERVER_UPDATE>=701)
 
@@ -6709,7 +6709,7 @@ void CChaosBox::PentagramJewelUpgradeRankMix(LPOBJ lpObj, BYTE info) // OK
 #endif
 }
 
-void CChaosBox::CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg, int aIndex) // OK
+void CChaosBox::CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -6986,7 +6986,7 @@ void CChaosBox::CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CChaosBox::CGChaosMixCloseRecv(int aIndex) // OK
+void CChaosBox::CGChaosMixCloseRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -7021,7 +7021,7 @@ void CChaosBox::CGChaosMixCloseRecv(int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.size);
 }
 
-void CChaosBox::GCChaosBoxSend(LPOBJ lpObj, BYTE type) // OK
+void CChaosBox::GCChaosBoxSend(LPOBJ lpObj, BYTE type)
 {
 	if ((type == 0 && (lpObj->Interface.type != INTERFACE_CHAOS_BOX || lpObj->Interface.state == 1)) || (type != 0 && (lpObj->Interface.type != INTERFACE_TRAINER || lpObj->Interface.state == 1)))
 	{
@@ -7067,7 +7067,7 @@ void CChaosBox::GCChaosBoxSend(LPOBJ lpObj, BYTE type) // OK
 	DataSend(lpObj->Index, send, size);
 }
 
-void CChaosBox::GCChaosMixSend(int aIndex, BYTE result, CItem* lpItem) // OK
+void CChaosBox::GCChaosMixSend(int aIndex, BYTE result, CItem* lpItem)
 {
 	PMSG_CHAOS_MIX_SEND pMsg;
 

@@ -9,12 +9,12 @@
 class CCrywolfShield
 {
 public:
-	CCrywolfShield() // OK
+	CCrywolfShield()
 	{
 		this->Reset();
 	}
 
-	void Reset() // OK
+	void Reset()
 	{
 		this->m_PriestNumber = 0;
 		this->m_ShieldHP = 0;
@@ -22,7 +22,7 @@ public:
 		this->m_ShieldState = 0;
 	}
 
-	int GetHPPercentage() // OK
+	int GetHPPercentage()
 	{
 		return ((this->m_ShieldMaxHP==0)?0:((this->m_ShieldHP*100)/this->m_ShieldMaxHP));
 	}

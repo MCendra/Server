@@ -17,17 +17,17 @@ CCrywolfAltar gCrywolfAltar;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCrywolfAltar::CCrywolfAltar() // OK
+CCrywolfAltar::CCrywolfAltar()
 {
 
 }
 
-CCrywolfAltar::~CCrywolfAltar() // OK
+CCrywolfAltar::~CCrywolfAltar()
 {
 
 }
 
-void CCrywolfAltar::CrywolfAltarAct(int aIndex) // OK
+void CCrywolfAltar::CrywolfAltarAct(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -69,7 +69,7 @@ void CCrywolfAltar::CrywolfAltarAct(int aIndex) // OK
 	this->SetAltarValidContract(aIndex,lpObj->Class);
 }
 
-void CCrywolfAltar::ResetAllAltar() // OK
+void CCrywolfAltar::ResetAllAltar()
 {
 	this->ResetAltar(205);
 	this->ResetAltar(206);
@@ -78,7 +78,7 @@ void CCrywolfAltar::ResetAllAltar() // OK
 	this->ResetAltar(209);
 }
 
-void CCrywolfAltar::ResetAltar(int Class) // OK
+void CCrywolfAltar::ResetAltar(int Class)
 {
 	int AltarNumber = this->GetAltarNumber(Class);
 
@@ -94,7 +94,7 @@ void CCrywolfAltar::ResetAltar(int Class) // OK
 	lpAltarInfo->Reset();
 }
 
-void CCrywolfAltar::ResetAltarUserIndex(int AltarObjIndex,int Class) // OK
+void CCrywolfAltar::ResetAltarUserIndex(int AltarObjIndex,int Class)
 {
 	int AltarNumber = this->GetAltarNumber(Class);
 
@@ -123,7 +123,7 @@ void CCrywolfAltar::ResetAltarUserIndex(int AltarObjIndex,int Class) // OK
 	lpAltarInfo->m_LastValidContractTime = GetTickCount();
 }
 
-void CCrywolfAltar::SetAllAltarObjectIndex() // OK
+void CCrywolfAltar::SetAllAltarObjectIndex()
 {
 	for(int n=0;n < MAX_OBJECT_MONSTER;n++)
 	{
@@ -134,7 +134,7 @@ void CCrywolfAltar::SetAllAltarObjectIndex() // OK
 	}
 }
 
-void CCrywolfAltar::SetAllAltarViewState(int AltarState) // OK
+void CCrywolfAltar::SetAllAltarViewState(int AltarState)
 {
 	this->SetAltarViewState(205,AltarState);
 	this->SetAltarViewState(206,AltarState);
@@ -143,7 +143,7 @@ void CCrywolfAltar::SetAllAltarViewState(int AltarState) // OK
 	this->SetAltarViewState(209,AltarState);
 }
 
-void CCrywolfAltar::SetAltarObjIndex(int Class,int ObjIndex) // OK
+void CCrywolfAltar::SetAltarObjIndex(int Class,int ObjIndex)
 {
 	int AltarNumber = this->GetAltarNumber(Class);
 
@@ -154,7 +154,7 @@ void CCrywolfAltar::SetAltarObjIndex(int Class,int ObjIndex) // OK
 	lpAltarInfo->SetAltarIndex(ObjIndex);
 }
 
-bool CCrywolfAltar::SetAltarUserIndex(int AltarObjIndex,int Class,int UserIndex) // OK
+bool CCrywolfAltar::SetAltarUserIndex(int AltarObjIndex,int Class,int UserIndex)
 {
 	int AltarNumber = this->GetAltarNumber(Class);
 
@@ -204,7 +204,7 @@ bool CCrywolfAltar::SetAltarUserIndex(int AltarObjIndex,int Class,int UserIndex)
 	return 1;
 }
 
-void CCrywolfAltar::SetAltarViewState(int Class,int AltarState) // OK
+void CCrywolfAltar::SetAltarViewState(int Class,int AltarState)
 {
 	int AltarNumber = this->GetAltarNumber(Class);
 
@@ -218,7 +218,7 @@ void CCrywolfAltar::SetAltarViewState(int Class,int AltarState) // OK
 	gEffectManager.AddEffect(&gObj[lpAltarInfo->m_AltarIndex],0,EFFECT_CRYWOLF_STATE1,0,0,0,0,0);
 }
 
-void CCrywolfAltar::SetAltarValidContract(int AltarObjIndex,int Class) // OK
+void CCrywolfAltar::SetAltarValidContract(int AltarObjIndex,int Class)
 {
 	int AltarNumber = this->GetAltarNumber(Class);
 
@@ -243,7 +243,7 @@ void CCrywolfAltar::SetAltarValidContract(int AltarObjIndex,int Class) // OK
 	}
 }
 
-int CCrywolfAltar::GetAltarState(int Class) // OK
+int CCrywolfAltar::GetAltarState(int Class)
 {
 	if(Class < 205 || Class > 209)
 	{
@@ -253,7 +253,7 @@ int CCrywolfAltar::GetAltarState(int Class) // OK
 	return this->m_AltarInfo[(Class-205)].GetAltarState();
 }
 
-int CCrywolfAltar::GetAltarNumber(int Class) // OK
+int CCrywolfAltar::GetAltarNumber(int Class)
 {
 	if(Class < 205 || Class > 209)
 	{
@@ -263,7 +263,7 @@ int CCrywolfAltar::GetAltarNumber(int Class) // OK
 	return (Class-205);
 }
 
-int CCrywolfAltar::GetAltarUserIndex(int Class) // OK
+int CCrywolfAltar::GetAltarUserIndex(int Class)
 {
 	if(Class < 205 || Class > 209)
 	{
@@ -273,7 +273,7 @@ int CCrywolfAltar::GetAltarUserIndex(int Class) // OK
 	return this->m_AltarInfo[(Class-205)].m_UserIndex;
 }
 
-int CCrywolfAltar::GetAltarRemainContractCount(int Class) // OK
+int CCrywolfAltar::GetAltarRemainContractCount(int Class)
 {
 	if(Class < 205 || Class > 209)
 	{
@@ -283,7 +283,7 @@ int CCrywolfAltar::GetAltarRemainContractCount(int Class) // OK
 	return this->m_AltarInfo[(Class-205)].GetRemainContractCount();
 }
 
-int CCrywolfAltar::GetPriestHPSum() // OK
+int CCrywolfAltar::GetPriestHPSum()
 {
 	int PriestHPSum = 0;
 
@@ -307,7 +307,7 @@ int CCrywolfAltar::GetPriestHPSum() // OK
 	return PriestHPSum;
 }
 
-int CCrywolfAltar::GetPriestMaxHPSum() // OK
+int CCrywolfAltar::GetPriestMaxHPSum()
 {
 	int PriestMaxHPSum = 0;
 
@@ -331,7 +331,7 @@ int CCrywolfAltar::GetPriestMaxHPSum() // OK
 	return PriestMaxHPSum;
 }
 
-int CCrywolfAltar::GetContractedAltarCount() // OK
+int CCrywolfAltar::GetContractedAltarCount()
 {
 	int ContractedAltarCount = 0;
 

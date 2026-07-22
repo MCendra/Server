@@ -17,8 +17,8 @@ struct QUEUE_INFO
 class CQueue
 {
 public:
-	CQueue();
-	virtual ~CQueue();
+	CQueue() = default;
+	~CQueue() = default;
 	void ClearQueue();
 	size_t GetQueueSize();
 	bool AddToQueue(const QUEUE_INFO* lpInfo);

@@ -18,17 +18,17 @@ CHelper gHelper;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CHelper::CHelper() // OK
+CHelper::CHelper()
 {
 
 }
 
-CHelper::~CHelper() // OK
+CHelper::~CHelper()
 {
 
 }
 
-void CHelper::MainProc() // OK
+void CHelper::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -85,7 +85,7 @@ void CHelper::MainProc() // OK
 	#endif
 }
 
-void CHelper::DisableHelper(LPOBJ lpObj) // OK
+void CHelper::DisableHelper(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -103,7 +103,7 @@ void CHelper::DisableHelper(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CHelper::CGHelperDataRecv(PMSG_HELPER_DATA_RECV* lpMsg,int aIndex) // OK
+void CHelper::CGHelperDataRecv(PMSG_HELPER_DATA_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -119,7 +119,7 @@ void CHelper::CGHelperDataRecv(PMSG_HELPER_DATA_RECV* lpMsg,int aIndex) // OK
 	#endif
 }
 
-void CHelper::CGHelperStartRecv(PMSG_HELPER_START_RECV* lpMsg,int aIndex) // OK
+void CHelper::CGHelperStartRecv(PMSG_HELPER_START_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -176,7 +176,7 @@ void CHelper::CGHelperStartRecv(PMSG_HELPER_START_RECV* lpMsg,int aIndex) // OK
 	#endif
 }
 
-void CHelper::GCHelperStartSend(int aIndex,int time,int money,int result) // OK
+void CHelper::GCHelperStartSend(int aIndex,int time,int money,int result)
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -195,7 +195,7 @@ void CHelper::GCHelperStartSend(int aIndex,int time,int money,int result) // OK
 	#endif
 }
 
-void CHelper::DGHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg) // OK
+void CHelper::DGHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -219,7 +219,7 @@ void CHelper::DGHelperDataRecv(SDHP_HELPER_DATA_RECV* lpMsg) // OK
 	#endif
 }
 
-void CHelper::GDHelperDataSend(int aIndex) // OK
+void CHelper::GDHelperDataSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=603)
 
@@ -243,7 +243,7 @@ void CHelper::GDHelperDataSend(int aIndex) // OK
 	#endif
 }
 
-void CHelper::GDHelperDataSaveSend(int aIndex,BYTE* data) // OK
+void CHelper::GDHelperDataSaveSend(int aIndex,BYTE* data)
 {
 	#if(GAMESERVER_UPDATE>=603)
 

@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuStateInfo::CKanturuStateInfo() // OK
+CKanturuStateInfo::CKanturuStateInfo()
 {
 	this->ResetTimeInfo();
 }
 
-CKanturuStateInfo::~CKanturuStateInfo() // OK
+CKanturuStateInfo::~CKanturuStateInfo()
 {
 
 }
 
-void CKanturuStateInfo::ResetTimeInfo() // OK
+void CKanturuStateInfo::ResetTimeInfo()
 {
 	this->SetStateInfo(0);
 
@@ -28,57 +28,57 @@ void CKanturuStateInfo::ResetTimeInfo() // OK
 	this->SetValue(0);
 }
 
-void CKanturuStateInfo::SetStateInfo(int state) // OK
+void CKanturuStateInfo::SetStateInfo(int state)
 {
 	this->m_State = state;
 }
 
-void CKanturuStateInfo::SetCondition(int condition) // OK
+void CKanturuStateInfo::SetCondition(int condition)
 {
 	this->m_Condition = condition;
 }
 
-void CKanturuStateInfo::SetValue(int value) // OK
+void CKanturuStateInfo::SetValue(int value)
 {
 	this->m_Value = value;
 }
 
-void CKanturuStateInfo::SetAppliedTime() // OK
+void CKanturuStateInfo::SetAppliedTime()
 {
 	this->m_AppliedTickCount = GetTickCount();
 }
 
-void CKanturuStateInfo::SetConditionAppliedTime() // OK
+void CKanturuStateInfo::SetConditionAppliedTime()
 {
 	this->m_AppliedTickCount = ((this->GetCondition()==0)?this->m_AppliedTickCount:GetTickCount());
 }
 
-int CKanturuStateInfo::GetCondition() // OK
+int CKanturuStateInfo::GetCondition()
 {
 	return this->m_Condition;
 }
 
-int CKanturuStateInfo::GetValue() // OK
+int CKanturuStateInfo::GetValue()
 {
 	return this->m_Value;
 }
 
-int CKanturuStateInfo::GetAppliedTime() // OK
+int CKanturuStateInfo::GetAppliedTime()
 {
 	return this->m_AppliedTickCount;
 }
 
-int CKanturuStateInfo::GetElapsedTime() // OK
+int CKanturuStateInfo::GetElapsedTime()
 {
 	return (GetTickCount()-this->GetAppliedTime());
 }
 
-int CKanturuStateInfo::GetRemainTime() // OK
+int CKanturuStateInfo::GetRemainTime()
 {
 	return ((this->GetCondition()==0)?0:(((this->m_Value-this->GetElapsedTime())<=0)?0:((this->m_Value-this->GetElapsedTime())/1000)));
 }
 
-int CKanturuStateInfo::IsTimeOut() // OK
+int CKanturuStateInfo::IsTimeOut()
 {
 	return ((this->GetRemainTime()>0)?0:1);
 }

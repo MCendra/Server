@@ -9,12 +9,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIState::CMonsterAIState() // OK
+CMonsterAIState::CMonsterAIState()
 {
 	this->Reset();
 }
 
-void CMonsterAIState::Reset() // OK
+void CMonsterAIState::Reset()
 {
 	this->m_Priority = -1;
 	this->m_CurrentState = -1;

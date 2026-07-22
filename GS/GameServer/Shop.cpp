@@ -16,17 +16,17 @@ CShop gShop;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CShop::CShop() // OK
+CShop::CShop()
 {
 	this->Init();
 }
 
-CShop::~CShop() // OK
+CShop::~CShop()
 {
 
 }
 
-void CShop::Init() // OK
+void CShop::Init()
 {
 	for(int n=0;n < SHOP_SIZE;n++)
 	{
@@ -35,7 +35,7 @@ void CShop::Init() // OK
 	}
 }
 
-void CShop::Load(char* path) // OK
+void CShop::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -112,7 +112,7 @@ void CShop::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CShop::ShopItemSet(int slot,BYTE type) // OK
+void CShop::ShopItemSet(int slot,BYTE type)
 {
 	if(SHOP_INVENTORY_RANGE(slot) == 0)
 	{
@@ -143,7 +143,7 @@ void CShop::ShopItemSet(int slot,BYTE type) // OK
 	}
 }
 
-BYTE CShop::ShopRectCheck(int x,int y,int width,int height) // OK
+BYTE CShop::ShopRectCheck(int x,int y,int width,int height)
 {
 	if((x+width) > 8 || (y+height) > 15)
 	{
@@ -164,7 +164,7 @@ BYTE CShop::ShopRectCheck(int x,int y,int width,int height) // OK
 	return ((y*8)+x);
 }
 
-void CShop::InsertItem(int ItemIndex,int ItemLevel,int ItemDurability,int ItemOption1,int ItemOption2,int ItemOption3,int ItemNewOption,int ItemValue) // OK
+void CShop::InsertItem(int ItemIndex,int ItemLevel,int ItemDurability,int ItemOption1,int ItemOption2,int ItemOption3,int ItemNewOption,int ItemValue)
 {
 	ITEM_INFO ItemInfo;
 
@@ -195,7 +195,7 @@ void CShop::InsertItem(int ItemIndex,int ItemLevel,int ItemDurability,int ItemOp
 	}
 }
 
-void CShop::InsertItemNew(int ItemIndex,int ItemLevel,int ItemDurability,int ItemOption1,int ItemOption2,int ItemOption3,int ItemNewOption,int Anc, int JOH, int OpEx, int Socket1, int Socket2, int Socket3, int Socket4, int Socket5, int ItemValue) // OK
+void CShop::InsertItemNew(int ItemIndex,int ItemLevel,int ItemDurability,int ItemOption1,int ItemOption2,int ItemOption3,int ItemNewOption,int Anc, int JOH, int OpEx, int Socket1, int Socket2, int Socket3, int Socket4, int Socket5, int ItemValue)
 {
 	ITEM_INFO ItemInfo;
 
@@ -247,7 +247,7 @@ void CShop::InsertItemNew(int ItemIndex,int ItemLevel,int ItemDurability,int Ite
 	}
 }
 
-bool CShop::GetItem(CItem* lpItem,int slot) // OK
+bool CShop::GetItem(CItem* lpItem,int slot)
 {
 	if(SHOP_INVENTORY_RANGE(slot) != 0)
 	{
@@ -261,7 +261,7 @@ bool CShop::GetItem(CItem* lpItem,int slot) // OK
 	return 0;
 }
 
-long CShop::GetItemCount() // OK
+long CShop::GetItemCount()
 {
 	int count = 0;
 
@@ -276,7 +276,7 @@ long CShop::GetItemCount() // OK
 	return count;
 }
 
-bool CShop::GCShopItemListSend(int aIndex) // OK
+bool CShop::GCShopItemListSend(int aIndex)
 {
 	BYTE send[2048];
 

@@ -72,7 +72,7 @@ struct BOSSGUILD_START_TIME
 
 struct BOSSGUILD_GUILD
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Number = -1;
 		this->Owner = 0; //Chiem tru
@@ -85,7 +85,7 @@ struct BOSSGUILD_GUILD
 
 struct BOSSGUILD_CHAR
 {
-	void Reset() // OK
+	void Reset()
 	{
 		memset(this->Name, 0, sizeof(this->Name));
 		this->Index = -1;

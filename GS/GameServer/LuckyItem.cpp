@@ -18,17 +18,17 @@ CLuckyItem gLuckyItem;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CLuckyItem::CLuckyItem() // OK
+CLuckyItem::CLuckyItem()
 {
 
 }
 
-CLuckyItem::~CLuckyItem() // OK
+CLuckyItem::~CLuckyItem()
 {
 
 }
 
-void CLuckyItem::Load(char* path) // OK
+void CLuckyItem::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -98,7 +98,7 @@ void CLuckyItem::Load(char* path) // OK
 	#endif
 }
 
-bool CLuckyItem::IsLuckyItem(CItem* lpItem) // OK
+bool CLuckyItem::IsLuckyItem(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -120,7 +120,7 @@ bool CLuckyItem::IsLuckyItem(CItem* lpItem) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemIndex(LPOBJ lpObj,int section,int group,WORD* index) // OK
+bool CLuckyItem::GetLuckyItemIndex(LPOBJ lpObj,int section,int group,WORD* index)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -142,7 +142,7 @@ bool CLuckyItem::GetLuckyItemIndex(LPOBJ lpObj,int section,int group,WORD* index
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemDecay(int index,int* decay) // OK
+bool CLuckyItem::GetLuckyItemDecay(int index,int* decay)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -165,7 +165,7 @@ bool CLuckyItem::GetLuckyItemDecay(int index,int* decay) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption0(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption0(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -187,7 +187,7 @@ bool CLuckyItem::GetLuckyItemOption0(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption1(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption1(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -209,7 +209,7 @@ bool CLuckyItem::GetLuckyItemOption1(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption2(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption2(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -231,7 +231,7 @@ bool CLuckyItem::GetLuckyItemOption2(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption3(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption3(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -253,7 +253,7 @@ bool CLuckyItem::GetLuckyItemOption3(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption4(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption4(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -275,7 +275,7 @@ bool CLuckyItem::GetLuckyItemOption4(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption5(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption5(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -297,7 +297,7 @@ bool CLuckyItem::GetLuckyItemOption5(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::GetLuckyItemOption6(int index,BYTE* option) // OK
+bool CLuckyItem::GetLuckyItemOption6(int index,BYTE* option)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -319,7 +319,7 @@ bool CLuckyItem::GetLuckyItemOption6(int index,BYTE* option) // OK
 	#endif
 }
 
-bool CLuckyItem::CharacterUseJewelOfExtension(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CLuckyItem::CharacterUseJewelOfExtension(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -369,7 +369,7 @@ bool CLuckyItem::CharacterUseJewelOfExtension(LPOBJ lpObj,int SourceSlot,int Tar
 	#endif
 }
 
-bool CLuckyItem::CharacterUseJewelOfElevation(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CLuckyItem::CharacterUseJewelOfElevation(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -382,7 +382,7 @@ bool CLuckyItem::CharacterUseJewelOfElevation(LPOBJ lpObj,int SourceSlot,int Tar
 	#endif
 }
 
-void CLuckyItem::DGLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg) // OK
+void CLuckyItem::DGLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -425,7 +425,7 @@ void CLuckyItem::DGLuckyItemRecv(SDHP_LUCKY_ITEM_RECV* lpMsg) // OK
 	#endif
 }
 
-void CLuckyItem::GDLuckyItemSend(int aIndex) // OK
+void CLuckyItem::GDLuckyItemSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -487,7 +487,7 @@ void CLuckyItem::GDLuckyItemSend(int aIndex) // OK
 	#endif
 }
 
-void CLuckyItem::GDLuckyItemSaveSend(int aIndex) // OK
+void CLuckyItem::GDLuckyItemSaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=602)
 

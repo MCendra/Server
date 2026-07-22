@@ -16,17 +16,17 @@ CQuestReward gQuestReward;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQuestReward::CQuestReward() // OK
+CQuestReward::CQuestReward()
 {
 	this->m_count = 0;
 }
 
-CQuestReward::~CQuestReward() // OK
+CQuestReward::~CQuestReward()
 {
 
 }
 
-void CQuestReward::Load(char* path) // OK
+void CQuestReward::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -98,7 +98,7 @@ void CQuestReward::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CQuestReward::SetInfo(QUEST_REWARD_INFO info) // OK
+void CQuestReward::SetInfo(QUEST_REWARD_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_QUEST_REWARD)
 	{
@@ -108,7 +108,7 @@ void CQuestReward::SetInfo(QUEST_REWARD_INFO info) // OK
 	this->m_QuestObjectiveInfo[this->m_count++] = info;
 }
 
-QUEST_REWARD_INFO* CQuestReward::GetInfo(int index) // OK
+QUEST_REWARD_INFO* CQuestReward::GetInfo(int index)
 {
 	if(index < 0 || index >= this->m_count)
 	{
@@ -118,7 +118,7 @@ QUEST_REWARD_INFO* CQuestReward::GetInfo(int index) // OK
 	return &this->m_QuestObjectiveInfo[index];
 }
 
-bool CQuestReward::CheckQuestRewardRequisite(LPOBJ lpObj,QUEST_REWARD_INFO* lpInfo) // OK
+bool CQuestReward::CheckQuestRewardRequisite(LPOBJ lpObj,QUEST_REWARD_INFO* lpInfo)
 {
 	if(lpInfo->RequireIndex != -1 && gQuest.CheckQuestListState(lpObj,lpInfo->RequireIndex,lpInfo->RequireState) == 0)
 	{
@@ -133,7 +133,7 @@ bool CQuestReward::CheckQuestRewardRequisite(LPOBJ lpObj,QUEST_REWARD_INFO* lpIn
 	return 1;
 }
 
-void CQuestReward::InsertQuestReward(LPOBJ lpObj,int QuestIndex) // OK
+void CQuestReward::InsertQuestReward(LPOBJ lpObj,int QuestIndex)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -236,7 +236,7 @@ void CQuestReward::InsertQuestReward(LPOBJ lpObj,int QuestIndex) // OK
 	}
 }
 
-long CQuestReward::GetQuestRewardPoint(LPOBJ lpObj,int QuestIndex) // OK
+long CQuestReward::GetQuestRewardPoint(LPOBJ lpObj,int QuestIndex)
 {
 	long point = 0;
 

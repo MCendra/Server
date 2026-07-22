@@ -15,17 +15,17 @@ CShopManager gShopManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CShopManager::CShopManager() // OK
+CShopManager::CShopManager()
 {
 	this->m_ShopManagerInfo.clear();
 }
 
-CShopManager::~CShopManager() // OK
+CShopManager::~CShopManager()
 {
 
 }
 
-void CShopManager::Load(char* path) // OK
+void CShopManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -81,7 +81,7 @@ void CShopManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CShopManager::LoadShop() // OK
+void CShopManager::LoadShop()
 {
 	std::map<int,int> LoadShop;
 
@@ -128,7 +128,7 @@ void CShopManager::LoadShop() // OK
 	while(FindNextFile(file,&data) != 0);
 }
 
-void CShopManager::ReloadShopInterface() // OK
+void CShopManager::ReloadShopInterface()
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -154,7 +154,7 @@ void CShopManager::ReloadShopInterface() // OK
 	}
 }
 
-long CShopManager::GetShopNumber(int MonsterClass,int Map,int X,int Y) // OK
+long CShopManager::GetShopNumber(int MonsterClass,int Map,int X,int Y)
 {
 	for(std::map<int,SHOP_MANAGER_INFO>::iterator it=this->m_ShopManagerInfo.begin();it != this->m_ShopManagerInfo.end();it++)
 	{
@@ -176,7 +176,7 @@ long CShopManager::GetShopNumber(int MonsterClass,int Map,int X,int Y) // OK
 	return -1;
 }
 
-bool CShopManager::GetItemByIndex(int index,CItem* lpItem,int slot) // OK
+bool CShopManager::GetItemByIndex(int index,CItem* lpItem,int slot)
 {
 	std::map<int,SHOP_MANAGER_INFO>::iterator it = this->m_ShopManagerInfo.find(index);
 
@@ -190,7 +190,7 @@ bool CShopManager::GetItemByIndex(int index,CItem* lpItem,int slot) // OK
 	}
 }
 
-bool CShopManager::GetItemByMonsterClass(int MonsterClass,CItem* lpItem,int slot) // OK
+bool CShopManager::GetItemByMonsterClass(int MonsterClass,CItem* lpItem,int slot)
 {
 	for(std::map<int,SHOP_MANAGER_INFO>::iterator it=this->m_ShopManagerInfo.begin();it != this->m_ShopManagerInfo.end();it++)
 	{
@@ -203,7 +203,7 @@ bool CShopManager::GetItemByMonsterClass(int MonsterClass,CItem* lpItem,int slot
 	return 0;
 }
 
-long CShopManager::GetItemCountByIndex(int index) // OK
+long CShopManager::GetItemCountByIndex(int index)
 {
 	std::map<int,SHOP_MANAGER_INFO>::iterator it = this->m_ShopManagerInfo.find(index);
 
@@ -217,7 +217,7 @@ long CShopManager::GetItemCountByIndex(int index) // OK
 	}
 }
 
-long CShopManager::GetItemCountByMonsterClass(int MonsterClass) // OK
+long CShopManager::GetItemCountByMonsterClass(int MonsterClass)
 {
 	for(std::map<int,SHOP_MANAGER_INFO>::iterator it=this->m_ShopManagerInfo.begin();it != this->m_ShopManagerInfo.end();it++)
 	{
@@ -230,7 +230,7 @@ long CShopManager::GetItemCountByMonsterClass(int MonsterClass) // OK
 	return 0;
 }
 
-bool CShopManager::GCShopItemListSendByIndex(int index,int aIndex) // OK
+bool CShopManager::GCShopItemListSendByIndex(int index,int aIndex)
 {
 	std::map<int,SHOP_MANAGER_INFO>::iterator it = this->m_ShopManagerInfo.find(index);
 
@@ -244,7 +244,7 @@ bool CShopManager::GCShopItemListSendByIndex(int index,int aIndex) // OK
 	}
 }
 
-bool CShopManager::GCShopItemListSendByMonsterClass(int MonsterClass,int Map,int X,int Y,int aIndex) // OK
+bool CShopManager::GCShopItemListSendByMonsterClass(int MonsterClass,int Map,int X,int Y,int aIndex)
 {
 	for(std::map<int,SHOP_MANAGER_INFO>::iterator it=this->m_ShopManagerInfo.begin();it != this->m_ShopManagerInfo.end();it++)
 	{

@@ -14,7 +14,7 @@ CMapServerManager gMapServerManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMapServerManager::CMapServerManager() // OK
+CMapServerManager::CMapServerManager()
 {
 	this->m_MapDataLoadOk=FALSE;
 	this->m_MapServerData = NULL;
@@ -22,7 +22,7 @@ CMapServerManager::CMapServerManager() // OK
 	InitializeCriticalSection(&this->m_critical);
 }
 
-CMapServerManager::~CMapServerManager() // OK
+CMapServerManager::~CMapServerManager()
 {
 	DeleteCriticalSection(&this->m_critical);
 }
@@ -151,7 +151,7 @@ void CMapServerManager::Load(char* path)
 					lpMapSvrData->m_used = TRUE;
 					lpMapSvrData->m_ServerCode = sSVR_CODE;
 					lpMapSvrData->m_MapServerGroup = (BYTE)sMAPSVR_GROUP;
-					lpMapSvrData->m_port = wPortNum;
+					lpMapSvrData->m_Port = wPortNum;
 					memcpy(lpMapSvrData->m_IpAddr, szIpAddr, 16);
 					lpMapSvrData->m_IpAddr[15] = 0;
 					
@@ -303,7 +303,7 @@ void CMapServerManager::Load(char* path)
 	delete lpMemScript;
 }
 
-int CMapServerManager::GetMapServerGroup() // OK
+int CMapServerManager::GetMapServerGroup()
 {
 	if(this->m_MapServerData == 0)
 	{
@@ -313,7 +313,7 @@ int CMapServerManager::GetMapServerGroup() // OK
 	return this->m_MapServerData->m_MapServerGroup;
 }
 
-bool CMapServerManager::GetMapServerData(WORD ServerCode,char* IpAddress,WORD* ServerPort) // OK
+bool CMapServerManager::GetMapServerData(WORD ServerCode,char* IpAddress,WORD* ServerPort)
 {
 	if ( !IpAddress || !ServerPort )
 		return FALSE;
@@ -335,12 +335,12 @@ bool CMapServerManager::GetMapServerData(WORD ServerCode,char* IpAddress,WORD* S
 		return FALSE;
 
 	strcpy_s(IpAddress, sizeof(lpMapSvrData->m_IpAddr), lpMapSvrData->m_IpAddr);
-	(*ServerPort) = lpMapSvrData->m_port;
+	(*ServerPort) = lpMapSvrData->m_Port;
 
 	return TRUE;
 }
 
-bool CMapServerManager::CheckMapServer(int map) // OK
+bool CMapServerManager::CheckMapServer(int map)
 {
 	if(MAP_RANGE(map) == 0)
 	{
@@ -365,7 +365,7 @@ bool CMapServerManager::CheckMapServer(int map) // OK
 	return 1;
 }
 
-short CMapServerManager::CheckMapServerMove(int aIndex,int map,short ServerCode) // OK
+short CMapServerManager::CheckMapServerMove(int aIndex,int map,short ServerCode)
 {
 	if ( this->m_MapDataLoadOk == FALSE )
 		return (short)gServerInfo.m_ServerCode;

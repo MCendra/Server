@@ -19,7 +19,7 @@ CCustomEventDrop gCustomEventDrop;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomEventDrop::CCustomEventDrop() // OK
+CCustomEventDrop::CCustomEventDrop()
 {
 	for(int n=0;n < MAX_CUSTOM_EVENT_DROP;n++)
 	{
@@ -35,12 +35,12 @@ CCustomEventDrop::CCustomEventDrop() // OK
 	}
 }
 
-CCustomEventDrop::~CCustomEventDrop() // OK
+CCustomEventDrop::~CCustomEventDrop()
 {
 
 }
 
-void CCustomEventDrop::Init() // OK
+void CCustomEventDrop::Init()
 {
 	for(int n=0;n < MAX_CUSTOM_EVENT_DROP;n++)
 	{
@@ -55,7 +55,7 @@ void CCustomEventDrop::Init() // OK
 	}
 }
 
-void CCustomEventDrop::ReadCustomEventDropInfo(char* section,char* path) // OK
+void CCustomEventDrop::ReadCustomEventDropInfo(char* section,char* path)
 {
 	this->m_CustomEventDropSwitch = GetPrivateProfileInt(section,"CustomEventDropSwitch",0,path);
 
@@ -66,7 +66,7 @@ void CCustomEventDrop::ReadCustomEventDropInfo(char* section,char* path) // OK
 	GetPrivateProfileString(section,"CustomEventDropText3","",this->m_CustomEventDropText3,sizeof(this->m_CustomEventDropText3),path);
 }
 
-void CCustomEventDrop::Load(char* path) // OK
+void CCustomEventDrop::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -190,7 +190,7 @@ void CCustomEventDrop::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomEventDrop::MainProc() // OK
+void CCustomEventDrop::MainProc()
 {
 	for(int n=0;n < MAX_CUSTOM_EVENT_DROP;n++)
 	{
@@ -243,12 +243,12 @@ void CCustomEventDrop::MainProc() // OK
 	}
 }
 
-void CCustomEventDrop::ProcState_BLANK(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::ProcState_BLANK(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 
 }
 
-void CCustomEventDrop::ProcState_EMPTY(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::ProcState_EMPTY(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 	if(lpInfo->RemainTime > 0 && lpInfo->RemainTime <= (lpInfo->RuleInfo.AlarmTime*60))
 	{
@@ -267,7 +267,7 @@ void CCustomEventDrop::ProcState_EMPTY(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomEventDrop::ProcState_START(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::ProcState_START(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 	for(std::vector<CUSTOM_EVENT_DROP_ITEM_INFO>::iterator it=lpInfo->RuleInfo.DropItem.begin();it != lpInfo->RuleInfo.DropItem.end();it++)
 	{
@@ -300,7 +300,7 @@ void CCustomEventDrop::ProcState_START(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomEventDrop::SetState(CUSTOM_EVENT_DROP_INFO* lpInfo,int state) // OK
+void CCustomEventDrop::SetState(CUSTOM_EVENT_DROP_INFO* lpInfo,int state)
 {
 	switch((lpInfo->State=state))
 	{
@@ -316,12 +316,12 @@ void CCustomEventDrop::SetState(CUSTOM_EVENT_DROP_INFO* lpInfo,int state) // OK
 	}
 }
 
-void CCustomEventDrop::SetState_BLANK(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::SetState_BLANK(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 
 }
 
-void CCustomEventDrop::SetState_EMPTY(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::SetState_EMPTY(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 	lpInfo->AlarmMinSave = -1;
 	lpInfo->AlarmMinLeft = -1;
@@ -334,7 +334,7 @@ void CCustomEventDrop::SetState_EMPTY(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
 	this->CheckSync(lpInfo);
 }
 
-void CCustomEventDrop::SetState_START(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::SetState_START(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 	lpInfo->AlarmMinSave = -1;
 	lpInfo->AlarmMinLeft = -1;
@@ -344,7 +344,7 @@ void CCustomEventDrop::SetState_START(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)(time(0)+lpInfo->RemainTime);
 }
 
-void CCustomEventDrop::CheckSync(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
+void CCustomEventDrop::CheckSync(CUSTOM_EVENT_DROP_INFO* lpInfo)
 {
 	if(lpInfo->StartTime.empty() != 0)
 	{
@@ -372,7 +372,7 @@ void CCustomEventDrop::CheckSync(CUSTOM_EVENT_DROP_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-LONG CCustomEventDrop::GetDummyUserIndex() // OK
+LONG CCustomEventDrop::GetDummyUserIndex()
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -385,7 +385,7 @@ LONG CCustomEventDrop::GetDummyUserIndex() // OK
 	return OBJECT_START_USER;
 }
 
-bool::CCustomEventDrop::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count) // OK
+bool::CCustomEventDrop::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count)
 {
 	int x = (*ox);
 	int y = (*oy);
@@ -407,7 +407,7 @@ bool::CCustomEventDrop::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx
 	return 0;
 }
 
-void CCustomEventDrop::GCFireworksSendToNearUser(int map,int x,int y) // OK
+void CCustomEventDrop::GCFireworksSendToNearUser(int map,int x,int y)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{

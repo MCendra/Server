@@ -16,7 +16,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuTowerOfRefinement::CKanturuTowerOfRefinement() // OK
+CKanturuTowerOfRefinement::CKanturuTowerOfRefinement()
 {
 	this->SetTowerOfRefinementState(KANTURU_TOWER_OF_REFINEMENT_NONE);
 
@@ -27,12 +27,12 @@ CKanturuTowerOfRefinement::CKanturuTowerOfRefinement() // OK
 	this->ResetAllData();
 }
 
-CKanturuTowerOfRefinement::~CKanturuTowerOfRefinement() // OK
+CKanturuTowerOfRefinement::~CKanturuTowerOfRefinement()
 {
 
 }
 
-void CKanturuTowerOfRefinement::ResetAllData() // OK
+void CKanturuTowerOfRefinement::ResetAllData()
 {
 	this->m_FileDataLoad = 0;
 
@@ -44,7 +44,7 @@ void CKanturuTowerOfRefinement::ResetAllData() // OK
 	this->m_StateInfoCount = 0;
 }
 
-void CKanturuTowerOfRefinement::Load(char* path) // OK
+void CKanturuTowerOfRefinement::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -117,7 +117,7 @@ void CKanturuTowerOfRefinement::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CKanturuTowerOfRefinement::MainProc() // OK
+void CKanturuTowerOfRefinement::MainProc()
 {
 	this->CheckStateTime();
 
@@ -144,37 +144,37 @@ void CKanturuTowerOfRefinement::MainProc() // OK
 	}
 }
 
-void CKanturuTowerOfRefinement::ProcState_NONE() // OK
+void CKanturuTowerOfRefinement::ProcState_NONE()
 {
 
 }
 
-void CKanturuTowerOfRefinement::ProcState_REVITALIZATION() // OK
+void CKanturuTowerOfRefinement::ProcState_REVITALIZATION()
 {
 
 }
 
-void CKanturuTowerOfRefinement::ProcState_NOTIFY1() // OK
+void CKanturuTowerOfRefinement::ProcState_NOTIFY1()
 {
 
 }
 
-void CKanturuTowerOfRefinement::ProcState_CLOSE() // OK
+void CKanturuTowerOfRefinement::ProcState_CLOSE()
 {
 
 }
 
-void CKanturuTowerOfRefinement::ProcState_NOTIFY2() // OK
+void CKanturuTowerOfRefinement::ProcState_NOTIFY2()
 {
 
 }
 
-void CKanturuTowerOfRefinement::ProcState_END() // OK
+void CKanturuTowerOfRefinement::ProcState_END()
 {
 
 }
 
-void CKanturuTowerOfRefinement::SetState(int state) // OK
+void CKanturuTowerOfRefinement::SetState(int state)
 {
 	this->m_StateInfo[state].SetConditionAppliedTime();
 
@@ -203,7 +203,7 @@ void CKanturuTowerOfRefinement::SetState(int state) // OK
 	gKanturuUtil.NotifyKanturuChangeState(KANTURU_STATE_TOWER_OF_REFINEMENT,this->m_TowerOfRefinementState);
 }
 
-void CKanturuTowerOfRefinement::SetState_NONE() // OK
+void CKanturuTowerOfRefinement::SetState_NONE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ TowerOfRefinement ] State(%d) -> NONE",this->m_TowerOfRefinementState);
 
@@ -216,7 +216,7 @@ void CKanturuTowerOfRefinement::SetState_NONE() // OK
 	gKanturuBattleUserMng.ResetAllData();
 }
 
-void CKanturuTowerOfRefinement::SetState_REVITALIZATION() // OK
+void CKanturuTowerOfRefinement::SetState_REVITALIZATION()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ TowerOfRefinement ] State(%d) -> REVITALIZATION",this->m_TowerOfRefinementState);
 
@@ -227,7 +227,7 @@ void CKanturuTowerOfRefinement::SetState_REVITALIZATION() // OK
 	this->SetUseTowerOfRefinement(1);
 }
 
-void CKanturuTowerOfRefinement::SetState_NOTIFY1() // OK
+void CKanturuTowerOfRefinement::SetState_NOTIFY1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ TowerOfRefinement ] State(%d) -> NOTIFY1",this->m_TowerOfRefinementState);
 
@@ -240,7 +240,7 @@ void CKanturuTowerOfRefinement::SetState_NOTIFY1() // OK
 	gKanturuUtil.SendMsgKanturuBossMapUser(gMessage.GetMessage(336));
 }
 
-void CKanturuTowerOfRefinement::SetState_CLOSE() // OK
+void CKanturuTowerOfRefinement::SetState_CLOSE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ TowerOfRefinement ] State(%d) -> CLOSE",this->m_TowerOfRefinementState);
 
@@ -253,7 +253,7 @@ void CKanturuTowerOfRefinement::SetState_CLOSE() // OK
 	gKanturuUtil.SendMsgKanturuBossMapUser(gMessage.GetMessage(337));
 }
 
-void CKanturuTowerOfRefinement::SetState_NOTIFY2() // OK
+void CKanturuTowerOfRefinement::SetState_NOTIFY2()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ TowerOfRefinement ] State(%d) -> NOTIFY2",this->m_TowerOfRefinementState);
 
@@ -264,7 +264,7 @@ void CKanturuTowerOfRefinement::SetState_NOTIFY2() // OK
 	this->SetUseTowerOfRefinement(1);
 }
 
-void CKanturuTowerOfRefinement::SetState_END() // OK
+void CKanturuTowerOfRefinement::SetState_END()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ TowerOfRefinement ] State(%d) -> END",this->m_TowerOfRefinementState);
 
@@ -284,7 +284,7 @@ void CKanturuTowerOfRefinement::SetState_END() // OK
 	}
 }
 
-void CKanturuTowerOfRefinement::CheckStateTime() // OK
+void CKanturuTowerOfRefinement::CheckStateTime()
 {
 	if(this->GetTowerOfRefinementState() != KANTURU_TOWER_OF_REFINEMENT_NONE && this->m_StateInfo[this->GetTowerOfRefinementState()].GetCondition() == 1 && this->m_StateInfo[this->GetTowerOfRefinementState()].IsTimeOut() != 0)
 	{
@@ -292,37 +292,37 @@ void CKanturuTowerOfRefinement::CheckStateTime() // OK
 	}
 }
 
-void CKanturuTowerOfRefinement::SetTowerOfRefinementState(int state) // OK
+void CKanturuTowerOfRefinement::SetTowerOfRefinementState(int state)
 {
 	this->m_TowerOfRefinementState = state;
 }
 
-void CKanturuTowerOfRefinement::SetEntrancePermit(int permit) // OK
+void CKanturuTowerOfRefinement::SetEntrancePermit(int permit)
 {
 	this->m_EntrancePermit = permit;
 }
 
-void CKanturuTowerOfRefinement::SetUseTowerOfRefinement(int use) // OK
+void CKanturuTowerOfRefinement::SetUseTowerOfRefinement(int use)
 {
 	this->m_IsUseTowerOfRefinement = use;
 }
 
-int CKanturuTowerOfRefinement::GetTowerOfRefinementState() // OK
+int CKanturuTowerOfRefinement::GetTowerOfRefinementState()
 {
 	return this->m_TowerOfRefinementState;
 }
 
-int CKanturuTowerOfRefinement::GetEntrancePermit() // OK
+int CKanturuTowerOfRefinement::GetEntrancePermit()
 {
 	return this->m_EntrancePermit;
 }
 
-int CKanturuTowerOfRefinement::GetUseTowerOfRefinement() // OK
+int CKanturuTowerOfRefinement::GetUseTowerOfRefinement()
 {
 	return this->m_IsUseTowerOfRefinement;
 }
 
-int CKanturuTowerOfRefinement::GetRemainTime() // OK
+int CKanturuTowerOfRefinement::GetRemainTime()
 {
 	return this->m_StateInfo[this->GetTowerOfRefinementState()].GetRemainTime();
 }

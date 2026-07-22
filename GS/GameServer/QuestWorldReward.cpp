@@ -18,7 +18,7 @@ CQuestWorldReward gQuestWorldReward;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQuestWorldReward::CQuestWorldReward() // OK
+CQuestWorldReward::CQuestWorldReward()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -27,12 +27,12 @@ CQuestWorldReward::CQuestWorldReward() // OK
 	#endif
 }
 
-CQuestWorldReward::~CQuestWorldReward() // OK
+CQuestWorldReward::~CQuestWorldReward()
 {
 
 }
 
-void CQuestWorldReward::Load(char* path) // OK
+void CQuestWorldReward::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -110,7 +110,7 @@ void CQuestWorldReward::Load(char* path) // OK
 	#endif
 }
 
-void CQuestWorldReward::SetInfo(QUEST_WORLD_REWARD_INFO info) // OK
+void CQuestWorldReward::SetInfo(QUEST_WORLD_REWARD_INFO info)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -124,7 +124,7 @@ void CQuestWorldReward::SetInfo(QUEST_WORLD_REWARD_INFO info) // OK
 	#endif
 }
 
-QUEST_WORLD_REWARD_INFO* CQuestWorldReward::GetInfo(int index) // OK
+QUEST_WORLD_REWARD_INFO* CQuestWorldReward::GetInfo(int index)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -142,7 +142,7 @@ QUEST_WORLD_REWARD_INFO* CQuestWorldReward::GetInfo(int index) // OK
 	#endif
 }
 
-bool CQuestWorldReward::GetQuestWorldReward(LPOBJ lpObj,int QuestIndex,int QuestGroup,QUEST_WORLD_REWARD* lpReward,int RewardNumber) // OK
+bool CQuestWorldReward::GetQuestWorldReward(LPOBJ lpObj,int QuestIndex,int QuestGroup,QUEST_WORLD_REWARD* lpReward,int RewardNumber)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -204,7 +204,7 @@ bool CQuestWorldReward::GetQuestWorldReward(LPOBJ lpObj,int QuestIndex,int Quest
 	#endif
 }
 
-bool CQuestWorldReward::CheckQuestWorldRewardRequisite(LPOBJ lpObj,QUEST_WORLD_REWARD_INFO* lpInfo) // OK
+bool CQuestWorldReward::CheckQuestWorldRewardRequisite(LPOBJ lpObj,QUEST_WORLD_REWARD_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -227,7 +227,7 @@ bool CQuestWorldReward::CheckQuestWorldRewardRequisite(LPOBJ lpObj,QUEST_WORLD_R
 	#endif
 }
 
-void CQuestWorldReward::InsertQuestWorldReward(LPOBJ lpObj,int QuestIndex,int QuestGroup) // OK
+void CQuestWorldReward::InsertQuestWorldReward(LPOBJ lpObj,int QuestIndex,int QuestGroup)
 {
 	#if(GAMESERVER_UPDATE>=501)
 

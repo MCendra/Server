@@ -28,17 +28,17 @@ CCustomNpcQuest gCustomNpcQuest;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomNpcQuest::CCustomNpcQuest() // OK
+CCustomNpcQuest::CCustomNpcQuest()
 {
 	this->Init();
 }
 
-CCustomNpcQuest::~CCustomNpcQuest() // OK
+CCustomNpcQuest::~CCustomNpcQuest()
 {
 
 }
 
-void CCustomNpcQuest::Init() // OK
+void CCustomNpcQuest::Init()
 {
 	this->m_CustomNpcQuestNpcTypeInfo.clear();
 	this->m_CustomNpcQuestCharacterInfo.clear();
@@ -49,7 +49,7 @@ void CCustomNpcQuest::Init() // OK
 	this->m_CustomNpcQuestRewardBuffInfo.clear();
 }
 
-void CCustomNpcQuest::Load(char* path) // OK
+void CCustomNpcQuest::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -306,7 +306,7 @@ void CCustomNpcQuest::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomNpcQuest::CheckNpcQuest(LPOBJ lpObj,LPOBJ lpNpc) // OK
+bool CCustomNpcQuest::CheckNpcQuest(LPOBJ lpObj,LPOBJ lpNpc)
 {
 	#if (GAMESERVER_CLIENTE_UPDATE >= 13)
 
@@ -335,7 +335,7 @@ bool CCustomNpcQuest::CheckNpcQuest(LPOBJ lpObj,LPOBJ lpNpc) // OK
 	return 0;
 }
 
-bool CCustomNpcQuest::CheckNpcOpen(int quest) // OK
+bool CCustomNpcQuest::CheckNpcOpen(int quest)
 {
 	for(std::vector<QUESTNPC_TYPE_INFO>::iterator it=this->m_CustomNpcQuestNpcTypeInfo.begin();it != this->m_CustomNpcQuestNpcTypeInfo.end();it++)
 	{
@@ -354,7 +354,7 @@ bool CCustomNpcQuest::CheckNpcOpen(int quest) // OK
 	return 0;
 }
 
-bool CCustomNpcQuest::CheckAll(int quest) // OK
+bool CCustomNpcQuest::CheckAll(int quest)
 {
 	for(std::vector<CUSTOM_QUEST_CHARACTER>::iterator it=this->m_CustomNpcQuestCharacterInfo.begin();it != this->m_CustomNpcQuestCharacterInfo.end();it++)
 	{
@@ -374,7 +374,7 @@ bool CCustomNpcQuest::CheckAll(int quest) // OK
 	return 0;
 }
 
-bool CCustomNpcQuest::CheckQuest(LPOBJ lpObj,int quest,int Npc, int qtd) // OK
+bool CCustomNpcQuest::CheckQuest(LPOBJ lpObj,int quest,int Npc, int qtd)
 {
 	for(std::vector<QUESTNPC_TYPE_INFO>::iterator it=this->m_CustomNpcQuestNpcTypeInfo.begin();it != this->m_CustomNpcQuestNpcTypeInfo.end();it++)
 	{
@@ -401,7 +401,7 @@ bool CCustomNpcQuest::CheckQuest(LPOBJ lpObj,int quest,int Npc, int qtd) // OK
 	return 1;
 }
 
-bool CCustomNpcQuest::CheckCharacter(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomNpcQuest::CheckCharacter(LPOBJ lpObj,int quest,int Npc)
 {
 	for(std::vector<CUSTOM_QUEST_CHARACTER>::iterator it=this->m_CustomNpcQuestCharacterInfo.begin();it != this->m_CustomNpcQuestCharacterInfo.end();it++)
 	{
@@ -529,7 +529,7 @@ bool CCustomNpcQuest::CheckCharacter(LPOBJ lpObj,int quest,int Npc) // OK
 	return 1;
 }
 
-bool CCustomNpcQuest::CheckItem(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomNpcQuest::CheckItem(LPOBJ lpObj,int quest,int Npc)
 {
 	int ItemOK;
 	int Qtd;
@@ -623,7 +623,7 @@ bool CCustomNpcQuest::CheckItem(LPOBJ lpObj,int quest,int Npc) // OK
 	return 1;
 }
 
-bool CCustomNpcQuest::CheckMonster(LPOBJ lpObj,int quest,int Npc,int Count) // OK
+bool CCustomNpcQuest::CheckMonster(LPOBJ lpObj,int quest,int Npc,int Count)
 {
 	if (lpObj->CustomNpcQuest != -1 && quest != lpObj->CustomNpcQuest)
 	{
@@ -678,7 +678,7 @@ bool CCustomNpcQuest::CheckMonster(LPOBJ lpObj,int quest,int Npc,int Count) // O
 	return 1;
 }
 
-bool CCustomNpcQuest::CheckItemRewardInventorySpace(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomNpcQuest::CheckItemRewardInventorySpace(LPOBJ lpObj,int quest,int Npc)
 {
 	this->m_LastPosX = 0;
 	this->m_LastPosY = 0;
@@ -714,7 +714,7 @@ bool CCustomNpcQuest::CheckItemRewardInventorySpace(LPOBJ lpObj,int quest,int Np
 	return 1;
 }
 
-bool CCustomNpcQuest::CheckItemInventorySpace(LPOBJ lpObj,int index) // OK
+bool CCustomNpcQuest::CheckItemInventorySpace(LPOBJ lpObj,int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -748,7 +748,7 @@ bool CCustomNpcQuest::CheckItemInventorySpace(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-void CCustomNpcQuest::RemoveItem(LPOBJ lpObj,int quest) // OK
+void CCustomNpcQuest::RemoveItem(LPOBJ lpObj,int quest)
 {
 	int ItemOK;
 	int QtdRemove;
@@ -835,7 +835,7 @@ void CCustomNpcQuest::RemoveItem(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomNpcQuest::RemoveMoney(LPOBJ lpObj,int quest) // OK
+void CCustomNpcQuest::RemoveMoney(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_CHARACTER>::iterator it=this->m_CustomNpcQuestCharacterInfo.begin();it != this->m_CustomNpcQuestCharacterInfo.end();it++)
 	{
@@ -863,7 +863,7 @@ void CCustomNpcQuest::RemoveMoney(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomNpcQuest::AddRewardCoin(LPOBJ lpObj,int quest) // OK
+void CCustomNpcQuest::AddRewardCoin(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD>::iterator it=this->m_CustomNpcQuestRewardInfo.begin();it != this->m_CustomNpcQuestRewardInfo.end();it++)
 	{
@@ -881,7 +881,7 @@ void CCustomNpcQuest::AddRewardCoin(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomNpcQuest::AddRewardItem(LPOBJ lpObj,int quest) // OK
+void CCustomNpcQuest::AddRewardItem(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD_ITEM>::iterator it=this->m_CustomNpcQuestRewardItemInfo.begin();it != this->m_CustomNpcQuestRewardItemInfo.end();it++)
 	{
@@ -922,7 +922,7 @@ void CCustomNpcQuest::AddRewardItem(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomNpcQuest::AddRewardBuff(LPOBJ lpObj,int quest) // OK
+void CCustomNpcQuest::AddRewardBuff(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD_BUFF>::iterator it=this->m_CustomNpcQuestRewardBuffInfo.begin();it != this->m_CustomNpcQuestRewardBuffInfo.end();it++)
 	{
@@ -940,7 +940,7 @@ void CCustomNpcQuest::AddRewardBuff(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomNpcQuest::AddRewardExperience(LPOBJ lpObj,int quest) // OK
+void CCustomNpcQuest::AddRewardExperience(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD_EXP>::iterator it=this->m_CustomNpcQuestRewardExpInfo.begin();it != this->m_CustomNpcQuestRewardExpInfo.end();it++)
 	{
@@ -969,7 +969,7 @@ void CCustomNpcQuest::AddRewardExperience(LPOBJ lpObj,int quest) // OK
 }
 
 
-void CCustomNpcQuest::DGCustomNpcQuestSend(int aIndex,int Quest, int NpcIndex) // OK
+void CCustomNpcQuest::DGCustomNpcQuestSend(int aIndex,int Quest, int NpcIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -988,7 +988,7 @@ void CCustomNpcQuest::DGCustomNpcQuestSend(int aIndex,int Quest, int NpcIndex) /
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg)); 
 }
 
-void CCustomNpcQuest::DGCustomNpcQuestRecv(SDHP_CUSTOMNPCQUEST_RECV* lpMsg) // OK
+void CCustomNpcQuest::DGCustomNpcQuestRecv(SDHP_CUSTOMNPCQUEST_RECV* lpMsg)
 {
 #if GAMESERVER_CLIENTE_UPDATE >= 13
 	
@@ -1097,7 +1097,7 @@ void CCustomNpcQuest::DGCustomNpcQuestRecv(SDHP_CUSTOMNPCQUEST_RECV* lpMsg) // O
 #endif
 }
 
-void CCustomNpcQuest::DGCustomNpcQuestMonsterSaveSend(int aIndex,int Quest, int Count) // OK
+void CCustomNpcQuest::DGCustomNpcQuestMonsterSaveSend(int aIndex,int Quest, int Count)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

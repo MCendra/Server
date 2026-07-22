@@ -13,17 +13,17 @@ CGuardianStatue gGuardianStatue;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGuardianStatue::CGuardianStatue() // OK
+CGuardianStatue::CGuardianStatue()
 {
 
 }
 
-CGuardianStatue::~CGuardianStatue() // OK
+CGuardianStatue::~CGuardianStatue()
 {
 
 }
 
-void CGuardianStatue::GuardianStatueAct(int aIndex) // OK
+void CGuardianStatue::GuardianStatueAct(int aIndex)
 {
 	int iIndex = aIndex;
 	if( ::gObjIsConnected(iIndex) == FALSE )

@@ -65,7 +65,7 @@ enum eSpecialNumber
 class CPetItemExp
 {
 public:
-	CPetItemExp() // OK
+	CPetItemExp()
 	{
 		this->m_DarkSpiritExpTable[0] = 0;
 		this->m_DarkSpiritExpTable[1] = 0;

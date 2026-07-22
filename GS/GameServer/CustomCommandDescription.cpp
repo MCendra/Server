@@ -16,17 +16,17 @@ CCustomCommandDescription gCustomCommandDescription;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomCommandDescription::CCustomCommandDescription() // OK
+CCustomCommandDescription::CCustomCommandDescription()
 {
 	this->m_CustomCommandDescriptionInfo.clear();
 }
 
-CCustomCommandDescription::~CCustomCommandDescription() // OK
+CCustomCommandDescription::~CCustomCommandDescription()
 {
 
 }
 
-void CCustomCommandDescription::Load(char* path) // OK
+void CCustomCommandDescription::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -78,7 +78,7 @@ void CCustomCommandDescription::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomCommandDescription::GetInfo(int index,CUSTOMCOMMANDDESCRIPTION_INFO* lpInfo) // OK
+bool CCustomCommandDescription::GetInfo(int index,CUSTOMCOMMANDDESCRIPTION_INFO* lpInfo)
 {
 	std::map<int,CUSTOMCOMMANDDESCRIPTION_INFO>::iterator it = this->m_CustomCommandDescriptionInfo.find(index);
 
@@ -93,7 +93,7 @@ bool CCustomCommandDescription::GetInfo(int index,CUSTOMCOMMANDDESCRIPTION_INFO*
 	}
 }
 
-bool CCustomCommandDescription::GetInfoByName(LPOBJ lpObj, char* message) // OK
+bool CCustomCommandDescription::GetInfoByName(LPOBJ lpObj, char* message)
 {
 #if GAMESERVER_CLIENTE_UPDATE >= 7
 	char command[32] = {0};

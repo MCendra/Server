@@ -16,7 +16,7 @@
 #include "OfflineMode.h"
 #include "FakeOnline.h"
 
-void JoinServerProtocolCore(BYTE head, BYTE* lpMsg, int size) // OK
+void JoinServerProtocolCore(BYTE head, BYTE* lpMsg, int size)
 {
 	PROTECT_START
 
@@ -54,11 +54,11 @@ void JoinServerProtocolCore(BYTE head, BYTE* lpMsg, int size) // OK
 	PROTECT_FINAL
 }
 
-void JGServerInfoRecv(SDHP_JOIN_SERVER_INFO_RECV* lpMsg) // OK
+void JGServerInfoRecv(SDHP_JOIN_SERVER_INFO_RECV* lpMsg)
 {
 
 }
-void JGRegisterAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg) // OK
+void JGRegisterAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg)
 {
 	if (OBJECT_RANGE(lpMsg->index) == 0)
 	{
@@ -80,7 +80,7 @@ void JGRegisterAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg) // OK
 	GCRegisterAccountSend(lpMsg->index, lpMsg->result);
 	return;
 }
-void JGConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg) // OK
+void JGConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg)
 {
 	if (OBJECT_RANGE(lpMsg->index) == 0)
 	{
@@ -148,7 +148,7 @@ void JGConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg) // OK
 
 }
 
-void JGDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg) // OK
+void JGDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) != 0)
 	{
@@ -156,7 +156,7 @@ void JGDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg) // OK
 	}
 }
 
-void JGMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg) // OK
+void JGMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
@@ -215,7 +215,7 @@ void JGMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg) // OK
 	gObj[lpMsg->index].MapServerMoveQuitTickCount = GetTickCount();
 }
 
-void JGMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg) // OK
+void JGMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg)
 {
 	if (OBJECT_RANGE(lpMsg->index) == 0)
 	{
@@ -289,7 +289,7 @@ void JGMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg) // OK
 	LogAddConnect(LOG_BLUE, "[Obj][%d] AddAccount (%s)", lpMsg->index, gObj[lpMsg->index].Account);
 }
 
-void JGAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg) // OK
+void JGAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
@@ -317,7 +317,7 @@ void JGAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg) // OK
 	}
 }
 
-void JGAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg) // OK
+void JGAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg)
 {
 	if (strcmp(lpMsg->account, "null") == 0)
 	{
@@ -341,7 +341,7 @@ void JGAccountLevelRecv2(SDHP_ACCOUNT_LEVEL_RECV* lpMsg) // OK
 }
 
 
-void JGAccountAlreadyConnectedRecv(SDHP_ACCOUNT_ALREADY_CONNECTED_RECV* lpMsg) // OK
+void JGAccountAlreadyConnectedRecv(SDHP_ACCOUNT_ALREADY_CONNECTED_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
@@ -366,7 +366,7 @@ void JGAccountAlreadyConnectedRecv(SDHP_ACCOUNT_ALREADY_CONNECTED_RECV* lpMsg) /
 	g_OfflineMode.OnHelperpAlreadyConnected(&gObj[lpMsg->index]);
 }
 
-void GJServerInfoSend() // OK
+void GJServerInfoSend()
 {
 	SDHP_JOIN_SERVER_INFO_SEND pMsg;
 
@@ -383,7 +383,7 @@ void GJServerInfoSend() // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJConnectAccountSend(int aIndex, char* account, char* password, char* IpAddress) // OK
+void GJConnectAccountSend(int aIndex, char* account, char* password, char* IpAddress)
 {
 	SDHP_CONNECT_ACCOUNT_SEND pMsg;
 
@@ -417,7 +417,7 @@ void GJRegisterAccountSend(int aIndex, char* account, char* password, char* pers
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
-void GJDisconnectAccountSend(int aIndex, char* account, char* IpAddress) // OK
+void GJDisconnectAccountSend(int aIndex, char* account, char* IpAddress)
 {
 	SDHP_DISCONNECT_ACCOUNT_SEND pMsg;
 
@@ -432,7 +432,7 @@ void GJDisconnectAccountSend(int aIndex, char* account, char* IpAddress) // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJMapServerMoveSend(int aIndex, WORD NextServerCode, WORD map, BYTE x, BYTE y) // OK
+void GJMapServerMoveSend(int aIndex, WORD NextServerCode, WORD map, BYTE x, BYTE y)
 {
 	SDHP_MAP_SERVER_MOVE_SEND pMsg;
 
@@ -457,7 +457,7 @@ void GJMapServerMoveSend(int aIndex, WORD NextServerCode, WORD map, BYTE x, BYTE
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJMapServerMoveAuthSend(int aIndex, char* account, char* name, DWORD AuthCode1, DWORD AuthCode2, DWORD AuthCode3, DWORD AuthCode4) // OK
+void GJMapServerMoveAuthSend(int aIndex, char* account, char* name, DWORD AuthCode1, DWORD AuthCode2, DWORD AuthCode3, DWORD AuthCode4)
 {
 	SDHP_MAP_SERVER_MOVE_AUTH_SEND pMsg;
 
@@ -482,7 +482,7 @@ void GJMapServerMoveAuthSend(int aIndex, char* account, char* name, DWORD AuthCo
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJAccountLevelSend(int aIndex) // OK
+void GJAccountLevelSend(int aIndex)
 {
 	SDHP_ACCOUNT_LEVEL_SEND pMsg;
 
@@ -495,7 +495,7 @@ void GJAccountLevelSend(int aIndex) // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJAccountLevelSend(int aIndex, char* account) // OK
+void GJAccountLevelSend(int aIndex, char* account)
 {
 	SDHP_ACCOUNT_LEVEL_SEND pMsg;
 
@@ -508,7 +508,7 @@ void GJAccountLevelSend(int aIndex, char* account) // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJMapServerMoveCancelSend(int aIndex) // OK
+void GJMapServerMoveCancelSend(int aIndex)
 {
 	SDHP_MAP_SERVER_MOVE_CANCEL_SEND pMsg;
 
@@ -521,7 +521,7 @@ void GJMapServerMoveCancelSend(int aIndex) // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime) // OK
+void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime)
 {
 	SDHP_ACCOUNT_LEVEL_SAVE_SEND pMsg;
 
@@ -538,7 +538,7 @@ void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime)
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime, char* account) // OK
+void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime, char* account)
 {
 	SDHP_ACCOUNT_LEVEL_SAVE_SEND pMsg;
 
@@ -555,7 +555,7 @@ void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime,
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJAccountLockSaveSend(int aIndex, int Lock) // OK
+void GJAccountLockSaveSend(int aIndex, int Lock)
 {
 	SDHP_LOCK_SAVE_SEND pMsg;
 
@@ -570,7 +570,7 @@ void GJAccountLockSaveSend(int aIndex, int Lock) // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GJServerUserInfoSend() // OK
+void GJServerUserInfoSend()
 {
 	PROTECT_START
 

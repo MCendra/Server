@@ -26,17 +26,17 @@ CGuild gGuild;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGuild::CGuild() // OK
+CGuild::CGuild()
 {
 
 }
 
-CGuild::~CGuild() // OK
+CGuild::~CGuild()
 {
 
 }
 
-int CGuild::GetMaxGuildUser(LPOBJ lpObj) // OK
+int CGuild::GetMaxGuildUser(LPOBJ lpObj)
 {
 	int MaxGuildUser = 0;
 
@@ -56,7 +56,7 @@ int CGuild::GetMaxGuildUser(LPOBJ lpObj) // OK
 	return ((MaxGuildUser>MAX_GUILD_USER)?MAX_GUILD_USER:MaxGuildUser);
 }
 
-int CGuild::GetGuildNameCount(LPOBJ lpObj,char* name) // OK
+int CGuild::GetGuildNameCount(LPOBJ lpObj,char* name)
 {
 	int count = 0;
 
@@ -71,7 +71,7 @@ int CGuild::GetGuildNameCount(LPOBJ lpObj,char* name) // OK
 	return count;
 }
 
-int CGuild::GetGuildBattleMasterCount(LPOBJ lpObj) // OK
+int CGuild::GetGuildBattleMasterCount(LPOBJ lpObj)
 {
 	int count = 0;
 
@@ -86,7 +86,7 @@ int CGuild::GetGuildBattleMasterCount(LPOBJ lpObj) // OK
 	return count;
 }
 
-int CGuild::GetGuildOfficeMasterCount(LPOBJ lpObj) // OK
+int CGuild::GetGuildOfficeMasterCount(LPOBJ lpObj)
 {
 	int count = 0;
 
@@ -101,7 +101,7 @@ int CGuild::GetGuildOfficeMasterCount(LPOBJ lpObj) // OK
 	return count;
 }
 
-void CGuild::CGGuildRequestRecv(PMSG_GUILD_REQUEST_RECV* lpMsg,int aIndex) // OK
+void CGuild::CGGuildRequestRecv(PMSG_GUILD_REQUEST_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -224,7 +224,7 @@ void CGuild::CGGuildRequestRecv(PMSG_GUILD_REQUEST_RECV* lpMsg,int aIndex) // OK
 	DataSend(bIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CGuild::CGGuildResultRecv(PMSG_GUILD_RESULT_RECV* lpMsg,int aIndex) // OK
+void CGuild::CGGuildResultRecv(PMSG_GUILD_RESULT_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -354,7 +354,7 @@ void CGuild::CGGuildResultRecv(PMSG_GUILD_RESULT_RECV* lpMsg,int aIndex) // OK
 	lpTarget->TargetNumber = -1;
 }
 
-void CGuild::CGGuildListRecv(int aIndex) // OK
+void CGuild::CGGuildListRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -440,7 +440,7 @@ void CGuild::CGGuildListRecv(int aIndex) // OK
 	}
 }
 
-void CGuild::CGGuildDeleteRecv(PMSG_GUILD_DELETE_RECV* lpMsg,int aIndex) // OK
+void CGuild::CGGuildDeleteRecv(PMSG_GUILD_DELETE_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -541,7 +541,7 @@ void CGuild::CGGuildDeleteRecv(PMSG_GUILD_DELETE_RECV* lpMsg,int aIndex) // OK
 	}
 }
 
-void CGuild::CGGuildAssignStatusRecv(PMSG_GUILD_ASSIGN_STATUS_RECV* lpMsg,int aIndex) // OK
+void CGuild::CGGuildAssignStatusRecv(PMSG_GUILD_ASSIGN_STATUS_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -604,7 +604,7 @@ void CGuild::CGGuildAssignStatusRecv(PMSG_GUILD_ASSIGN_STATUS_RECV* lpMsg,int aI
 	GDGuildReqAssignStatus(aIndex,lpMsg->type,name,lpMsg->status);
 }
 
-void CGuild::GCGuildResultSend(int aIndex,int result) // OK
+void CGuild::GCGuildResultSend(int aIndex,int result)
 {
 	PMSG_GUILD_RESULT_SEND pMsg;
 
@@ -615,7 +615,7 @@ void CGuild::GCGuildResultSend(int aIndex,int result) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CGuild::GCGuildWarEndSend(int aIndex,int result,char* GuildName) // OK
+void CGuild::GCGuildWarEndSend(int aIndex,int result,char* GuildName)
 {
 	PMSG_GUILD_WAR_END_SEND pMsg;
 
@@ -628,7 +628,7 @@ void CGuild::GCGuildWarEndSend(int aIndex,int result,char* GuildName) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CGuild::GCGuildWarScoreSend(int aIndex) // OK
+void CGuild::GCGuildWarScoreSend(int aIndex)
 {
 	if(gObj[aIndex].GuildNumber == 0)
 	{
@@ -648,7 +648,7 @@ void CGuild::GCGuildWarScoreSend(int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CGuild::GCGuildAssignStatusSend(int aIndex,int type,int result,char* name) // OK
+void CGuild::GCGuildAssignStatusSend(int aIndex,int type,int result,char* name)
 {
 	PMSG_GUILD_ASSIGN_STATUS_SEND pMsg;
 

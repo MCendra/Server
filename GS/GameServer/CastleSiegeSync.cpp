@@ -16,17 +16,17 @@ CCastleSiegeSync gCastleSiegeSync;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCastleSiegeSync::CCastleSiegeSync() // OK
+CCastleSiegeSync::CCastleSiegeSync()
 {
 	this->Clear();
 }
 
-CCastleSiegeSync::~CCastleSiegeSync() // OK
+CCastleSiegeSync::~CCastleSiegeSync()
 {
 
 }
 
-void CCastleSiegeSync::Clear() // OK
+void CCastleSiegeSync::Clear()
 {
 	this->m_CurCastleState = -1;
 	this->m_CurTaxRateChaos = 0;
@@ -36,12 +36,12 @@ void CCastleSiegeSync::Clear() // OK
 	memset(this->m_CastleOwnerGuild,0,sizeof(this->m_CastleOwnerGuild));
 }
 
-int CCastleSiegeSync::GetCastleState() // OK
+int CCastleSiegeSync::GetCastleState()
 {
 	return this->m_CurCastleState;
 }
 
-int CCastleSiegeSync::GetTaxRateChaos(int aIndex) // OK
+int CCastleSiegeSync::GetTaxRateChaos(int aIndex)
 {
 	int CurTaxRateChaos = this->m_CurTaxRateChaos;
 
@@ -56,7 +56,7 @@ int CCastleSiegeSync::GetTaxRateChaos(int aIndex) // OK
 	return CurTaxRateChaos;
 }
 
-int CCastleSiegeSync::GetTaxRateStore(int aIndex) // OK
+int CCastleSiegeSync::GetTaxRateStore(int aIndex)
 {
 	int CurTaxRateStore = this->m_CurTaxRateStore;
 
@@ -71,7 +71,7 @@ int CCastleSiegeSync::GetTaxRateStore(int aIndex) // OK
 	return CurTaxRateStore;
 }
 
-int CCastleSiegeSync::GetTaxHuntZone(int aIndex,bool CheckOwnerGuild) // OK
+int CCastleSiegeSync::GetTaxHuntZone(int aIndex,bool CheckOwnerGuild)
 {
 	int CurTaxHuntZone = this->m_CurTaxHuntZone;
 
@@ -89,12 +89,12 @@ int CCastleSiegeSync::GetTaxHuntZone(int aIndex,bool CheckOwnerGuild) // OK
 	return CurTaxHuntZone;
 }
 
-char* CCastleSiegeSync::GetCastleOwnerGuild() // OK
+char* CCastleSiegeSync::GetCastleOwnerGuild()
 {
 	return this->m_CastleOwnerGuild;
 }
 
-bool CCastleSiegeSync::CheckCastleOwnerMember(int aIndex) // OK
+bool CCastleSiegeSync::CheckCastleOwnerMember(int aIndex)
 {
 	int iIndex=aIndex;
 	if ( gObjIsConnected(iIndex) == FALSE )
@@ -115,7 +115,7 @@ bool CCastleSiegeSync::CheckCastleOwnerMember(int aIndex) // OK
 	return TRUE;
 }
 
-bool CCastleSiegeSync::CheckCastleOwnerUnionMember(int aIndex) // OK
+bool CCastleSiegeSync::CheckCastleOwnerUnionMember(int aIndex)
 {
 	int iIndex=aIndex;
 	if ( gObjIsConnected(iIndex) == FALSE )
@@ -150,12 +150,12 @@ bool CCastleSiegeSync::CheckCastleOwnerUnionMember(int aIndex) // OK
 	return FALSE;
 }
 
-void CCastleSiegeSync::ResetTributeMoney() // OK
+void CCastleSiegeSync::ResetTributeMoney()
 {
 	InterlockedExchange((long*)&this->m_CastleTributeMoney,0);
 }
 
-void CCastleSiegeSync::AddTributeMoney(int money) // OK
+void CCastleSiegeSync::AddTributeMoney(int money)
 {
 	if(this->m_CastleTributeMoney < 0)
 	{
@@ -199,33 +199,33 @@ void CCastleSiegeSync::AdjustTributeMoney()
 	GS_GDReqCastleTributeMoney(gMapServerManager.GetMapServerGroup(), this->m_CastleTributeMoney);
 }
 
-void CCastleSiegeSync::SetCastleOwnerGuild(char* GuildName) // OK
+void CCastleSiegeSync::SetCastleOwnerGuild(char* GuildName)
 {
 	memset(this->m_CastleOwnerGuild,0,sizeof(this->m_CastleOwnerGuild));
 	memcpy(this->m_CastleOwnerGuild,GuildName,(sizeof(this->m_CastleOwnerGuild)/2));
 }
 
-void CCastleSiegeSync::SetCastleState(int state) // OK
+void CCastleSiegeSync::SetCastleState(int state)
 {
 	this->m_CurCastleState = state;
 }
 
-void CCastleSiegeSync::SetTaxRateChaos(int rate) // OK
+void CCastleSiegeSync::SetTaxRateChaos(int rate)
 {
 	this->m_CurTaxRateChaos = rate;
 }
 
-void CCastleSiegeSync::SetTaxRateStore(int rate) // OK
+void CCastleSiegeSync::SetTaxRateStore(int rate)
 {
 	this->m_CurTaxRateStore = rate;
 }
 
-void CCastleSiegeSync::SetTaxHuntZone(int rate) // OK
+void CCastleSiegeSync::SetTaxHuntZone(int rate)
 {
 	this->m_CurTaxHuntZone = rate;
 }
 
-int CCastleSiegeSync::GetTributeMoney() // OK
+int CCastleSiegeSync::GetTributeMoney()
 {
 	return this->m_CastleTributeMoney;
 }

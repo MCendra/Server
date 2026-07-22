@@ -18,17 +18,17 @@ CCustomJewel gCustomJewel;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomJewel::CCustomJewel() // OK
+CCustomJewel::CCustomJewel()
 {
 	this->Init();
 }
 
-CCustomJewel::~CCustomJewel() // OK
+CCustomJewel::~CCustomJewel()
 {
 
 }
 
-void CCustomJewel::Init() // OK
+void CCustomJewel::Init()
 {
 	for (int n = 0; n < MAX_CUSTOM_JEWEL; n++)
 	{
@@ -36,7 +36,7 @@ void CCustomJewel::Init() // OK
 	}
 }
 
-void CCustomJewel::Load(char* path) // OK
+void CCustomJewel::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -198,7 +198,7 @@ void CCustomJewel::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomJewel::SetInfo(CUSTOM_JEWEL_INFO info) // OK
+void CCustomJewel::SetInfo(CUSTOM_JEWEL_INFO info)
 {
 	if (info.Index < 0 || info.Index >= MAX_CUSTOM_JEWEL)
 	{
@@ -208,7 +208,7 @@ void CCustomJewel::SetInfo(CUSTOM_JEWEL_INFO info) // OK
 	this->m_CustomJewelInfo[info.Index] = info;
 }
 
-void CCustomJewel::SetSuccessInfo(CUSTOM_JEWEL_SUCCESS_INFO info) // OK
+void CCustomJewel::SetSuccessInfo(CUSTOM_JEWEL_SUCCESS_INFO info)
 {
 	if (info.Index < 0 || info.Index >= MAX_CUSTOM_JEWEL)
 	{
@@ -218,7 +218,7 @@ void CCustomJewel::SetSuccessInfo(CUSTOM_JEWEL_SUCCESS_INFO info) // OK
 	this->m_CustomJewelInfo[info.Index].SuccessInfo = info;
 }
 
-void CCustomJewel::SetFailureInfo(CUSTOM_JEWEL_FAILURE_INFO info) // OK
+void CCustomJewel::SetFailureInfo(CUSTOM_JEWEL_FAILURE_INFO info)
 {
 	if (info.Index < 0 || info.Index >= MAX_CUSTOM_JEWEL)
 	{
@@ -228,7 +228,7 @@ void CCustomJewel::SetFailureInfo(CUSTOM_JEWEL_FAILURE_INFO info) // OK
 	this->m_CustomJewelInfo[info.Index].FailureInfo = info;
 }
 
-CUSTOM_JEWEL_INFO* CCustomJewel::GetInfo(int index) // OK
+CUSTOM_JEWEL_INFO* CCustomJewel::GetInfo(int index)
 {
 	if (index < 0 || index >= MAX_CUSTOM_JEWEL)
 	{
@@ -243,7 +243,7 @@ CUSTOM_JEWEL_INFO* CCustomJewel::GetInfo(int index) // OK
 	return &this->m_CustomJewelInfo[index];
 }
 
-CUSTOM_JEWEL_INFO* CCustomJewel::GetInfoByItem(int ItemIndex) // OK
+CUSTOM_JEWEL_INFO* CCustomJewel::GetInfoByItem(int ItemIndex)
 {
 	for (int n = 0; n < MAX_CUSTOM_JEWEL; n++)
 	{
@@ -263,7 +263,7 @@ CUSTOM_JEWEL_INFO* CCustomJewel::GetInfoByItem(int ItemIndex) // OK
 	return 0;
 }
 
-CUSTOM_JEWEL_SUCCESS_INFO* CCustomJewel::GetSuccessInfo(int ItemIndex) // OK
+CUSTOM_JEWEL_SUCCESS_INFO* CCustomJewel::GetSuccessInfo(int ItemIndex)
 {
 	CUSTOM_JEWEL_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -275,7 +275,7 @@ CUSTOM_JEWEL_SUCCESS_INFO* CCustomJewel::GetSuccessInfo(int ItemIndex) // OK
 	return &lpInfo->SuccessInfo;
 }
 
-CUSTOM_JEWEL_FAILURE_INFO* CCustomJewel::GetFailureInfo(int ItemIndex) // OK
+CUSTOM_JEWEL_FAILURE_INFO* CCustomJewel::GetFailureInfo(int ItemIndex)
 {
 	CUSTOM_JEWEL_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -287,7 +287,7 @@ CUSTOM_JEWEL_FAILURE_INFO* CCustomJewel::GetFailureInfo(int ItemIndex) // OK
 	return &lpInfo->FailureInfo;
 }
 
-bool CCustomJewel::CheckCustomJewel(int index) // OK
+bool CCustomJewel::CheckCustomJewel(int index)
 {
 	if (this->GetInfo(index) != 0)
 	{
@@ -297,7 +297,7 @@ bool CCustomJewel::CheckCustomJewel(int index) // OK
 	return 0;
 }
 
-bool CCustomJewel::CheckCustomJewelByItem(int ItemIndex) // OK
+bool CCustomJewel::CheckCustomJewelByItem(int ItemIndex)
 {
 	if (this->GetInfoByItem(ItemIndex) != 0)
 	{
@@ -307,7 +307,7 @@ bool CCustomJewel::CheckCustomJewelByItem(int ItemIndex) // OK
 	return 0;
 }
 
-bool CCustomJewel::CheckCustomJewelApplyItem(int ItemIndex, CItem* lpItem) // OK
+bool CCustomJewel::CheckCustomJewelApplyItem(int ItemIndex, CItem* lpItem)
 {
 	CUSTOM_JEWEL_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -418,7 +418,7 @@ bool CCustomJewel::CheckCustomJewelApplyItem(int ItemIndex, CItem* lpItem) // OK
 	return 1;
 }
 
-bool CCustomJewel::CheckCustomJewelApplyItemNewOption(CUSTOM_JEWEL_INFO* lpInfo, CItem* lpItem) // OK
+bool CCustomJewel::CheckCustomJewelApplyItemNewOption(CUSTOM_JEWEL_INFO* lpInfo, CItem* lpItem)
 {
 	if (lpInfo->MinItemNewOption != -1 && GetNewOptionCount(lpItem->m_NewOption) < lpInfo->MinItemNewOption)
 	{
@@ -438,7 +438,7 @@ bool CCustomJewel::CheckCustomJewelApplyItemNewOption(CUSTOM_JEWEL_INFO* lpInfo,
 	return 1;
 }
 
-bool CCustomJewel::CheckCustomJewelApplyItemSetOption(CUSTOM_JEWEL_INFO* lpInfo, CItem* lpItem) // OK
+bool CCustomJewel::CheckCustomJewelApplyItemSetOption(CUSTOM_JEWEL_INFO* lpInfo, CItem* lpItem)
 {
 	if (lpInfo->MaxItemSetOption != -1 && (lpItem->IsSetItem() != 0 || ((lpInfo->MaxItemSetOption & 1) != 0 && gSetItemType.GetSetItemOptionIndex(lpItem->m_Index, 0) <= 0)))
 	{
@@ -453,7 +453,7 @@ bool CCustomJewel::CheckCustomJewelApplyItemSetOption(CUSTOM_JEWEL_INFO* lpInfo,
 	return 1;
 }
 
-bool CCustomJewel::CheckCustomJewelApplyItemSocketOption(CUSTOM_JEWEL_INFO* lpInfo, CItem* lpItem) // OK
+bool CCustomJewel::CheckCustomJewelApplyItemSocketOption(CUSTOM_JEWEL_INFO* lpInfo, CItem* lpItem)
 {
 	if (gServerInfo.m_JewelSocketPentagram == 1 && (lpItem->m_Index >= GET_ITEM(12, 36) && lpItem->m_Index <= GET_ITEM(12, 240)) && GetSocketOptionCount(lpItem->m_SocketOption) < 5)
 	{
@@ -472,7 +472,7 @@ bool CCustomJewel::CheckCustomJewelApplyItemSocketOption(CUSTOM_JEWEL_INFO* lpIn
 	return 1;
 }
 
-int CCustomJewel::GetCustomJewelSuccessRate(int ItemIndex, int AccountLevel) // OK
+int CCustomJewel::GetCustomJewelSuccessRate(int ItemIndex, int AccountLevel)
 {
 	CUSTOM_JEWEL_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -484,7 +484,7 @@ int CCustomJewel::GetCustomJewelSuccessRate(int ItemIndex, int AccountLevel) // 
 	return lpInfo->SuccessRate[AccountLevel];
 }
 
-int CCustomJewel::GetCustomJewelSalePrice(int ItemIndex) // OK
+int CCustomJewel::GetCustomJewelSalePrice(int ItemIndex)
 {
 	CUSTOM_JEWEL_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -496,7 +496,7 @@ int CCustomJewel::GetCustomJewelSalePrice(int ItemIndex) // OK
 	return lpInfo->SalePrice;
 }
 
-int CCustomJewel::GetCustomJewelNewOption(CItem* lpItem, int value) // OK
+int CCustomJewel::GetCustomJewelNewOption(CItem* lpItem, int value)
 {
 	if (value >= 10)
 	{
@@ -630,7 +630,7 @@ int CCustomJewel::GetCustomJewelNewOption(CItem* lpItem, int value) // OK
 	return count;
 }
 
-int CCustomJewel::GetCustomJewelSetOption(CItem* lpItem, int value) // OK
+int CCustomJewel::GetCustomJewelSetOption(CItem* lpItem, int value)
 {
 	BYTE SetIndex = lpItem->m_SetOption & 3;
 	BYTE SetValue = lpItem->m_SetOption & 12;
@@ -659,7 +659,7 @@ int CCustomJewel::GetCustomJewelSetOption(CItem* lpItem, int value) // OK
 	return ((lpItem->m_SetOption) = (SetIndex + SetValue));
 }
 
-int CCustomJewel::GetCustomJewelSocketOption(CItem* lpItem, int value) // OK
+int CCustomJewel::GetCustomJewelSocketOption(CItem* lpItem, int value)
 {
 	int count = 0;
 

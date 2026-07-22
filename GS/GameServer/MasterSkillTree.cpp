@@ -17,7 +17,7 @@ CMasterSkillTree gMasterSkillTree;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMasterSkillTree::CMasterSkillTree() // OK
+CMasterSkillTree::CMasterSkillTree()
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -26,12 +26,12 @@ CMasterSkillTree::CMasterSkillTree() // OK
 	#endif
 }
 
-CMasterSkillTree::~CMasterSkillTree() // OK
+CMasterSkillTree::~CMasterSkillTree()
 {
 
 }
 
-void CMasterSkillTree::Load(char* path) // OK
+void CMasterSkillTree::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -133,7 +133,7 @@ void CMasterSkillTree::Load(char* path) // OK
 	#endif
 }
 
-bool CMasterSkillTree::GetInfo(int index,MASTER_SKILL_TREE_INFO* lpInfo) // OK
+bool CMasterSkillTree::GetInfo(int index,MASTER_SKILL_TREE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -156,7 +156,7 @@ bool CMasterSkillTree::GetInfo(int index,MASTER_SKILL_TREE_INFO* lpInfo) // OK
 	#endif
 }
 
-int CMasterSkillTree::GetMasterSkillRelated(int index) // OK
+int CMasterSkillTree::GetMasterSkillRelated(int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -178,7 +178,7 @@ int CMasterSkillTree::GetMasterSkillRelated(int index) // OK
 	#endif
 }
 
-flt CMasterSkillTree::GetMasterSkillValue(int index,int level) // OK
+flt CMasterSkillTree::GetMasterSkillValue(int index,int level)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -217,7 +217,7 @@ flt CMasterSkillTree::GetMasterSkillValue(int index,int level) // OK
 	#endif
 }
 
-int CMasterSkillTree::GetMasterSkillValue(LPOBJ lpObj, int index) // OK
+int CMasterSkillTree::GetMasterSkillValue(LPOBJ lpObj, int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -256,7 +256,7 @@ int CMasterSkillTree::GetMasterSkillValue(LPOBJ lpObj, int index) // OK
 	#endif
 }
 
-int CMasterSkillTree::GetMasterSkillLevel(LPOBJ lpObj,int index) // OK
+int CMasterSkillTree::GetMasterSkillLevel(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -295,7 +295,7 @@ int CMasterSkillTree::GetMasterSkillLevel(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-int CMasterSkillTree::GetMasterSkillWeapon(LPOBJ lpObj,int index) // OK
+int CMasterSkillTree::GetMasterSkillWeapon(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -370,7 +370,7 @@ int CMasterSkillTree::GetMasterSkillWeapon(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-int CMasterSkillTree::GetMasterSkillDamageMin(LPOBJ lpObj,int index) // OK
+int CMasterSkillTree::GetMasterSkillDamageMin(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -545,7 +545,7 @@ int CMasterSkillTree::GetMasterSkillDamageMin(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-int CMasterSkillTree::GetMasterSkillDamageMax(LPOBJ lpObj,int index) // OK
+int CMasterSkillTree::GetMasterSkillDamageMax(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -720,7 +720,7 @@ int CMasterSkillTree::GetMasterSkillDamageMax(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-bool CMasterSkillTree::CheckMasterLevel(LPOBJ lpObj) // OK
+bool CMasterSkillTree::CheckMasterLevel(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -741,7 +741,7 @@ bool CMasterSkillTree::CheckMasterLevel(LPOBJ lpObj) // OK
 	#endif
 }
 
-bool CMasterSkillTree::CheckMasterReplaceSkill(LPOBJ lpObj,int index) // OK
+bool CMasterSkillTree::CheckMasterReplaceSkill(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -763,7 +763,7 @@ bool CMasterSkillTree::CheckMasterReplaceSkill(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-bool CMasterSkillTree::CheckMasterRequireSkill(LPOBJ lpObj,int index) // OK
+bool CMasterSkillTree::CheckMasterRequireSkill(LPOBJ lpObj,int index)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -802,7 +802,7 @@ bool CMasterSkillTree::CheckMasterRequireSkill(LPOBJ lpObj,int index) // OK
 	#endif
 }
 
-bool CMasterSkillTree::CheckMasterRequireGroup(LPOBJ lpObj,int group,int rank) // OK
+bool CMasterSkillTree::CheckMasterRequireGroup(LPOBJ lpObj,int group,int rank)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -855,7 +855,7 @@ bool CMasterSkillTree::CheckMasterRequireGroup(LPOBJ lpObj,int group,int rank) /
 	#endif
 }
 
-void CMasterSkillTree::SetMasterLevelExperienceTable() // OK
+void CMasterSkillTree::SetMasterLevelExperienceTable()
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -890,7 +890,7 @@ void CMasterSkillTree::SetMasterLevelExperienceTable() // OK
 	#endif
 }
 
-void CMasterSkillTree::CalcMasterLevelNextExperience(LPOBJ lpObj) // OK
+void CMasterSkillTree::CalcMasterLevelNextExperience(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -906,7 +906,7 @@ QWORD CMasterSkillTree::GetMasterLevelExpTlbInfo(int iMasterLevel)	//OK
 	return this->m_MasterLevelExperienceTable[iMasterLevel];
 }
 
-void CMasterSkillTree::CalcMasterSkillTreeOption(LPOBJ lpObj,bool flag) // OK
+void CMasterSkillTree::CalcMasterSkillTreeOption(LPOBJ lpObj,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -945,7 +945,7 @@ void CMasterSkillTree::CalcMasterSkillTreeOption(LPOBJ lpObj,bool flag) // OK
 	#endif
 }
 
-void CMasterSkillTree::InsertOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CMasterSkillTree::InsertOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1950,7 +1950,7 @@ void CMasterSkillTree::InsertOption(LPOBJ lpObj,int index,int value,bool flag) /
 	#endif
 }
 
-bool CMasterSkillTree::ReplaceMasterSkill(LPOBJ lpObj,int index,int skill,int level) // OK
+bool CMasterSkillTree::ReplaceMasterSkill(LPOBJ lpObj,int index,int skill,int level)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -1972,7 +1972,7 @@ bool CMasterSkillTree::ReplaceMasterSkill(LPOBJ lpObj,int index,int skill,int le
 	#endif
 }
 
-void CMasterSkillTree::CGMasterSkillRecv(PMSG_MASTER_SKILL_RECV* lpMsg,int aIndex) // OK
+void CMasterSkillTree::CGMasterSkillRecv(PMSG_MASTER_SKILL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -2138,7 +2138,7 @@ void CMasterSkillTree::CGMasterSkillRecv(PMSG_MASTER_SKILL_RECV* lpMsg,int aInde
 	#endif
 }
 
-void CMasterSkillTree::GCMasterInfoSend(LPOBJ lpObj) // OK
+void CMasterSkillTree::GCMasterInfoSend(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2188,7 +2188,7 @@ void CMasterSkillTree::GCMasterInfoSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CMasterSkillTree::GCMasterLevelUpSend(LPOBJ lpObj) // OK
+void CMasterSkillTree::GCMasterLevelUpSend(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2228,7 +2228,7 @@ void CMasterSkillTree::GCMasterLevelUpSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CMasterSkillTree::GCMasterSkillSend(int aIndex,BYTE type,BYTE flag,int MasterPoint,int MasterSkill,int MasterEmpty) // OK
+void CMasterSkillTree::GCMasterSkillSend(int aIndex,BYTE type,BYTE flag,int MasterPoint,int MasterSkill,int MasterEmpty)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2259,7 +2259,7 @@ void CMasterSkillTree::GCMasterSkillSend(int aIndex,BYTE type,BYTE flag,int Mast
 	#endif
 }
 
-void CMasterSkillTree::GCMasterSkillList2Send(int aIndex) // OK
+void CMasterSkillTree::GCMasterSkillList2Send(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -2309,7 +2309,7 @@ void CMasterSkillTree::GCMasterSkillList2Send(int aIndex) // OK
 	#endif
 }
 
-void CMasterSkillTree::GCMasterSkillListSend(int aIndex) // OK
+void CMasterSkillTree::GCMasterSkillListSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=602)
 
@@ -2390,7 +2390,7 @@ void CMasterSkillTree::GCMasterSkillListSend(int aIndex) // OK
 	#endif
 }
 
-void CMasterSkillTree::DGMasterSkillTreeRecv(SDHP_MASTER_SKILL_TREE_RECV* lpMsg) // OK
+void CMasterSkillTree::DGMasterSkillTreeRecv(SDHP_MASTER_SKILL_TREE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2442,7 +2442,7 @@ void CMasterSkillTree::DGMasterSkillTreeRecv(SDHP_MASTER_SKILL_TREE_RECV* lpMsg)
 	#endif
 }
 
-void CMasterSkillTree::GDMasterSkillTreeSend(int aIndex) // OK
+void CMasterSkillTree::GDMasterSkillTreeSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2471,7 +2471,7 @@ void CMasterSkillTree::GDMasterSkillTreeSend(int aIndex) // OK
 	#endif
 }
 
-void CMasterSkillTree::GDMasterSkillTreeSaveSend(int aIndex) // OK
+void CMasterSkillTree::GDMasterSkillTreeSaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=401)
 

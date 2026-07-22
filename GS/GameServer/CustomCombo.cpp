@@ -19,18 +19,18 @@ CCustomCombo gCustomCombo;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomCombo::CCustomCombo() // OK
+CCustomCombo::CCustomCombo()
 {
 	this->m_CustomComboSkillPrimary.clear();
 	this->m_CustomComboSkillSecundary.clear();
 }
 
-CCustomCombo::~CCustomCombo() // OK
+CCustomCombo::~CCustomCombo()
 {
 
 }
 
-void CCustomCombo::Load(char* path) // OK
+void CCustomCombo::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -114,7 +114,7 @@ void CCustomCombo::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomCombo::CheckSkillPrimary(int Skill) // OK
+bool CCustomCombo::CheckSkillPrimary(int Skill)
 {
 	//LogAdd(LOG_BLACK,"%d",Skill);
 	for(std::map<int,CUSTOMCOMBO_INFO>::iterator it=this->m_CustomComboSkillPrimary.begin();it != this->m_CustomComboSkillPrimary.end();it++)
@@ -128,7 +128,7 @@ bool CCustomCombo::CheckSkillPrimary(int Skill) // OK
 	return 0;
 }
 
-bool CCustomCombo::CheckSkillSecundary(int Skill) // OK
+bool CCustomCombo::CheckSkillSecundary(int Skill)
 {
 	//LogAdd(LOG_BLACK,"%d",Skill);
 	for(std::map<int,CUSTOMCOMBO_INFO>::iterator it=this->m_CustomComboSkillSecundary.begin();it != this->m_CustomComboSkillSecundary.end();it++)

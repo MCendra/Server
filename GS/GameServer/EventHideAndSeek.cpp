@@ -17,7 +17,7 @@
 
 CEventHideAndSeek gEventHideAndSeek;
 
-CEventHideAndSeek::CEventHideAndSeek() // OK
+CEventHideAndSeek::CEventHideAndSeek()
 {
 	this->m_RemainTime = 0;
 	this->m_GmIndex = 0;
@@ -25,7 +25,7 @@ CEventHideAndSeek::CEventHideAndSeek() // OK
 	this->m_EventHideAndSeek = 0;
 }
 
-CEventHideAndSeek::~CEventHideAndSeek() // OK
+CEventHideAndSeek::~CEventHideAndSeek()
 {
 
 }
@@ -39,7 +39,7 @@ void CEventHideAndSeek::Clear()
 	this->m_EventHideAndSeek = 0;
 }
 
-void CEventHideAndSeek::MainProc() // OK
+void CEventHideAndSeek::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -85,7 +85,7 @@ void CEventHideAndSeek::MainProc() // OK
 
 }
 
-void CEventHideAndSeek::CommandEventHideAndSeek(LPOBJ lpObj,char* arg) // OK 
+void CEventHideAndSeek::CommandEventHideAndSeek(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventHideAndSeekSwitch == 0)
@@ -117,7 +117,7 @@ void CEventHideAndSeek::CommandEventHideAndSeek(LPOBJ lpObj,char* arg) // OK
 	LogAdd(LOG_EVENT,"[EVENT HIDE AND SEEK] Start");
 }
 
-int CEventHideAndSeek::EventHideAndSeekTrade(int aIndex,int bIndex) // OK 
+int CEventHideAndSeek::EventHideAndSeekTrade(int aIndex,int bIndex) 
 {
 
 	if(gServerInfo.m_EventHideAndSeekSwitch == 0)

@@ -13,17 +13,17 @@ CMonsterAIAutomataInfo CMonsterAIAutomata::m_MonsterAIAutomataInfoArray[MAX_MONS
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIAutomata::CMonsterAIAutomata() // OK
+CMonsterAIAutomata::CMonsterAIAutomata()
 {
 	CMonsterAIAutomata::DelAllAutomata();
 }
 
-CMonsterAIAutomata::~CMonsterAIAutomata() // OK
+CMonsterAIAutomata::~CMonsterAIAutomata()
 {
 
 }
 
-void CMonsterAIAutomata::LoadData(char* path) // OK
+void CMonsterAIAutomata::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -108,7 +108,7 @@ void CMonsterAIAutomata::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterAIAutomata::DelAllAutomata() // OK
+void CMonsterAIAutomata::DelAllAutomata()
 {
 	CMonsterAIAutomata::m_DataLoad = 0;
 
@@ -118,7 +118,7 @@ void CMonsterAIAutomata::DelAllAutomata() // OK
 	}
 }
 
-CMonsterAIAutomataInfo* CMonsterAIAutomata::FindAutomataInfo(int AutomataNumber) // OK
+CMonsterAIAutomataInfo* CMonsterAIAutomata::FindAutomataInfo(int AutomataNumber)
 {
 	if(AutomataNumber < 0 || AutomataNumber >= MAX_MONSTER_AI_AUTOMATA_INFO)
 	{

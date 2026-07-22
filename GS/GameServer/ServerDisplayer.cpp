@@ -46,7 +46,7 @@ CServerDisplayer::CServerDisplayer()
 	strncpy_s(m_displayertext[1], sizeof(m_displayertext[1]), GAMESERVER_ACTIVE, _TRUNCATE);
 }
 
-CServerDisplayer::~CServerDisplayer() // OK
+CServerDisplayer::~CServerDisplayer()
 {
 	DeleteObject(this->m_font);
 	DeleteObject(this->m_brush[0]);
@@ -128,7 +128,7 @@ void CServerDisplayer::Init(HWND hWnd)
 
 }
 
-void CServerDisplayer::Run() // OK
+void CServerDisplayer::Run()
 {
 	this->LogTextPaint();
 	this->PaintName();
@@ -144,7 +144,7 @@ void CServerDisplayer::Run() // OK
 	this->LogTextPaintGlobalMessage();
 }
 
-void CServerDisplayer::SetWindowName() // OK
+void CServerDisplayer::SetWindowName()
 {
 	char buff[256];
 
@@ -208,7 +208,7 @@ void CServerDisplayer::SetWindowName() // OK
 
 }
 
-void CServerDisplayer::PaintAllInfo() // OK activo y desactivado
+void CServerDisplayer::PaintAllInfo() activo y desactivado
 {
 	RECT rect;
 
@@ -250,7 +250,7 @@ void CServerDisplayer::PaintAllInfo() // OK activo y desactivado
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::PaintOnline() // OK
+void CServerDisplayer::PaintOnline()
 {
 	RECT rect;
 
@@ -309,7 +309,7 @@ void CServerDisplayer::PaintOnline() // OK
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::PaintSeason() // OK Season6
+void CServerDisplayer::PaintSeason() Season6
 {
 	RECT rect;
 
@@ -348,7 +348,7 @@ void CServerDisplayer::PaintSeason() // OK Season6
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::PaintPremium() // OK
+void CServerDisplayer::PaintPremium()
 {
 	RECT rect;
 
@@ -382,7 +382,7 @@ void CServerDisplayer::PaintPremium() // OK
 }
 
 
-void CServerDisplayer::PaintName() // OK nombre
+void CServerDisplayer::PaintName() nombre
 {
 	RECT rect;
 	GetClientRect(this->m_hwnd, &rect);
@@ -412,7 +412,7 @@ void CServerDisplayer::PaintName() // OK nombre
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::PaintEventTime() // OK
+void CServerDisplayer::PaintEventTime()
 {
 #if(GAMESERVER_TYPE==0)
 	RECT rect;
@@ -1245,7 +1245,7 @@ void CServerDisplayer::PaintEventTime() // OK
 #endif
 }
 
-void CServerDisplayer::PaintInvasionTime() // OK
+void CServerDisplayer::PaintInvasionTime()
 {
 #if(GAMESERVER_TYPE==0)
 	RECT rect;
@@ -1352,7 +1352,7 @@ void CServerDisplayer::PaintInvasionTime() // OK
 #endif
 }
 
-void CServerDisplayer::PaintCustomArenaTime() // OK
+void CServerDisplayer::PaintCustomArenaTime()
 {
 #if(GAMESERVER_TYPE==0)
 	RECT rect;
@@ -1673,7 +1673,7 @@ void CServerDisplayer::PaintCustomArenaTime() // OK
 
 }
 
-void CServerDisplayer::LogTextPaint() // OK
+void CServerDisplayer::LogTextPaint()
 {
 	RECT rect;
 
@@ -1752,7 +1752,7 @@ void CServerDisplayer::LogTextPaint() // OK
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::LogTextPaintConnect() // OK
+void CServerDisplayer::LogTextPaintConnect()
 {
 	RECT rect;
 
@@ -1844,7 +1844,7 @@ void CServerDisplayer::LogTextPaintConnect() // OK
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::LogTextPaintGlobalMessage() // OK
+void CServerDisplayer::LogTextPaintGlobalMessage()
 {
 	RECT rect;
 
@@ -1903,7 +1903,7 @@ void CServerDisplayer::LogTextPaintGlobalMessage() // OK
 	ReleaseDC(this->m_hwnd, hdc);
 }
 
-void CServerDisplayer::LogAddText(eLogColor color, char* text, int size) // OK
+void CServerDisplayer::LogAddText(eLogColor color, char* text, int size)
 {
 	PROTECT_START
 
@@ -1922,7 +1922,7 @@ void CServerDisplayer::LogAddText(eLogColor color, char* text, int size) // OK
 		gLog.Output(LOG_GENERAL, "%s", &text[9]);
 }
 
-void CServerDisplayer::LogAddTextConnect(eLogColor color, char* text, int size) // OK
+void CServerDisplayer::LogAddTextConnect(eLogColor color, char* text, int size)
 {
 	PROTECT_START
 
@@ -1941,7 +1941,7 @@ void CServerDisplayer::LogAddTextConnect(eLogColor color, char* text, int size) 
 		gLog.Output(LOG_GENERAL, "%s", &text[9]);
 }
 
-void CServerDisplayer::LogAddTextGlobal(eLogColor color, char* text, int size) // OK
+void CServerDisplayer::LogAddTextGlobal(eLogColor color, char* text, int size)
 {
 	PROTECT_START
 

@@ -17,7 +17,12 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 constexpr int WINDOW_WIDTH = 980;                  // Ancho de la ventana
 constexpr int WINDOW_HEIGHT = 750;                 // Alto de la ventana
 
-//int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow) // OK
+constexpr char CONFIRM_EXIT_MESSAGE[] = "\xBFTerminar JoinServer?"; // \xBF = ¿ en ANSI
+constexpr char CONFIRM_EXIT_TITLE[] = "Confirmar cierre";
+constexpr char ERROR_WSA_STARTUP[] = "[GS] Fallo critico: WSAStartup() error %d. El servidor no puede iniciar.";
+constexpr char ERROR_TCP_STARTUP[] = "[GS] Fallo critico: no se pudo iniciar el socket TCP en el puerto %d.";
+
+//int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
 	/*if(gProtect.ReadMainFile("..\\Data\\Hack\\keyword.enc") == 0)
@@ -61,8 +66,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 //	CreateThread(NULL, NULL, LPTHREAD_START_ROUTINE(RamFix), NULL, 0, 0); // Ram Fix
 //#endif
 
-	gServerInfo.ReadStartupInfo("GameServerInfo",".\\Data\\GameServerInfo - Common.ini");
-
 	//#if(PROTECT_STATE==1)
 
 	//#if(GAMESERVER_UPDATE>=801)
@@ -81,66 +84,71 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	//#endif
 
-	char buff[256];
-
-	wsprintf(buff,"[%s] %s (ON: %d) %s",GAMESERVER_VERSION,gServerInfo.m_ServerName, gObjTotalUser,GAMESERVER_CLIENT);
-
-	SetWindowText(hWnd,buff);
-
+	// ------------------------------------------------------------------
+	// Secuencia de arranque de red y base de datos.
+	//
+	// A diferencia de ConnectServer (que solo abre sockets), JoinServer
+	// depende de tres recursos externos en cadena: Winsock, la base de
+	// datos (ODBC) y el socket UDP de notificacion hacia ConnectServer.
+	// Si cualquiera falla, abortamos con mensaje claro en vez de dejar
+	// el proceso "vivo" pero inoperante (mismo criterio aplicado en CS).
+	// ------------------------------------------------------------------
 
 	WSADATA wsa;
-
-	if(WSAStartup(MAKEWORD(2,2),&wsa) == 0)
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
-		if(gSocketManager.Start((WORD)gServerInfo.m_ServerPort) == 0)
-		{
-			LogAdd(LOG_RED,"Không Thể Mở GameServer");
-		}
-		else
-		{
-			GameMainInit(hWnd);
+		Log.ToFile(LogType::GENERAL, ERROR_WSA_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_WSA_STARTUP, WSAGetLastError());
+		CMiniDump::Clean();
+		return false;  // gUtil.ErrorMessageBox ya llama ExitProcess, pero por claridad dejamos el return
+	}
 
-			JoinServerConnect(WM_JOIN_SERVER_MSG_PROC);
+	bool wsaStarted = true;
 
-			DataServerConnect(WM_DATA_SERVER_MSG_PROC);
+	if (!gSocketManager.Init(ServerPort))
+	{
+		Log.ToFile(LogType::GENERAL, ERROR_TCP_STARTUP, WSAGetLastError());
+		gUtil.ErrorMessageBox(ERROR_TCP_STARTUP, ServerPort);
+		return false;
+	}
 
-			gSocketManagerUdp.Connect(gServerInfo.m_ConnectServerAddress,(WORD)gServerInfo.m_ConnectServerPort);
+	GameMainInit(hWnd);
 
-			SetTimer(hWnd,WM_TIMER_1000,1000,0);
+	JoinServerConnect(WM_JOIN_SERVER_MSG_PROC);
 
-			SetTimer(hWnd,WM_TIMER_10000,10000,0);
+	DataServerConnect(WM_DATA_SERVER_MSG_PROC);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER,100,&QueueTimerCallback);
+	gSocketManagerUdp.Connect(gServerInfo.m_ConnectServerAddress,(WORD)gServerInfo.m_ConnectServerPort);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER_MOVE,100,&QueueTimerCallback);
+	SetTimer(hWnd,WM_TIMER_1000,1000,0);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER_AI,100,&QueueTimerCallback);
+	SetTimer(hWnd,WM_TIMER_10000,10000,0);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER_AI_MOVE,100,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER,100,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_EVENT,100,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER_MOVE,100,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_VIEWPORT,1000,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER_AI,100,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_FIRST,1000,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_MONSTER_AI_MOVE,100,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_CLOSE,1000,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_EVENT,100,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_MATH_AUTHENTICATOR,10000,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_VIEWPORT,1000,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_ACCOUNT_LEVEL,60000,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_FIRST,1000,&QueueTimerCallback);
 
-			gQueueTimer.CreateTimer(QUEUE_TIMER_PICK_COMMAND,6000,&QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_CLOSE,1000,&QueueTimerCallback);
+
+	gQueueTimer.CreateTimer(QUEUE_TIMER_MATH_AUTHENTICATOR,10000,&QueueTimerCallback);
+
+	gQueueTimer.CreateTimer(QUEUE_TIMER_ACCOUNT_LEVEL,60000,&QueueTimerCallback);
+
+	gQueueTimer.CreateTimer(QUEUE_TIMER_PICK_COMMAND,6000,&QueueTimerCallback);
 #if(RANKING_NEW == 1)
-			gQueueTimer.CreateTimer(QUEUE_TIMER_RANKING, 180000, &QueueTimerCallback);
+	gQueueTimer.CreateTimer(QUEUE_TIMER_RANKING, 180000, &QueueTimerCallback);
 #endif
 
-		}
-	}
-	else
-	{
-		LogAdd(LOG_RED,"WSAStartup() failed with error: %d",WSAGetLastError());
-	}
 
 	gServerDisplayer.PaintAllInfo();
 
@@ -162,8 +170,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	}
 
 	CMiniDump::Clean();
-
-	VM_END
 
 	return msg.wParam;
 }
@@ -225,7 +231,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return true;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // OK
+LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam)
 {
 
 	const char ClassName[] = "MainWindowClass";
@@ -679,7 +685,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT message,WPARAM wParam,LPARAM lParam) // 
 	return 0;
 }
 
-LRESULT CALLBACK About(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam) // OK
+LRESULT CALLBACK About(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam)
 {
 	switch(message)
 	{
@@ -697,7 +703,7 @@ LRESULT CALLBACK About(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam) // OK
 	return 0;
 }
 
-LRESULT CALLBACK UserOnline(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam) // OK
+LRESULT CALLBACK UserOnline(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam)
 {
 	
 	switch(message)
@@ -783,7 +789,7 @@ LRESULT CALLBACK UserOnline(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam) 
 //antiflood
 std::map<std::string, IP_ADDRESS_INFO>::iterator it;
 std::map<std::string, IP_ADDRESS_INFO>::iterator buscador;
-LRESULT CALLBACK IPBanned(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) // OK
+LRESULT CALLBACK IPBanned(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{

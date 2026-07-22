@@ -19,17 +19,17 @@ CItemDrop gItemDrop;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemDrop::CItemDrop() // OK
+CItemDrop::CItemDrop()
 {
 	this->m_ItemDropInfo.clear();
 }
 
-CItemDrop::~CItemDrop() // OK
+CItemDrop::~CItemDrop()
 {
 
 }
 
-void CItemDrop::Load(char* path) // OK
+void CItemDrop::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -107,7 +107,7 @@ void CItemDrop::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-int CItemDrop::DropItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
+int CItemDrop::DropItem(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	CRandomManager RandomManager;
 
@@ -193,7 +193,7 @@ int CItemDrop::DropItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-int CItemDrop::GetItemDropRate(LPOBJ lpObj,LPOBJ lpTarget,int ItemIndex,int ItemLevel,int DropRate) // OK
+int CItemDrop::GetItemDropRate(LPOBJ lpObj,LPOBJ lpTarget,int ItemIndex,int ItemLevel,int DropRate)
 {
 	if(ItemIndex == GET_ITEM(12,25) || ItemIndex == GET_ITEM(14,13) || ItemIndex == GET_ITEM(14,14) || ItemIndex == GET_ITEM(14,16) || ItemIndex == GET_ITEM(14,22) || ItemIndex == GET_ITEM(14,31))
 	{

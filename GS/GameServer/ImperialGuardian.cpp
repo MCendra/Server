@@ -26,7 +26,7 @@ CImperialGuardian gImperialGuardian;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CImperialGuardian::CImperialGuardian() // OK
+CImperialGuardian::CImperialGuardian()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -58,12 +58,12 @@ CImperialGuardian::CImperialGuardian() // OK
 	#endif
 }
 
-CImperialGuardian::~CImperialGuardian() // OK
+CImperialGuardian::~CImperialGuardian()
 {
 
 }
 
-void CImperialGuardian::Load(char* path) // OK
+void CImperialGuardian::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -168,7 +168,7 @@ void CImperialGuardian::Load(char* path) // OK
 	#endif
 }
 
-void CImperialGuardian::MainProc() // OK
+void CImperialGuardian::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -220,12 +220,12 @@ void CImperialGuardian::MainProc() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_EMPTY() // OK
+void CImperialGuardian::ProcState_EMPTY()
 {
 
 }
 
-void CImperialGuardian::ProcState_WAIT1() // OK
+void CImperialGuardian::ProcState_WAIT1()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -260,7 +260,7 @@ void CImperialGuardian::ProcState_WAIT1() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_PLAY1() // OK
+void CImperialGuardian::ProcState_PLAY1()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -306,7 +306,7 @@ void CImperialGuardian::ProcState_PLAY1() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_WAIT2() // OK
+void CImperialGuardian::ProcState_WAIT2()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -341,7 +341,7 @@ void CImperialGuardian::ProcState_WAIT2() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_PLAY2() // OK
+void CImperialGuardian::ProcState_PLAY2()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -387,7 +387,7 @@ void CImperialGuardian::ProcState_PLAY2() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_WAIT3() // OK
+void CImperialGuardian::ProcState_WAIT3()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -422,7 +422,7 @@ void CImperialGuardian::ProcState_WAIT3() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_PLAY3() // OK
+void CImperialGuardian::ProcState_PLAY3()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -474,7 +474,7 @@ void CImperialGuardian::ProcState_PLAY3() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_WAIT4() // OK
+void CImperialGuardian::ProcState_WAIT4()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -509,7 +509,7 @@ void CImperialGuardian::ProcState_WAIT4() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_PLAY4() // OK
+void CImperialGuardian::ProcState_PLAY4()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -550,7 +550,7 @@ void CImperialGuardian::ProcState_PLAY4() // OK
 	#endif
 }
 
-void CImperialGuardian::ProcState_CLEAN() // OK
+void CImperialGuardian::ProcState_CLEAN()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -579,7 +579,7 @@ void CImperialGuardian::ProcState_CLEAN() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState(int state) // OK
+void CImperialGuardian::SetState(int state)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -622,7 +622,7 @@ void CImperialGuardian::SetState(int state) // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_EMPTY() // OK
+void CImperialGuardian::SetState_EMPTY()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -681,7 +681,7 @@ void CImperialGuardian::SetState_EMPTY() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_WAIT1() // OK
+void CImperialGuardian::SetState_WAIT1()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -707,7 +707,7 @@ void CImperialGuardian::SetState_WAIT1() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_PLAY1() // OK
+void CImperialGuardian::SetState_PLAY1()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -773,7 +773,7 @@ void CImperialGuardian::SetState_PLAY1() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_WAIT2() // OK
+void CImperialGuardian::SetState_WAIT2()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -797,7 +797,7 @@ void CImperialGuardian::SetState_WAIT2() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_PLAY2() // OK
+void CImperialGuardian::SetState_PLAY2()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -863,7 +863,7 @@ void CImperialGuardian::SetState_PLAY2() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_WAIT3() // OK
+void CImperialGuardian::SetState_WAIT3()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -887,7 +887,7 @@ void CImperialGuardian::SetState_WAIT3() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_PLAY3() // OK
+void CImperialGuardian::SetState_PLAY3()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -973,7 +973,7 @@ void CImperialGuardian::SetState_PLAY3() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_WAIT4() // OK
+void CImperialGuardian::SetState_WAIT4()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1003,7 +1003,7 @@ void CImperialGuardian::SetState_WAIT4() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_PLAY4() // OK
+void CImperialGuardian::SetState_PLAY4()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1053,7 +1053,7 @@ void CImperialGuardian::SetState_PLAY4() // OK
 	#endif
 }
 
-void CImperialGuardian::SetState_CLEAN() // OK
+void CImperialGuardian::SetState_CLEAN()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1133,7 +1133,7 @@ void CImperialGuardian::SetState_CLEAN() // OK
 	#endif
 }
 
-int CImperialGuardian::GetState() // OK
+int CImperialGuardian::GetState()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1146,7 +1146,7 @@ int CImperialGuardian::GetState() // OK
 	#endif
 }
 
-bool CImperialGuardian::AddUser(int aIndex) // OK
+bool CImperialGuardian::AddUser(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1181,7 +1181,7 @@ bool CImperialGuardian::AddUser(int aIndex) // OK
 	#endif
 }
 
-bool CImperialGuardian::DelUser(int aIndex) // OK
+bool CImperialGuardian::DelUser(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1214,7 +1214,7 @@ bool CImperialGuardian::DelUser(int aIndex) // OK
 	#endif
 }
 
-IMPERIAL_GUARDIAN_USER* CImperialGuardian::GetUser(int aIndex) // OK
+IMPERIAL_GUARDIAN_USER* CImperialGuardian::GetUser(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1240,7 +1240,7 @@ IMPERIAL_GUARDIAN_USER* CImperialGuardian::GetUser(int aIndex) // OK
 	#endif
 }
 
-void CImperialGuardian::CleanUser() // OK
+void CImperialGuardian::CleanUser()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1253,7 +1253,7 @@ void CImperialGuardian::CleanUser() // OK
 	#endif
 }
 
-void CImperialGuardian::ClearUser() // OK
+void CImperialGuardian::ClearUser()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1273,7 +1273,7 @@ void CImperialGuardian::ClearUser() // OK
 	#endif
 }
 
-void CImperialGuardian::CheckUser() // OK
+void CImperialGuardian::CheckUser()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1300,7 +1300,7 @@ void CImperialGuardian::CheckUser() // OK
 	#endif
 }
 
-int CImperialGuardian::GetUserCount() // OK
+int CImperialGuardian::GetUserCount()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1323,7 +1323,7 @@ int CImperialGuardian::GetUserCount() // OK
 	#endif
 }
 
-void CImperialGuardian::GiveUserRewardExperience(int aIndex) // OK
+void CImperialGuardian::GiveUserRewardExperience(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1360,7 +1360,7 @@ void CImperialGuardian::GiveUserRewardExperience(int aIndex) // OK
 	#endif
 }
 
-bool CImperialGuardian::AddMonster(int aIndex) // OK
+bool CImperialGuardian::AddMonster(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1394,7 +1394,7 @@ bool CImperialGuardian::AddMonster(int aIndex) // OK
 	#endif
 }
 
-bool CImperialGuardian::DelMonster(int aIndex) // OK
+bool CImperialGuardian::DelMonster(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1420,7 +1420,7 @@ bool CImperialGuardian::DelMonster(int aIndex) // OK
 	#endif
 }
 
-int* CImperialGuardian::GetMonster(int aIndex) // OK
+int* CImperialGuardian::GetMonster(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1446,7 +1446,7 @@ int* CImperialGuardian::GetMonster(int aIndex) // OK
 	#endif
 }
 
-void CImperialGuardian::CleanMonster() // OK
+void CImperialGuardian::CleanMonster()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1458,7 +1458,7 @@ void CImperialGuardian::CleanMonster() // OK
 	#endif
 }
 
-void CImperialGuardian::ClearMonster() // OK
+void CImperialGuardian::ClearMonster()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1474,7 +1474,7 @@ void CImperialGuardian::ClearMonster() // OK
 	#endif
 }
 
-void CImperialGuardian::ClearMonsterTrap() // OK
+void CImperialGuardian::ClearMonsterTrap()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1489,7 +1489,7 @@ void CImperialGuardian::ClearMonsterTrap() // OK
 	#endif
 }
 
-int CImperialGuardian::GetMonsterCount() // OK
+int CImperialGuardian::GetMonsterCount()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1512,7 +1512,7 @@ int CImperialGuardian::GetMonsterCount() // OK
 	#endif
 }
 
-void CImperialGuardian::SetSideGate() // OK
+void CImperialGuardian::SetSideGate()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1577,7 +1577,7 @@ void CImperialGuardian::SetSideGate() // OK
 	#endif
 }
 
-void CImperialGuardian::SetLockGate() // OK
+void CImperialGuardian::SetLockGate()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1642,7 +1642,7 @@ void CImperialGuardian::SetLockGate() // OK
 	#endif
 }
 
-void CImperialGuardian::SetMainGate() // OK
+void CImperialGuardian::SetMainGate()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1707,7 +1707,7 @@ void CImperialGuardian::SetMainGate() // OK
 	#endif
 }
 
-void CImperialGuardian::SetSideBoss(int MonsterClass) // OK
+void CImperialGuardian::SetSideBoss(int MonsterClass)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1775,7 +1775,7 @@ void CImperialGuardian::SetSideBoss(int MonsterClass) // OK
 	#endif
 }
 
-void CImperialGuardian::SetMainBoss(int MonsterClass) // OK
+void CImperialGuardian::SetMainBoss(int MonsterClass)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1843,7 +1843,7 @@ void CImperialGuardian::SetMainBoss(int MonsterClass) // OK
 	#endif
 }
 
-void CImperialGuardian::SetMonster(int MonsterClass) // OK
+void CImperialGuardian::SetMonster(int MonsterClass)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1910,7 +1910,7 @@ void CImperialGuardian::SetMonster(int MonsterClass) // OK
 	#endif
 }
 
-void CImperialGuardian::SetMonsterTrap(int MonsterClass) // OK
+void CImperialGuardian::SetMonsterTrap(int MonsterClass)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1958,7 +1958,7 @@ void CImperialGuardian::SetMonsterTrap(int MonsterClass) // OK
 	#endif
 }
 
-void CImperialGuardian::NpcJerryTheAdviser(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CImperialGuardian::NpcJerryTheAdviser(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1984,7 +1984,7 @@ void CImperialGuardian::NpcJerryTheAdviser(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CImperialGuardian::MoveGate(LPOBJ lpObj,int gate) // OK
+void CImperialGuardian::MoveGate(LPOBJ lpObj,int gate)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2018,7 +2018,7 @@ void CImperialGuardian::MoveGate(LPOBJ lpObj,int gate) // OK
 	#endif
 }
 
-void CImperialGuardian::DropSideBossItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CImperialGuardian::DropSideBossItem(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2062,7 +2062,7 @@ void CImperialGuardian::DropSideBossItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CImperialGuardian::DropMainBossItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CImperialGuardian::DropMainBossItem(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2098,7 +2098,7 @@ void CImperialGuardian::DropMainBossItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterLevel(float value) // OK
+float CImperialGuardian::GetMonsterLevel(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2113,7 +2113,7 @@ float CImperialGuardian::GetMonsterLevel(float value) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterLife(float value) // OK
+float CImperialGuardian::GetMonsterLife(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2128,7 +2128,7 @@ float CImperialGuardian::GetMonsterLife(float value) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterDamageMin(float value) // OK
+float CImperialGuardian::GetMonsterDamageMin(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2143,7 +2143,7 @@ float CImperialGuardian::GetMonsterDamageMin(float value) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterDamageMax(float value) // OK
+float CImperialGuardian::GetMonsterDamageMax(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2158,7 +2158,7 @@ float CImperialGuardian::GetMonsterDamageMax(float value) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterDefense(float value) // OK
+float CImperialGuardian::GetMonsterDefense(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2173,7 +2173,7 @@ float CImperialGuardian::GetMonsterDefense(float value) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterAttackSuccessRate(float value) // OK
+float CImperialGuardian::GetMonsterAttackSuccessRate(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2188,7 +2188,7 @@ float CImperialGuardian::GetMonsterAttackSuccessRate(float value) // OK
 	#endif
 }
 
-float CImperialGuardian::GetMonsterDefenseSuccessRate(float value) // OK
+float CImperialGuardian::GetMonsterDefenseSuccessRate(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2203,7 +2203,7 @@ float CImperialGuardian::GetMonsterDefenseSuccessRate(float value) // OK
 	#endif
 }
 
-void CImperialGuardian::SetSideGateZone() // OK
+void CImperialGuardian::SetSideGateZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2226,7 +2226,7 @@ void CImperialGuardian::SetSideGateZone() // OK
 	#endif
 }
 
-void CImperialGuardian::SetLockGateZone() // OK
+void CImperialGuardian::SetLockGateZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2249,7 +2249,7 @@ void CImperialGuardian::SetLockGateZone() // OK
 	#endif
 }
 
-void CImperialGuardian::SetMainGateZone() // OK
+void CImperialGuardian::SetMainGateZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2272,7 +2272,7 @@ void CImperialGuardian::SetMainGateZone() // OK
 	#endif
 }
 
-void CImperialGuardian::DelSideGateZone() // OK
+void CImperialGuardian::DelSideGateZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2295,7 +2295,7 @@ void CImperialGuardian::DelSideGateZone() // OK
 	#endif
 }
 
-void CImperialGuardian::DelLockGateZone() // OK
+void CImperialGuardian::DelLockGateZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2318,7 +2318,7 @@ void CImperialGuardian::DelLockGateZone() // OK
 	#endif
 }
 
-void CImperialGuardian::DelMainGateZone() // OK
+void CImperialGuardian::DelMainGateZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2341,7 +2341,7 @@ void CImperialGuardian::DelMainGateZone() // OK
 	#endif
 }
 
-void CImperialGuardian::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CImperialGuardian::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2367,7 +2367,7 @@ void CImperialGuardian::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CImperialGuardian::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CImperialGuardian::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2498,7 +2498,7 @@ void CImperialGuardian::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CImperialGuardian::NoticeSendToAll(int type,char* message,...) // OK
+void CImperialGuardian::NoticeSendToAll(int type,char* message,...)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2520,7 +2520,7 @@ void CImperialGuardian::NoticeSendToAll(int type,char* message,...) // OK
 	#endif
 }
 
-void CImperialGuardian::DataSendToAll(BYTE* lpMsg,int size) // OK
+void CImperialGuardian::DataSendToAll(BYTE* lpMsg,int size)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2535,7 +2535,7 @@ void CImperialGuardian::DataSendToAll(BYTE* lpMsg,int size) // OK
 	#endif
 }
 
-void CImperialGuardian::CGImperialGuardianEnterRecv(PMSG_IMPERIAL_GUARDIAN_ENTER_RECV* lpMsg,int aIndex) // OK
+void CImperialGuardian::CGImperialGuardianEnterRecv(PMSG_IMPERIAL_GUARDIAN_ENTER_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2661,7 +2661,7 @@ void CImperialGuardian::CGImperialGuardianEnterRecv(PMSG_IMPERIAL_GUARDIAN_ENTER
 	#endif
 }
 
-void CImperialGuardian::GCImperialGuardianStateSend(int state,int aIndex) // OK
+void CImperialGuardian::GCImperialGuardianStateSend(int state,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2691,7 +2691,7 @@ void CImperialGuardian::GCImperialGuardianStateSend(int state,int aIndex) // OK
 	#endif
 }
 
-void CImperialGuardian::GCImperialGuardianInterfaceSend() // OK
+void CImperialGuardian::GCImperialGuardianInterfaceSend()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2714,7 +2714,7 @@ void CImperialGuardian::GCImperialGuardianInterfaceSend() // OK
 	#endif
 }
 
-void CImperialGuardian::GCImperialGuardianResultSend(int aIndex,int result,int experience) // OK
+void CImperialGuardian::GCImperialGuardianResultSend(int aIndex,int result,int experience)
 {
 	#if(GAMESERVER_UPDATE>=501)
 

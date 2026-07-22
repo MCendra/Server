@@ -26,17 +26,17 @@ CCustomQuest gCustomQuest;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomQuest::CCustomQuest() // OK
+CCustomQuest::CCustomQuest()
 {
 	this->Init();
 }
 
-CCustomQuest::~CCustomQuest() // OK
+CCustomQuest::~CCustomQuest()
 {
 
 }
 
-void CCustomQuest::Init() // OK
+void CCustomQuest::Init()
 {
 	//for(int n=0;n < MAX_CUSTOM_QUEST;n++)
 	//{
@@ -54,7 +54,7 @@ void CCustomQuest::Init() // OK
 	this->m_CustomQuestRewardBuffInfo.clear();
 }
 
-void CCustomQuest::Load(char* path) // OK
+void CCustomQuest::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -278,7 +278,7 @@ void CCustomQuest::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomQuest::CheckAll(int quest) // OK
+bool CCustomQuest::CheckAll(int quest)
 {
 	for(std::vector<CUSTOM_QUEST_CHARACTER>::iterator it=this->m_CustomQuestCharacterInfo.begin();it != this->m_CustomQuestCharacterInfo.end();it++)
 	{
@@ -298,7 +298,7 @@ bool CCustomQuest::CheckAll(int quest) // OK
 	return 0;
 }
 
-bool CCustomQuest::CheckCharacter(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomQuest::CheckCharacter(LPOBJ lpObj,int quest,int Npc)
 {
 	for(std::vector<CUSTOM_QUEST_CHARACTER>::iterator it=this->m_CustomQuestCharacterInfo.begin();it != this->m_CustomQuestCharacterInfo.end();it++)
 	{
@@ -426,7 +426,7 @@ bool CCustomQuest::CheckCharacter(LPOBJ lpObj,int quest,int Npc) // OK
 	return 1;
 }
 
-bool CCustomQuest::CheckItem(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomQuest::CheckItem(LPOBJ lpObj,int quest,int Npc)
 {
 	int ItemOK;
 	int Qtd;
@@ -520,7 +520,7 @@ bool CCustomQuest::CheckItem(LPOBJ lpObj,int quest,int Npc) // OK
 	return 1;
 }
 
-bool CCustomQuest::CheckMonster(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomQuest::CheckMonster(LPOBJ lpObj,int quest,int Npc)
 {
 	for(std::vector<CUSTOM_QUEST_MONSTER>::iterator it=this->m_CustomQuestMonsterInfo.begin();it != this->m_CustomQuestMonsterInfo.end();it++)
 	{
@@ -555,7 +555,7 @@ bool CCustomQuest::CheckMonster(LPOBJ lpObj,int quest,int Npc) // OK
 	return 1;
 }
 
-bool CCustomQuest::CheckItemRewardInventorySpace(LPOBJ lpObj,int quest,int Npc) // OK
+bool CCustomQuest::CheckItemRewardInventorySpace(LPOBJ lpObj,int quest,int Npc)
 {
 	this->m_LastPosX = 0;
 	this->m_LastPosY = 0;
@@ -591,7 +591,7 @@ bool CCustomQuest::CheckItemRewardInventorySpace(LPOBJ lpObj,int quest,int Npc) 
 	return 1;
 }
 
-bool CCustomQuest::CheckItemInventorySpace(LPOBJ lpObj,int index) // OK
+bool CCustomQuest::CheckItemInventorySpace(LPOBJ lpObj,int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -625,7 +625,7 @@ bool CCustomQuest::CheckItemInventorySpace(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-void CCustomQuest::RemoveItem(LPOBJ lpObj,int quest) // OK
+void CCustomQuest::RemoveItem(LPOBJ lpObj,int quest)
 {
 	int ItemOK;
 	int QtdRemove;
@@ -712,7 +712,7 @@ void CCustomQuest::RemoveItem(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomQuest::RemoveMoney(LPOBJ lpObj,int quest) // OK
+void CCustomQuest::RemoveMoney(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_CHARACTER>::iterator it=this->m_CustomQuestCharacterInfo.begin();it != this->m_CustomQuestCharacterInfo.end();it++)
 	{
@@ -740,7 +740,7 @@ void CCustomQuest::RemoveMoney(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomQuest::AddRewardCoin(LPOBJ lpObj,int quest) // OK
+void CCustomQuest::AddRewardCoin(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD>::iterator it=this->m_CustomQuestRewardInfo.begin();it != this->m_CustomQuestRewardInfo.end();it++)
 	{
@@ -758,7 +758,7 @@ void CCustomQuest::AddRewardCoin(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomQuest::AddRewardItem(LPOBJ lpObj,int quest) // OK
+void CCustomQuest::AddRewardItem(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD_ITEM>::iterator it=this->m_CustomQuestRewardItemInfo.begin();it != this->m_CustomQuestRewardItemInfo.end();it++)
 	{
@@ -799,7 +799,7 @@ void CCustomQuest::AddRewardItem(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomQuest::AddRewardBuff(LPOBJ lpObj,int quest) // OK
+void CCustomQuest::AddRewardBuff(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD_BUFF>::iterator it=this->m_CustomQuestRewardBuffInfo.begin();it != this->m_CustomQuestRewardBuffInfo.end();it++)
 	{
@@ -817,7 +817,7 @@ void CCustomQuest::AddRewardBuff(LPOBJ lpObj,int quest) // OK
 	}
 }
 
-void CCustomQuest::AddRewardExperience(LPOBJ lpObj,int quest) // OK
+void CCustomQuest::AddRewardExperience(LPOBJ lpObj,int quest)
 {
 	for(std::vector<CUSTOM_QUEST_REWARD_EXP>::iterator it=this->m_CustomQuestRewardExpInfo.begin();it != this->m_CustomQuestRewardExpInfo.end();it++)
 	{
@@ -924,7 +924,7 @@ void CCustomQuest::QuestCommand(LPOBJ lpObj,char* arg,int Npc)
 #endif
 }
 
-void CCustomQuest::DGCustomQuestSend(int aIndex) // OK
+void CCustomQuest::DGCustomQuestSend(int aIndex)
 {
 	#if GAMESERVER_CLIENTE_UPDATE >= 3
 	LPOBJ lpObj = &gObj[aIndex];
@@ -941,7 +941,7 @@ void CCustomQuest::DGCustomQuestSend(int aIndex) // OK
 	#endif
 }
 
-void CCustomQuest::DGCustomQuestRecv(SDHP_CUSTOMQUEST_RECV* lpMsg) // OK
+void CCustomQuest::DGCustomQuestRecv(SDHP_CUSTOMQUEST_RECV* lpMsg)
 {
 	#if GAMESERVER_CLIENTE_UPDATE >= 3
 	LPOBJ lpObj = &gObj[lpMsg->index];

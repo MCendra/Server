@@ -10,17 +10,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIAgro::CMonsterAIAgro() // OK
+CMonsterAIAgro::CMonsterAIAgro()
 {
 	this->ResetAll();
 }
 
-CMonsterAIAgro::~CMonsterAIAgro() // OK
+CMonsterAIAgro::~CMonsterAIAgro()
 {
 
 }
 
-void CMonsterAIAgro::ResetAll() // OK
+void CMonsterAIAgro::ResetAll()
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -28,7 +28,7 @@ void CMonsterAIAgro::ResetAll() // OK
 	}
 }
 
-bool CMonsterAIAgro::SetAgro(int aIndex,int value) // OK
+bool CMonsterAIAgro::SetAgro(int aIndex,int value)
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -42,7 +42,7 @@ bool CMonsterAIAgro::SetAgro(int aIndex,int value) // OK
 	return 0;
 }
 
-bool CMonsterAIAgro::DelAgro(int aIndex) // OK
+bool CMonsterAIAgro::DelAgro(int aIndex)
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -56,7 +56,7 @@ bool CMonsterAIAgro::DelAgro(int aIndex) // OK
 	return 0;
 }
 
-int CMonsterAIAgro::GetAgro(int aIndex) // OK
+int CMonsterAIAgro::GetAgro(int aIndex)
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -69,7 +69,7 @@ int CMonsterAIAgro::GetAgro(int aIndex) // OK
 	return -1;
 }
 
-int CMonsterAIAgro::IncAgro(int aIndex,int value) // OK
+int CMonsterAIAgro::IncAgro(int aIndex,int value)
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -82,7 +82,7 @@ int CMonsterAIAgro::IncAgro(int aIndex,int value) // OK
 	return -1;
 }
 
-int CMonsterAIAgro::DecAgro(int aIndex,int value) // OK
+int CMonsterAIAgro::DecAgro(int aIndex,int value)
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -95,7 +95,7 @@ int CMonsterAIAgro::DecAgro(int aIndex,int value) // OK
 	return -1;
 }
 
-void CMonsterAIAgro::DecAllAgro(int value) // OK
+void CMonsterAIAgro::DecAllAgro(int value)
 {
 	for(int n=0;n < MAX_MONSTER_AI_AGRO;n++)
 	{
@@ -110,7 +110,7 @@ void CMonsterAIAgro::DecAllAgro(int value) // OK
 	}
 }
 
-int CMonsterAIAgro::GetMaxAgroUserIndex(int aIndex) // OK
+int CMonsterAIAgro::GetMaxAgroUserIndex(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

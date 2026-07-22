@@ -30,7 +30,7 @@ CCrywolf gCrywolf;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCrywolf::CCrywolf() // OK
+CCrywolf::CCrywolf()
 {
 	this->m_CrywolfState = CRYWOLF_STATE_NONE;
 	this->m_OccupationState = 0;
@@ -42,12 +42,12 @@ CCrywolf::CCrywolf() // OK
 	this->m_BossIndex = -1;
 }
 
-CCrywolf::~CCrywolf() // OK
+CCrywolf::~CCrywolf()
 {
 
 }
 
-void CCrywolf::DelAllData() // OK
+void CCrywolf::DelAllData()
 {
 	this->m_FileDataLoad = 0;
 	this->m_DBDataLoadOK = 0;
@@ -81,7 +81,7 @@ void CCrywolf::DelAllData() // OK
 	this->SetState(CRYWOLF_STATE_NONE);
 }
 
-void CCrywolf::Load(char* path) // OK
+void CCrywolf::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -254,7 +254,7 @@ void CCrywolf::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCrywolf::MainProc() // OK
+void CCrywolf::MainProc()
 {
 	if(gCrywolfSync.CheckEnableCrywolf() == 0)
 	{
@@ -320,12 +320,12 @@ void CCrywolf::MainProc() // OK
 	}
 }
 
-void CCrywolf::ProcState_NONE() // OK
+void CCrywolf::ProcState_NONE()
 {
 
 }
 
-void CCrywolf::ProcState_NOTIFY1() // OK
+void CCrywolf::ProcState_NOTIFY1()
 {
 	if((GetTickCount()-this->m_CrywolfNotifyMsgStartTick) > 70000)
 	{
@@ -334,7 +334,7 @@ void CCrywolf::ProcState_NOTIFY1() // OK
 	}
 }
 
-void CCrywolf::ProcState_NOTIFY2() // OK
+void CCrywolf::ProcState_NOTIFY2()
 {
 	if((GetTickCount()-this->m_CrywolfNotifyMsgStartTick) > 70000)
 	{
@@ -351,7 +351,7 @@ void CCrywolf::ProcState_NOTIFY2() // OK
 	}
 }
 
-void CCrywolf::ProcState_READY() // OK
+void CCrywolf::ProcState_READY()
 {
 	this->NotifyCrywolfStatueAndAltarInfo();
 
@@ -410,17 +410,17 @@ void CCrywolf::ProcState_START()
 	}
 }
 
-void CCrywolf::ProcState_END() // OK
+void CCrywolf::ProcState_END()
 {
 
 }
 
-void CCrywolf::ProcState_ENDCYCLE() // OK
+void CCrywolf::ProcState_ENDCYCLE()
 {
 
 }
 
-void CCrywolf::SetState(int state) // OK
+void CCrywolf::SetState(int state)
 {
 	switch(state)
 	{
@@ -452,7 +452,7 @@ void CCrywolf::SetState(int state) // OK
 	this->CrywolfInfoDBSave();
 }
 
-void CCrywolf::SetState_NONE() // OK
+void CCrywolf::SetState_NONE()
 {
 	LogAdd(LOG_BLUE,"[ Crywolf ] State (%d) -> NONE",this->m_CrywolfState);
 
@@ -464,7 +464,7 @@ void CCrywolf::SetState_NONE() // OK
 
 }
 
-void CCrywolf::SetState_NOTIFY1() // OK
+void CCrywolf::SetState_NOTIFY1()
 {
 	gCrywolfUtil.SendMapServerGroupMsg(gMessage.GetMessage(368));
 
@@ -477,7 +477,7 @@ void CCrywolf::SetState_NOTIFY1() // OK
 	this->m_CrywolfNotifyMsgStartTick = GetTickCount();
 }
 
-void CCrywolf::SetState_NOTIFY2() // OK
+void CCrywolf::SetState_NOTIFY2()
 {
 	gCrywolfUtil.SendMapServerGroupMsg(gMessage.GetMessage(369));
 
@@ -498,7 +498,7 @@ void CCrywolf::SetState_NOTIFY2() // OK
 	this->m_CrywolfNotifyMsgStartTick = GetTickCount();
 }
 
-void CCrywolf::SetState_READY() // OK
+void CCrywolf::SetState_READY()
 {
 	gCrywolfUtil.SendMapServerGroupMsg(gMessage.GetMessage(370));
 
@@ -530,7 +530,7 @@ void CCrywolf::SetState_READY() // OK
 	this->ResetAllUserMVPScore();
 }
 
-void CCrywolf::SetState_START() // OK
+void CCrywolf::SetState_START()
 {
 	gCrywolfUtil.SendMapServerGroupMsg(gMessage.GetMessage(371));
 
@@ -610,7 +610,7 @@ void CCrywolf::SetState_END()
 	this->NotifyCrywolfPersonalRank();
 }
 
-void CCrywolf::SetState_ENDCYCLE() // OK
+void CCrywolf::SetState_ENDCYCLE()
 {
 	LogAdd(LOG_BLUE,"[ Crywolf ] State (%d) -> ENDCYCLE",this->m_CrywolfState);
 
@@ -636,7 +636,7 @@ void CCrywolf::SetState_ENDCYCLE() // OK
 	this->ResetAllUserMVPScore();
 }
 
-void CCrywolf::CheckStateTimeSync() // OK
+void CCrywolf::CheckStateTimeSync()
 {
 	if(this->m_CrywolfState == CRYWOLF_STATE_NONE)
 	{
@@ -679,7 +679,7 @@ void CCrywolf::CheckStateTimeSync() // OK
 	}
 }
 
-void CCrywolf::CrywolfSecondAct() // OK
+void CCrywolf::CrywolfSecondAct()
 {
 	this->CrywolfServerGroupSync();
 
@@ -689,7 +689,7 @@ void CCrywolf::CrywolfSecondAct() // OK
 	}
 }
 
-void CCrywolf::CrywolfServerGroupSync() // OK
+void CCrywolf::CrywolfServerGroupSync()
 {
 	if(this->m_DBDataLoadOK != 0)
 	{
@@ -697,7 +697,7 @@ void CCrywolf::CrywolfServerGroupSync() // OK
 	}
 }
 
-void CCrywolf::CrywolfInfoDBSave() // OK
+void CCrywolf::CrywolfInfoDBSave()
 {
 	if(this->m_DBDataLoadOK != 0)
 	{
@@ -705,14 +705,14 @@ void CCrywolf::CrywolfInfoDBSave() // OK
 	}
 }
 
-void CCrywolf::CrywolfInfoDBLoad() // OK
+void CCrywolf::CrywolfInfoDBLoad()
 {
 	this->m_DBDataLoading = 1;
 
 	GDCrywolfInfoSend(gMapServerManager.GetMapServerGroup());
 }
 
-void CCrywolf::ApplyCrywolfDBInfo(int state) // OK
+void CCrywolf::ApplyCrywolfDBInfo(int state)
 {
 	this->SetDBDataLoad(1);
 
@@ -727,7 +727,7 @@ void CCrywolf::ApplyCrywolfDBInfo(int state) // OK
 	this->CheckSync();
 }
 
-void CCrywolf::ResetAllUserMVPScore() // OK
+void CCrywolf::ResetAllUserMVPScore()
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -738,14 +738,14 @@ void CCrywolf::ResetAllUserMVPScore() // OK
 	}
 }
 
-void CCrywolf::TurnUpBoss() // OK
+void CCrywolf::TurnUpBoss()
 {
 	CMonsterAIGroup::Init(this->m_BossGroupNumber);
 	CMonsterAIGroup::ChangeAIOrder(this->m_BossGroupNumber,1);
 	this->m_BossIndex = CMonsterAIGroup::FindGroupLeader(this->m_BossGroupNumber);
 }
 
-void CCrywolf::ChangeAI(int AIOrder) // OK
+void CCrywolf::ChangeAI(int AIOrder)
 {
 	for(int n=0;n < this->m_MonsterGroupNumberCount;n++)
 	{
@@ -753,7 +753,7 @@ void CCrywolf::ChangeAI(int AIOrder) // OK
 	}
 }
 
-void CCrywolf::CrywolfNpcAct(int aIndex) // OK
+void CCrywolf::CrywolfNpcAct(int aIndex)
 {
 	if(this->GetCrywolfState() == CRYWOLF_STATE_READY || this->GetCrywolfState() == CRYWOLF_STATE_START)
 	{
@@ -763,12 +763,12 @@ void CCrywolf::CrywolfNpcAct(int aIndex) // OK
 	}
 }
 
-void CCrywolf::CrywolfMonsterAct(int aIndex) // OK
+void CCrywolf::CrywolfMonsterAct(int aIndex)
 {
 
 }
 
-void CCrywolf::CreateCrywolfCommonMonster() // OK
+void CCrywolf::CreateCrywolfCommonMonster()
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{
@@ -822,7 +822,7 @@ void CCrywolf::CreateCrywolfCommonMonster() // OK
 	}
 }
 
-void CCrywolf::RemoveCrywolfCommonMonster() // OK
+void CCrywolf::RemoveCrywolfCommonMonster()
 {
 	for(int n=0;n < this->m_ObjCommonMonster.m_ObjCount;n++)
 	{
@@ -832,7 +832,7 @@ void CCrywolf::RemoveCrywolfCommonMonster() // OK
 	this->m_ObjCommonMonster.Reset();
 }
 
-void CCrywolf::NotifyCrywolfCurrentState() // OK
+void CCrywolf::NotifyCrywolfCurrentState()
 {
 	PMSG_CRYWOLF_INFO_SEND pMsg;
 
@@ -847,7 +847,7 @@ void CCrywolf::NotifyCrywolfCurrentState() // OK
 	LogAdd(LOG_BLACK,"[ Crywolf ] SetState - StateInfo : Occupation/%d, State/%d",pMsg.OccupationState,pMsg.CrywolfState);
 }
 
-void CCrywolf::NotifyCrywolfStateLeftTime() // OK
+void CCrywolf::NotifyCrywolfStateLeftTime()
 {
 	static DWORD CrywolfLeftTimeTickCount = 0;
 
@@ -871,7 +871,7 @@ void CCrywolf::NotifyCrywolfStateLeftTime() // OK
 	LogAdd(LOG_BLACK,"[ Crywolf ] War LeftTime - (%02d:%02d)",pMsg.hour,pMsg.minute);
 }
 
-void CCrywolf::NotifyCrywolfStatueAndAltarInfo() // OK
+void CCrywolf::NotifyCrywolfStatueAndAltarInfo()
 {
 	static DWORD CrywolfStatueAndAltarInfoTickCount = 0;
 
@@ -911,7 +911,7 @@ void CCrywolf::NotifyCrywolfStatueAndAltarInfo() // OK
 	}
 }
 
-void CCrywolf::NotifyCrywolfBossMonsterInfo() // OK
+void CCrywolf::NotifyCrywolfBossMonsterInfo()
 {
 	static DWORD CrywolfBossMonsterInfoTickCount = 0;
 
@@ -952,7 +952,7 @@ void CCrywolf::NotifyCrywolfBossMonsterInfo() // OK
 	LogAdd(LOG_BLACK,"[ Crywolf ][Boss Monster Info] Balgars HP:%d, DarkElf:%d",pMsg.BalgassHP,pMsg.DarkElfCount);
 }
 
-void CCrywolf::NotifyCrywolfStageEffectOnOff(int state) // OK
+void CCrywolf::NotifyCrywolfStageEffectOnOff(int state)
 {
 	PMSG_CRYWOLF_STAGE_EFFECT_SEND pMsg;
 
@@ -963,7 +963,7 @@ void CCrywolf::NotifyCrywolfStageEffectOnOff(int state) // OK
 	gCrywolfUtil.SendCrywolfUserAnyData((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void CCrywolf::NotifyCrywolfPersonalRank() // OK
+void CCrywolf::NotifyCrywolfPersonalRank()
 {
 	PMSG_CRYWOLF_RANK_SEND pMsg;
 
@@ -994,7 +994,7 @@ void CCrywolf::NotifyCrywolfPersonalRank() // OK
 	}
 }
 
-void CCrywolf::NotifyCrywolfHeroList() // OK
+void CCrywolf::NotifyCrywolfHeroList()
 {
 	std::vector<LPOBJ> CrywolfHeroList;
 
@@ -1047,7 +1047,7 @@ void CCrywolf::NotifyCrywolfHeroList() // OK
 	gCrywolfUtil.SendCrywolfUserAnyData(send,size);
 }
 
-void CCrywolf::CGCrywolfInfoRecv(int aIndex) // OK
+void CCrywolf::CGCrywolfInfoRecv(int aIndex)
 {
 	if(gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -1065,7 +1065,7 @@ void CCrywolf::CGCrywolfInfoRecv(int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void CCrywolf::CGCrywolfAltarContractRecv(PMSG_CRYWOLF_ALTAR_CONTRACT_RECV* lpMsg,int aIndex) // OK
+void CCrywolf::CGCrywolfAltarContractRecv(PMSG_CRYWOLF_ALTAR_CONTRACT_RECV* lpMsg,int aIndex)
 {
 	if(gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -1106,7 +1106,7 @@ void CCrywolf::CGCrywolfAltarContractRecv(PMSG_CRYWOLF_ALTAR_CONTRACT_RECV* lpMs
 	DataSend(aIndex,(BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void CCrywolf::CGCrywolfChaosRateRecv(int aIndex) // OK
+void CCrywolf::CGCrywolfChaosRateRecv(int aIndex)
 {
 	if(gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -1129,7 +1129,7 @@ void CCrywolf::CGCrywolfChaosRateRecv(int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void CCrywolf::GiveUserRewardExperience(int aIndex,int AddExperience) // OK
+void CCrywolf::GiveUserRewardExperience(int aIndex,int AddExperience)
 {
 	if(gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -1149,7 +1149,7 @@ void CCrywolf::GiveUserRewardExperience(int aIndex,int AddExperience) // OK
 	GCRewardExperienceSend(aIndex,AddExperience);
 }
 
-void CCrywolf::GiveUserRewardItem(int aIndex) // OK
+void CCrywolf::GiveUserRewardItem(int aIndex)
 {
 	if(this->GetOccupationState() == 1)
 	{
@@ -1159,7 +1159,7 @@ void CCrywolf::GiveUserRewardItem(int aIndex) // OK
 	gItemBagManager.DropItemBySpecialValue(ITEM_BAG_CRYWOLF,&gObj[aIndex],gObj[aIndex].Map,gObj[aIndex].X,gObj[aIndex].Y);
 }
 
-void CCrywolf::CrywolfMonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CCrywolf::CrywolfMonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 
@@ -1195,7 +1195,7 @@ void CCrywolf::CrywolfMonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-void CCrywolf::LoadCrywolfMapAttr(char* path,int state) // OK
+void CCrywolf::LoadCrywolfMapAttr(char* path,int state)
 {
 	if(state < 0 || state >= MAX_CRYWOLF_OCCUPATION_STATE)
 	{
@@ -1205,12 +1205,12 @@ void CCrywolf::LoadCrywolfMapAttr(char* path,int state) // OK
 	this->m_CrywolfMapAttr[state].Load(path,MAP_CRYWOLF);
 }
 
-void CCrywolf::SetDBDataLoad(int loaded) // OK
+void CCrywolf::SetDBDataLoad(int loaded)
 {
 	this->m_DBDataLoadOK = loaded;
 }
 
-void CCrywolf::SetCrywolfMapAttr(int state) // OK
+void CCrywolf::SetCrywolfMapAttr(int state)
 {
 	if(state < 0 || state >= MAX_CRYWOLF_OCCUPATION_STATE)
 	{
@@ -1226,17 +1226,17 @@ void CCrywolf::SetCrywolfMapAttr(int state) // OK
 	memcpy(gMap[MAP_CRYWOLF].m_MapAttr,this->m_CrywolfMapAttr[state].m_MapAttr,(this->m_CrywolfMapAttr[state].m_width*this->m_CrywolfMapAttr[state].m_height));
 }
 
-void CCrywolf::SetCrywolfState(int state) // OK
+void CCrywolf::SetCrywolfState(int state)
 {
 	this->m_CrywolfState = state;
 }
 
-void CCrywolf::SetOccupationState(int state) // OK
+void CCrywolf::SetOccupationState(int state)
 {
 	this->m_OccupationState = state;
 }
 
-void CCrywolf::SetCrywolfCommonNPC(int state) // OK
+void CCrywolf::SetCrywolfCommonNPC(int state)
 {
 	for(int n=0;n < this->m_ObjCommonNPC.m_ObjCount;n++)
 	{
@@ -1256,27 +1256,27 @@ void CCrywolf::SetCrywolfCommonNPC(int state) // OK
 	}
 }
 
-void CCrywolf::SetCrywolfStateAppliedTime(int state) // OK
+void CCrywolf::SetCrywolfStateAppliedTime(int state)
 {
 	this->m_StateTimeInfo[state].SetAppliedTime();
 }
 
-void CCrywolf::SetCrywolfBossIndex(int index) // OK
+void CCrywolf::SetCrywolfBossIndex(int index)
 {
 	this->m_BossIndex = index;
 }
 
-int CCrywolf::GetCrywolfState() // OK
+int CCrywolf::GetCrywolfState()
 {
 	return this->m_CrywolfState;
 }
 
-int CCrywolf::GetOccupationState() // OK
+int CCrywolf::GetOccupationState()
 {
 	return this->m_OccupationState;
 }
 
-int CCrywolf::GetUserRank(int aIndex) // OK
+int CCrywolf::GetUserRank(int aIndex)
 {
 	int rank = 0;
 
@@ -1291,7 +1291,7 @@ int CCrywolf::GetUserRank(int aIndex) // OK
 	return rank;
 }
 
-int CCrywolf::GetUserExperience(int aIndex,int rank) // OK
+int CCrywolf::GetUserExperience(int aIndex,int rank)
 {
 	int experience = this->m_MVPRankExpTable[rank];
 
@@ -1303,7 +1303,7 @@ int CCrywolf::GetUserExperience(int aIndex,int rank) // OK
 	return (experience*gServerInfo.m_AddEventExperienceRate[gObj[aIndex].AccountLevel]);
 }
 
-int CCrywolf::GetUserScore(int aIndex,int bIndex,int type) // OK
+int CCrywolf::GetUserScore(int aIndex,int bIndex,int type)
 {
 	int AddMVPScore = ((type==6)?this->m_MVPScoreTable[6]:0);
 
@@ -1339,7 +1339,7 @@ int CCrywolf::GetUserScore(int aIndex,int bIndex,int type) // OK
 	return gObj[aIndex].CrywolfMVPScore;
 }
 
-void CCrywolf::CheckSync() // OK
+void CCrywolf::CheckSync()
 {
 	CTime ScheduleTime;
 

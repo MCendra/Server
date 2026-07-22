@@ -16,7 +16,7 @@
 
 CEventPvP gEventPvP;
 
-CEventPvP::CEventPvP() // OK
+CEventPvP::CEventPvP()
 {
 	this->m_RemainTime = 0;
 	this->m_GmIndex = 0;
@@ -30,7 +30,7 @@ CEventPvP::CEventPvP() // OK
 	this->m_Score2 = 0;
 }
 
-CEventPvP::~CEventPvP() // OK
+CEventPvP::~CEventPvP()
 {
 
 }
@@ -69,7 +69,7 @@ void CEventPvP::Clear()
 	}
 }
 
-void CEventPvP::MainProc() // OK
+void CEventPvP::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -150,7 +150,7 @@ void CEventPvP::MainProc() // OK
 
 }
 
-bool CEventPvP::CommandEventPvP(LPOBJ lpObj,char* arg) // OK 
+bool CEventPvP::CommandEventPvP(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventPvPSwitch == 0)
@@ -185,7 +185,7 @@ bool CEventPvP::CommandEventPvP(LPOBJ lpObj,char* arg) // OK
 	return 1;
 }
 
-bool CEventPvP::EventPvPTradeJoin(int aIndex,int bIndex) // OK 
+bool CEventPvP::EventPvPTradeJoin(int aIndex,int bIndex) 
 {
 	if(gServerInfo.m_EventPvPSwitch == 0)
 	{
@@ -230,7 +230,7 @@ bool CEventPvP::EventPvPTradeJoin(int aIndex,int bIndex) // OK
 	return 1;
 }
 
-void CEventPvP::EventPvPDead(int aIndex,int bIndex) // OK 
+void CEventPvP::EventPvPDead(int aIndex,int bIndex) 
 {
 	if(gServerInfo.m_EventPvPSwitch == 0)
 	{

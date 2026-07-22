@@ -14,17 +14,17 @@
 
 CCustomMonster gCustomMonster;
 
-CCustomMonster::CCustomMonster() // OK
+CCustomMonster::CCustomMonster()
 {
 	this->m_CustomMonsterInfo.clear();
 }
 
-CCustomMonster::~CCustomMonster() // OK
+CCustomMonster::~CCustomMonster()
 {
 
 }
 
-void CCustomMonster::Load(char* path) // OK
+void CCustomMonster::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -104,7 +104,7 @@ void CCustomMonster::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomMonster::SetCustomMonsterInfo(LPOBJ lpObj) // OK
+void CCustomMonster::SetCustomMonsterInfo(LPOBJ lpObj)
 {
 	CUSTOM_MONSTER_INFO CustomMonsterInfo;
 
@@ -144,7 +144,7 @@ void CCustomMonster::SetCustomMonsterInfo(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CCustomMonster::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CCustomMonster::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	CUSTOM_MONSTER_INFO CustomMonsterInfo;
 
@@ -255,7 +255,7 @@ void CCustomMonster::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-long CCustomMonster::GetCustomMonsterExperienceRate(int index,int map) // OK
+long CCustomMonster::GetCustomMonsterExperienceRate(int index,int map)
 {
 	CUSTOM_MONSTER_INFO CustomMonsterInfo;
 
@@ -269,7 +269,7 @@ long CCustomMonster::GetCustomMonsterExperienceRate(int index,int map) // OK
 	}
 }
 
-long CCustomMonster::GetCustomMonsterMasterExperienceRate(int index,int map) // OK
+long CCustomMonster::GetCustomMonsterMasterExperienceRate(int index,int map)
 {
 	CUSTOM_MONSTER_INFO CustomMonsterInfo;
 
@@ -283,7 +283,7 @@ long CCustomMonster::GetCustomMonsterMasterExperienceRate(int index,int map) // 
 	}
 }
 
-bool CCustomMonster::GetCustomMonsterInfo(int index,int map,CUSTOM_MONSTER_INFO* lpInfo) // OK
+bool CCustomMonster::GetCustomMonsterInfo(int index,int map,CUSTOM_MONSTER_INFO* lpInfo)
 {
 	for(std::vector<CUSTOM_MONSTER_INFO>::iterator it=this->m_CustomMonsterInfo.begin();it != this->m_CustomMonsterInfo.end();it++)
 	{

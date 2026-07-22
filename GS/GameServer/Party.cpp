@@ -19,17 +19,17 @@ CParty gParty;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CParty::CParty() // OK
+CParty::CParty()
 {
 	this->m_PartyCount = 0;
 }
 
-CParty::~CParty() // OK
+CParty::~CParty()
 {
 
 }
 
-bool CParty::IsParty(int index) // OK
+bool CParty::IsParty(int index)
 {
 	if (OBJECT_RANGE(index) == 0)
 	{
@@ -44,7 +44,7 @@ bool CParty::IsParty(int index) // OK
 	return 1;
 }
 
-bool CParty::IsLeader(int index, int aIndex) // OK
+bool CParty::IsLeader(int index, int aIndex)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -59,7 +59,7 @@ bool CParty::IsLeader(int index, int aIndex) // OK
 	return 0;
 }
 
-bool CParty::IsMember(int index, int aIndex) // OK
+bool CParty::IsMember(int index, int aIndex)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -77,7 +77,7 @@ bool CParty::IsMember(int index, int aIndex) // OK
 	return 0;
 }
 
-int CParty::GetMemberCount(int index) // OK
+int CParty::GetMemberCount(int index)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -87,7 +87,7 @@ int CParty::GetMemberCount(int index) // OK
 	return this->m_PartyInfo[index].Count;
 }
 
-int CParty::GetMemberIndex(int index, int number) // OK
+int CParty::GetMemberIndex(int index, int number)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -102,7 +102,7 @@ int CParty::GetMemberIndex(int index, int number) // OK
 	return this->m_PartyInfo[index].Index[number];
 }
 
-int CParty::GetMemberNumber(int index, int aIndex) // OK
+int CParty::GetMemberNumber(int index, int aIndex)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -120,7 +120,7 @@ int CParty::GetMemberNumber(int index, int aIndex) // OK
 	return -1;
 }
 
-bool CParty::Create(int aIndex) // OK
+bool CParty::Create(int aIndex)
 {
 	if (this->IsParty(gObj[aIndex].PartyNumber) != 0)
 	{
@@ -158,7 +158,7 @@ bool CParty::Create(int aIndex) // OK
 	return 0;
 }
 
-bool CParty::Destroy(int index) // OK
+bool CParty::Destroy(int index)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -182,7 +182,7 @@ bool CParty::Destroy(int index) // OK
 	return 1;
 }
 
-bool CParty::AddMember(int index, int aIndex) // OK
+bool CParty::AddMember(int index, int aIndex)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -209,7 +209,7 @@ bool CParty::AddMember(int index, int aIndex) // OK
 	return 0;
 }
 
-bool CParty::DelMember(int index, int aIndex) // OK
+bool CParty::DelMember(int index, int aIndex)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -236,7 +236,7 @@ bool CParty::DelMember(int index, int aIndex) // OK
 	return 0;
 }
 
-void CParty::ChangeLeader(int index, int number) // OK
+void CParty::ChangeLeader(int index, int number)
 {
 	if (this->IsParty(index) == 0 || number != 0)
 	{
@@ -424,7 +424,7 @@ bool CParty::AutoAcceptPartyRequest(LPOBJ lpObj, LPOBJ lpTarget)
 	return 0;
 }
 
-void CParty::CGPartyRequestRecv(PMSG_PARTY_REQUEST_RECV* lpMsg, int aIndex) // OK
+void CParty::CGPartyRequestRecv(PMSG_PARTY_REQUEST_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -610,7 +610,7 @@ void CParty::CGPartyRequestRecv(PMSG_PARTY_REQUEST_RECV* lpMsg, int aIndex) // O
 	DataSend(bIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CParty::CGPartyRequestResultRecv(PMSG_PARTY_REQUEST_RESULT_RECV* lpMsg, int aIndex) // OK
+void CParty::CGPartyRequestResultRecv(PMSG_PARTY_REQUEST_RESULT_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -696,7 +696,7 @@ CLEAR_JUMP:
 	lpTarget->PartyTargetUser = -1;
 }
 
-void CParty::CGPartyListRecv(int aIndex) // OK
+void CParty::CGPartyListRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -773,7 +773,7 @@ void CParty::CGPartyListRecv(int aIndex) // OK
 	this->CGPartyListRecv2(aIndex);
 }
 
-void CParty::CGPartyDelMemberRecv(PMSG_PARTY_DEL_MEMBER_RECV* lpMsg, int aIndex) // OK
+void CParty::CGPartyDelMemberRecv(PMSG_PARTY_DEL_MEMBER_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -811,7 +811,7 @@ void CParty::CGPartyDelMemberRecv(PMSG_PARTY_DEL_MEMBER_RECV* lpMsg, int aIndex)
 	}
 }
 
-void CParty::GCPartyResultSend(int aIndex, BYTE result) // OK
+void CParty::GCPartyResultSend(int aIndex, BYTE result)
 {
 	PMSG_PARTY_RESULT_SEND pMsg;
 
@@ -822,7 +822,7 @@ void CParty::GCPartyResultSend(int aIndex, BYTE result) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CParty::GCPartyListSend(int index) // OK
+void CParty::GCPartyListSend(int index)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -910,7 +910,7 @@ void CParty::GCPartyListSend(int index) // OK
 	this->GCPartyListSend2(index);
 }
 
-void CParty::GCPartyDelMemberSend(int aIndex) // OK
+void CParty::GCPartyDelMemberSend(int aIndex)
 {
 	PBMSG_HEAD pMsg;
 
@@ -919,7 +919,7 @@ void CParty::GCPartyDelMemberSend(int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.size);
 }
 
-void CParty::GCPartyLifeSend(int index) // OK
+void CParty::GCPartyLifeSend(int index)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -1030,7 +1030,7 @@ bool CParty::GetLevel(int party_number)
 //************ Takumi12 -> Client ************//
 //**********************************************//
 
-void CParty::GCPartyLifeSend2(int index) // OK
+void CParty::GCPartyLifeSend2(int index)
 {
 	if (this->IsParty(index) == 0)
 	{
@@ -1082,7 +1082,7 @@ void CParty::GCPartyLifeSend2(int index) // OK
 }
 
 
-void CParty::CGPartyListRecv2(int aIndex) // OK
+void CParty::CGPartyListRecv2(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1140,7 +1140,7 @@ void CParty::CGPartyListRecv2(int aIndex) // OK
 	DataSend(aIndex, send, size);
 }
 
-void CParty::GCPartyListSend2(int index) // OK
+void CParty::GCPartyListSend2(int index)
 {
 	if (this->IsParty(index) == 0)
 	{

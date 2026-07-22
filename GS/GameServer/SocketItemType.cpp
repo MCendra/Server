@@ -13,17 +13,17 @@ CSocketItemType gSocketItemType;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSocketItemType::CSocketItemType() // OK
+CSocketItemType::CSocketItemType()
 {
 	this->m_SocketItemTypeInfo.clear();
 }
 
-CSocketItemType::~CSocketItemType() // OK
+CSocketItemType::~CSocketItemType()
 {
 
 }
 
-void CSocketItemType::Load(char* path) // OK
+void CSocketItemType::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -75,7 +75,7 @@ void CSocketItemType::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CSocketItemType::CheckSocketItemType(int index) // OK
+bool CSocketItemType::CheckSocketItemType(int index)
 {
 	std::map<int,SOCKET_ITEM_TYPE_INFO>::iterator it = this->m_SocketItemTypeInfo.find(index);
 
@@ -89,7 +89,7 @@ bool CSocketItemType::CheckSocketItemType(int index) // OK
 	}
 }
 
-long CSocketItemType::GetSocketItemMaxSocket(int index) // OK
+long CSocketItemType::GetSocketItemMaxSocket(int index)
 {
 	std::map<int,SOCKET_ITEM_TYPE_INFO>::iterator it = this->m_SocketItemTypeInfo.find(index);
 

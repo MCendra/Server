@@ -9,40 +9,40 @@
 class CMonsterAIAgroInfo
 {
 public:
-	CMonsterAIAgroInfo() // OK
+	CMonsterAIAgroInfo()
 	{
 		this->Reset();
 	}
 
-	void Reset() // OK
+	void Reset()
 	{
 		this->m_UserIndex = -1;
 		this->m_AgroValue = -1;
 	}
 
-	int GetUserIndex() // OK
+	int GetUserIndex()
 	{
 		return this->m_UserIndex;
 	}
 
-	int GetAgroValue() // OK
+	int GetAgroValue()
 	{
 		return this->m_AgroValue;
 	}
 
-	void SetAgro(int aIndex,int value) // OK
+	void SetAgro(int aIndex,int value)
 	{
 		this->m_UserIndex = aIndex;
 		this->m_AgroValue = value;
 	}
 
-	int IncAgro(int value) // OK
+	int IncAgro(int value)
 	{
 		this->m_AgroValue += value;
 		return this->m_AgroValue;
 	}
 
-	int DecAgro(int value) // OK
+	int DecAgro(int value)
 	{
 		this->m_AgroValue -= value;
 		return this->m_AgroValue;

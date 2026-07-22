@@ -15,22 +15,22 @@ CRaklionBattleUserMng gRaklionBattleUserMng;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklionBattleUserMng::CRaklionBattleUserMng() // OK
+CRaklionBattleUserMng::CRaklionBattleUserMng()
 {
 	this->ResetAllData();
 }
 
-CRaklionBattleUserMng::~CRaklionBattleUserMng() // OK
+CRaklionBattleUserMng::~CRaklionBattleUserMng()
 {
 
 }
 
-void CRaklionBattleUserMng::ResetAllData() // OK
+void CRaklionBattleUserMng::ResetAllData()
 {
 	this->m_UserInfo.clear();
 }
 
-void CRaklionBattleUserMng::AddUserData(int aIndex) // OK
+void CRaklionBattleUserMng::AddUserData(int aIndex)
 {
 	if(gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -45,7 +45,7 @@ void CRaklionBattleUserMng::AddUserData(int aIndex) // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Battle User ] Add User [%s][%s] Current Battle User:%d",gObj[aIndex].Account,gObj[aIndex].Name,this->m_UserInfo.size());
 }
 
-void CRaklionBattleUserMng::DelUserData(int aIndex) // OK
+void CRaklionBattleUserMng::DelUserData(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -64,7 +64,7 @@ void CRaklionBattleUserMng::DelUserData(int aIndex) // OK
 	}
 }
 
-void CRaklionBattleUserMng::CheckUserState() // OK
+void CRaklionBattleUserMng::CheckUserState()
 {
 	for(int n=0;n < this->GetBattleUserCount();n++)
 	{
@@ -82,7 +82,7 @@ void CRaklionBattleUserMng::CheckUserState() // OK
 	}
 }
 
-void CRaklionBattleUserMng::CheckUserOnRaklionBossMap() // OK
+void CRaklionBattleUserMng::CheckUserOnRaklionBossMap()
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -97,7 +97,7 @@ void CRaklionBattleUserMng::CheckUserOnRaklionBossMap() // OK
 	}
 }
 
-bool CRaklionBattleUserMng::IsBattleUser(int aIndex) // OK
+bool CRaklionBattleUserMng::IsBattleUser(int aIndex)
 {
 	for(int n=0;n < this->GetBattleUserCount();n++)
 	{
@@ -110,17 +110,17 @@ bool CRaklionBattleUserMng::IsBattleUser(int aIndex) // OK
 	return 0;
 }
 
-bool CRaklionBattleUserMng::CheckBattleUsers() // OK
+bool CRaklionBattleUserMng::CheckBattleUsers()
 {
 	return this->m_UserInfo.empty();
 }
 
-int CRaklionBattleUserMng::GetBattleUserCount() // OK
+int CRaklionBattleUserMng::GetBattleUserCount()
 {
 	return this->m_UserInfo.size();
 }
 
-int CRaklionBattleUserMng::GetBattleUserIndex(int index) // OK
+int CRaklionBattleUserMng::GetBattleUserIndex(int index)
 {
 	return this->m_UserInfo[index];
 }

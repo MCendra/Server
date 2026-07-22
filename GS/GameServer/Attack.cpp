@@ -50,17 +50,17 @@ CAttack gAttack;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CAttack::CAttack() // OK
+CAttack::CAttack()
 {
 
 }
 
-CAttack::~CAttack() // OK
+CAttack::~CAttack()
 {
 
 }
 
-bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,int damage,int count,bool combo) // OK
+bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,int damage,int count,bool combo)
 {
 	#pragma region ATTACK_CHECK
 
@@ -1195,7 +1195,7 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 	return 1;
 }
 
-bool CAttack::AttackElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,int damage,int count,bool combo) // OK
+bool CAttack::AttackElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,int damage,int count,bool combo)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -1412,7 +1412,7 @@ bool CAttack::AttackElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool se
 	#endif
 }
 
-bool CAttack::DecreaseArrow(LPOBJ lpObj) // OK
+bool CAttack::DecreaseArrow(LPOBJ lpObj)
 {
 	if (lpObj->Type != OBJECT_USER || lpObj->Class != CLASS_FE)
 	{
@@ -1467,7 +1467,7 @@ bool CAttack::DecreaseArrow(LPOBJ lpObj) // OK
 	return 1;
 }
 
-void CAttack::WingSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
+void CAttack::WingSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage)
 {
 	if(lpObj != 0 && lpObj->Type == OBJECT_USER)
 	{
@@ -1607,7 +1607,7 @@ void CAttack::WingSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 	}
 }
 
-void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
+void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage)
 {
 	if(lpObj != 0 && lpObj->Type == OBJECT_USER)
 	{
@@ -1713,7 +1713,7 @@ void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 	}
 }
 //otra parte que podria ser
-//void CAttack::DamageSprite(LPOBJ lpObj,int damage) // OK
+//void CAttack::DamageSprite(LPOBJ lpObj,int damage)
 //{
 //	if(lpObj->Type != OBJECT_USER)
 //	{
@@ -1814,7 +1814,7 @@ void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 //	}
 //}
 //- Fix auto move from Icarus if dinorant/fenrir died
-void CAttack::DamageSprite(LPOBJ lpObj, int damage) // OK
+void CAttack::DamageSprite(LPOBJ lpObj, int damage)
 {
 	if (lpObj->Type != OBJECT_USER)
 	{
@@ -1917,7 +1917,7 @@ void CAttack::DamageSprite(LPOBJ lpObj, int damage) // OK
 
 
 
-bool CAttack::MuunPet(LPOBJ lpObj,int damage) // OK
+bool CAttack::MuunPet(LPOBJ lpObj,int damage)
 {
 	CItem* lpItem = &lpObj->Inventory[8];
 
@@ -1951,7 +1951,7 @@ bool CAttack::MuunPet(LPOBJ lpObj,int damage) // OK
 	return 1;
 }
 
-bool CAttack::DarkHorseSprite(LPOBJ lpObj,int damage) // OK
+bool CAttack::DarkHorseSprite(LPOBJ lpObj,int damage)
 {
 	CItem* lpItem = &lpObj->Inventory[8];
 
@@ -1984,7 +1984,7 @@ bool CAttack::DarkHorseSprite(LPOBJ lpObj,int damage) // OK
 	return 0;
 }
 
-bool CAttack::FenrirSprite(LPOBJ lpObj,int damage) // OK
+bool CAttack::FenrirSprite(LPOBJ lpObj,int damage)
 {
 	CItem* lpItem = &lpObj->Inventory[8];
 
@@ -2015,7 +2015,7 @@ bool CAttack::FenrirSprite(LPOBJ lpObj,int damage) // OK
 	return 1;
 }
 
-void CAttack::WeaponDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CAttack::WeaponDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpObj->Type != OBJECT_USER)
 	{
@@ -2063,7 +2063,7 @@ void CAttack::WeaponDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-void CAttack::ArmorDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CAttack::ArmorDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpTarget->Type != OBJECT_USER)
 	{
@@ -2089,7 +2089,7 @@ void CAttack::ArmorDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 //luego probar aqui
-bool CAttack::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CAttack::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpObj->Type != OBJECT_USER || lpTarget->Type != OBJECT_USER)
 	{
@@ -2328,7 +2328,7 @@ bool CAttack::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	return 1;
 }
 
-void CAttack::MissSend(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count) // OK
+void CAttack::MissSend(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count)
 {
 	WORD effect = 0;
 
@@ -2350,7 +2350,7 @@ void CAttack::MissSend(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int c
 	}
 }
 
-bool CAttack::MissCheck(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss) // OK
+bool CAttack::MissCheck(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss)
 {
 	int AttackSuccessRate = lpObj->AttackSuccessRate;
 
@@ -2396,7 +2396,7 @@ bool CAttack::MissCheck(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int 
 	return 1;
 }
 
-bool CAttack::MissCheckPvP(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss) // OK
+bool CAttack::MissCheckPvP(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss)
 {
 	(*miss) = 0;
 
@@ -2430,7 +2430,7 @@ bool CAttack::MissCheckPvP(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,i
 	return 1;
 }
 
-bool CAttack::MissCheckElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss) // OK
+bool CAttack::MissCheckElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2486,7 +2486,7 @@ bool CAttack::MissCheckElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int 
 	#endif
 }
 
-bool CAttack::ApplySkillEffect(LPOBJ lpObj, LPOBJ lpTarget, CSkill* lpSkill, int damage) // OK
+bool CAttack::ApplySkillEffect(LPOBJ lpObj, LPOBJ lpTarget, CSkill* lpSkill, int damage)
 {
 	if (lpTarget->Type != OBJECT_USER && ((lpTarget->Class >= 204 && lpTarget->Class <= 209) || (lpTarget->Class >= 215 && lpTarget->Class <= 219) || lpTarget->Class == 277 || lpTarget->Class == 278 || lpTarget->Class == 283 || lpTarget->Class == 288))
 	{
@@ -2621,7 +2621,7 @@ bool CAttack::ApplySkillEffect(LPOBJ lpObj, LPOBJ lpTarget, CSkill* lpSkill, int
 	return 1;
 }
 
-int CAttack::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
+int CAttack::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect)
 {
 	int defense = lpTarget->Defense;
 
@@ -2667,7 +2667,7 @@ int CAttack::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
 	return defense;
 }
 
-int CAttack::GetTargetElementalDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
+int CAttack::GetTargetElementalDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -2713,7 +2713,7 @@ int CAttack::GetTargetElementalDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) 
 	#endif
 }
 
-int CAttack::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
+int CAttack::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense)
 {
 	CItem* Right = &lpObj->Inventory[0];
 	CItem* Left = &lpObj->Inventory[1];
@@ -2903,7 +2903,7 @@ int CAttack::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* ef
 	return damage;
 }
 
-int CAttack::GetAttackDamageWizard(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
+int CAttack::GetAttackDamageWizard(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense)
 {
 	CItem* Right = &lpObj->Inventory[0];
 	CItem* Left = &lpObj->Inventory[1];
@@ -3018,7 +3018,7 @@ int CAttack::GetAttackDamageWizard(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WO
 	return damage;
 }
 
-int CAttack::GetAttackDamageCursed(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
+int CAttack::GetAttackDamageCursed(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense)
 {
 	CItem* Right = &lpObj->Inventory[0];
 	CItem* Left = &lpObj->Inventory[1];
@@ -3100,7 +3100,7 @@ int CAttack::GetAttackDamageCursed(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WO
 	return damage;
 }
 
-int CAttack::GetAttackDamageFenrir(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
+int CAttack::GetAttackDamageFenrir(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense)
 {
 	int BaseDamage = 0;
 
@@ -3169,7 +3169,7 @@ int CAttack::GetAttackDamageFenrir(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WO
 	return damage;
 }
 
-int CAttack::GetAttackDamageElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int AttackDamage,int TargetDefense) // OK
+int CAttack::GetAttackDamageElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int AttackDamage,int TargetDefense)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -3251,7 +3251,7 @@ int CAttack::GetAttackDamageElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill
 	#endif
 }
 
-int CAttack::GetShieldDamage(LPOBJ lpObj,LPOBJ lpTarget,int damage) // OK
+int CAttack::GetShieldDamage(LPOBJ lpObj,LPOBJ lpTarget,int damage)
 {
 	if(gServerInfo.m_DissableSD == 1 )
 	{
@@ -3291,7 +3291,7 @@ int CAttack::GetShieldDamage(LPOBJ lpObj,LPOBJ lpTarget,int damage) // OK
 	return SDDamage;
 }
 
-void CAttack::GetPreviewDefense(LPOBJ lpObj,DWORD* defense) // OK
+void CAttack::GetPreviewDefense(LPOBJ lpObj,DWORD* defense)
 {
 	(*defense) = lpObj->Defense;
 
@@ -3306,7 +3306,7 @@ void CAttack::GetPreviewDefense(LPOBJ lpObj,DWORD* defense) // OK
 	(*defense) -= ((*defense)*lpObj->EffectOption.DivDefense)/100;
 }
 
-void CAttack::GetPreviewPhysiDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* MulDamage,DWORD* DivDamage) // OK
+void CAttack::GetPreviewPhysiDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* MulDamage,DWORD* DivDamage)
 {
 	CItem* Right = &lpObj->Inventory[0];
 	CItem* Left = &lpObj->Inventory[1];
@@ -3362,7 +3362,7 @@ void CAttack::GetPreviewPhysiDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMa
 	(*DivDamage) = lpObj->EffectOption.DivPhysiDamage;
 }
 
-void CAttack::GetPreviewMagicDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* MulDamage,DWORD* DivDamage,DWORD* DamageRate) // OK
+void CAttack::GetPreviewMagicDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* MulDamage,DWORD* DivDamage,DWORD* DamageRate)
 {
 	CItem* Right = &lpObj->Inventory[0];
 	CItem* Left = &lpObj->Inventory[1];
@@ -3391,7 +3391,7 @@ void CAttack::GetPreviewMagicDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMa
 	}
 }
 
-void CAttack::GetPreviewCurseDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* MulDamage,DWORD* DivDamage,DWORD* DamageRate) // OK
+void CAttack::GetPreviewCurseDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* MulDamage,DWORD* DivDamage,DWORD* DamageRate)
 {
 	CItem* Right = &lpObj->Inventory[0];
 	CItem* Left = &lpObj->Inventory[1];
@@ -3420,7 +3420,7 @@ void CAttack::GetPreviewCurseDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMa
 	}
 }
 
-void CAttack::GetPreviewDamageMultiplier(LPOBJ lpObj,DWORD* DamageMultiplier,DWORD* RFDamageMultiplierA,DWORD* RFDamageMultiplierB,DWORD* RFDamageMultiplierC) // OK
+void CAttack::GetPreviewDamageMultiplier(LPOBJ lpObj,DWORD* DamageMultiplier,DWORD* RFDamageMultiplierA,DWORD* RFDamageMultiplierB,DWORD* RFDamageMultiplierC)
 {
 	switch(lpObj->Class)
 	{
@@ -3469,7 +3469,7 @@ void CAttack::GetPreviewDamageMultiplier(LPOBJ lpObj,DWORD* DamageMultiplier,DWO
 	}
 }
 
-void CAttack::CGAttackRecv(PMSG_ATTACK_RECV* lpMsg,int aIndex) // OK
+void CAttack::CGAttackRecv(PMSG_ATTACK_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

@@ -105,7 +105,7 @@ int gObjMonsterSearchEnemy(LPOBJ lpObj, BYTE objtype);
 int gObjGuardSearchEnemy(LPOBJ lpObj);
 void gObjMonsterProcess(LPOBJ lpObj);
 BOOL PathFindMoveMsgSend(LPOBJ lpObj);
-bool gObjSetBots(int aIndex,int MonsterClass); //MC bot
+bool gObjSetBots(int aIndex,int MonsterClass);
 void gObjMonsterMoveAction(LPOBJ lpObj);
 void gObjMonsterBaseAct(LPOBJ lpObj);
 void gObjTrapAttackEnemySearchX(LPOBJ lpObj, int count);

@@ -13,7 +13,7 @@
 #define MAX_OBJECT 10000
 #define MAX_OBJECT_MONSTER 8000
 #define MAX_OBJECT_USER 1000
-#define MAX_OBJECT_USER_AND_BOTS 2000 //MC bot
+#define MAX_OBJECT_USER_AND_BOTS 2000
 #define MAX_OBJECT_BOTS 200
 
 #else
@@ -21,7 +21,7 @@
 #define MAX_OBJECT 4500
 #define MAX_OBJECT_MONSTER 2500
 #define MAX_OBJECT_USER 1000
-#define MAX_OBJECT_USER_AND_BOTS 2000 //MC bot
+#define MAX_OBJECT_USER_AND_BOTS 2000
 #define MAX_OBJECT_BOTS 200
 
 #endif
@@ -203,12 +203,12 @@ enum eExperienceType
 
 struct MESSAGE_STATE_MACHINE
 {
-	MESSAGE_STATE_MACHINE() // OK
+	MESSAGE_STATE_MACHINE()
 	{
 		this->Clear();
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->MsgCode = -1;
 		this->SendUser = -1;
@@ -224,14 +224,14 @@ struct MESSAGE_STATE_MACHINE
 
 struct MESSAGE_STATE_MACHINE_COMMON
 {
-	MESSAGE_STATE_MACHINE_COMMON() // OK
+	MESSAGE_STATE_MACHINE_COMMON()
 	{
 		this->CommonStruct = new MESSAGE_STATE_MACHINE;
 
 		for(int n=0;n < MAX_MONSTER_SEND_MSG;n++){this->ObjectStruct[n] = this->CommonStruct;}
 	}
 
-	MESSAGE_STATE_MACHINE& operator[](int index) // OK
+	MESSAGE_STATE_MACHINE& operator[](int index)
 	{
 		return (*this->ObjectStruct[index]);
 	}
@@ -242,14 +242,14 @@ struct MESSAGE_STATE_MACHINE_COMMON
 
 struct MESSAGE_STATE_MACHINE_HEADER
 {
-	MESSAGE_STATE_MACHINE_HEADER() // OK
+	MESSAGE_STATE_MACHINE_HEADER()
 	{
 		this->CommonStruct = new MESSAGE_STATE_MACHINE_COMMON;
 
 		for(int n=0;n < MAX_OBJECT;n++){this->ObjectStruct[n] = this->CommonStruct;}
 	}
 
-	MESSAGE_STATE_MACHINE_COMMON& operator[](int index) // OK
+	MESSAGE_STATE_MACHINE_COMMON& operator[](int index)
 	{
 		return (*this->ObjectStruct[index]);
 	}
@@ -260,12 +260,12 @@ struct MESSAGE_STATE_MACHINE_HEADER
 
 struct MESSAGE_STATE_ATTACK_MACHINE
 {
-	MESSAGE_STATE_ATTACK_MACHINE() // OK
+	MESSAGE_STATE_ATTACK_MACHINE()
 	{
 		this->Clear();
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->MsgCode = -1;
 		this->SendUser = -1;
@@ -283,14 +283,14 @@ struct MESSAGE_STATE_ATTACK_MACHINE
 
 struct MESSAGE_STATE_ATTACK_MACHINE_COMMON
 {
-	MESSAGE_STATE_ATTACK_MACHINE_COMMON() // OK
+	MESSAGE_STATE_ATTACK_MACHINE_COMMON()
 	{
 		this->CommonStruct = new MESSAGE_STATE_ATTACK_MACHINE;
 
 		for(int n=0;n < MAX_MONSTER_SEND_ATTACK_MSG;n++){this->ObjectStruct[n] = this->CommonStruct;}
 	}
 
-	MESSAGE_STATE_ATTACK_MACHINE& operator[](int index) // OK
+	MESSAGE_STATE_ATTACK_MACHINE& operator[](int index)
 	{
 		return (*this->ObjectStruct[index]);
 	}
@@ -301,14 +301,14 @@ struct MESSAGE_STATE_ATTACK_MACHINE_COMMON
 
 struct MESSAGE_STATE_ATTACK_MACHINE_HEADER
 {
-	MESSAGE_STATE_ATTACK_MACHINE_HEADER() // OK
+	MESSAGE_STATE_ATTACK_MACHINE_HEADER()
 	{
 		this->CommonStruct = new MESSAGE_STATE_ATTACK_MACHINE_COMMON;
 
 		for(int n=0;n < MAX_OBJECT;n++){this->ObjectStruct[n] = this->CommonStruct;}
 	}
 
-	MESSAGE_STATE_ATTACK_MACHINE_COMMON& operator[](int index) // OK
+	MESSAGE_STATE_ATTACK_MACHINE_COMMON& operator[](int index)
 	{
 		return (*this->ObjectStruct[index]);
 	}
@@ -482,8 +482,7 @@ struct OFFLINE_MODE_DATA
 };
 #endif
 
-#if(MOCNAP == 1)
-
+#if(MOCNAP)
 struct MOCNAP_USER_DATA
 {
 	int		MOCNAP1;
@@ -501,8 +500,8 @@ struct MOCNAP_USER_DATA
 	int		MOCNAP13;
 };
 #endif
-//------------------------------------
-#if (SACHTHUOCTINH_NEW == 1)
+
+#if (SACHTHUOCTINH_NEW)
 struct SACHTHUOCTINH_USER_DATA
 {
 	int SACHTHUOCTINH_01;
@@ -514,9 +513,6 @@ struct SACHTHUOCTINH_USER_DATA
 	int SACHTHUOCTINH_07;
 };
 #endif
-//------------------------------------
-
-
 
 struct OBJECTSTRUCT
 {
@@ -682,7 +678,7 @@ struct OBJECTSTRUCT
 	int Defense;
 	int MagicDefense;
 	int DefenseSuccessRate;
-	#if(GAMESERVER_UPDATE>=701)
+#if(GAMESERVER_UPDATE>=701)
 	int ElementalAttribute;
 	int ElementalPattern;
 	int ElementalDefense;
@@ -690,7 +686,7 @@ struct OBJECTSTRUCT
 	int ElementalDamageMax;
 	int ElementalAttackSuccessRate;
 	int ElementalDefenseSuccessRate;
-	#endif
+#endif
 	short MoveSpeed;
 	short MoveRange;
 	short AttackRange;
@@ -745,10 +741,10 @@ struct OBJECTSTRUCT
 	int ChaosMoney;
 	int ChaosSuccessRate;
 	int ChaosLock;
-#if(NGAN_HANG_NGOC)
+#if (NGAN_HANG_NGOC)
 	int	TradeDuel;
 #endif
-	#if(GAMESERVER_UPDATE>=802)
+#if(GAMESERVER_UPDATE>=802)
 	int LoadEventInventory;
 	CItem* EventInventory;
 	CItem* EventInventory1;
@@ -756,19 +752,17 @@ struct OBJECTSTRUCT
 	BYTE* EventInventoryMap;
 	BYTE* EventInventoryMap1;
 	BYTE* EventInventoryMap2;
-	#endif
-	#if(GAMESERVER_UPDATE>=803)
+#endif
+#if(GAMESERVER_UPDATE>=803)
 	int MuunItemStatus[2];
 	int LoadMuunInventory;
 	CItem* MuunInventory;
 	BYTE* MuunInventoryMap;
-	#endif
-
+#endif
 	//thong killer
 	int BuyShopTickCount;
 	int BuyXShopTickCount;
 	//
-
 	DWORD Option;
 	int ChaosCastleBlowTime;
 	int DuelUserReserved;
@@ -849,7 +843,7 @@ struct OBJECTSTRUCT
 	int AttackCustomOffline;
 	int AttackCustomOfflineTime;
 	//int AttackCustomOfflineMoneyDelay;
-#if(OFFLINE_MODE_NEW)
+#if (OFFLINE_MODE_NEW)
 	OFFLINE_MODE_DATA OfflineMode;
 #endif
 	int AttackCustomAutoBuff;
@@ -891,26 +885,24 @@ struct OBJECTSTRUCT
 	int GensContribution;
 	int GensNextContribution;
 	struct GENS_SYSTEM_VICTIM_LIST* GensVictimList;
-	#if(GAMESERVER_UPDATE>=701)
+#if(GAMESERVER_UPDATE>=701)
 	struct PENTAGRAM_JEWEL_INFO* PentagramJewelInfo_Inventory;
 	struct PENTAGRAM_JEWEL_INFO* PentagramJewelInfo_Warehouse;
-	#endif
-	#if(GAMESERVER_UPDATE>=802)
+#endif
+#if(GAMESERVER_UPDATE>=802)
 	class CMuRummyInfo* MuRummyInfo;
-	#endif
+#endif
 	EFFECT_OPTION EffectOption;
-	#if(GAMESERVER_UPDATE>=701)
+#if(GAMESERVER_UPDATE>=701)
 	PENTAGRAM_OPTION PentagramOption;
 	PENTAGRAM_JEWEL_OPTION PentagramJewelOption;
-	#endif
+#endif
 	int ArmorSetBonus;
 	int SkillDamageBonus;
 	int DoubleDamageRate;
 	int TripleDamageRate;
 	int IgnoreDefenseRate;
 	int IgnoreShieldGaugeRate;
-
-
 	//--
 	int TrashCodeItemId;
 	int TrashCodeItemSet2;
@@ -923,7 +915,6 @@ struct OBJECTSTRUCT
 	int TrashCodeItemPen;
 	int TrashCodeItemRing1;
 	int TrashCodeItemRing2;
-
 	//--
 	int CriticalDamageRate;
 	int CriticalDamage;
@@ -1013,26 +1004,21 @@ struct OBJECTSTRUCT
 	int CustomNpcQuestMonsterQtd;
 	int CustomNpcQuestFinished;
 	int RussianRoulette;
-#if(OANTUTI)
+#if (OANTUTI)
 	int RPSMode;
 #endif
 	int Kills;
 	int Deads;
-
 	//bloodvip
 	int ScoreKill;
 	int ScoreKillDevil;
-
 	int Coin1;
 	int Coin2;
 	int Coin3;
 	int Ruud;
-
 	DWORD WCoinCaRecv;
 	DWORD WCoinPaRecv;
 	DWORD GPointaRecv;
-
-
 	int BuyVip;
 	BYTE ItemStart;
 	int PickupEnable;
@@ -1040,26 +1026,16 @@ struct OBJECTSTRUCT
 	int PickupExc;
 	int PickupSocket;
 	int PickupSetItem;
-
 	bool RenameEnable;
-
 	int CommandDelay[100];
-
 	int CommandNotice[100];
-
 	int DisablePvp;
-
 	int Lock;
-
 	int PvP;
-
 	int KillAll;
-
 	short MapMoveDisable;
-
 	DWORD ShopDelay;
-
-	#if(GAMESERVER_TYPE==1)
+#if(GAMESERVER_TYPE==1)
 	union
 	{
 		struct
@@ -1079,17 +1055,17 @@ struct OBJECTSTRUCT
 	BYTE CsNpcRgLevel;
 	BYTE CsJoinSide;
 	bool CsGuildInvolved;
-	#endif
+#endif
 	bool IsCastleNPCUpgradeCompleted;
 	BYTE CsSiegeWeaponState;
 	int CsWeaponIndex;
 	BYTE KillCount;
 	int AccumulatedDamage;
-	#if(GAMESERVER_TYPE==1)
+#if(GAMESERVER_TYPE==1)
 	BYTE LifeStoneCount;
 	BYTE CreationState;
 	int CreatedActivationTime;
-	#endif
+#endif
 	int AccumulatedCrownAccessTime;
 	CMonsterSkillElementOption MonsterSkillElementOption;
 	int BasicAI;
@@ -1125,15 +1101,13 @@ struct OBJECTSTRUCT
 
 
 //MC bot
-	#if(ALLBOTSSTRUC == 1)
-
+#if(ALLBOTSSTRUC == 1)
 	BYTE IsBot;
 	int BotNumOwner;
 	int BotPower;
 	int BotDefense;
 	int BotLife;
 	int BotMaxLife;
-
 	int BotLvlUpDefense;
 	int BotLvlUpPower;
 	int BotLvlUpLife;
@@ -1141,21 +1115,18 @@ struct OBJECTSTRUCT
 	int BotLvlUpExp;
 	short BotLvlUpMaxLevel;
 	BYTE BotVersion;
-
 	BYTE BotFollowMe;
 	BYTE BotSkillAttack;
-
 	BYTE HaveBot;
 	WORD aFloodBotPetCmd;
 	BYTE AccountExtraInfoModified;
 	BYTE PlayerExtraInfoModified;
-	
 	BYTE RaceCheck;
 	int RaceTime;
 	BYTE VaultTimeBuyShop;
 	DWORD	m_ShopPointExTime;
 	DWORD	m_ShopPointExTimeBackup;
-#if(BOT_BUFFER == 1)
+#if(BOT_BUFFER)
 	//Buff Times
 	int ManaShieldTime;					// EFFECT_MANA_SHIELD
 	int DamageReflectTime;				// EFFECT_DAMAGE_REFLECT
@@ -1166,9 +1137,7 @@ struct OBJECTSTRUCT
 	int GreaterDamageTime;				// EFFECT_GREATER_DAMAGE
 	int GreaterCriticalDamageTime;		// EFFECT_GREATER_CRITICAL_DAMAGE
 	int GreaterIgnoreDefenseRateTime;	// EFFECT_GREATER_IGNORE_DEFENSE_RATE
-
 #endif
-
 #endif
 
 
@@ -1299,7 +1268,7 @@ int orderskill;
 	DWORD TimeDelayStore;
 	DWORD ClickClientSend;
 
-#if(MOVETAP == 1)
+#if(MOVETAP)
 	BYTE IsAutoMoveRunning;
 #endif
 
@@ -1431,14 +1400,14 @@ enum DB_CLASS_CODES {
 
 struct OBJECTSTRUCT_HEADER
 {
-	OBJECTSTRUCT_HEADER() // OK
+	OBJECTSTRUCT_HEADER()
 	{
 		this->CommonStruct = new OBJECTSTRUCT;
 
 		for(int n=0;n < MAX_OBJECT;n++){this->ObjectStruct[n] = this->CommonStruct;}
 	}
 
-	OBJECTSTRUCT& operator[](int index) // OK
+	OBJECTSTRUCT& operator[](int index)
 	{
 		return (*this->ObjectStruct[index]);
 	}
@@ -1459,20 +1428,8 @@ extern DWORD gCheckSum[MAX_CHECKSUM_KEY];
 
 extern DWORD gLevelExperience[MAX_CHARACTER_LEVEL+1];
 
-//**************************************************************************//
-// OBJECT MAIN FUNCTIONS ***************************************************//
-//**************************************************************************//
-void gObjEventRunProc();
-void gObjViewportProc();
-void gObjFirstProc();
-void gObjCloseProc();
-void gObjCountProc();
-void gObjAccountLevelProc();
-void gObjMathAuthenticatorProc();
-void gObjPickProc();
-//**************************************************************************//
-// OBJECT BASE FUNCTIONS ***************************************************//
-//**************************************************************************//
+// Base functions
+
 void gObjInit();
 void gObjAllLogOut();
 void gObjAllDisconnect();
@@ -1481,17 +1438,28 @@ void gObjCharZeroSet(int aIndex);
 void gObjClearPlayerOption(LPOBJ lpObj);
 void gObjClearSpecialOption(LPOBJ lpObj);
 void gObjCalcExperience(LPOBJ lpObj);
-bool gObjGetRandomFreeLocation(int map,int* ox,int* oy,int tx,int ty,int count);
+bool gObjGetRandomFreeLocation(int map, int* ox, int* oy, int tx, int ty, int count);
 bool gObjAllocData(int aIndex);
 void gObjFreeData(int aIndex);
-short gObjAddSearch(SOCKET socket,char* IpAddress);
-short gObjAdd(SOCKET socket,char* IpAddress,int aIndex);
+short gObjAddSearch(SOCKET socket, char* IpAddress);
+short gObjAdd(SOCKET socket, char* IpAddress, int aIndex);
 short gObjDel(int aIndex);
 LPOBJ gObjFind(char* name);
-int gObjCalcDistance(LPOBJ lpObj,LPOBJ lpTarget);
-//**************************************************************************//
-// OBJECT CHECK FUNCTIONS **************************************************//
-//**************************************************************************//
+int gObjCalcDistance(LPOBJ lpObj, LPOBJ lpTarget);
+
+// RAW functions
+
+void gObjEventRunProc();
+void gObjViewportProc();
+void gObjFirstProc();
+void gObjCloseProc();
+void gObjCountProc();
+void gObjAccountLevelProc();
+void gObjMathAuthenticatorProc();
+void gObjPickProc();
+
+// Check functions
+
 bool gObjIsConnected(int aIndex);
 bool gObjIsConnectedGP(int aIndex);
 bool gObjIsConnectedGS(int aIndex);
@@ -1503,9 +1471,9 @@ bool gObjCheckPersonalCode(int aIndex,char* PersonalCode);
 bool gObjCheckResistance(LPOBJ lpObj,int type);
 bool gObjCheckTeleportArea(int aIndex,int x,int y);
 bool gObjCheckMapTile(LPOBJ lpObj,int type);
-//**************************************************************************//
-// ITEM TRANSACTION FUNCTIONS **********************************************//
-//**************************************************************************//
+
+// Item transaction functions
+
 bool gObjFixInventoryPointer(int aIndex);
 void gObjSetInventory1Pointer(LPOBJ lpObj);
 void gObjSetInventory2Pointer(LPOBJ lpObj);
@@ -1515,9 +1483,9 @@ void gObjSetEventInventory2Pointer(LPOBJ lpObj);
 bool gObjInventoryTransaction(int aIndex);
 bool gObjInventoryCommit(int aIndex);
 bool gObjInventoryRollback(int aIndex);
-//**************************************************************************//
-// VIEWPORT FUNCTIONS ******************************************************//
-//**************************************************************************//
+
+// Viewport functions
+
 void gObjSetViewport(int aIndex,int state);
 void gObjClearViewport(LPOBJ lpObj);
 void gObjViewportListProtocolDestroy(LPOBJ lpObj);
@@ -1525,9 +1493,9 @@ void gObjViewportListProtocolCreate(LPOBJ lpObj);
 void gObjViewportListProtocol(int aIndex);
 void gObjViewportListDestroy(int aIndex);
 void gObjViewportListCreate(int aIndex);
-//**************************************************************************//
-// USER FUNCTIONS **********************************************************//
-//**************************************************************************//
+
+// User functions
+
 void gObjSetKillCount(int aIndex,int type);
 void gObjTeleportMagicUse(int aIndex,int x,int y);
 void gObjInterfaceCheckTime(LPOBJ lpObj);
@@ -1546,9 +1514,7 @@ void gObjAddMsgSend(LPOBJ lpObj,int MsgCode,int SendUser,int SubCode);
 void gObjAddMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,int SubCode);
 void gObjAddAttackProcMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,int SubCode,int SubCode2);
 
-//**************************************************************************//
-// RAW FUNCTIONS ***********************************************************//
-//**************************************************************************//
+// RAW functions
 
 void gObjSecondProc();
 void gObjDelayLifeCheck(int aIndex);
@@ -1586,7 +1552,7 @@ LPOBJ gObjFindByAcc(char* account);
 
 extern int gObjCount;
 extern int gObjMonCount;
-extern int gObjBotCount;//MC
+extern int gObjBotCount;
 extern int gObjCallMonCount;
 extern int gObjTotalUser;
 extern int gObjTotalMonster;

@@ -32,17 +32,17 @@ CMove gMove;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMove::CMove() // OK
+CMove::CMove()
 {
 	this->m_MoveInfo.clear();
 }
 
-CMove::~CMove() // OK
+CMove::~CMove()
 {
 
 }
 
-void CMove::Load(char* path) // OK
+void CMove::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -106,7 +106,7 @@ void CMove::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CMove::GetInfo(int index,MOVE_INFO* lpInfo) // OK
+bool CMove::GetInfo(int index,MOVE_INFO* lpInfo)
 {
 	std::map<int,MOVE_INFO>::iterator it = this->m_MoveInfo.find(index);
 
@@ -121,7 +121,7 @@ bool CMove::GetInfo(int index,MOVE_INFO* lpInfo) // OK
 	}
 }
 
-bool CMove::GetInfoByName(char* name,MOVE_INFO* lpInfo) // OK
+bool CMove::GetInfoByName(char* name,MOVE_INFO* lpInfo)
 {
 	for(std::map<int,MOVE_INFO>::iterator it=this->m_MoveInfo.begin();it != this->m_MoveInfo.end();it++)
 	{
@@ -135,7 +135,7 @@ bool CMove::GetInfoByName(char* name,MOVE_INFO* lpInfo) // OK
 	return 0;
 }
 
-void CMove::Move(LPOBJ lpObj,int index) // OK
+void CMove::Move(LPOBJ lpObj,int index)
 {
 	MOVE_INFO MoveInfo;
 
@@ -260,7 +260,7 @@ void CMove::Move(LPOBJ lpObj,int index) // OK
 	}
 }
 
-void CMove::CGTeleportRecv(PMSG_TELEPORT_RECV* lpMsg,int aIndex) // OK
+void CMove::CGTeleportRecv(PMSG_TELEPORT_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -372,7 +372,7 @@ void CMove::CGTeleportRecv(PMSG_TELEPORT_RECV* lpMsg,int aIndex) // OK
 	}
 }
 
-void CMove::CGTeleportMoveRecv(PMSG_TELEPORT_MOVE_RECV* lpMsg,int aIndex) // OK
+void CMove::CGTeleportMoveRecv(PMSG_TELEPORT_MOVE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -386,7 +386,7 @@ void CMove::CGTeleportMoveRecv(PMSG_TELEPORT_MOVE_RECV* lpMsg,int aIndex) // OK
 	#endif
 }
 
-void CMove::GCTeleportSend(int aIndex,int gate,BYTE map,BYTE x,BYTE y,BYTE dir) // OK
+void CMove::GCTeleportSend(int aIndex,int gate,BYTE map,BYTE x,BYTE y,BYTE dir)
 {
 	PMSG_TELEPORT_SEND pMsg;
 

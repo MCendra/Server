@@ -20,17 +20,17 @@ CMonsterSkillInfo CMonsterSkillManager::m_MonsterSkillInfoArray[MAX_MONSTER_SKIL
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillManager::CMonsterSkillManager() // OK
+CMonsterSkillManager::CMonsterSkillManager()
 {
 	CMonsterSkillManager::DelAllSkillManagerInfo();
 }
 
-CMonsterSkillManager::~CMonsterSkillManager() // OK
+CMonsterSkillManager::~CMonsterSkillManager()
 {
 
 }
 
-void CMonsterSkillManager::LoadData(char* path) // OK
+void CMonsterSkillManager::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -108,7 +108,7 @@ void CMonsterSkillManager::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterSkillManager::DelAllSkillManagerInfo() // OK
+void CMonsterSkillManager::DelAllSkillManagerInfo()
 {
 	CMonsterSkillManager::m_DataLoad = 0;
 
@@ -118,7 +118,7 @@ void CMonsterSkillManager::DelAllSkillManagerInfo() // OK
 	}
 }
 
-BOOL CMonsterSkillManager::CheckMonsterSkill(int MonsterClass,int MonsterSkillUnitType) // OK
+BOOL CMonsterSkillManager::CheckMonsterSkill(int MonsterClass,int MonsterSkillUnitType)
 {
 	if(MonsterClass < 0 || MonsterClass >= MAX_MONSTER_SKILL_INFO)
 	{
@@ -141,7 +141,7 @@ BOOL CMonsterSkillManager::CheckMonsterSkill(int MonsterClass,int MonsterSkillUn
 	return 0;
 }
 
-CMonsterSkillUnitInfo* CMonsterSkillManager::FindMonsterSkillUnitInfo(int aIndex,int MonsterSkillUnitType) // OK
+CMonsterSkillUnitInfo* CMonsterSkillManager::FindMonsterSkillUnitInfo(int aIndex,int MonsterSkillUnitType)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -164,7 +164,7 @@ CMonsterSkillUnitInfo* CMonsterSkillManager::FindMonsterSkillUnitInfo(int aIndex
 	return ((MonsterSkillUnitTypeCount==0)?0:CMonsterSkillManager::m_MonsterSkillInfoArray[lpObj->Class].m_SkillUnitArray[MonsterSkillUnitTypeTable[GetLargeRand()%MonsterSkillUnitTypeCount]]);
 }
 
-void CMonsterSkillManager::UseMonsterSkill(int aIndex,int bIndex,int MonsterSkillUnitType,int MonsterSkillUnit,CSkill* lpSkill) // OK
+void CMonsterSkillManager::UseMonsterSkill(int aIndex,int bIndex,int MonsterSkillUnitType,int MonsterSkillUnit,CSkill* lpSkill)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -234,7 +234,7 @@ void CMonsterSkillManager::UseMonsterSkill(int aIndex,int bIndex,int MonsterSkil
 	}
 }
 
-void CMonsterSkillManager::SpecialMonsterSkillAttack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,CMonsterSkillUnitInfo* lpMonsterSkillUnitInfo) // OK
+void CMonsterSkillManager::SpecialMonsterSkillAttack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,CMonsterSkillUnitInfo* lpMonsterSkillUnitInfo)
 {
 	if(lpMonsterSkillUnitInfo->m_UnitTargetType != MSU_TARGET_TYPE_COMMON)
 	{

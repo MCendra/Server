@@ -20,17 +20,17 @@ CEventInventory gEventInventory;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEventInventory::CEventInventory() // OK
+CEventInventory::CEventInventory()
 {
 
 }
 
-CEventInventory::~CEventInventory() // OK
+CEventInventory::~CEventInventory()
 {
 
 }
 
-bool CEventInventory::IsEventItem(int ItemIndex) // OK
+bool CEventInventory::IsEventItem(int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -50,7 +50,7 @@ bool CEventInventory::IsEventItem(int ItemIndex) // OK
 	#endif
 }
 
-bool CEventInventory::IsEventItem(CItem* lpItem) // OK
+bool CEventInventory::IsEventItem(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -70,7 +70,7 @@ bool CEventInventory::IsEventItem(CItem* lpItem) // OK
 	#endif
 }
 
-void CEventInventory::EventInventoryItemSet(int aIndex,int slot,BYTE type) // OK
+void CEventInventory::EventInventoryItemSet(int aIndex,int slot,BYTE type)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -105,7 +105,7 @@ void CEventInventory::EventInventoryItemSet(int aIndex,int slot,BYTE type) // OK
 	#endif
 }
 
-BYTE CEventInventory::EventInventoryRectCheck(int aIndex,int x,int y,int width,int height) // OK
+BYTE CEventInventory::EventInventoryRectCheck(int aIndex,int x,int y,int width,int height)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -134,7 +134,7 @@ BYTE CEventInventory::EventInventoryRectCheck(int aIndex,int x,int y,int width,i
 	#endif
 }
 
-BYTE CEventInventory::EventInventoryInsertItem(int aIndex,CItem item) // OK
+BYTE CEventInventory::EventInventoryInsertItem(int aIndex,CItem item)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -172,7 +172,7 @@ BYTE CEventInventory::EventInventoryInsertItem(int aIndex,CItem item) // OK
 	#endif
 }
 
-BYTE CEventInventory::EventInventoryAddItem(int aIndex,CItem item,int slot) // OK
+BYTE CEventInventory::EventInventoryAddItem(int aIndex,CItem item,int slot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -214,7 +214,7 @@ BYTE CEventInventory::EventInventoryAddItem(int aIndex,CItem item,int slot) // O
 	#endif
 }
 
-void CEventInventory::EventInventoryDelItem(int aIndex,int slot) // OK
+void CEventInventory::EventInventoryDelItem(int aIndex,int slot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -224,7 +224,7 @@ void CEventInventory::EventInventoryDelItem(int aIndex,int slot) // OK
 	#endif
 }
 
-bool CEventInventory::EventInventoryInsertItemStack(LPOBJ lpObj,CItem* lpItem) // OK
+bool CEventInventory::EventInventoryInsertItemStack(LPOBJ lpObj,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -282,7 +282,7 @@ bool CEventInventory::EventInventoryInsertItemStack(LPOBJ lpObj,CItem* lpItem) /
 	#endif
 }
 
-bool CEventInventory::EventInventoryAddItemStack(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CEventInventory::EventInventoryAddItemStack(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -342,7 +342,7 @@ bool CEventInventory::EventInventoryAddItemStack(LPOBJ lpObj,int SourceSlot,int 
 	#endif
 }
 
-void CEventInventory::CGEventItemGetRecv(PMSG_EVENT_ITEM_GET_RECV* lpMsg,int aIndex) // OK
+void CEventInventory::CGEventItemGetRecv(PMSG_EVENT_ITEM_GET_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -451,7 +451,7 @@ void CEventInventory::CGEventItemGetRecv(PMSG_EVENT_ITEM_GET_RECV* lpMsg,int aIn
 	#endif
 }
 
-void CEventInventory::CGEventItemDropRecv(PMSG_EVENT_ITEM_DROP_RECV* lpMsg,int aIndex) // OK
+void CEventInventory::CGEventItemDropRecv(PMSG_EVENT_ITEM_DROP_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -544,7 +544,7 @@ void CEventInventory::CGEventItemDropRecv(PMSG_EVENT_ITEM_DROP_RECV* lpMsg,int a
 	#endif
 }
 
-void CEventInventory::CGEventInventoryOpenRecv(PMSG_EVENT_INVENTORY_OPEN_RECV* lpMsg,int aIndex) // OK
+void CEventInventory::CGEventInventoryOpenRecv(PMSG_EVENT_INVENTORY_OPEN_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -589,7 +589,7 @@ void CEventInventory::CGEventInventoryOpenRecv(PMSG_EVENT_INVENTORY_OPEN_RECV* l
 	#endif
 }
 
-void CEventInventory::GCEventItemListSend(int aIndex) // OK
+void CEventInventory::GCEventItemListSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -634,7 +634,7 @@ void CEventInventory::GCEventItemListSend(int aIndex) // OK
 	#endif
 }
 
-void CEventInventory::GCEventItemDurSend(int aIndex,BYTE slot,BYTE dur) // OK
+void CEventInventory::GCEventItemDurSend(int aIndex,BYTE slot,BYTE dur)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -651,7 +651,7 @@ void CEventInventory::GCEventItemDurSend(int aIndex,BYTE slot,BYTE dur) // OK
 	#endif
 }
 
-void CEventInventory::GCEventItemDeleteSend(int aIndex,BYTE slot,BYTE flag) // OK
+void CEventInventory::GCEventItemDeleteSend(int aIndex,BYTE slot,BYTE flag)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -668,7 +668,7 @@ void CEventInventory::GCEventItemDeleteSend(int aIndex,BYTE slot,BYTE flag) // O
 	#endif
 }
 
-void CEventInventory::GCEventItemModifySend(int aIndex,BYTE slot) // OK
+void CEventInventory::GCEventItemModifySend(int aIndex,BYTE slot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -692,7 +692,7 @@ void CEventInventory::GCEventItemModifySend(int aIndex,BYTE slot) // OK
 	#endif
 }
 
-void CEventInventory::GCEventItemChangeSend(int aIndex,BYTE slot) // OK
+void CEventInventory::GCEventItemChangeSend(int aIndex,BYTE slot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -715,7 +715,7 @@ void CEventInventory::GCEventItemChangeSend(int aIndex,BYTE slot) // OK
 	#endif
 }
 
-void CEventInventory::GCEventInventoryEnableSend(int aIndex) // OK
+void CEventInventory::GCEventInventoryEnableSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -735,7 +735,7 @@ void CEventInventory::GCEventInventoryEnableSend(int aIndex) // OK
 	#endif
 }
 
-void CEventInventory::DGEventInventoryRecv(SDHP_EVENT_INVENTORY_RECV* lpMsg) // OK
+void CEventInventory::DGEventInventoryRecv(SDHP_EVENT_INVENTORY_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -773,7 +773,7 @@ void CEventInventory::DGEventInventoryRecv(SDHP_EVENT_INVENTORY_RECV* lpMsg) // 
 	#endif
 }
 
-void CEventInventory::GDEventInventorySend(int aIndex) // OK
+void CEventInventory::GDEventInventorySend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -802,7 +802,7 @@ void CEventInventory::GDEventInventorySend(int aIndex) // OK
 	#endif
 }
 
-void CEventInventory::GDEventInventorySaveSend(int aIndex) // OK
+void CEventInventory::GDEventInventorySaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 

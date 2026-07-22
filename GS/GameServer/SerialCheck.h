@@ -1,16 +1,12 @@
-// SerialCheck.h: interface for the CSerialCheck class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// SerialCheck.h
 #pragma once
-
 #include "User.h"
 
 class CSerialCheck
 {
 public:
 	CSerialCheck();
-	virtual ~CSerialCheck();
+	~CSerialCheck() = default ;
 	void Init();
 	bool CheckSerial(BYTE serial);
 	BYTE GetRecvSerial();

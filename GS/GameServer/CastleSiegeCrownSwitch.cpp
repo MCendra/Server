@@ -13,17 +13,17 @@ CCastleSiegeCrownSwitch gCastleSiegeCrownSwitch;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCastleSiegeCrownSwitch::CCastleSiegeCrownSwitch() // OK
+CCastleSiegeCrownSwitch::CCastleSiegeCrownSwitch()
 {
 
 }
 
-CCastleSiegeCrownSwitch::~CCastleSiegeCrownSwitch() // OK
+CCastleSiegeCrownSwitch::~CCastleSiegeCrownSwitch()
 {
 
 }
 
-void CCastleSiegeCrownSwitch::CastleSiegeCrownSwitchAct(int aIndex) // OK
+void CCastleSiegeCrownSwitch::CastleSiegeCrownSwitchAct(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 

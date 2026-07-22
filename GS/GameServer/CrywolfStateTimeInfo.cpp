@@ -10,12 +10,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCrywolfStateTimeInfo::CCrywolfStateTimeInfo() // OK
+CCrywolfStateTimeInfo::CCrywolfStateTimeInfo()
 {
 	this->Reset();
 }
 
-bool CCrywolfStateTimeInfo::CheckScheduleTime() // OK
+bool CCrywolfStateTimeInfo::CheckScheduleTime()
 {
 	CTime CurrentTime = CTime::GetTickCount();
 
@@ -75,7 +75,7 @@ bool CCrywolfStateTimeInfo::CheckScheduleTime() // OK
 	return 1;
 }
 
-bool CCrywolfStateTimeInfo::CheckContinuanceTime() // OK
+bool CCrywolfStateTimeInfo::CheckContinuanceTime()
 {
 	if((GetTickCount()-this->m_AppliedTickCount) > ((DWORD)this->m_ContinuanceTime))
 	{
@@ -85,7 +85,7 @@ bool CCrywolfStateTimeInfo::CheckContinuanceTime() // OK
 	return 1;
 }
 
-void CCrywolfStateTimeInfo::Reset() // OK
+void CCrywolfStateTimeInfo::Reset()
 {
 	this->m_Used = 0;
 	this->m_StateNumber = -1;
@@ -100,17 +100,17 @@ void CCrywolfStateTimeInfo::Reset() // OK
 	this->m_AppliedTickCount = 0;
 }
 
-void CCrywolfStateTimeInfo::ResetAppliedTime() // OK
+void CCrywolfStateTimeInfo::ResetAppliedTime()
 {
 	this->m_AppliedTickCount = 0;
 }
 
-void CCrywolfStateTimeInfo::SetAppliedTime() // OK
+void CCrywolfStateTimeInfo::SetAppliedTime()
 {
 	this->m_AppliedTickCount = GetTickCount();
 }
 
-int CCrywolfStateTimeInfo::GetLeftTime() // OK
+int CCrywolfStateTimeInfo::GetLeftTime()
 {
 	if(this->CheckContinuanceTime() == 0)
 	{

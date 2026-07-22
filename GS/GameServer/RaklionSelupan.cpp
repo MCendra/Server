@@ -16,17 +16,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklionSelupan::CRaklionSelupan() // OK
+CRaklionSelupan::CRaklionSelupan()
 {
 	this->ClearData();
 }
 
-CRaklionSelupan::~CRaklionSelupan() // OK
+CRaklionSelupan::~CRaklionSelupan()
 {
 
 }
 
-void CRaklionSelupan::ClearData() // OK
+void CRaklionSelupan::ClearData()
 {
 	this->m_SelupanObjIndex = -1;
 	this->m_BerserkIndex = 0;
@@ -34,7 +34,7 @@ void CRaklionSelupan::ClearData() // OK
 	this->m_BossAttackMax = 0;
 }
 
-void CRaklionSelupan::SelupanAct_FirstSkill() // OK
+void CRaklionSelupan::SelupanAct_FirstSkill()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -81,7 +81,7 @@ void CRaklionSelupan::SelupanAct_FirstSkill() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ FirstSkill ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_PoisonAttack() // OK
+void CRaklionSelupan::SelupanAct_PoisonAttack()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -112,7 +112,7 @@ void CRaklionSelupan::SelupanAct_PoisonAttack() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ PoisonAttack ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_IceStorm() // OK
+void CRaklionSelupan::SelupanAct_IceStorm()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -143,7 +143,7 @@ void CRaklionSelupan::SelupanAct_IceStorm() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ IceStorm ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_IceStrike() // OK
+void CRaklionSelupan::SelupanAct_IceStrike()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -174,7 +174,7 @@ void CRaklionSelupan::SelupanAct_IceStrike() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ IceStrike ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_SummonMonster() // OK
+void CRaklionSelupan::SelupanAct_SummonMonster()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -190,7 +190,7 @@ void CRaklionSelupan::SelupanAct_SummonMonster() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ SummonMonster ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_Heal() // OK
+void CRaklionSelupan::SelupanAct_Heal()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -204,7 +204,7 @@ void CRaklionSelupan::SelupanAct_Heal() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Heal ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_Freeze() // OK
+void CRaklionSelupan::SelupanAct_Freeze()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -223,7 +223,7 @@ void CRaklionSelupan::SelupanAct_Freeze() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Freeze ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_Teleport() // OK
+void CRaklionSelupan::SelupanAct_Teleport()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -246,7 +246,7 @@ void CRaklionSelupan::SelupanAct_Teleport() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Teleport ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_Invincibility() // OK
+void CRaklionSelupan::SelupanAct_Invincibility()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -260,7 +260,7 @@ void CRaklionSelupan::SelupanAct_Invincibility() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Invincibility ] Skill Using : Index(%d) %s",aIndex,gObj[aIndex].Name);
 }
 
-void CRaklionSelupan::SelupanAct_BerserkCansel() // OK
+void CRaklionSelupan::SelupanAct_BerserkCansel()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -276,7 +276,7 @@ void CRaklionSelupan::SelupanAct_BerserkCansel() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Berserk Cancel ] MinDamage(%d) Damage(%d~%d)",gObj[aIndex].PhysiDamageMin,gObj[aIndex].PhysiDamageMin,gObj[aIndex].PhysiDamageMax);
 }
 
-void CRaklionSelupan::SelupanAct_Berserk1() // OK
+void CRaklionSelupan::SelupanAct_Berserk1()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -296,7 +296,7 @@ void CRaklionSelupan::SelupanAct_Berserk1() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Berserk1 ] Skill Using : Index(%d) Damage(%d~%d)",aIndex,gObj[aIndex].PhysiDamageMin,gObj[aIndex].PhysiDamageMax);
 }
 
-void CRaklionSelupan::SelupanAct_Berserk2() // OK
+void CRaklionSelupan::SelupanAct_Berserk2()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -316,7 +316,7 @@ void CRaklionSelupan::SelupanAct_Berserk2() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Berserk2 ] Skill Using : Index(%d) Damage(%d~%d)",aIndex,gObj[aIndex].PhysiDamageMin,gObj[aIndex].PhysiDamageMax);
 }
 
-void CRaklionSelupan::SelupanAct_Berserk3() // OK
+void CRaklionSelupan::SelupanAct_Berserk3()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -336,7 +336,7 @@ void CRaklionSelupan::SelupanAct_Berserk3() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Berserk3 ] Skill Using : Index(%d) Damage(%d~%d)",aIndex,gObj[aIndex].PhysiDamageMin,gObj[aIndex].PhysiDamageMax);
 }
 
-void CRaklionSelupan::SelupanAct_Berserk4() // OK
+void CRaklionSelupan::SelupanAct_Berserk4()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) == 0)
 	{
@@ -356,7 +356,7 @@ void CRaklionSelupan::SelupanAct_Berserk4() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ][ Berserk4 ] Skill Using : Index(%d) Damage(%d~%d)",aIndex,gObj[aIndex].PhysiDamageMin,gObj[aIndex].PhysiDamageMax);
 }
 
-bool CRaklionSelupan::CreateSelupan() // OK
+bool CRaklionSelupan::CreateSelupan()
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{
@@ -398,7 +398,7 @@ bool CRaklionSelupan::CreateSelupan() // OK
 	return 0;
 }
 
-void CRaklionSelupan::DeleteSelupan() // OK
+void CRaklionSelupan::DeleteSelupan()
 {
 	if(OBJECT_RANGE(this->GetSelupanObjIndex()) != 0)
 	{
@@ -407,12 +407,12 @@ void CRaklionSelupan::DeleteSelupan() // OK
 	}
 }
 
-void CRaklionSelupan::SetSelupanObjIndex(int index) // OK
+void CRaklionSelupan::SetSelupanObjIndex(int index)
 {
 	this->m_SelupanObjIndex = index;
 }
 
-void CRaklionSelupan::SetSelupanSkillDelay(int delay) // OK
+void CRaklionSelupan::SetSelupanSkillDelay(int delay)
 {
 	if(delay < 0 || delay > 50000)
 	{
@@ -423,7 +423,7 @@ void CRaklionSelupan::SetSelupanSkillDelay(int delay) // OK
 	this->m_SelupanSkillDelay = delay;
 }
 
-void CRaklionSelupan::CreateSummonMonster() // OK
+void CRaklionSelupan::CreateSummonMonster()
 {
 	int index = gObjAddMonster(MAP_RAKLION2);
 
@@ -462,7 +462,7 @@ void CRaklionSelupan::CreateSummonMonster() // OK
 	}
 }
 
-void CRaklionSelupan::DeleteSummonMonster() // OK
+void CRaklionSelupan::DeleteSummonMonster()
 {
 	for(int n=OBJECT_START_MONSTER;n < MAX_OBJECT_MONSTER;n++)
 	{
@@ -475,32 +475,32 @@ void CRaklionSelupan::DeleteSummonMonster() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ] [ DeleteSummonMonster ] Delete All SummonMonster");
 }
 
-int CRaklionSelupan::GetSelupanLife() // OK
+int CRaklionSelupan::GetSelupanLife()
 {
 	return ((OBJECT_RANGE(this->GetSelupanObjIndex())==0)?0:(int)gObj[this->GetSelupanObjIndex()].Life);
 }
 
-int CRaklionSelupan::GetSelupanMaxLife() // OK
+int CRaklionSelupan::GetSelupanMaxLife()
 {
 	return ((OBJECT_RANGE(this->GetSelupanObjIndex())==0)?0:(int)(gObj[this->GetSelupanObjIndex()].MaxLife+gObj[this->GetSelupanObjIndex()].AddLife));
 }
 
-int CRaklionSelupan::GetSelupanObjIndex() // OK
+int CRaklionSelupan::GetSelupanObjIndex()
 {
 	return this->m_SelupanObjIndex;
 }
 
-int CRaklionSelupan::GetSelupanTargetIndex() // OK
+int CRaklionSelupan::GetSelupanTargetIndex()
 {
 	return ((OBJECT_RANGE(this->GetSelupanObjIndex())==0)?-1:gObj[this->GetSelupanObjIndex()].TargetNumber);
 }
 
-int CRaklionSelupan::GetSelupanSkillDelay() // OK
+int CRaklionSelupan::GetSelupanSkillDelay()
 {
 	return this->m_SelupanSkillDelay;
 }
 
-int CRaklionSelupan::GetBerserkIndex() // OK
+int CRaklionSelupan::GetBerserkIndex()
 {
 	return this->m_BerserkIndex;
 }

@@ -179,7 +179,7 @@ void ObjBOTSTATUE::MainProc()
 		}
 	}
 }
-void ObjBOTSTATUE::CheckSync() // OK
+void ObjBOTSTATUE::CheckSync()
 {
 	if (this->m_TimeReloadInfo.empty() != 0)
 	{
@@ -217,7 +217,7 @@ int ObjBOTSTATUE::GetBotIndex(int aIndex)
 	}
 	return -1;
 }
-void ObjBOTSTATUE::BotGetInfoSet(SDHP_BOT_INFO_RECV* lpMsg) // OK
+void ObjBOTSTATUE::BotGetInfoSet(SDHP_BOT_INFO_RECV* lpMsg)
 {
 	int result = lpMsg->index;
 

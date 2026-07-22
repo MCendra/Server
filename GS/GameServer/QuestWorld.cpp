@@ -19,7 +19,7 @@ CQuestWorld gQuestWorld;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQuestWorld::CQuestWorld() // OK
+CQuestWorld::CQuestWorld()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -28,12 +28,12 @@ CQuestWorld::CQuestWorld() // OK
 	#endif
 }
 
-CQuestWorld::~CQuestWorld() // OK
+CQuestWorld::~CQuestWorld()
 {
 
 }
 
-void CQuestWorld::Load(char* path) // OK
+void CQuestWorld::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -125,7 +125,7 @@ void CQuestWorld::Load(char* path) // OK
 	#endif
 }
 
-void CQuestWorld::SetInfo(QUEST_WORLD_INFO info) // OK
+void CQuestWorld::SetInfo(QUEST_WORLD_INFO info)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -139,7 +139,7 @@ void CQuestWorld::SetInfo(QUEST_WORLD_INFO info) // OK
 	#endif
 }
 
-QUEST_WORLD_INFO* CQuestWorld::GetInfo(int index) // OK
+QUEST_WORLD_INFO* CQuestWorld::GetInfo(int index)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -157,7 +157,7 @@ QUEST_WORLD_INFO* CQuestWorld::GetInfo(int index) // OK
 	#endif
 }
 
-QUEST_WORLD_INFO* CQuestWorld::GetInfoByIndex(LPOBJ lpObj,int QuestIndex,int QuestGroup) // OK
+QUEST_WORLD_INFO* CQuestWorld::GetInfoByIndex(LPOBJ lpObj,int QuestIndex,int QuestGroup)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -197,7 +197,7 @@ QUEST_WORLD_INFO* CQuestWorld::GetInfoByIndex(LPOBJ lpObj,int QuestIndex,int Que
 	#endif
 }
 
-bool CQuestWorld::AddQuestWorldList(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestNumber,int QuestState) // OK
+bool CQuestWorld::AddQuestWorldList(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestNumber,int QuestState)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -242,7 +242,7 @@ bool CQuestWorld::AddQuestWorldList(LPOBJ lpObj,int QuestIndex,int QuestGroup,in
 	#endif
 }
 
-QUEST_WORLD_LIST* CQuestWorld::GetQuestWorldList(LPOBJ lpObj,int QuestIndex,int QuestGroup) // OK
+QUEST_WORLD_LIST* CQuestWorld::GetQuestWorldList(LPOBJ lpObj,int QuestIndex,int QuestGroup)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -265,7 +265,7 @@ QUEST_WORLD_LIST* CQuestWorld::GetQuestWorldList(LPOBJ lpObj,int QuestIndex,int 
 	#endif
 }
 
-bool CQuestWorld::CheckQuestWorldRequisite(LPOBJ lpObj,QUEST_WORLD_INFO* lpInfo) // OK
+bool CQuestWorld::CheckQuestWorldRequisite(LPOBJ lpObj,QUEST_WORLD_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -342,7 +342,7 @@ bool CQuestWorld::CheckQuestWorldRequisite(LPOBJ lpObj,QUEST_WORLD_INFO* lpInfo)
 	#endif
 }
 
-bool CQuestWorld::CheckQuestWorldListState(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestState) // OK
+bool CQuestWorld::CheckQuestWorldListState(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestState)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -367,7 +367,7 @@ bool CQuestWorld::CheckQuestWorldListState(LPOBJ lpObj,int QuestIndex,int QuestG
 	#endif
 }
 
-void CQuestWorld::NpcElfBuffer(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CQuestWorld::NpcElfBuffer(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -389,7 +389,7 @@ void CQuestWorld::NpcElfBuffer(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldDialogRecv(PMSG_QUEST_WORLD_DIALOG_RECV* lpMsg,int aIndex) // OK
+void CQuestWorld::CGQuestWorldDialogRecv(PMSG_QUEST_WORLD_DIALOG_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -482,7 +482,7 @@ void CQuestWorld::CGQuestWorldDialogRecv(PMSG_QUEST_WORLD_DIALOG_RECV* lpMsg,int
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldAcceptRecv(PMSG_QUEST_WORLD_ACCEPT_RECV* lpMsg,int aIndex) // OK
+void CQuestWorld::CGQuestWorldAcceptRecv(PMSG_QUEST_WORLD_ACCEPT_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -589,7 +589,7 @@ void CQuestWorld::CGQuestWorldAcceptRecv(PMSG_QUEST_WORLD_ACCEPT_RECV* lpMsg,int
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldFinishRecv(PMSG_QUEST_WORLD_FINISH_RECV* lpMsg,int aIndex) // OK
+void CQuestWorld::CGQuestWorldFinishRecv(PMSG_QUEST_WORLD_FINISH_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -635,7 +635,7 @@ void CQuestWorld::CGQuestWorldFinishRecv(PMSG_QUEST_WORLD_FINISH_RECV* lpMsg,int
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldCancelRecv(PMSG_QUEST_WORLD_CANCEL_RECV* lpMsg,int aIndex) // OK
+void CQuestWorld::CGQuestWorldCancelRecv(PMSG_QUEST_WORLD_CANCEL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -679,7 +679,7 @@ void CQuestWorld::CGQuestWorldCancelRecv(PMSG_QUEST_WORLD_CANCEL_RECV* lpMsg,int
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldButtonRecv(PMSG_QUEST_WORLD_BUTTON_RECV* lpMsg,int aIndex) // OK
+void CQuestWorld::CGQuestWorldButtonRecv(PMSG_QUEST_WORLD_BUTTON_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -702,7 +702,7 @@ void CQuestWorld::CGQuestWorldButtonRecv(PMSG_QUEST_WORLD_BUTTON_RECV* lpMsg,int
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldDetailRecv(PMSG_QUEST_WORLD_DETAIL_RECV* lpMsg,int aIndex) // OK
+void CQuestWorld::CGQuestWorldDetailRecv(PMSG_QUEST_WORLD_DETAIL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -770,7 +770,7 @@ void CQuestWorld::CGQuestWorldDetailRecv(PMSG_QUEST_WORLD_DETAIL_RECV* lpMsg,int
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldListRecv(int aIndex) // OK
+void CQuestWorld::CGQuestWorldListRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -845,7 +845,7 @@ void CQuestWorld::CGQuestWorldListRecv(int aIndex) // OK
 	#endif
 }
 
-void CQuestWorld::CGQuestWorldNpcElfBufferRecv(int aIndex) // OK
+void CQuestWorld::CGQuestWorldNpcElfBufferRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -878,7 +878,7 @@ void CQuestWorld::CGQuestWorldNpcElfBufferRecv(int aIndex) // OK
 	#endif
 }
 
-void CQuestWorld::GCQuestWorldButtonSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestOption) // OK
+void CQuestWorld::GCQuestWorldButtonSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestOption)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -926,7 +926,7 @@ void CQuestWorld::GCQuestWorldButtonSend(LPOBJ lpObj,int QuestIndex,int QuestGro
 	#endif
 }
 
-void CQuestWorld::GCQuestWorldAcceptSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestOption) // OK
+void CQuestWorld::GCQuestWorldAcceptSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestOption)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -947,7 +947,7 @@ void CQuestWorld::GCQuestWorldAcceptSend(LPOBJ lpObj,int QuestIndex,int QuestGro
 	#endif
 }
 
-void CQuestWorld::GCQuestWorldDetailSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestOption) // OK
+void CQuestWorld::GCQuestWorldDetailSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestOption)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -996,7 +996,7 @@ void CQuestWorld::GCQuestWorldDetailSend(LPOBJ lpObj,int QuestIndex,int QuestGro
 	#endif
 }
 
-void CQuestWorld::GCQuestWorldFinishSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestResult) // OK
+void CQuestWorld::GCQuestWorldFinishSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestResult)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1017,7 +1017,7 @@ void CQuestWorld::GCQuestWorldFinishSend(LPOBJ lpObj,int QuestIndex,int QuestGro
 	#endif
 }
 
-void CQuestWorld::GCQuestWorldCancelSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestResult) // OK
+void CQuestWorld::GCQuestWorldCancelSend(LPOBJ lpObj,int QuestIndex,int QuestGroup,int QuestResult)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1038,7 +1038,7 @@ void CQuestWorld::GCQuestWorldCancelSend(LPOBJ lpObj,int QuestIndex,int QuestGro
 	#endif
 }
 
-void CQuestWorld::GCQuestWorldInterfaceListSend(LPOBJ lpObj) // OK
+void CQuestWorld::GCQuestWorldInterfaceListSend(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1090,7 +1090,7 @@ void CQuestWorld::GCQuestWorldInterfaceListSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CQuestWorld::DGQuestWorldRecv(SDHP_QUEST_WORLD_RECV* lpMsg) // OK
+void CQuestWorld::DGQuestWorldRecv(SDHP_QUEST_WORLD_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -1115,7 +1115,7 @@ void CQuestWorld::DGQuestWorldRecv(SDHP_QUEST_WORLD_RECV* lpMsg) // OK
 	this->GCQuestWorldButtonSend(lpObj,0,1,0);
 }
 
-void CQuestWorld::GDQuestWorldSend(int aIndex) // OK
+void CQuestWorld::GDQuestWorldSend(int aIndex)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -1140,7 +1140,7 @@ void CQuestWorld::GDQuestWorldSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CQuestWorld::GDQuestWorldSaveSend(int aIndex) // OK
+void CQuestWorld::GDQuestWorldSaveSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

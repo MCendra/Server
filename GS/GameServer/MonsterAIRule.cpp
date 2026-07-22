@@ -15,17 +15,17 @@ int CMonsterAIRule::m_MonsterAIRuleInfoCount;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIRule::CMonsterAIRule() // OK
+CMonsterAIRule::CMonsterAIRule()
 {
 	CMonsterAIRule::DelAllAIRule();
 }
 
-CMonsterAIRule::~CMonsterAIRule() // OK
+CMonsterAIRule::~CMonsterAIRule()
 {
 
 }
 
-void CMonsterAIRule::LoadData(char* path) // OK
+void CMonsterAIRule::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -129,7 +129,7 @@ void CMonsterAIRule::DelAllAIRule()
 	CMonsterAIRule::m_MonsterAIRuleInfoCount = 0;
 }
 
-int CMonsterAIRule::GetCurrentAIUnit(int MonsterClass) // OK
+int CMonsterAIRule::GetCurrentAIUnit(int MonsterClass)
 {
 	if(MonsterClass < 0 || MonsterClass >= MAX_MONSTER_AI_RULE_TABLE)
 	{
@@ -139,7 +139,7 @@ int CMonsterAIRule::GetCurrentAIUnit(int MonsterClass) // OK
 	return CMonsterAIRule::m_MonsterCurrentAIUnitTable[MonsterClass];
 }
 
-void CMonsterAIRule::MonsterAIRuleProc() // OK
+void CMonsterAIRule::MonsterAIRuleProc()
 {
 	for(int n=0;n < CMonsterAIRule::m_MonsterAIRuleInfoCount;n++)
 	{

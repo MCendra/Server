@@ -15,7 +15,7 @@ CSummonScroll gSummonScroll;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSummonScroll::CSummonScroll() // OK
+CSummonScroll::CSummonScroll()
 {
 
 	this->m_SummonScrollInfo.clear();
@@ -23,12 +23,12 @@ CSummonScroll::CSummonScroll() // OK
 	this->m_SummonScrollMonsterInfo.clear();
 }
 
-CSummonScroll::~CSummonScroll() // OK
+CSummonScroll::~CSummonScroll()
 {
 
 }
 
-void CSummonScroll::Load(char* path) // OK
+void CSummonScroll::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -115,7 +115,7 @@ void CSummonScroll::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CSummonScroll::CheckSummonScroll(int ItemIndex) // OK
+bool CSummonScroll::CheckSummonScroll(int ItemIndex)
 {
 	for(std::vector<SUMMON_SCROLL_INFO>::iterator it=this->m_SummonScrollInfo.begin();it != this->m_SummonScrollInfo.end();it++)
 	{
@@ -128,7 +128,7 @@ bool CSummonScroll::CheckSummonScroll(int ItemIndex) // OK
 	return 0;
 }
 
-bool CSummonScroll::GetSummonScrollInfo(int ItemIndex,SUMMON_SCROLL_INFO* lpInfo) // OK
+bool CSummonScroll::GetSummonScrollInfo(int ItemIndex,SUMMON_SCROLL_INFO* lpInfo)
 {
 
 	for(std::vector<SUMMON_SCROLL_INFO>::iterator it=this->m_SummonScrollInfo.begin();it != this->m_SummonScrollInfo.end();it++)
@@ -143,7 +143,7 @@ bool CSummonScroll::GetSummonScrollInfo(int ItemIndex,SUMMON_SCROLL_INFO* lpInfo
 	return 0;
 }
 
-bool CSummonScroll::CreateSummonScrollMonster(int aIndex,int ItemIndex,int map,int x,int y) // OK
+bool CSummonScroll::CreateSummonScrollMonster(int aIndex,int ItemIndex,int map,int x,int y)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

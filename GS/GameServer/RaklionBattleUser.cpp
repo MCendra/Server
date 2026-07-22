@@ -9,34 +9,34 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklionBattleUser::CRaklionBattleUser() // OK
+CRaklionBattleUser::CRaklionBattleUser()
 {
 	this->ResetData();
 }
 
-CRaklionBattleUser::~CRaklionBattleUser() // OK
+CRaklionBattleUser::~CRaklionBattleUser()
 {
 
 }
 
-void CRaklionBattleUser::ResetData() // OK
+void CRaklionBattleUser::ResetData()
 {
 	this->m_Index = -1;
 	this->m_IsUse = 0;
 }
 
-void CRaklionBattleUser::SetIndex(int aIndex) // OK
+void CRaklionBattleUser::SetIndex(int aIndex)
 {
 	this->m_Index = aIndex;
 	this->m_IsUse = 1;
 }
 
-BOOL CRaklionBattleUser::IsUseData() // OK
+BOOL CRaklionBattleUser::IsUseData()
 {
 	return this->m_IsUse;
 }
 
-int CRaklionBattleUser::GetIndex() // OK
+int CRaklionBattleUser::GetIndex()
 {
 	return this->m_Index;
 }

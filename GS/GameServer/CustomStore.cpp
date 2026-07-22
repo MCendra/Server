@@ -24,17 +24,17 @@ CCustomStore gCustomStore;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomStore::CCustomStore() // OK
+CCustomStore::CCustomStore()
 {
 
 }
 
-CCustomStore::~CCustomStore() // OK
+CCustomStore::~CCustomStore()
 {
 
 }
 
-void CCustomStore::ReadCustomStoreInfo(char* section,char* path) // OK
+void CCustomStore::ReadCustomStoreInfo(char* section,char* path)
 {
 	this->m_CustomStoreMapZone = GetPrivateProfileInt(section,"CustomStoreMapZone",0,path);
 
@@ -76,7 +76,7 @@ void CCustomStore::ReadCustomStoreInfo(char* section,char* path) // OK
 
 }
 
-bool CCustomStore::CommandCustomStore(LPOBJ lpObj,char* arg) // OK
+bool CCustomStore::CommandCustomStore(LPOBJ lpObj,char* arg)
 {
 	char mode[32] = {0};
 
@@ -130,7 +130,7 @@ bool CCustomStore::CommandCustomStore(LPOBJ lpObj,char* arg) // OK
 	return 0;
 }
 
-bool CCustomStore::CommandCustomStoreOffline(LPOBJ lpObj,char* arg) // OK
+bool CCustomStore::CommandCustomStoreOffline(LPOBJ lpObj,char* arg)
 {
 	 if(lpObj->Interface.use != 0)
 	 {
@@ -174,7 +174,7 @@ bool CCustomStore::CommandCustomStoreOffline(LPOBJ lpObj,char* arg) // OK
 	return 1;
 }
 
-bool CCustomStore::OpenCustomStore(LPOBJ lpObj,int type) // OK
+bool CCustomStore::OpenCustomStore(LPOBJ lpObj,int type)
 {
 	if(gServerInfo.m_PersonalShopSwitch == 0)
 	{
@@ -284,12 +284,12 @@ bool CCustomStore::OpenCustomStore(LPOBJ lpObj,int type) // OK
 	return 1;
 }
 
-bool CCustomStore::OnPShopOpen(LPOBJ lpObj) // OK
+bool CCustomStore::OnPShopOpen(LPOBJ lpObj)
 {
 	return ((lpObj->PShopCustom==0)?0:1);
 }
 
-void CCustomStore::OnPShopClose(LPOBJ lpObj) // OK
+void CCustomStore::OnPShopClose(LPOBJ lpObj)
 {
 	if(lpObj->PShopCustom != 0)
 	{
@@ -304,7 +304,7 @@ void CCustomStore::OnPShopClose(LPOBJ lpObj) // OK
 	}
 }
 
-void CCustomStore::OnPShopSecondProc(LPOBJ lpObj) // OK
+void CCustomStore::OnPShopSecondProc(LPOBJ lpObj)
 {
 	if(lpObj->PShopCustomOffline != 0)
 	{
@@ -341,7 +341,7 @@ void CCustomStore::OnPShopSecondProc(LPOBJ lpObj) // OK
 	}
 }
 
-void CCustomStore::OnPShopAlreadyConnected(LPOBJ lpObj) // OK
+void CCustomStore::OnPShopAlreadyConnected(LPOBJ lpObj)
 {
 	if(lpObj->PShopCustomOffline != 0)
 	{
@@ -351,7 +351,7 @@ void CCustomStore::OnPShopAlreadyConnected(LPOBJ lpObj) // OK
 	}
 }
 
-void CCustomStore::OnPShopItemList(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CCustomStore::OnPShopItemList(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpTarget->PShopCustom != 0)
 	{
@@ -379,7 +379,7 @@ void CCustomStore::OnPShopItemList(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-bool CCustomStore::OnPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aIndex) // OK
+bool CCustomStore::OnPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -651,7 +651,7 @@ bool CCustomStore::OnPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aIndex
 	return 1;
 }
 
-void CCustomStore::OnPShopBuyItemCallbackRecv(LPOBJ lpObj,LPOBJ lpTarget,DWORD slot,DWORD WCoinC,DWORD WCoinP,DWORD GoblinPoint) // OK
+void CCustomStore::OnPShopBuyItemCallbackRecv(LPOBJ lpObj,LPOBJ lpTarget,DWORD slot,DWORD WCoinC,DWORD WCoinP,DWORD GoblinPoint)
 {
 	if(gObjIsConnectedGP(lpTarget->Index) == 0)
 	{

@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIGroupMember::CMonsterAIGroupMember() // OK
+CMonsterAIGroupMember::CMonsterAIGroupMember()
 {
 	this->Reset();
 }
 
-CMonsterAIGroupMember::~CMonsterAIGroupMember() // OK
+CMonsterAIGroupMember::~CMonsterAIGroupMember()
 {
 
 }
 
-void CMonsterAIGroupMember::Reset() // OK
+void CMonsterAIGroupMember::Reset()
 {
 	this->m_GroupNumber = -1;
 	this->m_Guid = -1;

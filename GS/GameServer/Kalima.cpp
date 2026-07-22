@@ -13,17 +13,17 @@ CKalima gKalima;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKalima::CKalima() // OK
+CKalima::CKalima()
 {
 	InitializeCriticalSection(&this->m_critical);
 }
 
-CKalima::~CKalima() // OK
+CKalima::~CKalima()
 {
 	DeleteCriticalSection(&this->m_critical);
 }
 
-int CKalima::GetKalimaGateLevel(LPOBJ lpObj) // OK
+int CKalima::GetKalimaGateLevel(LPOBJ lpObj)
 {
 	int level = -1;
 
@@ -102,7 +102,7 @@ int CKalima::GetKalimaGateLevel(LPOBJ lpObj) // OK
 	return level;
 }
 
-bool CKalima::CreateKalimaGate(int aIndex,int level,int x,int y) // OK
+bool CKalima::CreateKalimaGate(int aIndex,int level,int x,int y)
 {
 	EnterCriticalSection(&this->m_critical);
 
@@ -214,7 +214,7 @@ bool CKalima::CreateKalimaGate(int aIndex,int level,int x,int y) // OK
 	return 1;
 }
 
-bool CKalima::CreateNextKalimaGate(int aIndex,int map,int x,int y) // OK
+bool CKalima::CreateNextKalimaGate(int aIndex,int map,int x,int y)
 {
 	EnterCriticalSection(&this->m_critical);
 
@@ -294,7 +294,7 @@ bool CKalima::CreateNextKalimaGate(int aIndex,int map,int x,int y) // OK
 	return 1;
 }
 
-bool CKalima::DeleteKalimaGate(int aIndex) // OK
+bool CKalima::DeleteKalimaGate(int aIndex)
 {
 	EnterCriticalSection(&this->m_critical);
 
@@ -335,7 +335,7 @@ bool CKalima::DeleteKalimaGate(int aIndex) // OK
 	return 1;
 }
 
-void CKalima::KalimaGateAct(int aIndex) // OK
+void CKalima::KalimaGateAct(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -449,7 +449,7 @@ void CKalima::KalimaGateAct(int aIndex) // OK
 	}
 }
 
-void CKalima::KalimaNextGateAct(int aIndex) // OK
+void CKalima::KalimaNextGateAct(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{

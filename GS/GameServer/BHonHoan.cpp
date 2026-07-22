@@ -79,7 +79,7 @@ void CBHonHoan::LoadConfig(char* FilePath)
 	LogAdd(LOG_BLUE, "[HonHoan] Enable %d Size %d", this->Enable, this->mDataConfigHonHoan.size());
 }
 
-char* CBHonHoan::GetMessage(int index) // OK
+char* CBHonHoan::GetMessage(int index)
 {
 	std::map<int, MESSAGE_INFO_HONHOAN>::iterator it = this->m_MessageInfoBP.find(index);
 
@@ -111,7 +111,7 @@ CONFIDATA_HONHOAN* CBHonHoan::GetConfigLvHonHoan(int LvHonHoan)
 }
 
 
-void CBHonHoan::SendInfoClient(int aIndex) // OK
+void CBHonHoan::SendInfoClient(int aIndex)
 {
 	if (!this->Enable)
 	{
@@ -203,7 +203,7 @@ void CBHonHoan::GetOptionHonHoan(LPOBJ lpObj, bool flag)
 	// SD
 	lpObj->AddShield += BGetDataHonHoan->TangSD;
 }
-bool CBHonHoan::NangCapHonHoan(int aIndex) // OK
+bool CBHonHoan::NangCapHonHoan(int aIndex)
 {
 	if (!this->Enable)
 	{

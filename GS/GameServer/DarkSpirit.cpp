@@ -31,17 +31,17 @@ CDarkSpirit gDarkSpirit[MAX_OBJECT];
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDarkSpirit::CDarkSpirit() // OK
+CDarkSpirit::CDarkSpirit()
 {
 	this->Init();
 }
 
-CDarkSpirit::~CDarkSpirit() // OK
+CDarkSpirit::~CDarkSpirit()
 {
 
 }
 
-void CDarkSpirit::Init() // OK
+void CDarkSpirit::Init()
 {
 	this->m_AttackDamageMin = 0;
 	this->m_AttackDamageMax = 0;
@@ -53,7 +53,7 @@ void CDarkSpirit::Init() // OK
 	this->m_Item = 0;
 }
 
-void CDarkSpirit::MainProc() // OK
+void CDarkSpirit::MainProc()
 {
 	if(gObjIsConnectedGP(this->m_MasterIndex) == 0)
 	{
@@ -106,12 +106,12 @@ void CDarkSpirit::MainProc() // OK
 	}
 }
 
-void CDarkSpirit::ModeNormal() // OK
+void CDarkSpirit::ModeNormal()
 {
 
 }
 
-void CDarkSpirit::ModeAttackRandom() // OK
+void CDarkSpirit::ModeAttackRandom()
 {
 	LPOBJ lpObj = &gObj[this->m_MasterIndex];
 	int IndexTable[MAX_VIEWPORT];
@@ -152,7 +152,7 @@ void CDarkSpirit::ModeAttackRandom() // OK
 	}
 }
 
-void CDarkSpirit::ModeAttackWithMaster() // OK
+void CDarkSpirit::ModeAttackWithMaster()
 {
 	LPOBJ lpObj = &gObj[this->m_MasterIndex];
 
@@ -190,7 +190,7 @@ void CDarkSpirit::ModeAttackWithMaster() // OK
 	}
 }
 
-void CDarkSpirit::ModeAttakTarget() // OK
+void CDarkSpirit::ModeAttakTarget()
 {
 	LPOBJ lpObj = &gObj[this->m_MasterIndex];
 
@@ -228,7 +228,7 @@ void CDarkSpirit::ModeAttakTarget() // OK
 	}
 }
 
-void CDarkSpirit::RangeAttack(int aIndex,int bIndex) // OK
+void CDarkSpirit::RangeAttack(int aIndex,int bIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -276,7 +276,7 @@ void CDarkSpirit::RangeAttack(int aIndex,int bIndex) // OK
 	}
 }
 
-void CDarkSpirit::SendAttackMsg(int aIndex,int bIndex,bool send,BYTE action) // OK
+void CDarkSpirit::SendAttackMsg(int aIndex,int bIndex,bool send,BYTE action)
 {
 	if(send != 0)
 	{
@@ -304,7 +304,7 @@ void CDarkSpirit::SendAttackMsg(int aIndex,int bIndex,bool send,BYTE action) // 
 	gObjAddAttackProcMsgSendDelay(&gObj[aIndex],51,bIndex,600,send,action);
 }
 
-void CDarkSpirit::Set(int aIndex,CItem* lpItem) // OK
+void CDarkSpirit::Set(int aIndex,CItem* lpItem)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -350,7 +350,7 @@ void CDarkSpirit::Set(int aIndex,CItem* lpItem) // OK
 	}
 }
 
-void CDarkSpirit::SetMode(eDarkSpiritMode mode,int aIndex) // OK
+void CDarkSpirit::SetMode(eDarkSpiritMode mode,int aIndex)
 {
 	if(OBJECT_RANGE(this->m_MasterIndex) == 0)
 	{
@@ -396,7 +396,7 @@ void CDarkSpirit::SetMode(eDarkSpiritMode mode,int aIndex) // OK
 	DataSend(this->m_MasterIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CDarkSpirit::SetTarget(int aIndex) // OK
+void CDarkSpirit::SetTarget(int aIndex)
 {
 	if(OBJECT_RANGE(this->m_MasterIndex) == 0)
 	{
@@ -413,7 +413,7 @@ void CDarkSpirit::SetTarget(int aIndex) // OK
 	this->m_TargetIndex = aIndex;
 }
 
-void CDarkSpirit::ResetTarget(int aIndex) // OK
+void CDarkSpirit::ResetTarget(int aIndex)
 {
 	if(OBJECT_RANGE(this->m_MasterIndex) == 0)
 	{
@@ -438,7 +438,7 @@ void CDarkSpirit::ResetTarget(int aIndex) // OK
 	}
 }
 
-void CDarkSpirit::ChangeCommand(int command,int aIndex) // OK
+void CDarkSpirit::ChangeCommand(int command,int aIndex)
 {
 	switch(command)
 	{
@@ -460,7 +460,7 @@ void CDarkSpirit::ChangeCommand(int command,int aIndex) // OK
 	}
 }
 
-bool CDarkSpirit::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,BYTE action) // OK
+bool CDarkSpirit::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,BYTE action)
 {
 	#pragma region ATTACK_CHECK
 
@@ -1074,7 +1074,7 @@ bool CDarkSpirit::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BY
 	return 1;
 }
 
-void CDarkSpirit::DarkSpiritSprite(LPOBJ lpObj,int damage) // OK
+void CDarkSpirit::DarkSpiritSprite(LPOBJ lpObj,int damage)
 {
 	CItem* lpItem = &lpObj->Inventory[1];
 
@@ -1100,7 +1100,7 @@ void CDarkSpirit::DarkSpiritSprite(LPOBJ lpObj,int damage) // OK
 	}
 }
 
-bool CDarkSpirit::MissCheck(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,BYTE* miss) // OK
+bool CDarkSpirit::MissCheck(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,BYTE* miss)
 {
 	if(this->m_AttackSuccessRate < lpTarget->DefenseSuccessRate)
 	{
@@ -1126,7 +1126,7 @@ bool CDarkSpirit::MissCheck(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,
 	return 1;
 }
 
-int CDarkSpirit::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
+int CDarkSpirit::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect)
 {
 	int defense = lpTarget->Defense;
 
@@ -1171,7 +1171,7 @@ int CDarkSpirit::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
 	return defense;
 }
 
-int CDarkSpirit::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
+int CDarkSpirit::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense)
 {
 	CItem* lpItem = &lpObj->Inventory[0];
 
@@ -1232,7 +1232,7 @@ int CDarkSpirit::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD
 	return damage;
 }
 
-void CDarkSpirit::GetPreviewAttackDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* AttackSpeed,DWORD* AttackSuccessRate) // OK
+void CDarkSpirit::GetPreviewAttackDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMax,DWORD* AttackSpeed,DWORD* AttackSuccessRate)
 {
 	CItem* lpItem = &lpObj->Inventory[0];
 

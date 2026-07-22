@@ -14,17 +14,17 @@ CItemValue gItemValue;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemValue::CItemValue() // OK
+CItemValue::CItemValue()
 {
 	this->m_ItemValueInfo.clear();
 }
 
-CItemValue::~CItemValue() // OK
+CItemValue::~CItemValue()
 {
 
 }
 
-void CItemValue::Load(char* path) // OK
+void CItemValue::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -86,7 +86,7 @@ void CItemValue::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemValue::GetItemValue(CItem* lpItem,int* value) // OK
+bool CItemValue::GetItemValue(CItem* lpItem,int* value)
 {
 	for(std::vector<ITEM_VALUE_INFO>::iterator it=this->m_ItemValueInfo.begin();it != this->m_ItemValueInfo.end();it++)
 	{
@@ -114,7 +114,7 @@ bool CItemValue::GetItemValue(CItem* lpItem,int* value) // OK
 	return 0;
 }
 
-bool CItemValue::GetItemValueNew(CItem* lpItem,int* value,int* coin1,int* coin2,int* coin3,int* sell) // OK
+bool CItemValue::GetItemValueNew(CItem* lpItem,int* value,int* coin1,int* coin2,int* coin3,int* sell)
 {
 	for(std::vector<ITEM_VALUE_INFO>::iterator it=this->m_ItemValueInfo.begin();it != this->m_ItemValueInfo.end();it++)
 	{

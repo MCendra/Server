@@ -15,17 +15,17 @@ int CMonsterAIGroup::m_MonsterAIGroupMemberCount[MAX_MONSTER_AI_GROUP];
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIGroup::CMonsterAIGroup() // OK
+CMonsterAIGroup::CMonsterAIGroup()
 {
 	CMonsterAIGroup::DelAllGroupInfo();
 }
 
-CMonsterAIGroup::~CMonsterAIGroup() // OK
+CMonsterAIGroup::~CMonsterAIGroup()
 {
 
 }
 
-void CMonsterAIGroup::LoadData(char* path) // OK
+void CMonsterAIGroup::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -117,7 +117,7 @@ void CMonsterAIGroup::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterAIGroup::ChangeAIOrder(int GroupNumber,int AIOrder) // OK
+void CMonsterAIGroup::ChangeAIOrder(int GroupNumber,int AIOrder)
 {
 	if(GroupNumber < 0 || GroupNumber >= MAX_MONSTER_AI_GROUP)
 	{
@@ -163,7 +163,7 @@ void CMonsterAIGroup::ChangeAIOrder(int GroupNumber,int AIOrder) // OK
 	}
 }
 
-BOOL CMonsterAIGroup::DelGroupInstance(int GroupNumber) // OK
+BOOL CMonsterAIGroup::DelGroupInstance(int GroupNumber)
 {
 	if(GroupNumber < 0 || GroupNumber >= MAX_MONSTER_AI_GROUP)
 	{
@@ -188,7 +188,7 @@ BOOL CMonsterAIGroup::DelGroupInstance(int GroupNumber) // OK
 	return 1;
 }
 
-void CMonsterAIGroup::DelAllGroupInfo() // OK
+void CMonsterAIGroup::DelAllGroupInfo()
 {
 	CMonsterAIGroup::m_DataLoad = 0;
 
@@ -198,7 +198,7 @@ void CMonsterAIGroup::DelAllGroupInfo() // OK
 	}
 }
 
-int CMonsterAIGroup::FindGroupLeader(int GroupNumber) // OK
+int CMonsterAIGroup::FindGroupLeader(int GroupNumber)
 {
 	if(GroupNumber < 0 || GroupNumber >= MAX_MONSTER_AI_GROUP)
 	{
@@ -223,7 +223,7 @@ int CMonsterAIGroup::FindGroupLeader(int GroupNumber) // OK
 	return -1;
 }
 
-int CMonsterAIGroup::FindGroupMemberObjectIndex(int GroupNumber,int guid) // OK
+int CMonsterAIGroup::FindGroupMemberObjectIndex(int GroupNumber,int guid)
 {
 	if(GroupNumber < 0 || GroupNumber >= MAX_MONSTER_AI_GROUP)
 	{
@@ -248,7 +248,7 @@ int CMonsterAIGroup::FindGroupMemberObjectIndex(int GroupNumber,int guid) // OK
 	return -1;
 }
 
-CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMember(int GroupNumber,int guid) // OK
+CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMember(int GroupNumber,int guid)
 {
 	if(GroupNumber < 0 || GroupNumber >= MAX_MONSTER_AI_GROUP)
 	{
@@ -273,7 +273,7 @@ CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMember(int GroupNumber,int guid
 	return 0;
 }
 
-CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMemberToHeal(int ObjIndex,int GroupNumber,int guid,int distance,int rate) // OK
+CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMemberToHeal(int ObjIndex,int GroupNumber,int guid,int distance,int rate)
 {
 	for(int n=0;n < MAX_MONSTER_AI_GROUP_MEMBER;n++)
 	{
@@ -303,7 +303,7 @@ CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMemberToHeal(int ObjIndex,int G
 	return 0;
 }
 
-CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMemberToSommon(int ObjIndex,int GroupNumber,int guid) // OK
+CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMemberToSommon(int ObjIndex,int GroupNumber,int guid)
 {
 	for(int n=0;n < MAX_MONSTER_AI_GROUP_MEMBER;n++)
 	{
@@ -333,7 +333,7 @@ CMonsterAIGroupMember* CMonsterAIGroup::FindGroupMemberToSommon(int ObjIndex,int
 	return 0;
 }
 
-void CMonsterAIGroup::InitAll() // OK
+void CMonsterAIGroup::InitAll()
 {
 	for(int n=0;n < MAX_MONSTER_AI_GROUP;n++)
 	{
@@ -341,7 +341,7 @@ void CMonsterAIGroup::InitAll() // OK
 	}
 }
 
-void CMonsterAIGroup::Init(int GroupNumber) // OK
+void CMonsterAIGroup::Init(int GroupNumber)
 {
 	if(GroupNumber < 0 || GroupNumber >= MAX_MONSTER_AI_GROUP)
 	{

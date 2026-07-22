@@ -18,17 +18,17 @@ CQuestObjective gQuestObjective;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQuestObjective::CQuestObjective() // OK
+CQuestObjective::CQuestObjective()
 {
 	this->m_count = 0;
 }
 
-CQuestObjective::~CQuestObjective() // OK
+CQuestObjective::~CQuestObjective()
 {
 
 }
 
-void CQuestObjective::Load(char* path) // OK
+void CQuestObjective::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -106,7 +106,7 @@ void CQuestObjective::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CQuestObjective::SetInfo(QUEST_OBJECTIVE_INFO info) // OK
+void CQuestObjective::SetInfo(QUEST_OBJECTIVE_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_QUEST_OBJECTIVE)
 	{
@@ -116,7 +116,7 @@ void CQuestObjective::SetInfo(QUEST_OBJECTIVE_INFO info) // OK
 	this->m_QuestObjectiveInfo[this->m_count++] = info;
 }
 
-QUEST_OBJECTIVE_INFO* CQuestObjective::GetInfo(int index) // OK
+QUEST_OBJECTIVE_INFO* CQuestObjective::GetInfo(int index)
 {
 	if(index < 0 || index >= this->m_count)
 	{
@@ -126,7 +126,7 @@ QUEST_OBJECTIVE_INFO* CQuestObjective::GetInfo(int index) // OK
 	return &this->m_QuestObjectiveInfo[index];
 }
 
-int CQuestObjective::GetQuestObjectiveCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo) // OK
+int CQuestObjective::GetQuestObjectiveCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo)
 {
 	if(lpInfo->Type == QUEST_OBJECTIVE_NONE)
 	{
@@ -151,7 +151,7 @@ int CQuestObjective::GetQuestObjectiveCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lp
 	return 0;
 }
 
-int CQuestObjective::GetQuestObjectiveKillCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo) // OK
+int CQuestObjective::GetQuestObjectiveKillCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo)
 {
 	if(lpObj->QuestKillCountIndex != lpInfo->RequireIndex)
 	{
@@ -166,7 +166,7 @@ int CQuestObjective::GetQuestObjectiveKillCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO
 	return lpObj->QuestKillCount[lpInfo->Number].KillCount;
 }
 
-bool CQuestObjective::CheckQuestObjectiveRequisite(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo) // OK
+bool CQuestObjective::CheckQuestObjectiveRequisite(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo)
 {
 	if(lpInfo->RequireIndex != -1 && gQuest.CheckQuestListState(lpObj,lpInfo->RequireIndex,lpInfo->RequireState) == 0)
 	{
@@ -181,7 +181,7 @@ bool CQuestObjective::CheckQuestObjectiveRequisite(LPOBJ lpObj,QUEST_OBJECTIVE_I
 	return 1;
 }
 
-bool CQuestObjective::CheckQuestObjective(LPOBJ lpObj,int QuestIndex) // OK
+bool CQuestObjective::CheckQuestObjective(LPOBJ lpObj,int QuestIndex)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -211,7 +211,7 @@ bool CQuestObjective::CheckQuestObjective(LPOBJ lpObj,int QuestIndex) // OK
 	return 1;
 }
 
-bool CQuestObjective::CheckQuestObjectiveItemCount(LPOBJ lpObj,int ItemIndex,int ItemLevel) // OK
+bool CQuestObjective::CheckQuestObjectiveItemCount(LPOBJ lpObj,int ItemIndex,int ItemLevel)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -241,7 +241,7 @@ bool CQuestObjective::CheckQuestObjectiveItemCount(LPOBJ lpObj,int ItemIndex,int
 	return 1;
 }
 
-void CQuestObjective::AddQuestObjectiveKillCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo) // OK
+void CQuestObjective::AddQuestObjectiveKillCount(LPOBJ lpObj,QUEST_OBJECTIVE_INFO* lpInfo)
 {
 	if(lpObj->QuestKillCountIndex != lpInfo->RequireIndex)
 	{
@@ -256,7 +256,7 @@ void CQuestObjective::AddQuestObjectiveKillCount(LPOBJ lpObj,QUEST_OBJECTIVE_INF
 	lpObj->QuestKillCount[lpInfo->Number].KillCount++;
 }
 
-void CQuestObjective::InitQuestObjectiveKillCount(LPOBJ lpObj,int QuestIndex) // OK
+void CQuestObjective::InitQuestObjectiveKillCount(LPOBJ lpObj,int QuestIndex)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -290,7 +290,7 @@ void CQuestObjective::InitQuestObjectiveKillCount(LPOBJ lpObj,int QuestIndex) //
 	}
 }
 
-void CQuestObjective::RemoveQuestObjective(LPOBJ lpObj,int QuestIndex) // OK
+void CQuestObjective::RemoveQuestObjective(LPOBJ lpObj,int QuestIndex)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -339,7 +339,7 @@ void CQuestObjective::RemoveQuestObjective(LPOBJ lpObj,int QuestIndex) // OK
 	}
 }
 
-bool CQuestObjective::MonsterItemDrop(LPOBJ lpMonster) // OK
+bool CQuestObjective::MonsterItemDrop(LPOBJ lpMonster)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpMonster);
 
@@ -389,7 +389,7 @@ bool CQuestObjective::MonsterItemDrop(LPOBJ lpMonster) // OK
 	return 0;
 }
 
-bool CQuestObjective::MonsterItemDropParty(LPOBJ lpMonster,int PartyNumber) // OK
+bool CQuestObjective::MonsterItemDropParty(LPOBJ lpMonster,int PartyNumber)
 {
 	for(int n=0;n < MAX_PARTY_USER;n++)
 	{
@@ -437,7 +437,7 @@ bool CQuestObjective::MonsterItemDropParty(LPOBJ lpMonster,int PartyNumber) // O
 	return 0;
 }
 
-void CQuestObjective::MonsterKill(LPOBJ lpMonster) // OK
+void CQuestObjective::MonsterKill(LPOBJ lpMonster)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpMonster);
 
@@ -481,7 +481,7 @@ void CQuestObjective::MonsterKill(LPOBJ lpMonster) // OK
 	}
 }
 
-void CQuestObjective::MonsterKillParty(LPOBJ lpMonster,int PartyNumber) // OK
+void CQuestObjective::MonsterKillParty(LPOBJ lpMonster,int PartyNumber)
 {
 	for(int n=0;n < MAX_PARTY_USER;n++)
 	{

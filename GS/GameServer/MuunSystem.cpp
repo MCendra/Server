@@ -22,7 +22,7 @@ CMuunSystem gMuunSystem;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMuunSystem::CMuunSystem() // OK
+CMuunSystem::CMuunSystem()
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -33,12 +33,12 @@ CMuunSystem::CMuunSystem() // OK
 	#endif
 }
 
-CMuunSystem::~CMuunSystem() // OK
+CMuunSystem::~CMuunSystem()
 {
 
 }
 
-void CMuunSystem::Load(char* path) // OK
+void CMuunSystem::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -159,7 +159,7 @@ void CMuunSystem::Load(char* path) // OK
 	#endif
 }
 
-void CMuunSystem::MainProc() // OK
+void CMuunSystem::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -213,7 +213,7 @@ void CMuunSystem::MainProc() // OK
 	#endif
 }
 
-bool CMuunSystem::IsMuunItem(int ItemIndex) // OK
+bool CMuunSystem::IsMuunItem(int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -235,7 +235,7 @@ bool CMuunSystem::IsMuunItem(int ItemIndex) // OK
 	#endif
 }
 
-bool CMuunSystem::IsMuunItem(CItem* lpItem) // OK
+bool CMuunSystem::IsMuunItem(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -257,7 +257,7 @@ bool CMuunSystem::IsMuunItem(CItem* lpItem) // OK
 	#endif
 }
 
-bool CMuunSystem::IsMuunUtil(int ItemIndex) // OK
+bool CMuunSystem::IsMuunUtil(int ItemIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -277,7 +277,7 @@ bool CMuunSystem::IsMuunUtil(int ItemIndex) // OK
 	#endif
 }
 
-bool CMuunSystem::IsMuunUtil(CItem* lpItem) // OK
+bool CMuunSystem::IsMuunUtil(CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -297,7 +297,7 @@ bool CMuunSystem::IsMuunUtil(CItem* lpItem) // OK
 	#endif
 }
 
-bool CMuunSystem::GetMuunSystemInfo(int index,MUUN_SYSTEM_INFO* lpInfo) // OK
+bool CMuunSystem::GetMuunSystemInfo(int index,MUUN_SYSTEM_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -320,7 +320,7 @@ bool CMuunSystem::GetMuunSystemInfo(int index,MUUN_SYSTEM_INFO* lpInfo) // OK
 	#endif
 }
 
-bool CMuunSystem::GetMuunSystemOptionInfo(int index,MUUN_SYSTEM_OPTION_INFO* lpInfo) // OK
+bool CMuunSystem::GetMuunSystemOptionInfo(int index,MUUN_SYSTEM_OPTION_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -343,7 +343,7 @@ bool CMuunSystem::GetMuunSystemOptionInfo(int index,MUUN_SYSTEM_OPTION_INFO* lpI
 	#endif
 }
 
-void CMuunSystem::MuunInventoryItemSet(int aIndex,int slot,BYTE type) // OK
+void CMuunSystem::MuunInventoryItemSet(int aIndex,int slot,BYTE type)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -378,7 +378,7 @@ void CMuunSystem::MuunInventoryItemSet(int aIndex,int slot,BYTE type) // OK
 	#endif
 }
 
-BYTE CMuunSystem::MuunInventoryRectCheck(int aIndex,int x,int y,int width,int height) // OK
+BYTE CMuunSystem::MuunInventoryRectCheck(int aIndex,int x,int y,int width,int height)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -407,7 +407,7 @@ BYTE CMuunSystem::MuunInventoryRectCheck(int aIndex,int x,int y,int width,int he
 	#endif
 }
 
-BYTE CMuunSystem::MuunInventoryInsertItem(int aIndex,CItem item) // OK
+BYTE CMuunSystem::MuunInventoryInsertItem(int aIndex,CItem item)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -445,7 +445,7 @@ BYTE CMuunSystem::MuunInventoryInsertItem(int aIndex,CItem item) // OK
 	#endif
 }
 
-BYTE CMuunSystem::MuunInventoryAddItem(int aIndex,CItem item,int slot) // OK
+BYTE CMuunSystem::MuunInventoryAddItem(int aIndex,CItem item,int slot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -498,7 +498,7 @@ BYTE CMuunSystem::MuunInventoryAddItem(int aIndex,CItem item,int slot) // OK
 	#endif
 }
 
-void CMuunSystem::MuunInventoryDelItem(int aIndex,int slot) // OK
+void CMuunSystem::MuunInventoryDelItem(int aIndex,int slot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -515,7 +515,7 @@ void CMuunSystem::MuunInventoryDelItem(int aIndex,int slot) // OK
 	#endif
 }
 
-bool CMuunSystem::CheckSpecialOption(LPOBJ lpObj,MUUN_SYSTEM_OPTION_INFO* lpInfo) // OK
+bool CMuunSystem::CheckSpecialOption(LPOBJ lpObj,MUUN_SYSTEM_OPTION_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -577,7 +577,7 @@ bool CMuunSystem::CheckSpecialOption(LPOBJ lpObj,MUUN_SYSTEM_OPTION_INFO* lpInfo
 	#endif
 }
 
-bool CMuunSystem::CheckItemMoveToMuunInventory(LPOBJ lpObj,CItem* lpItem,int slot) // OK
+bool CMuunSystem::CheckItemMoveToMuunInventory(LPOBJ lpObj,CItem* lpItem,int slot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -628,7 +628,7 @@ bool CMuunSystem::CheckItemMoveToMuunInventory(LPOBJ lpObj,CItem* lpItem,int slo
 	#endif
 }
 
-void CMuunSystem::GetOptionValue(LPOBJ lpObj,CItem* lpItem,MUUN_SYSTEM_OPTION_INFO* lpInfo,int* value) // OK
+void CMuunSystem::GetOptionValue(LPOBJ lpObj,CItem* lpItem,MUUN_SYSTEM_OPTION_INFO* lpInfo,int* value)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -657,7 +657,7 @@ void CMuunSystem::GetOptionValue(LPOBJ lpObj,CItem* lpItem,MUUN_SYSTEM_OPTION_IN
 	#endif
 }
 
-void CMuunSystem::GetMuunItemSocketOption(int ItemIndex,BYTE* ItemLevel,BYTE* SocketOption,BYTE* SocketOptionBonus) // OK
+void CMuunSystem::GetMuunItemSocketOption(int ItemIndex,BYTE* ItemLevel,BYTE* SocketOption,BYTE* SocketOptionBonus)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -674,7 +674,7 @@ void CMuunSystem::GetMuunItemSocketOption(int ItemIndex,BYTE* ItemLevel,BYTE* So
 	#endif
 }
 
-void CMuunSystem::GetMuunUtilSocketOption(int ItemIndex,BYTE* ItemLevel,BYTE* SocketOption,BYTE* SocketOptionBonus) // OK
+void CMuunSystem::GetMuunUtilSocketOption(int ItemIndex,BYTE* ItemLevel,BYTE* SocketOption,BYTE* SocketOptionBonus)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -717,7 +717,7 @@ void CMuunSystem::GetMuunUtilSocketOption(int ItemIndex,BYTE* ItemLevel,BYTE* So
 	#endif
 }
 
-bool CMuunSystem::CharacterUseMuunLevelUp(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CMuunSystem::CharacterUseMuunLevelUp(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -777,7 +777,7 @@ bool CMuunSystem::CharacterUseMuunLevelUp(LPOBJ lpObj,int SourceSlot,int TargetS
 	#endif
 }
 
-bool CMuunSystem::CharacterUseEvolutionStone(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CMuunSystem::CharacterUseEvolutionStone(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -848,7 +848,7 @@ bool CMuunSystem::CharacterUseEvolutionStone(LPOBJ lpObj,int SourceSlot,int Targ
 	#endif
 }
 
-bool CMuunSystem::CharacterUseJewelOfLife(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CMuunSystem::CharacterUseJewelOfLife(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -900,7 +900,7 @@ bool CMuunSystem::CharacterUseJewelOfLife(LPOBJ lpObj,int SourceSlot,int TargetS
 	#endif
 }
 
-void CMuunSystem::MuunSprite(LPOBJ lpObj,int damage) // OK
+void CMuunSystem::MuunSprite(LPOBJ lpObj,int damage)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -937,7 +937,7 @@ void CMuunSystem::MuunSprite(LPOBJ lpObj,int damage) // OK
 	#endif
 }
 
-void CMuunSystem::CalcMuunOption(LPOBJ lpObj,bool flag) // OK
+void CMuunSystem::CalcMuunOption(LPOBJ lpObj,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -968,7 +968,7 @@ void CMuunSystem::CalcMuunOption(LPOBJ lpObj,bool flag) // OK
 	#endif
 }
 
-void CMuunSystem::InsertOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CMuunSystem::InsertOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1063,7 +1063,7 @@ void CMuunSystem::InsertOption(LPOBJ lpObj,int index,int value,bool flag) // OK
 	#endif
 }
 
-void CMuunSystem::CGMuunItemGetRecv(PMSG_MUUN_ITEM_GET_RECV* lpMsg,int aIndex) // OK
+void CMuunSystem::CGMuunItemGetRecv(PMSG_MUUN_ITEM_GET_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1147,7 +1147,7 @@ void CMuunSystem::CGMuunItemGetRecv(PMSG_MUUN_ITEM_GET_RECV* lpMsg,int aIndex) /
 	#endif
 }
 
-void CMuunSystem::CGMuunItemUseRecv(PMSG_MUUN_ITEM_USE_RECV* lpMsg,int aIndex) // OK
+void CMuunSystem::CGMuunItemUseRecv(PMSG_MUUN_ITEM_USE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1215,7 +1215,7 @@ void CMuunSystem::CGMuunItemUseRecv(PMSG_MUUN_ITEM_USE_RECV* lpMsg,int aIndex) /
 	#endif
 }
 
-void CMuunSystem::CGMuunItemSellRecv(PMSG_MUUN_ITEM_SELL_RECV* lpMsg,int aIndex) // OK
+void CMuunSystem::CGMuunItemSellRecv(PMSG_MUUN_ITEM_SELL_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1303,7 +1303,7 @@ void CMuunSystem::CGMuunItemSellRecv(PMSG_MUUN_ITEM_SELL_RECV* lpMsg,int aIndex)
 	#endif
 }
 
-void CMuunSystem::GCMuunItemListSend(int aIndex) // OK
+void CMuunSystem::GCMuunItemListSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1346,7 +1346,7 @@ void CMuunSystem::GCMuunItemListSend(int aIndex) // OK
 	#endif
 }
 
-void CMuunSystem::GCMuunItemDurSend(int aIndex,BYTE slot,BYTE dur) // OK
+void CMuunSystem::GCMuunItemDurSend(int aIndex,BYTE slot,BYTE dur)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1363,7 +1363,7 @@ void CMuunSystem::GCMuunItemDurSend(int aIndex,BYTE slot,BYTE dur) // OK
 	#endif
 }
 
-void CMuunSystem::GCMuunItemDeleteSend(int aIndex,BYTE slot,BYTE flag) // OK
+void CMuunSystem::GCMuunItemDeleteSend(int aIndex,BYTE slot,BYTE flag)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1380,7 +1380,7 @@ void CMuunSystem::GCMuunItemDeleteSend(int aIndex,BYTE slot,BYTE flag) // OK
 	#endif
 }
 
-void CMuunSystem::GCMuunItemModifySend(int aIndex,BYTE slot) // OK
+void CMuunSystem::GCMuunItemModifySend(int aIndex,BYTE slot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1406,7 +1406,7 @@ void CMuunSystem::GCMuunItemModifySend(int aIndex,BYTE slot) // OK
 	#endif
 }
 
-void CMuunSystem::GCMuunItemChangeSend(int aIndex,BYTE slot) // OK
+void CMuunSystem::GCMuunItemChangeSend(int aIndex,BYTE slot)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1429,7 +1429,7 @@ void CMuunSystem::GCMuunItemChangeSend(int aIndex,BYTE slot) // OK
 	#endif
 }
 
-void CMuunSystem::GCMuunItemStatusSend(int aIndex,BYTE slot,BYTE status) // OK
+void CMuunSystem::GCMuunItemStatusSend(int aIndex,BYTE slot,BYTE status)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1446,7 +1446,7 @@ void CMuunSystem::GCMuunItemStatusSend(int aIndex,BYTE slot,BYTE status) // OK
 	#endif
 }
 
-void CMuunSystem::DGMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg) // OK
+void CMuunSystem::DGMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1482,7 +1482,7 @@ void CMuunSystem::DGMuunInventoryRecv(SDHP_MUUN_INVENTORY_RECV* lpMsg) // OK
 	#endif
 }
 
-void CMuunSystem::GDMuunInventorySend(int aIndex) // OK
+void CMuunSystem::GDMuunInventorySend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 
@@ -1511,7 +1511,7 @@ void CMuunSystem::GDMuunInventorySend(int aIndex) // OK
 	#endif
 }
 
-void CMuunSystem::GDMuunInventorySaveSend(int aIndex) // OK
+void CMuunSystem::GDMuunInventorySaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=803)
 

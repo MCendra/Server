@@ -14,7 +14,7 @@ cCItemLevel::~cCItemLevel()
 {
 }
 
-void cCItemLevel::Load(char* path) // OK
+void cCItemLevel::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIRuleInfo::CMonsterAIRuleInfo() // OK
+CMonsterAIRuleInfo::CMonsterAIRuleInfo()
 {
 	this->Reset();
 }
 
-CMonsterAIRuleInfo::~CMonsterAIRuleInfo() // OK
+CMonsterAIRuleInfo::~CMonsterAIRuleInfo()
 {
 
 }
 
-void CMonsterAIRuleInfo::Reset() // OK
+void CMonsterAIRuleInfo::Reset()
 {
 	this->m_RuleNumber = -1;
 	this->m_MonsterClass = -1;
@@ -38,7 +38,7 @@ void CMonsterAIRuleInfo::Reset() // OK
 	memset(this->m_RuleDesc,0,sizeof(this->m_RuleDesc));
 }
 
-BOOL CMonsterAIRuleInfo::IsValid() // OK
+BOOL CMonsterAIRuleInfo::IsValid()
 {
 	BOOL IsValid = 0;
 
@@ -80,7 +80,7 @@ BOOL CMonsterAIRuleInfo::IsValid() // OK
 	return 1;
 }
 
-BOOL CMonsterAIRuleInfo::CheckConditionSpecificDate() // OK
+BOOL CMonsterAIRuleInfo::CheckConditionSpecificDate()
 {
 	CTime CurrentTime = CTime::GetTickCount();
 
@@ -140,12 +140,12 @@ BOOL CMonsterAIRuleInfo::CheckConditionSpecificDate() // OK
 	return 1;
 }
 
-BOOL CMonsterAIRuleInfo::CheckConditionCrywolfStart() // OK
+BOOL CMonsterAIRuleInfo::CheckConditionCrywolfStart()
 {
 	return 0;
 }
 
-BOOL CMonsterAIRuleInfo::CheckConditionCrywolfEnd() // OK
+BOOL CMonsterAIRuleInfo::CheckConditionCrywolfEnd()
 {
 	return 0;
 }

@@ -11,17 +11,17 @@ CCustomPet gCustomPet;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomPet::CCustomPet() // OK
+CCustomPet::CCustomPet()
 {
 	this->m_CustomPetInfo.clear();
 }
 
-CCustomPet::~CCustomPet() // OK
+CCustomPet::~CCustomPet()
 {
 
 }
 
-void CCustomPet::Load(char* path) // OK
+void CCustomPet::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -96,7 +96,7 @@ void CCustomPet::Load(char* path) // OK
 
 
 
-bool CCustomPet::CheckCustomPetByItem(int ItemIndex) // OK
+bool CCustomPet::CheckCustomPetByItem(int ItemIndex)
 {
 	std::map<int, CUSTOM_PET_INFO>::iterator it = this->m_CustomPetInfo.find(ItemIndex);
 
@@ -109,7 +109,7 @@ bool CCustomPet::CheckCustomPetByItem(int ItemIndex) // OK
 }
 
 
-bool CCustomPet::PetIsInmortal(int ItemIndex) // OK
+bool CCustomPet::PetIsInmortal(int ItemIndex)
 {
 	std::map<int, CUSTOM_PET_INFO>::iterator it = this->m_CustomPetInfo.find(ItemIndex);
 
@@ -124,7 +124,7 @@ bool CCustomPet::PetIsInmortal(int ItemIndex) // OK
 	return 0;
 }
 
-int CCustomPet::GetCustomPetDamageRate(int ItemIndex) // OK
+int CCustomPet::GetCustomPetDamageRate(int ItemIndex)
 {
 	std::map<int, CUSTOM_PET_INFO>::iterator it = this->m_CustomPetInfo.find(ItemIndex);
 

@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklionObjInfo::CRaklionObjInfo() // OK
+CRaklionObjInfo::CRaklionObjInfo()
 {
 	this->Reset();
 }
 
-CRaklionObjInfo::~CRaklionObjInfo() // OK
+CRaklionObjInfo::~CRaklionObjInfo()
 {
 
 }
 
-void CRaklionObjInfo::Reset() // OK
+void CRaklionObjInfo::Reset()
 {
 	this->m_ObjCount = 0;
 
@@ -29,7 +29,7 @@ void CRaklionObjInfo::Reset() // OK
 	}
 }
 
-bool CRaklionObjInfo::AddObj(int aIndex) // OK
+bool CRaklionObjInfo::AddObj(int aIndex)
 {
 	if(this->m_ObjCount < 0 || this->m_ObjCount >= MAX_RAKLION_OBJ_INDEX)
 	{
@@ -40,7 +40,7 @@ bool CRaklionObjInfo::AddObj(int aIndex) // OK
 	return 1;
 }
 
-int CRaklionObjInfo::GetCount() // OK
+int CRaklionObjInfo::GetCount()
 {
 	return this->m_ObjCount;
 }

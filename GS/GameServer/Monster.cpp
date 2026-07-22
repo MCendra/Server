@@ -55,7 +55,7 @@
 #include "BBuffPhe.h"
 #include "BEventEndLess.h"
 
-void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 
@@ -284,7 +284,7 @@ void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-bool gObjSetPosMonster(int aIndex, int number) // OK
+bool gObjSetPosMonster(int aIndex, int number)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -321,7 +321,7 @@ bool gObjSetPosMonster(int aIndex, int number) // OK
 	return 1;
 }
 
-bool gObjSetMonster(int aIndex, int MonsterClass) // OK
+bool gObjSetMonster(int aIndex, int MonsterClass)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -587,7 +587,7 @@ bool gObjSetMonster(int aIndex, int MonsterClass) // OK
 	return 1;
 }
 
-bool gObjMonsterRegen(LPOBJ lpObj) // OK
+bool gObjMonsterRegen(LPOBJ lpObj)
 {
 	gObjClearViewport(lpObj);
 
@@ -664,7 +664,7 @@ bool gObjMonsterRegen(LPOBJ lpObj) // OK
 	return 1;
 }
 
-bool gObjMonsterMoveCheck(LPOBJ lpObj, int tx, int ty) // OK
+bool gObjMonsterMoveCheck(LPOBJ lpObj, int tx, int ty)
 {
 	if (lpObj->ActionState.Emotion == 1)
 	{
@@ -706,7 +706,7 @@ bool gObjMonsterMoveCheck(LPOBJ lpObj, int tx, int ty) // OK
 	return 1;
 }
 
-void gObjMonsterInitHitDamage(LPOBJ lpObj) // OK
+void gObjMonsterInitHitDamage(LPOBJ lpObj)
 {
 	for (int n = 0; n < MAX_HIT_DAMAGE; n++)
 	{
@@ -718,7 +718,7 @@ void gObjMonsterInitHitDamage(LPOBJ lpObj) // OK
 	lpObj->HitDamageCount = 0;
 }
 
-void gObjMonsterSetHitDamage(LPOBJ lpObj, int aIndex, int damage) // OK
+void gObjMonsterSetHitDamage(LPOBJ lpObj, int aIndex, int damage)
 {
 	int HitDamageIndex = -1;
 
@@ -750,7 +750,7 @@ void gObjMonsterSetHitDamage(LPOBJ lpObj, int aIndex, int damage) // OK
 	}
 }
 
-int gObjMonsterDelHitDamageUser(LPOBJ lpObj) // OK
+int gObjMonsterDelHitDamageUser(LPOBJ lpObj)
 {
 	int HitDamageIndex = -1;
 
@@ -791,7 +791,7 @@ int gObjMonsterDelHitDamageUser(LPOBJ lpObj) // OK
 	return HitDamageIndex;
 }
 
-int gObjMonsterGetTopHitDamageUser(LPOBJ lpObj) // OK
+int gObjMonsterGetTopHitDamageUser(LPOBJ lpObj)
 {
 	int TopHitDamageUser = -1;
 	int TopHitDamage = 0;
@@ -841,7 +841,7 @@ int gObjMonsterGetTopHitDamageUser(LPOBJ lpObj) // OK
 	return TopHitDamageUser;
 }
 
-int gObjMonsterGetTopHitDamageParty(LPOBJ lpObj, int PartyNumber, int* TopHitDamageUser) // OK
+int gObjMonsterGetTopHitDamageParty(LPOBJ lpObj, int PartyNumber, int* TopHitDamageUser)
 {
 	int TopHitDamage = 0;
 	int TotalHitDamage = 0;
@@ -891,7 +891,7 @@ int gObjMonsterGetTopHitDamageParty(LPOBJ lpObj, int PartyNumber, int* TopHitDam
 	return TotalHitDamage;
 }
 
-int gObjAddMonster(int map) // OK
+int gObjAddMonster(int map)
 {
 	static CCriticalSection critical;
 
@@ -963,7 +963,7 @@ int gObjAddMonster(int map) // OK
 	return -1;
 }
 
-int gObjAddSummon() // OK
+int gObjAddSummon()
 {
 	static CCriticalSection critical;
 
@@ -1007,7 +1007,7 @@ int gObjAddSummon() // OK
 	return -1;
 }
 
-int gObjSummonSetEnemy(LPOBJ lpObj, int aIndex) // OK
+int gObjSummonSetEnemy(LPOBJ lpObj, int aIndex)
 {
 	if (lpObj->Type != OBJECT_USER)
 	{
@@ -1032,7 +1032,7 @@ int gObjSummonSetEnemy(LPOBJ lpObj, int aIndex) // OK
 	return aIndex;
 }
 
-void gObjSummonKill(int aIndex) // OK
+void gObjSummonKill(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1070,7 +1070,7 @@ void gObjSummonKill(int aIndex) // OK
 	}
 }
 
-void gObjMonsterMagicAttack(LPOBJ lpObj, int skill) // OK
+void gObjMonsterMagicAttack(LPOBJ lpObj, int skill)
 {
 	CSkill* lpSkill = &lpObj->Skill[skill];
 
@@ -1164,7 +1164,7 @@ void gObjMonsterMagicAttack(LPOBJ lpObj, int skill) // OK
 	}
 }
 
-void gObjMonsterBeattackRecv(BYTE* aRecv, int aIndex) // OK
+void gObjMonsterBeattackRecv(BYTE* aRecv, int aIndex)
 {
 	PMSG_MULTI_SKILL_ATTACK_RECV* lpMsg = (PMSG_MULTI_SKILL_ATTACK_RECV*)aRecv;
 
@@ -1206,7 +1206,7 @@ void gObjMonsterBeattackRecv(BYTE* aRecv, int aIndex) // OK
 	}
 }
 
-void gObjMonsterAttack(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void gObjMonsterAttack(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (lpObj->Class == 66 || lpObj->Class == 73 || lpObj->Class == 77)
 	{
@@ -1624,7 +1624,7 @@ void gObjMonsterAttack(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-void gObjMonsterDie(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void gObjMonsterDie(LPOBJ lpObj, LPOBJ lpTarget)
 {
 #if(GAMESERVER_TYPE==1)
 
@@ -1676,7 +1676,7 @@ void gObjMonsterDie(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-void gObjMonsterStateProc(LPOBJ lpObj, int code, int aIndex, int SubCode) // OK
+void gObjMonsterStateProc(LPOBJ lpObj, int code, int aIndex, int SubCode)
 {
 	switch (code)
 	{
@@ -3076,7 +3076,7 @@ void gObjMonsterStateProcCase0(LPOBJ lpObj, int aIndex)
 }
 
 //mc
-bool gObjSetBots(int aIndex, int MonsterClass) // OK SACAR LO QUE NO ES NESESARIO CUANDO SE FINALIZE 
+bool gObjSetBots(int aIndex, int MonsterClass) SACAR LO QUE NO ES NESESARIO CUANDO SE FINALIZE 
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{

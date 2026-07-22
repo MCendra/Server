@@ -13,17 +13,17 @@ CMonsterSkillElementInfo CMonsterSkillElement::m_MonsterSkillElementInfoArray[MA
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillElement::CMonsterSkillElement() // OK
+CMonsterSkillElement::CMonsterSkillElement()
 {
 	CMonsterSkillElement::DelAllSkillElement();
 }
 
-CMonsterSkillElement::~CMonsterSkillElement() // OK
+CMonsterSkillElement::~CMonsterSkillElement()
 {
 
 }
 
-void CMonsterSkillElement::LoadData(char* path) // OK
+void CMonsterSkillElement::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -106,7 +106,7 @@ void CMonsterSkillElement::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterSkillElement::DelAllSkillElement() // OK
+void CMonsterSkillElement::DelAllSkillElement()
 {
 	CMonsterSkillElement::m_DataLoad = 0;
 
@@ -116,7 +116,7 @@ void CMonsterSkillElement::DelAllSkillElement() // OK
 	}
 }
 
-CMonsterSkillElementInfo* CMonsterSkillElement::FindSkillElementInfo(int ElementNumber) // OK
+CMonsterSkillElementInfo* CMonsterSkillElement::FindSkillElementInfo(int ElementNumber)
 {
 	if(ElementNumber < 0 || ElementNumber >= MAX_MONSTER_SKILL_ELEMENT_INFO)
 	{

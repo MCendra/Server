@@ -13,7 +13,7 @@ CMiniMap gMiniMap;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMiniMap::CMiniMap() // OK
+CMiniMap::CMiniMap()
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -22,12 +22,12 @@ CMiniMap::CMiniMap() // OK
 #endif
 }
 
-CMiniMap::~CMiniMap() // OK
+CMiniMap::~CMiniMap()
 {
 
 }
 
-void CMiniMap::Load(char* path) // OK
+void CMiniMap::Load(char* path)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -91,7 +91,7 @@ void CMiniMap::Load(char* path) // OK
 #endif
 }
 
-void CMiniMap::CGMiniMapStartPartyInfoRecv(int aIndex) // OK
+void CMiniMap::CGMiniMapStartPartyInfoRecv(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -114,7 +114,7 @@ void CMiniMap::CGMiniMapStartPartyInfoRecv(int aIndex) // OK
 #endif
 }
 
-void CMiniMap::CGMiniMapClosePartyInfoRecv(int aIndex) // OK
+void CMiniMap::CGMiniMapClosePartyInfoRecv(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -130,7 +130,7 @@ void CMiniMap::CGMiniMapClosePartyInfoRecv(int aIndex) // OK
 #endif
 }
 
-void CMiniMap::CGMiniMapInfoRecv(PMSG_MINI_MAP_INFO_RECV* lpMsg, int aIndex) // OK
+void CMiniMap::CGMiniMapInfoRecv(PMSG_MINI_MAP_INFO_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=602)
 
@@ -144,7 +144,7 @@ void CMiniMap::CGMiniMapInfoRecv(PMSG_MINI_MAP_INFO_RECV* lpMsg, int aIndex) // 
 #endif
 }
 
-void CMiniMap::GCMiniMapPartyInfoSend(int aIndex) // OK
+void CMiniMap::GCMiniMapPartyInfoSend(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=602)
 	/*
@@ -209,7 +209,7 @@ void CMiniMap::GCMiniMapPartyInfoSend(int aIndex) // OK
 #endif
 }
 
-void CMiniMap::GCMiniMapInfoSend(int aIndex) // OK
+void CMiniMap::GCMiniMapInfoSend(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=602)
 

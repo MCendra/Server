@@ -173,17 +173,17 @@ bool AlreadyReaded = false;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CServerInfo::CServerInfo() // OK
+CServerInfo::CServerInfo()
 {
 
 }
 
-CServerInfo::~CServerInfo() // OK
+CServerInfo::~CServerInfo()
 {
 
 }
 
-void CServerInfo::ReadInit() // OK
+void CServerInfo::ReadInit()
 {	
 
 	//MessageBox(0,"Phien Ban Season 6.15 Thuong Mai ,Phat Trien Boi HieuDaiCa","HieuDaiCa",MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
@@ -241,7 +241,7 @@ void CServerInfo::ReadInit() // OK
 
 }
 
-void CServerInfo::ReloadAll() // OK
+void CServerInfo::ReloadAll()
 {
 	this->ReadCashShopInfo();
 
@@ -287,7 +287,7 @@ void CServerInfo::ReloadAll() // OK
 	g_OfflineMode.ReadOffLine("GameServerInfo",".\\Data\\GameServerInfo - Custom.ini");
 }
 
-void CServerInfo::ReadCashShopInfo() // OK
+void CServerInfo::ReadCashShopInfo()
 {
 	this->ReadCashShopInfo("GameServerInfo",".\\Data\\GameServerInfo - Common.ini");
 
@@ -302,14 +302,14 @@ void CServerInfo::ReadCashShopInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] CashShop Loaded Thành Công");
 }
 
-void CServerInfo::ReadChaosMixInfo() // OK
+void CServerInfo::ReadChaosMixInfo()
 {
 	this->ReadChaosMixInfo("GameServerInfo",".\\Data\\GameServerInfo - ChaosMix.ini");
 
 	LogAdd(LOG_BLUE,"[ServerInfo] ChaosMix Loaded Thành Công");
 }
 
-void CServerInfo::ReadCharacterInfo() // OK
+void CServerInfo::ReadCharacterInfo()
 {
 	this->ReadCharacterInfo("GameServerInfo",".\\Data\\GameServerInfo - Character.ini");
 
@@ -318,7 +318,7 @@ void CServerInfo::ReadCharacterInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Character Loaded Thành Công");
 }
 
-void CServerInfo::ReadCommandInfo() // OK
+void CServerInfo::ReadCommandInfo()
 {
 	gCommand.Load(gPath.GetFullPath("Command.txt"));
 
@@ -329,7 +329,7 @@ void CServerInfo::ReadCommandInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Command Loaded Thành Công");
 }
 
-void CServerInfo::ReadCommonInfo() // OK
+void CServerInfo::ReadCommonInfo()
 {
 	this->ReadCommonInfo("GameServerInfo",".\\Data\\GameServerInfo - Common.ini");
 
@@ -352,7 +352,7 @@ void CServerInfo::ReadCommonInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Common Loaded Thành Công");
 }
 
-void CServerInfo::ReadCustomInfo() // OK
+void CServerInfo::ReadCustomInfo()
 {
 #if(MOCNAP == 1)
 	gMocNap.Load(gPath.GetFullPath("Custom\\MocNap\\MocNap.txt"));
@@ -513,7 +513,7 @@ void CServerInfo::ReadCustomInfo() // OK
 
 
 
-void CServerInfo::ReadEventInfo() // OK
+void CServerInfo::ReadEventInfo()
 {
 #if(EVENT_END_LESS)
 
@@ -627,7 +627,7 @@ void CServerInfo::ReadEventInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Event Loaded Thành Công");
 }
 
-void CServerInfo::ReadEventItemBagInfo() // OK
+void CServerInfo::ReadEventItemBagInfo()
 {
 	gItemBagManager.Load(gPath.GetFullPath("EventItemBagManager.txt"));
 
@@ -636,7 +636,7 @@ void CServerInfo::ReadEventItemBagInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] EventItemBag Loaded Thành Công");
 }
 
-void CServerInfo::ReadHackInfo() // OK
+void CServerInfo::ReadHackInfo()
 {
 	this->ReadHackInfo("GameServerInfo",".\\Data\\GameServerInfo - Common.ini");
 
@@ -660,7 +660,7 @@ void CServerInfo::ReadHackInfo() // OK
 
 
 
-void CServerInfo::ReadItemInfo() // OK
+void CServerInfo::ReadItemInfo()
 {
 	#if(GAMESERVER_UPDATE>=201)
 
@@ -732,7 +732,7 @@ void CServerInfo::ReadItemInfo() // OK
 }
 
 
-void CServerInfo::ReadMapInfo() // OK
+void CServerInfo::ReadMapInfo()
 {
 	FILE* file;
 
@@ -775,7 +775,7 @@ void CServerInfo::ReadSkyEvent()
 
 
 
-void CServerInfo::ReadMonsterInfo() // OK
+void CServerInfo::ReadMonsterInfo()
 {
 	gKanturuMonsterMng.Load(gPath.GetFullPath("Monster\\KanturuMonsterSetBase.txt"));
 
@@ -810,7 +810,7 @@ void CServerInfo::ReadMonsterInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Monster Loaded Thành Công");
 }
 
-void CServerInfo::ReadMoveInfo() // OK
+void CServerInfo::ReadMoveInfo()
 {
 	gGate.Load(gPath.GetFullPath("Move\\Gate.txt"));
 
@@ -825,7 +825,7 @@ void CServerInfo::ReadMoveInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Move Loaded Thành Công");
 }
 
-void CServerInfo::ReadQuestInfo() // OK
+void CServerInfo::ReadQuestInfo()
 {
 	gQuest.Load(gPath.GetFullPath("Quest\\Quest.txt"));
 
@@ -846,7 +846,7 @@ void CServerInfo::ReadQuestInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Quest Loaded Thành Công");
 }
 
-void CServerInfo::ReadShopInfo() // OK
+void CServerInfo::ReadShopInfo()
 {
 	gItemValue.Load(gPath.GetFullPath("Item\\ItemValue.txt"));
 
@@ -869,7 +869,7 @@ void CServerInfo::ReadShopInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Shop Loaded Thành Công");
 }
 
-void CServerInfo::ReadSkillInfo() // OK
+void CServerInfo::ReadSkillInfo()
 {
 	this->ReadSkillInfo("GameServerInfo",".\\Data\\GameServerInfo - Skill.ini");
 
@@ -886,7 +886,7 @@ void CServerInfo::ReadSkillInfo() // OK
 	LogAdd(LOG_BLUE,"[ServerInfo] Skill Loaded Thành Công");
 }
 
-void CServerInfo::ReadUtilInfo() // OK
+void CServerInfo::ReadUtilInfo()
 {
 	gExperienceTable.Load(gPath.GetFullPath("Util\\ExperienceTable.txt"));
 
@@ -908,7 +908,7 @@ void CServerInfo::ReadUtilInfo() // OK
 }
 
 //MC bot
-void CServerInfo::ReloadBotInfo() // OK
+void CServerInfo::ReloadBotInfo()
 {
 
 
@@ -937,7 +937,7 @@ void CServerInfo::ReloadBotInfo() // OK
 }
 //MC bot
 
-void CServerInfo::ReloadMonsterInfo() // OK
+void CServerInfo::ReloadMonsterInfo()
 {
 	for(int n=0;n < MAX_OBJECT_MONSTER;n++)
 	{
@@ -973,7 +973,7 @@ void CServerInfo::ReloadMonsterInfo() // OK
 	gMonsterManager.SetMonsterData();
 }
 
-void CServerInfo::ReadStartupInfo(char* section,char* path) // OK
+void CServerInfo::ReadStartupInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -1051,7 +1051,7 @@ void CServerInfo::ReadStartupInfo(char* section,char* path) // OK
 
 }
 
-void CServerInfo::ReadCashShopInfo(char* section,char* path) // OK
+void CServerInfo::ReadCashShopInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -1119,7 +1119,7 @@ void CServerInfo::ReadCashShopInfo(char* section,char* path) // OK
 #endif
 }
 
-void CServerInfo::ReadChaosMixInfo(char* section,char* path) // OK
+void CServerInfo::ReadChaosMixInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -1800,7 +1800,7 @@ void CServerInfo::ReadChaosMixInfo(char* section,char* path) // OK
 	#endif
 }
 
-void CServerInfo::ReadCharacterInfo(char* section,char* path) // OK
+void CServerInfo::ReadCharacterInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -2881,7 +2881,7 @@ void CServerInfo::ReadCharacterInfo(char* section,char* path) // OK
 	#endif
 }
 
-void CServerInfo::ReadCommandInfo(char* section,char* path) // OK
+void CServerInfo::ReadCommandInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -3301,7 +3301,7 @@ void CServerInfo::ReadCommandInfo(char* section,char* path) // OK
 	this->m_CommandBlocCharShowMessage	=  GetPrivateProfileInt(section,"CommandBlocCharShowMessage",0,path);
 }
 
-void CServerInfo::ReadCommonInfo(char* section,char* path) // OK
+void CServerInfo::ReadCommonInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -4151,7 +4151,7 @@ void CServerInfo::ReadCommonInfo(char* section,char* path) // OK
 
 }
 
-void CServerInfo::ReadCustomInfo(char* section,char* path) // OK
+void CServerInfo::ReadCustomInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 #if(EVENT_MAPBAOTIEU)
@@ -4265,7 +4265,7 @@ void CServerInfo::ReadCustomInfo(char* section,char* path) // OK
 	
 }
 
-void CServerInfo::ReadEventInfo(char* section,char* path) // OK
+void CServerInfo::ReadEventInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -4462,7 +4462,7 @@ void CServerInfo::ReadEventInfo(char* section,char* path) // OK
 	#endif
 }
 
-void CServerInfo::ReadHackInfo(char* section,char* path) // OK
+void CServerInfo::ReadHackInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -4514,7 +4514,7 @@ void CServerInfo::ReadHackInfo(char* section,char* path) // OK
 
 }
 
-void CServerInfo::ReadSkillInfo(char* section,char* path) // OK
+void CServerInfo::ReadSkillInfo(char* section,char* path)
 {
 	char GameServerInfo[100] = {0};
 
@@ -4909,7 +4909,7 @@ bool CServerInfo::InSafeZone(int aIndex)
 
 
 #if(HONCHIENCLASS == 1)
-void CServerInfo::ReadPKEventInfo() // OK
+void CServerInfo::ReadPKEventInfo()
 {
 	g_Survivor.LoadSchedule();
 

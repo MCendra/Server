@@ -42,7 +42,7 @@ void CSDataSend(BYTE* lpMsg,int size)
 	}
 }
 
-void CSDataRecv(BYTE head,BYTE* lpMsg,int size) // OK
+void CSDataRecv(BYTE head,BYTE* lpMsg,int size)
 {
 	switch(lpMsg[0])
 	{
@@ -79,7 +79,7 @@ void CSDataRecv(BYTE head,BYTE* lpMsg,int size) // OK
 	}
 }
 
-void ChatServerProtocolCore(BYTE head,BYTE* lpMsg,int size) // OK
+void ChatServerProtocolCore(BYTE head,BYTE* lpMsg,int size)
 {
 	PROTECT_START
 
@@ -658,7 +658,7 @@ void FriendRoomInvitationRecv(FHP_FRIEND_INVITATION_RET* lpMsg)
 	DataSend(lpMsg->Number, (LPBYTE)&pMsg, sizeof(pMsg));
 }
 
-void GEMailMessageSend(char* name,char* target,char* subject,BYTE dir,BYTE action,BYTE* photo,char* text) // OK
+void GEMailMessageSend(char* name,char* target,char* subject,BYTE dir,BYTE action,BYTE* photo,char* text)
 {
 	int size = strlen(text);
 

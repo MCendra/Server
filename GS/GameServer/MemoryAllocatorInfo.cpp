@@ -20,12 +20,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMemoryAllocatorInfo::CMemoryAllocatorInfo() // OK
+CMemoryAllocatorInfo::CMemoryAllocatorInfo()
 {
 	this->Clear();
 }
 
-void CMemoryAllocatorInfo::Clear() // OK
+void CMemoryAllocatorInfo::Clear()
 {
 	this->m_Index = -1;
 	this->m_Active = 0;
@@ -74,7 +74,7 @@ void CMemoryAllocatorInfo::Clear() // OK
 	#endif
 }
 
-void CMemoryAllocatorInfo::Alloc() // OK
+void CMemoryAllocatorInfo::Alloc()
 {
 	this->m_SkillBackup = new CSkill[MAX_SKILL_LIST];
 	this->m_Skill = new CSkill[MAX_SKILL_LIST];

@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuObjInfo::CKanturuObjInfo() // OK
+CKanturuObjInfo::CKanturuObjInfo()
 {
 
 }
 
-CKanturuObjInfo::~CKanturuObjInfo() // OK
+CKanturuObjInfo::~CKanturuObjInfo()
 {
 
 }
 
-void CKanturuObjInfo::Reset() // OK
+void CKanturuObjInfo::Reset()
 {
 	this->m_ObjCount = 0;
 
@@ -29,7 +29,7 @@ void CKanturuObjInfo::Reset() // OK
 	}
 }
 
-bool CKanturuObjInfo::AddObj(int aIndex) // OK
+bool CKanturuObjInfo::AddObj(int aIndex)
 {
 	if(this->m_ObjCount < 0 || this->m_ObjCount >= MAX_KANTURU_OBJ_INDEX)
 	{
@@ -40,7 +40,7 @@ bool CKanturuObjInfo::AddObj(int aIndex) // OK
 	return 1;
 }
 
-int CKanturuObjInfo::GetCount() // OK
+int CKanturuObjInfo::GetCount()
 {
 	return this->m_ObjCount;
 }

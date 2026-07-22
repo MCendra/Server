@@ -51,25 +51,25 @@
 #include "huyhieu.h"
 CItemManager gItemManager;
 
-ITEM_ATTRIBUTE ItemAttribute[MAX_ITEM]; //MC bot
+ITEM_ATTRIBUTE ItemAttribute[MAX_ITEM];
 
-int g_MaxItemIndexOfEachItemType[MAX_ITEM_TYPE]; //MC bot
+int g_MaxItemIndexOfEachItemType[MAX_ITEM_TYPE];
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemManager::CItemManager() // OK
+CItemManager::CItemManager()
 {
 	this->m_ItemInfo.clear();
 }
 
-CItemManager::~CItemManager() // OK
+CItemManager::~CItemManager()
 {
 
 }
 
-void CItemManager::Load(char* path) // OK
+void CItemManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -304,7 +304,7 @@ void CItemManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemManager::GetInfo(int index, ITEM_INFO* lpInfo) // OK
+bool CItemManager::GetInfo(int index, ITEM_INFO* lpInfo)
 {
 	std::map<int, ITEM_INFO>::iterator it = this->m_ItemInfo.find(index);
 
@@ -319,7 +319,7 @@ bool CItemManager::GetInfo(int index, ITEM_INFO* lpInfo) // OK
 	}
 }
 
-int CItemManager::GetItemSkill(int index) // OK
+int CItemManager::GetItemSkill(int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -334,7 +334,7 @@ int CItemManager::GetItemSkill(int index) // OK
 
 }
 
-int CItemManager::CheckItemSkill(int index) // OK
+int CItemManager::CheckItemSkill(int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -353,7 +353,7 @@ int CItemManager::CheckItemSkill(int index) // OK
 
 }
 
-char* CItemManager::GetItemName(int index) // OK
+char* CItemManager::GetItemName(int index)
 {
 	std::map<int, ITEM_INFO>::iterator it = this->m_ItemInfo.find(index);
 
@@ -368,7 +368,7 @@ char* CItemManager::GetItemName(int index) // OK
 }
 
 
-int CItemManager::GetItemTwoHand(int index) // OK
+int CItemManager::GetItemTwoHand(int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -382,7 +382,7 @@ int CItemManager::GetItemTwoHand(int index) // OK
 	}
 }
 
-int CItemManager::GetItemDurability(int index, int level, int NewOption, int SetOption) // OK
+int CItemManager::GetItemDurability(int index, int level, int NewOption, int SetOption)
 {
 	ITEM_INFO ItemInfo;
 
@@ -459,7 +459,7 @@ int CItemManager::GetItemDurability(int index, int level, int NewOption, int Set
 	return ((dur>255) ? 255 : dur);
 }
 
-int CItemManager::GetItemRepairMoney(CItem* lpItem, int type) // OK
+int CItemManager::GetItemRepairMoney(CItem* lpItem, int type)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -526,7 +526,7 @@ int CItemManager::GetItemRepairMoney(CItem* lpItem, int type) // OK
 	return money;
 }
 
-int CItemManager::GetInventoryItemSlot(LPOBJ lpObj, int index, int level) // OK
+int CItemManager::GetInventoryItemSlot(LPOBJ lpObj, int index, int level)
 {
 	int MaxValue = this->GetInventoryMaxValue(lpObj);
 
@@ -544,7 +544,7 @@ int CItemManager::GetInventoryItemSlot(LPOBJ lpObj, int index, int level) // OK
 	return -1;
 }
 
-int CItemManager::GetInventoryItemCount(LPOBJ lpObj, int index, int level) // OK
+int CItemManager::GetInventoryItemCount(LPOBJ lpObj, int index, int level)
 {
 	int count = 0;
 
@@ -571,7 +571,7 @@ int CItemManager::GetInventoryItemCount(LPOBJ lpObj, int index, int level) // OK
 	return count;
 }
 
-int CItemManager::GetInventoryEmptySlotCount(LPOBJ lpObj) // OK
+int CItemManager::GetInventoryEmptySlotCount(LPOBJ lpObj)
 {
 	int count = 0;
 
@@ -588,7 +588,7 @@ int CItemManager::GetInventoryEmptySlotCount(LPOBJ lpObj) // OK
 	return count;
 }
 
-int CItemManager::GetInventoryMaxValue(LPOBJ lpObj) // OK
+int CItemManager::GetInventoryMaxValue(LPOBJ lpObj)
 {
 	int MaxValue = INVENTORY_MAIN_SIZE;
 
@@ -617,7 +617,7 @@ int CItemManager::GetInventoryMaxValue(LPOBJ lpObj) // OK
 	return MaxValue;
 }
 
-bool CItemManager::CheckItemRequireLevel(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemRequireLevel(LPOBJ lpObj, CItem* lpItem)
 {
 	if (lpObj->Level >= lpItem->m_RequireLevel)
 	{
@@ -629,7 +629,7 @@ bool CItemManager::CheckItemRequireLevel(LPOBJ lpObj, CItem* lpItem) // OK
 	}
 }
 
-bool CItemManager::CheckItemRequireStrength(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemRequireStrength(LPOBJ lpObj, CItem* lpItem)
 {
 	if ((lpObj->Strength + lpObj->AddStrength) >= (lpItem->m_RequireStrength - lpItem->m_SubRequireStr))
 	{
@@ -641,7 +641,7 @@ bool CItemManager::CheckItemRequireStrength(LPOBJ lpObj, CItem* lpItem) // OK
 	}
 }
 
-bool CItemManager::CheckItemRequireDexterity(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemRequireDexterity(LPOBJ lpObj, CItem* lpItem)
 {
 	if ((lpObj->Dexterity + lpObj->AddDexterity) >= (lpItem->m_RequireDexterity - lpItem->m_SubRequireDex))
 	{
@@ -653,7 +653,7 @@ bool CItemManager::CheckItemRequireDexterity(LPOBJ lpObj, CItem* lpItem) // OK
 	}
 }
 
-bool CItemManager::CheckItemRequireVitality(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemRequireVitality(LPOBJ lpObj, CItem* lpItem)
 {
 	if ((lpObj->Vitality + lpObj->AddVitality) >= lpItem->m_RequireVitality)
 	{
@@ -665,7 +665,7 @@ bool CItemManager::CheckItemRequireVitality(LPOBJ lpObj, CItem* lpItem) // OK
 	}
 }
 
-bool CItemManager::CheckItemRequireEnergy(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemRequireEnergy(LPOBJ lpObj, CItem* lpItem)
 {
 	if ((lpObj->Energy + lpObj->AddEnergy) >= lpItem->m_RequireEnergy)
 	{
@@ -677,7 +677,7 @@ bool CItemManager::CheckItemRequireEnergy(LPOBJ lpObj, CItem* lpItem) // OK
 	}
 }
 
-bool CItemManager::CheckItemRequireLeadership(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemRequireLeadership(LPOBJ lpObj, CItem* lpItem)
 {
 	if ((lpObj->Leadership + lpObj->AddLeadership) >= lpItem->m_RequireLeadership)
 	{
@@ -689,7 +689,7 @@ bool CItemManager::CheckItemRequireLeadership(LPOBJ lpObj, CItem* lpItem) // OK
 	}
 }
 
-bool CItemManager::CheckItemRequireClass(LPOBJ lpObj, int index) // OK
+bool CItemManager::CheckItemRequireClass(LPOBJ lpObj, int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -718,7 +718,7 @@ bool CItemManager::CheckItemRequireClass(LPOBJ lpObj, int index) // OK
 	}
 }
 
-bool CItemManager::CheckItemMoveToInventory(LPOBJ lpObj, CItem* lpItem, int slot) // OK
+bool CItemManager::CheckItemMoveToInventory(LPOBJ lpObj, CItem* lpItem, int slot)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -823,7 +823,7 @@ bool CItemManager::CheckItemMoveToInventory(LPOBJ lpObj, CItem* lpItem, int slot
 	return 1;
 }
 
-bool CItemManager::CheckItemMoveToTrade(LPOBJ lpObj, CItem* lpItem, BYTE TargetFlag) // OK
+bool CItemManager::CheckItemMoveToTrade(LPOBJ lpObj, CItem* lpItem, BYTE TargetFlag)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -868,7 +868,7 @@ bool CItemManager::CheckItemMoveToTrade(LPOBJ lpObj, CItem* lpItem, BYTE TargetF
 	return 1;
 }
 
-bool CItemManager::CheckItemMoveToVault(LPOBJ lpObj, CItem* lpItem, BYTE TargetFlag) // OK
+bool CItemManager::CheckItemMoveToVault(LPOBJ lpObj, CItem* lpItem, BYTE TargetFlag)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -901,7 +901,7 @@ bool CItemManager::CheckItemMoveToVault(LPOBJ lpObj, CItem* lpItem, BYTE TargetF
 	return 1;
 }
 
-bool CItemManager::CheckItemMoveToChaos(LPOBJ lpObj, CItem* lpItem, BYTE TargetFlag) // OK
+bool CItemManager::CheckItemMoveToChaos(LPOBJ lpObj, CItem* lpItem, BYTE TargetFlag)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -940,7 +940,7 @@ bool CItemManager::CheckItemMoveToChaos(LPOBJ lpObj, CItem* lpItem, BYTE TargetF
 	return 1;
 }
 
-bool CItemManager::CheckItemMoveToBlock(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::CheckItemMoveToBlock(LPOBJ lpObj, CItem* lpItem)
 {
 	if (gServerInfo.m_TradeItemBlock == 0 || lpObj->Authority == 32)
 	{
@@ -965,7 +965,7 @@ bool CItemManager::CheckItemMoveToBlock(LPOBJ lpObj, CItem* lpItem) // OK
 	return 1;
 }
 
-bool CItemManager::CheckItemInventorySpace(LPOBJ lpObj, int index) // OK
+bool CItemManager::CheckItemInventorySpace(LPOBJ lpObj, int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -993,7 +993,7 @@ bool CItemManager::CheckItemInventorySpace(LPOBJ lpObj, int index) // OK
 	return 0;
 }
 
-bool CItemManager::CheckItemInventorySpace(LPOBJ lpObj, int width, int height) // OK
+bool CItemManager::CheckItemInventorySpace(LPOBJ lpObj, int width, int height)
 {
 	int MaxY = (this->GetInventoryMaxValue(lpObj) - INVENTORY_WEAR_SIZE) / 8;
 
@@ -1014,7 +1014,7 @@ bool CItemManager::CheckItemInventorySpace(LPOBJ lpObj, int width, int height) /
 	return 0;
 }
 
-void CItemManager::InventoryItemSet(int aIndex, int slot, BYTE type) // OK
+void CItemManager::InventoryItemSet(int aIndex, int slot, BYTE type)
 {
 	if (INVENTORY_BASE_RANGE(slot) == 0)
 	{
@@ -1070,7 +1070,7 @@ void CItemManager::InventoryItemSet(int aIndex, int slot, BYTE type) // OK
 	}
 }
 
-BYTE CItemManager::InventoryRectCheck(int aIndex, int x, int y, int width, int height) // OK
+BYTE CItemManager::InventoryRectCheck(int aIndex, int x, int y, int width, int height)
 {
 	int slot = ((y * 8) + x) + INVENTORY_WEAR_SIZE;
 
@@ -1118,7 +1118,7 @@ BYTE CItemManager::InventoryRectCheck(int aIndex, int x, int y, int width, int h
 	return slot;
 }
 
-BYTE CItemManager::InventoryInsertItem(int aIndex, CItem item) // OK
+BYTE CItemManager::InventoryInsertItem(int aIndex, CItem item)
 {
 	ITEM_INFO ItemInfo;
 
@@ -1150,7 +1150,7 @@ BYTE CItemManager::InventoryInsertItem(int aIndex, CItem item) // OK
 	return 0xFF;
 }
 
-BYTE CItemManager::InventoryAddItem(int aIndex, CItem item, int slot) // OK
+BYTE CItemManager::InventoryAddItem(int aIndex, CItem item, int slot)
 {
 	if (INVENTORY_RANGE(slot) == 0)
 	{
@@ -1203,7 +1203,7 @@ BYTE CItemManager::InventoryAddItem(int aIndex, CItem item, int slot) // OK
 	}
 }
 
-void CItemManager::InventoryDelItem(int aIndex, int slot) // OK
+void CItemManager::InventoryDelItem(int aIndex, int slot)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1219,7 +1219,7 @@ void CItemManager::InventoryDelItem(int aIndex, int slot) // OK
 	}
 }
 
-bool CItemManager::InventoryInsertItemStack(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::InventoryInsertItemStack(LPOBJ lpObj, CItem* lpItem)
 {
 	int MaxStack, CreateItemIndex;
 
@@ -1271,7 +1271,7 @@ bool CItemManager::InventoryInsertItemStack(LPOBJ lpObj, CItem* lpItem) // OK
 	return 0;
 }
 
-bool CItemManager::InventoryAddItemStack(LPOBJ lpObj, int SourceSlot, int TargetSlot) // OK
+bool CItemManager::InventoryAddItemStack(LPOBJ lpObj, int SourceSlot, int TargetSlot)
 {
 	int MaxStack, CreateItemIndex;
 
@@ -1323,7 +1323,7 @@ bool CItemManager::InventoryAddItemStack(LPOBJ lpObj, int SourceSlot, int Target
 	return 1;
 }
 
-void CItemManager::TradeItemSet(int aIndex, int slot, BYTE type) // OK
+void CItemManager::TradeItemSet(int aIndex, int slot, BYTE type)
 {
 	if (TRADE_RANGE(slot) == 0)
 	{
@@ -1354,7 +1354,7 @@ void CItemManager::TradeItemSet(int aIndex, int slot, BYTE type) // OK
 	}
 }
 
-BYTE CItemManager::TradeRectCheck(int aIndex, int x, int y, int width, int height) // OK
+BYTE CItemManager::TradeRectCheck(int aIndex, int x, int y, int width, int height)
 {
 	if ((x + width) > 8 || (y + height) > 4)
 	{
@@ -1375,7 +1375,7 @@ BYTE CItemManager::TradeRectCheck(int aIndex, int x, int y, int width, int heigh
 	return ((y * 8) + x);
 }
 
-BYTE CItemManager::TradeInsertItem(int aIndex, CItem item) // OK
+BYTE CItemManager::TradeInsertItem(int aIndex, CItem item)
 {
 	ITEM_INFO ItemInfo;
 
@@ -1405,7 +1405,7 @@ BYTE CItemManager::TradeInsertItem(int aIndex, CItem item) // OK
 	return 0xFF;
 }
 
-BYTE CItemManager::TradeAddItem(int aIndex, CItem item, int slot) // OK
+BYTE CItemManager::TradeAddItem(int aIndex, CItem item, int slot)
 {
 	if (TRADE_RANGE(slot) == 0)
 	{
@@ -1439,13 +1439,13 @@ BYTE CItemManager::TradeAddItem(int aIndex, CItem item, int slot) // OK
 	return slot;
 }
 
-void CItemManager::TradeDelItem(int aIndex, int slot) // OK
+void CItemManager::TradeDelItem(int aIndex, int slot)
 {
 	this->TradeItemSet(aIndex, slot, 0xFF);
 	gObj[aIndex].Trade[slot].Clear();
 }
 
-void CItemManager::WarehouseItemSet(int aIndex, int slot, BYTE type) // OK
+void CItemManager::WarehouseItemSet(int aIndex, int slot, BYTE type)
 {
 	if (WAREHOUSE_RANGE(slot) == 0)
 	{
@@ -1481,7 +1481,7 @@ void CItemManager::WarehouseItemSet(int aIndex, int slot, BYTE type) // OK
 	}
 }
 
-BYTE CItemManager::WarehouseRectCheck(int aIndex, int x, int y, int width, int height) // OK
+BYTE CItemManager::WarehouseRectCheck(int aIndex, int x, int y, int width, int height)
 {
 	int slot = ((y * 8) + x);
 
@@ -1509,7 +1509,7 @@ BYTE CItemManager::WarehouseRectCheck(int aIndex, int x, int y, int width, int h
 	return slot;
 }
 
-BYTE CItemManager::WarehouseInsertItem(int aIndex, CItem item) // OK
+BYTE CItemManager::WarehouseInsertItem(int aIndex, CItem item)
 {
 	ITEM_INFO ItemInfo;
 
@@ -1541,7 +1541,7 @@ BYTE CItemManager::WarehouseInsertItem(int aIndex, CItem item) // OK
 	return 0xFF;
 }
 
-BYTE CItemManager::WarehouseAddItem(int aIndex, CItem item, int slot) // OK
+BYTE CItemManager::WarehouseAddItem(int aIndex, CItem item, int slot)
 {
 	if (WAREHOUSE_RANGE(slot) == 0)
 	{
@@ -1575,13 +1575,13 @@ BYTE CItemManager::WarehouseAddItem(int aIndex, CItem item, int slot) // OK
 	return slot;
 }
 
-void CItemManager::WarehouseDelItem(int aIndex, int slot) // OK
+void CItemManager::WarehouseDelItem(int aIndex, int slot)
 {
 	this->WarehouseItemSet(aIndex, slot, 0xFF);
 	gObj[aIndex].Warehouse[slot].Clear();
 }
 
-void CItemManager::ChaosBoxItemSet(int aIndex, int slot, BYTE type) // OK
+void CItemManager::ChaosBoxItemSet(int aIndex, int slot, BYTE type)
 {
 	if (CHAOS_BOX_RANGE(slot) == 0)
 	{
@@ -1612,7 +1612,7 @@ void CItemManager::ChaosBoxItemSet(int aIndex, int slot, BYTE type) // OK
 	}
 }
 
-BYTE CItemManager::ChaosBoxRectCheck(int aIndex, int x, int y, int width, int height) // OK
+BYTE CItemManager::ChaosBoxRectCheck(int aIndex, int x, int y, int width, int height)
 {
 	if ((x + width) > 8 || (y + height) > 4)
 	{
@@ -1633,7 +1633,7 @@ BYTE CItemManager::ChaosBoxRectCheck(int aIndex, int x, int y, int width, int he
 	return ((y * 8) + x);
 }
 
-BYTE CItemManager::ChaosBoxInsertItem(int aIndex, CItem item) // OK
+BYTE CItemManager::ChaosBoxInsertItem(int aIndex, CItem item)
 {
 	ITEM_INFO ItemInfo;
 
@@ -1663,7 +1663,7 @@ BYTE CItemManager::ChaosBoxInsertItem(int aIndex, CItem item) // OK
 	return 0xFF;
 }
 
-BYTE CItemManager::ChaosBoxAddItem(int aIndex, CItem item, int slot) // OK
+BYTE CItemManager::ChaosBoxAddItem(int aIndex, CItem item, int slot)
 {
 	if (CHAOS_BOX_RANGE(slot) == 0)
 	{
@@ -1697,13 +1697,13 @@ BYTE CItemManager::ChaosBoxAddItem(int aIndex, CItem item, int slot) // OK
 	return slot;
 }
 
-void CItemManager::ChaosBoxDelItem(int aIndex, int slot) // OK
+void CItemManager::ChaosBoxDelItem(int aIndex, int slot)
 {
 	this->ChaosBoxItemSet(aIndex, slot, 0xFF);
 	gObj[aIndex].ChaosBox[slot].Clear();
 }
 
-void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item) // OK
+void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item)
 {
 	lpMsg[0] = item.m_Index & 0xFF;
 
@@ -1740,7 +1740,7 @@ void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item) // OK
 	memcpy(&lpMsg[7], item.m_SocketOption, MAX_SOCKET_OPTION);
 }
 
-void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
+void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -1795,7 +1795,7 @@ void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
 	memcpy(&lpMsg[11], lpItem->m_SocketOption, MAX_SOCKET_OPTION);
 }
 
-bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
+bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg)
 {
 	if (lpMsg[0] == 0xFF && (lpMsg[7] & 0x80) == 0x80 && (lpMsg[9] & 0xF0) == 0xF0)
 	{
@@ -1860,7 +1860,7 @@ bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
 	return 1;
 }
 
-bool CItemManager::IsValidItem(LPOBJ lpObj, CItem* lpItem) // OK
+bool CItemManager::IsValidItem(LPOBJ lpObj, CItem* lpItem)
 {
 	if (lpItem->IsItem() == 0)
 	{
@@ -1910,7 +1910,7 @@ bool CItemManager::IsValidItem(LPOBJ lpObj, CItem* lpItem) // OK
 	return 1;
 }
 
-void CItemManager::UpdateInventoryViewport(int aIndex, int slot) // OK
+void CItemManager::UpdateInventoryViewport(int aIndex, int slot)
 {
 	if (INVENTORY_WEAR_RANGE(slot) == 0)
 	{
@@ -1931,7 +1931,7 @@ void CItemManager::UpdateInventoryViewport(int aIndex, int slot) // OK
 	this->GCItemChangeSend(aIndex, slot);
 }
 
-void CItemManager::DeleteInventoryItemCount(LPOBJ lpObj, int index, int level, int count) // OK
+void CItemManager::DeleteInventoryItemCount(LPOBJ lpObj, int index, int level, int count)
 {
 	int MaxValue = this->GetInventoryMaxValue(lpObj);
 
@@ -1967,7 +1967,7 @@ void CItemManager::DeleteInventoryItemCount(LPOBJ lpObj, int index, int level, i
 	}
 }
 
-void CItemManager::DecreaseItemDur(LPOBJ lpObj, int slot, int dur) // OK
+void CItemManager::DecreaseItemDur(LPOBJ lpObj, int slot, int dur)
 {
 	if (INVENTORY_FULL_RANGE(slot) == 0)
 	{
@@ -1991,7 +1991,7 @@ void CItemManager::DecreaseItemDur(LPOBJ lpObj, int slot, int dur) // OK
 	}
 }
 
-int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type) // OK
+int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type)
 {
 	if (lpItem->m_Slot == 0xFF || INVENTORY_WEAR_RANGE(lpItem->m_Slot) == 0)
 	{
@@ -2089,7 +2089,7 @@ int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type) // 
 	return lpObj->Money;
 }
 
-BYTE CItemManager::MoveItemToInventoryFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToInventoryFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2189,7 +2189,7 @@ BYTE CItemManager::MoveItemToInventoryFromInventory(LPOBJ lpObj, BYTE SourceSlot
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (TRADE_RANGE(SourceSlot) == 0)
 	{
@@ -2259,7 +2259,7 @@ BYTE CItemManager::MoveItemToInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlot, BY
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToInventoryFromWarehouse(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToInventoryFromWarehouse(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (WAREHOUSE_RANGE(SourceSlot) == 0)
 	{
@@ -2347,7 +2347,7 @@ BYTE CItemManager::MoveItemToInventoryFromWarehouse(LPOBJ lpObj, BYTE SourceSlot
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToInventoryFromChaosBox(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToInventoryFromChaosBox(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (CHAOS_BOX_RANGE(SourceSlot) == 0)
 	{
@@ -2406,7 +2406,7 @@ BYTE CItemManager::MoveItemToInventoryFromChaosBox(LPOBJ lpObj, BYTE SourceSlot,
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToInventoryFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToInventoryFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_SHOP_RANGE(SourceSlot) == 0)
 	{
@@ -2478,7 +2478,7 @@ BYTE CItemManager::MoveItemToInventoryFromPersonalShop(LPOBJ lpObj, BYTE SourceS
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToTradeFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToTradeFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2549,7 +2549,7 @@ BYTE CItemManager::MoveItemToTradeFromInventory(LPOBJ lpObj, BYTE SourceSlot, BY
 	return 1;
 }
 
-BYTE CItemManager::MoveItemToTradeFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToTradeFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (TRADE_RANGE(SourceSlot) == 0)
 	{
@@ -2603,7 +2603,7 @@ BYTE CItemManager::MoveItemToTradeFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE T
 	return 1;
 }
 
-BYTE CItemManager::MoveItemToTradeFromEventInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToTradeFromEventInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 #if(GAMESERVER_UPDATE>=802)
 
@@ -2654,7 +2654,7 @@ BYTE CItemManager::MoveItemToTradeFromEventInventory(LPOBJ lpObj, BYTE SourceSlo
 #endif
 }
 
-BYTE CItemManager::MoveItemToWarehouseFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToWarehouseFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2724,7 +2724,7 @@ BYTE CItemManager::MoveItemToWarehouseFromInventory(LPOBJ lpObj, BYTE SourceSlot
 	return 2;
 }
 
-BYTE CItemManager::MoveItemToWarehouseFromWarehouse(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToWarehouseFromWarehouse(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (WAREHOUSE_RANGE(SourceSlot) == 0)
 	{
@@ -2775,7 +2775,7 @@ BYTE CItemManager::MoveItemToWarehouseFromWarehouse(LPOBJ lpObj, BYTE SourceSlot
 	return 2;
 }
 
-BYTE CItemManager::MoveItemToChaosBoxFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToChaosBoxFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2834,7 +2834,7 @@ BYTE CItemManager::MoveItemToChaosBoxFromInventory(LPOBJ lpObj, BYTE SourceSlot,
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToChaosBoxFromChaosBox(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToChaosBoxFromChaosBox(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (CHAOS_BOX_RANGE(SourceSlot) == 0)
 	{
@@ -2880,7 +2880,7 @@ BYTE CItemManager::MoveItemToChaosBoxFromChaosBox(LPOBJ lpObj, BYTE SourceSlot, 
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToPersonalShopFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToPersonalShopFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_RANGE(SourceSlot) == 0)
 	{
@@ -2925,7 +2925,7 @@ BYTE CItemManager::MoveItemToPersonalShopFromInventory(LPOBJ lpObj, BYTE SourceS
 	return 0;
 }
 
-BYTE CItemManager::MoveItemToPersonalShopFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToPersonalShopFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (INVENTORY_SHOP_RANGE(SourceSlot) == 0)
 	{
@@ -2979,7 +2979,7 @@ BYTE CItemManager::MoveItemToPersonalShopFromPersonalShop(LPOBJ lpObj, BYTE Sour
 	return 0;
 }
 
-BYTE CItemManager::MoveItemToEventInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToEventInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 	if (TRADE_RANGE(SourceSlot) == 0)
 	{
@@ -3022,7 +3022,7 @@ BYTE CItemManager::MoveItemToEventInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlo
 	return TargetFlag;
 }
 
-BYTE CItemManager::MoveItemToEventInventoryFromEventInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToEventInventoryFromEventInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 #if(GAMESERVER_UPDATE>=802)
 
@@ -3081,7 +3081,7 @@ BYTE CItemManager::MoveItemToEventInventoryFromEventInventory(LPOBJ lpObj, BYTE 
 #endif
 }
 
-BYTE CItemManager::MoveItemToMuunInventoryFromMuunInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+BYTE CItemManager::MoveItemToMuunInventoryFromMuunInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag)
 {
 #if(GAMESERVER_UPDATE>=803)
 
@@ -3144,7 +3144,7 @@ BYTE CItemManager::MoveItemToMuunInventoryFromMuunInventory(LPOBJ lpObj, BYTE So
 #endif
 }
 
-void CItemManager::CGItemGetRecv(PMSG_ITEM_GET_RECV* lpMsg, int aIndex) // OK
+void CItemManager::CGItemGetRecv(PMSG_ITEM_GET_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3331,7 +3331,7 @@ Next:
 	}
 }
 
-void CItemManager::CGItemDropRecv(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex) // OK
+void CItemManager::CGItemDropRecv(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3539,7 +3539,7 @@ void CItemManager::CGItemDropRecv(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex) // OK
 	this->UpdateInventoryViewport(aIndex, lpMsg->slot);
 }
 
-bool CItemManager::CGPkDrop(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex) // OK
+bool CItemManager::CGPkDrop(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3676,7 +3676,7 @@ bool CItemManager::CGPkDrop(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex) // OK
 	return 1;
 }
 
-void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
+void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4144,7 +4144,7 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 	}
 }
 
-void CItemManager::CGItemUseRecv(PMSG_ITEM_USE_RECV* lpMsg, int aIndex) // OK
+void CItemManager::CGItemUseRecv(PMSG_ITEM_USE_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4458,7 +4458,7 @@ Next:
 	}
 }
 
-void CItemManager::CGItemBuyRecv(PMSG_ITEM_BUY_RECV* lpMsg, int aIndex, int ok) // OK
+void CItemManager::CGItemBuyRecv(PMSG_ITEM_BUY_RECV* lpMsg, int aIndex, int ok)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4676,7 +4676,7 @@ void CItemManager::CGItemBuyRecv(PMSG_ITEM_BUY_RECV* lpMsg, int aIndex, int ok) 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::CGItemSellRecv(PMSG_ITEM_SELL_RECV* lpMsg, int aIndex) // OK
+void CItemManager::CGItemSellRecv(PMSG_ITEM_SELL_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4822,7 +4822,7 @@ void CItemManager::CGItemSellRecv(PMSG_ITEM_SELL_RECV* lpMsg, int aIndex) // OK
 	this->UpdateInventoryViewport(aIndex, lpMsg->slot);
 }
 
-void CItemManager::CGItemRepairRecv(PMSG_ITEM_REPAIR_RECV* lpMsg, int aIndex) // OK
+void CItemManager::CGItemRepairRecv(PMSG_ITEM_REPAIR_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4894,7 +4894,7 @@ void CItemManager::CGItemRepairRecv(PMSG_ITEM_REPAIR_RECV* lpMsg, int aIndex) //
 	}
 }
 
-void CItemManager::GCItemMoveSend(int aIndex, BYTE result, BYTE slot, BYTE* ItemInfo) // OK
+void CItemManager::GCItemMoveSend(int aIndex, BYTE result, BYTE slot, BYTE* ItemInfo)
 {
 	PMSG_ITEM_MOVE_SEND pMsg;
 
@@ -4909,7 +4909,7 @@ void CItemManager::GCItemMoveSend(int aIndex, BYTE result, BYTE slot, BYTE* Item
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::GCItemChangeSend(int aIndex, BYTE slot) // OK
+void CItemManager::GCItemChangeSend(int aIndex, BYTE slot)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4934,7 +4934,7 @@ void CItemManager::GCItemChangeSend(int aIndex, BYTE slot) // OK
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::GCItemDeleteSend(int aIndex, BYTE slot, BYTE flag) // OK
+void CItemManager::GCItemDeleteSend(int aIndex, BYTE slot, BYTE flag)
 {
 	PMSG_ITEM_DELETE_SEND pMsg;
 
@@ -4947,7 +4947,7 @@ void CItemManager::GCItemDeleteSend(int aIndex, BYTE slot, BYTE flag) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::GCItemDurSend(int aIndex, BYTE slot, BYTE dur, BYTE flag) // OK
+void CItemManager::GCItemDurSend(int aIndex, BYTE slot, BYTE dur, BYTE flag)
 {
 	PMSG_ITEM_DUR_SEND pMsg;
 
@@ -4962,7 +4962,7 @@ void CItemManager::GCItemDurSend(int aIndex, BYTE slot, BYTE dur, BYTE flag) // 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::GCItemListSend(int aIndex) // OK
+void CItemManager::GCItemListSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -5004,7 +5004,7 @@ void CItemManager::GCItemListSend(int aIndex) // OK
 	DataSend(aIndex, send, size);
 }
 
-void CItemManager::GCItemEquipmentSend(int aIndex) // OK
+void CItemManager::GCItemEquipmentSend(int aIndex)
 {
 	PMSG_ITEM_EQUIPMENT_SEND pMsg;
 
@@ -5019,7 +5019,7 @@ void CItemManager::GCItemEquipmentSend(int aIndex) // OK
 	MsgSendV2(&gObj[aIndex], (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::GCItemModifySend(int aIndex, BYTE slot) // OK
+void CItemManager::GCItemModifySend(int aIndex, BYTE slot)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -5039,7 +5039,7 @@ void CItemManager::GCItemModifySend(int aIndex, BYTE slot) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CItemManager::CGItemBuyConfirmRecv(PMSG_ITEM_BUY_NEW* lpMsg, int aIndex) // OK
+void CItemManager::CGItemBuyConfirmRecv(PMSG_ITEM_BUY_NEW* lpMsg, int aIndex)
 {
 	PMSG_ITEM_BUY_RECV pMsg;
 
@@ -5053,7 +5053,7 @@ void CItemManager::CGItemBuyConfirmRecv(PMSG_ITEM_BUY_NEW* lpMsg, int aIndex) //
 //---------------------------------------------------------------------------
 #if(FixDupeItem)
 //-> Thêm Mới Fix Dupe
-bool CItemManager::ChaosBoxHasItem(LPOBJ lpObj) // OK
+bool CItemManager::ChaosBoxHasItem(LPOBJ lpObj)
 {
 	for (int n = 0; n < CHAOS_BOX_SIZE; n++)
 	{
@@ -5065,7 +5065,7 @@ bool CItemManager::ChaosBoxHasItem(LPOBJ lpObj) // OK
 	return 0;
 }
 //---------------------------------------------------------------------------
-bool CItemManager::TradeHasItem(LPOBJ lpObj) // OK
+bool CItemManager::TradeHasItem(LPOBJ lpObj)
 {
 	for (int n = 0; n < TRADE_SIZE; n++)
 	{
@@ -5079,7 +5079,7 @@ bool CItemManager::TradeHasItem(LPOBJ lpObj) // OK
 #endif
 //---------------------------------------------------------------------------
 
-BYTE CItemManager::InventoryCheckInsertItem(int aIndex, WORD item) // OK
+BYTE CItemManager::InventoryCheckInsertItem(int aIndex, WORD item)
 {
 	ITEM_INFO ItemInfo;
 
@@ -5397,7 +5397,7 @@ void CItemManager::CGMoveItemProc(PMSG_MOVEITEM* aRecv, short aIndex)
 	return;
 }
 
-bool CItemManager::CheckItemRequireClassUnick(WORD Class, int index) // OK
+bool CItemManager::CheckItemRequireClassUnick(WORD Class, int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -5440,7 +5440,7 @@ bool CItemManager::CheckItemRequireClassUnick(WORD Class, int index) // OK
 	}
 }
 
-bool CItemManager::CheckItemNotSlot(int index) // OK
+bool CItemManager::CheckItemNotSlot(int index)
 {
 	ITEM_INFO ItemInfo;
 
@@ -5458,7 +5458,7 @@ bool CItemManager::CheckItemNotSlot(int index) // OK
 }
 
 #if(NGAN_HANG_NGOC)
-int CItemManager::CheckItemInventorySpaceCount(LPOBJ lpObj, int width, int height) // OK
+int CItemManager::CheckItemInventorySpaceCount(LPOBJ lpObj, int width, int height)
 {
 	int MaxY = (this->GetInventoryMaxValue(lpObj) - INVENTORY_WEAR_SIZE) / 8;
 
@@ -5483,7 +5483,7 @@ int CItemManager::CheckItemInventorySpaceCount(LPOBJ lpObj, int width, int heigh
 #endif
 
 #if(SOIITEM)
-void CItemManager::GCItemListViewSend(PMSG_VIEW_REQUEST_RECV* lpMsg, int aIndex) // OK
+void CItemManager::GCItemListViewSend(PMSG_VIEW_REQUEST_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

@@ -9,12 +9,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCrywolfObjInfo::CCrywolfObjInfo() // OK
+CCrywolfObjInfo::CCrywolfObjInfo()
 {
 	this->Reset();
 }
 
-void CCrywolfObjInfo::Reset() // OK
+void CCrywolfObjInfo::Reset()
 {
 	this->m_ObjCount = 0;
 
@@ -24,7 +24,7 @@ void CCrywolfObjInfo::Reset() // OK
 	}
 }
 
-bool CCrywolfObjInfo::AddObj(int aIndex) // OK
+bool CCrywolfObjInfo::AddObj(int aIndex)
 {
 	if(this->m_ObjCount < 0 || this->m_ObjCount >= MAX_CRYWOLF_OBJ_INFO)
 	{

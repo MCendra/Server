@@ -29,17 +29,17 @@ CTrade gTrade;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CTrade::CTrade() // OK
+CTrade::CTrade()
 {
 
 }
 
-CTrade::~CTrade() // OK
+CTrade::~CTrade()
 {
 
 }
 
-void CTrade::ClearTrade(LPOBJ lpObj) // OK
+void CTrade::ClearTrade(LPOBJ lpObj)
 {
 	for (int n = 0; n < TRADE_SIZE; n++)
 	{
@@ -49,7 +49,7 @@ void CTrade::ClearTrade(LPOBJ lpObj) // OK
 	memset(lpObj->TradeMap, 0xFF, TRADE_SIZE);
 }
 
-void CTrade::ResetTrade(int aIndex) // OK
+void CTrade::ResetTrade(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -87,7 +87,7 @@ void CTrade::ResetTrade(int aIndex) // OK
 
 }
 
-bool CTrade::ExchangeTradeItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CTrade::ExchangeTradeItem(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	for (int n = 0; n < TRADE_SIZE; n++)
 	{
@@ -113,7 +113,7 @@ bool CTrade::ExchangeTradeItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	return 1;
 }
 
-void CTrade::ExchangeTradeItemLog(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CTrade::ExchangeTradeItemLog(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	for (int n = 0; n < TRADE_SIZE; n++)
 	{
@@ -124,7 +124,7 @@ void CTrade::ExchangeTradeItemLog(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-void CTrade::CGTradeRequestRecv(PMSG_TRADE_REQUEST_RECV* lpMsg, int aIndex) // OK
+void CTrade::CGTradeRequestRecv(PMSG_TRADE_REQUEST_RECV* lpMsg, int aIndex)
 {
 	if (gServerInfo.m_TradeSwitch == 0)
 	{
@@ -280,7 +280,7 @@ void CTrade::CGTradeRequestRecv(PMSG_TRADE_REQUEST_RECV* lpMsg, int aIndex) // O
 	this->GCTradeRequestSend(bIndex, lpObj->Name);
 }
 
-void CTrade::CGTradeResponseRecv(PMSG_TRADE_RESPONSE_RECV* lpMsg, int aIndex) // OK
+void CTrade::CGTradeResponseRecv(PMSG_TRADE_RESPONSE_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -417,7 +417,7 @@ CLEAR_JUMP:
 	this->GCTradeResponseSend(bIndex, 0, lpObj->Name, 0, 0);
 }
 
-void CTrade::CGTradeMoneyRecv(PMSG_TRADE_MONEY_RECV* lpMsg, int aIndex) // OK
+void CTrade::CGTradeMoneyRecv(PMSG_TRADE_MONEY_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -485,7 +485,7 @@ void CTrade::CGTradeMoneyRecv(PMSG_TRADE_MONEY_RECV* lpMsg, int aIndex) // OK
 	this->GCTradeMoneySend(bIndex, lpMsg->money);
 }
 
-void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg, int aIndex) // OK
+void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg, int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -796,7 +796,7 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg, int aIndex) /
 	this->GCTradeResultSend(bIndex, 1);
 }
 
-void CTrade::CGTradeCancelButtonRecv(int aIndex) // OK
+void CTrade::CGTradeCancelButtonRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -848,7 +848,7 @@ void CTrade::CGTradeCancelButtonRecv(int aIndex) // OK
 	this->GCTradeResultSend(bIndex, 0);
 }
 
-void CTrade::GCTradeRequestSend(int aIndex, char* name) // OK
+void CTrade::GCTradeRequestSend(int aIndex, char* name)
 {
 	PMSG_TRADE_REQUEST_SEND pMsg;
 
@@ -859,7 +859,7 @@ void CTrade::GCTradeRequestSend(int aIndex, char* name) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CTrade::GCTradeResponseSend(int aIndex, BYTE response, char* name, int level, int GuildNumber) // OK
+void CTrade::GCTradeResponseSend(int aIndex, BYTE response, char* name, int level, int GuildNumber)
 {
 	PMSG_TRADE_RESPONSE_SEND pMsg;
 
@@ -876,7 +876,7 @@ void CTrade::GCTradeResponseSend(int aIndex, BYTE response, char* name, int leve
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CTrade::GCTradeItemDelSend(int aIndex, BYTE slot) // OK
+void CTrade::GCTradeItemDelSend(int aIndex, BYTE slot)
 {
 	PMSG_TRADE_ITEM_DEL_SEND pMsg;
 
@@ -887,7 +887,7 @@ void CTrade::GCTradeItemDelSend(int aIndex, BYTE slot) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CTrade::GCTradeItemAddSend(int aIndex, BYTE slot, BYTE* ItemInfo) // OK
+void CTrade::GCTradeItemAddSend(int aIndex, BYTE slot, BYTE* ItemInfo)
 {
 	PMSG_TRADE_ITEM_ADD_SEND pMsg;
 
@@ -900,7 +900,7 @@ void CTrade::GCTradeItemAddSend(int aIndex, BYTE slot, BYTE* ItemInfo) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CTrade::GCTradeMoneySend(int aIndex, DWORD money) // OK
+void CTrade::GCTradeMoneySend(int aIndex, DWORD money)
 {
 	PMSG_TRADE_MONEY_SEND pMsg;
 
@@ -911,7 +911,7 @@ void CTrade::GCTradeMoneySend(int aIndex, DWORD money) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CTrade::GCTradeOkButtonSend(int aIndex, BYTE flag) // OK
+void CTrade::GCTradeOkButtonSend(int aIndex, BYTE flag)
 {
 	PMSG_TRADE_OK_BUTTON_SEND pMsg;
 
@@ -922,7 +922,7 @@ void CTrade::GCTradeOkButtonSend(int aIndex, BYTE flag) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CTrade::GCTradeResultSend(int aIndex, BYTE result) // OK
+void CTrade::GCTradeResultSend(int aIndex, BYTE result)
 {
 	PMSG_TRADE_RESULT_SEND pMsg;
 

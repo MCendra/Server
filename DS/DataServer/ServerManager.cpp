@@ -98,9 +98,9 @@ void CServerManager::DelServer()
 	// Marcar OFFLINE primero para que cualquier otra llamada concurrente
 	// a DelClient() salga inmediatamente por el check de arriba.
 	m_state = SERVER_OFFLINE;
-	m_index = -1;
-
+	
 	Log.ToDisp(LOG_BLACK, "[ServerManager - DelServer] Servidor eliminado (Index: %d, IP: %s)", m_index, m_IpAddr);
+
 	// Eliminar info de las cuentas servidor del manager
 	gCharacterManager.ClearServerCharacterInfo(m_ServerCode);
 	gGuildMatching.ClearGuildMatchingInfo(m_ServerCode);
@@ -108,6 +108,7 @@ void CServerManager::DelServer()
 	gPartyMatching.ClearPartyMatchingInfo(m_ServerCode);
 	gPartyMatching.ClearPartyMatchingJoinInfo(m_ServerCode);
 
+	m_index = -1;
 	memset(m_IpAddr, 0, sizeof(m_IpAddr));
 	memset(m_ServerName, 0, sizeof(m_ServerName));
 	m_socket = INVALID_SOCKET;

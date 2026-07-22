@@ -69,7 +69,7 @@ struct CS_WEAPON_DAMAGED_TARGET_INFO
 	int m_iDamageDealingTime; // 8
 	BOOL m_IsUsed; // C
 
-	void Reset() // OK
+	void Reset()
 	{
 		this->m_iWeaponObjIndex = -1;
 		this->m_iTargetObjIndex = -1;
@@ -86,7 +86,7 @@ struct CS_WEAPON_CAL_DAMAGER_INFO
 	int m_iLimitTime; // C
 	BOOL m_IsUsed; // 10
 
-	void Reset() // OK
+	void Reset()
 	{
 		this->m_iWeaponObjIndex = -1;
 		this->m_iTargetX = -1;

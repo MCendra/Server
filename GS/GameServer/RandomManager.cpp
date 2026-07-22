@@ -10,24 +10,24 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRandomManager::CRandomManager() // OK
+CRandomManager::CRandomManager()
 {
 	this->Clear();
 }
 
-CRandomManager::~CRandomManager() // OK
+CRandomManager::~CRandomManager()
 {
 
 }
 
-void CRandomManager::Clear() // OK
+void CRandomManager::Clear()
 {
 	this->m_MaxRate = 0;
 
 	this->m_RandomManagerInfo.clear();
 }
 
-bool CRandomManager::GetRandomElement(int* value) // OK
+bool CRandomManager::GetRandomElement(int* value)
 {
 	if(this->m_MaxRate == 0)
 	{
@@ -53,7 +53,7 @@ bool CRandomManager::GetRandomElement(int* value) // OK
 	return 0;
 }
 
-bool CRandomManager::GetRandomElement(WORD* value) // OK
+bool CRandomManager::GetRandomElement(WORD* value)
 {
 	if(this->m_MaxRate == 0)
 	{
@@ -79,7 +79,7 @@ bool CRandomManager::GetRandomElement(WORD* value) // OK
 	return 0;
 }
 
-bool CRandomManager::GetRandomElement(BYTE* value) // OK
+bool CRandomManager::GetRandomElement(BYTE* value)
 {
 	if(this->m_MaxRate == 0)
 	{
@@ -105,7 +105,7 @@ bool CRandomManager::GetRandomElement(BYTE* value) // OK
 	return 0;
 }
 
-void CRandomManager::AddElement(int value,int rate) // OK
+void CRandomManager::AddElement(int value,int rate)
 {
 	if(rate == 0)
 	{

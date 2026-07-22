@@ -16,17 +16,17 @@ CCustomNpcCommand gCustomNpcCommand;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomNpcCommand::CCustomNpcCommand() // OK
+CCustomNpcCommand::CCustomNpcCommand()
 {
 	this->m_CustomNpcCommand.clear();
 }
 
-CCustomNpcCommand::~CCustomNpcCommand() // OK
+CCustomNpcCommand::~CCustomNpcCommand()
 {
 
 }
 
-void CCustomNpcCommand::Load(char* path) // OK
+void CCustomNpcCommand::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -86,7 +86,7 @@ void CCustomNpcCommand::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomNpcCommand::GetNpcCommand(LPOBJ lpObj,LPOBJ lpNpc) // OK
+bool CCustomNpcCommand::GetNpcCommand(LPOBJ lpObj,LPOBJ lpNpc)
 {
 	#if (GAMESERVER_CLIENTE_UPDATE >= 12)
 	for(std::map<int,NPC_TYPE_INFO>::iterator it=this->m_CustomNpcCommand.begin();it != this->m_CustomNpcCommand.end();it++)

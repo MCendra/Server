@@ -13,17 +13,17 @@ CItemStack gItemStack;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemStack::CItemStack() // OK
+CItemStack::CItemStack()
 {
 	this->m_ItemStackInfo.clear();
 }
 
-CItemStack::~CItemStack() // OK
+CItemStack::~CItemStack()
 {
 
 }
 
-void CItemStack::Load(char* path) // OK
+void CItemStack::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -75,7 +75,7 @@ void CItemStack::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-int CItemStack::GetItemMaxStack(int index) // OK
+int CItemStack::GetItemMaxStack(int index)
 {
 	std::map<int,ITEM_STACK_INFO>::iterator it = this->m_ItemStackInfo.find(index);
 
@@ -89,7 +89,7 @@ int CItemStack::GetItemMaxStack(int index) // OK
 	}
 }
 
-int CItemStack::GetCreateItemIndex(int index) // OK
+int CItemStack::GetCreateItemIndex(int index)
 {
 	std::map<int,ITEM_STACK_INFO>::iterator it = this->m_ItemStackInfo.find(index);
 

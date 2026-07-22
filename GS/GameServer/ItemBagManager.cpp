@@ -18,17 +18,17 @@ CItemBagManager gItemBagManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemBagManager::CItemBagManager() // OK
+CItemBagManager::CItemBagManager()
 {
 	this->m_ItemBagManagerInfo.clear();
 }
 
-CItemBagManager::~CItemBagManager() // OK
+CItemBagManager::~CItemBagManager()
 {
 
 }
 
-void CItemBagManager::Load(char* path) // OK
+void CItemBagManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -86,7 +86,7 @@ void CItemBagManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CItemBagManager::LoadEventItemBag() // OK
+void CItemBagManager::LoadEventItemBag()
 {
 	std::map<int,int> LoadEventItemBag;
 
@@ -133,7 +133,7 @@ void CItemBagManager::LoadEventItemBag() // OK
 	while(FindNextFile(file,&data) != 0);
 }
 
-bool CItemBagManager::GetItemByItemIndex(int ItemIndex,int ItemLevel,LPOBJ lpObj,CItem* lpItem) // OK
+bool CItemBagManager::GetItemByItemIndex(int ItemIndex,int ItemLevel,LPOBJ lpObj,CItem* lpItem)
 {
 	for(std::map<int,ITEM_BAG_MANAGER_INFO>::iterator it=this->m_ItemBagManagerInfo.begin();it != this->m_ItemBagManagerInfo.end();it++)
 	{
@@ -146,7 +146,7 @@ bool CItemBagManager::GetItemByItemIndex(int ItemIndex,int ItemLevel,LPOBJ lpObj
 	return 0;
 }
 
-bool CItemBagManager::GetItemByMonsterClass(int MonsterClass,LPOBJ lpObj,CItem* lpItem) // OK
+bool CItemBagManager::GetItemByMonsterClass(int MonsterClass,LPOBJ lpObj,CItem* lpItem)
 {
 	for(std::map<int,ITEM_BAG_MANAGER_INFO>::iterator it=this->m_ItemBagManagerInfo.begin();it != this->m_ItemBagManagerInfo.end();it++)
 	{
@@ -159,7 +159,7 @@ bool CItemBagManager::GetItemByMonsterClass(int MonsterClass,LPOBJ lpObj,CItem* 
 	return 0;
 }
 
-bool CItemBagManager::GetItemBySpecialValue(int SpecialValue,LPOBJ lpObj,CItem* lpItem) // OK
+bool CItemBagManager::GetItemBySpecialValue(int SpecialValue,LPOBJ lpObj,CItem* lpItem)
 {
 	for(std::map<int,ITEM_BAG_MANAGER_INFO>::iterator it=this->m_ItemBagManagerInfo.begin();it != this->m_ItemBagManagerInfo.end();it++)
 	{
@@ -172,7 +172,7 @@ bool CItemBagManager::GetItemBySpecialValue(int SpecialValue,LPOBJ lpObj,CItem* 
 	return 0;
 }
 
-int CItemBagManager::DropItemByItemIndex(int ItemIndex,int ItemLevel,LPOBJ lpObj,int map,int x,int y) // OK
+int CItemBagManager::DropItemByItemIndex(int ItemIndex,int ItemLevel,LPOBJ lpObj,int map,int x,int y)
 {
 	if(gDropReward.DropRewardByItemIndex(ItemIndex,lpObj))
 	{
@@ -203,7 +203,7 @@ int CItemBagManager::DropItemByItemIndex(int ItemIndex,int ItemLevel,LPOBJ lpObj
 	return 0;
 }
 
-bool CItemBagManager::DropItemByMonsterClass(int MonsterClass,LPOBJ lpObj,int map,int x,int y) // OK
+bool CItemBagManager::DropItemByMonsterClass(int MonsterClass,LPOBJ lpObj,int map,int x,int y)
 {
 	for(std::map<int,ITEM_BAG_MANAGER_INFO>::iterator it=this->m_ItemBagManagerInfo.begin();it != this->m_ItemBagManagerInfo.end();it++)
 	{
@@ -216,7 +216,7 @@ bool CItemBagManager::DropItemByMonsterClass(int MonsterClass,LPOBJ lpObj,int ma
 	return 0;
 }
 
-bool CItemBagManager::DropItemBySpecialValue(int SpecialValue,LPOBJ lpObj,int map,int x,int y) // OK
+bool CItemBagManager::DropItemBySpecialValue(int SpecialValue,LPOBJ lpObj,int map,int x,int y)
 {
 	for(std::map<int,ITEM_BAG_MANAGER_INFO>::iterator it=this->m_ItemBagManagerInfo.begin();it != this->m_ItemBagManagerInfo.end();it++)
 	{
@@ -238,7 +238,7 @@ bool CItemBagManager::DropItemBySpecialValue(int SpecialValue,LPOBJ lpObj,int ma
 	return 0;
 }
 
-bool CItemBagManager::DropItemByIndexItemBag(int IndexItemBag, LPOBJ lpObj) // OK
+bool CItemBagManager::DropItemByIndexItemBag(int IndexItemBag, LPOBJ lpObj)
 {
 	for (std::map<int, ITEM_BAG_MANAGER_INFO>::iterator it = this->m_ItemBagManagerInfo.begin(); it != this->m_ItemBagManagerInfo.end(); it++)
 	{

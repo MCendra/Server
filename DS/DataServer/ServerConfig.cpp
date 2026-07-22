@@ -21,28 +21,22 @@ constexpr char KEY_DATA_SERVER_PASS[] = "DataServerPASS";
 constexpr char KEY_DATA_ADVANCED_LOG[] = "AdvancedLog";
 constexpr char KEY_RSTIME_CTC[] = "RSTimeCTC";
 
-constexpr WORD DEFAULT_DATA_SERVER_PORT = 55960;
-constexpr char DEFAULT_DATA_SERVER_ODBC[] = "MuOnlineS6";
-constexpr char DEFAULT_DATA_SERVER_USER[] = "sa";
-constexpr char DEFAULT_DATA_SERVER_PASS[] = "$Magda314$$$";
-constexpr BYTE DEFAULT_ADVANCED_LOG = 1;
-constexpr WORD DEFAULT_RSTIME_CTC = 40;
+constexpr char DEFAULT_CONFIG[] = R"ini([DataServerInfo]
+CustomerName=
+CustomerHardwareId=
+DataServerPort=55960
+DataServerODBC=MuOnlineS6
+DataServerUSER=sa
+DataServerPASS=$Magda314$$$
+AdvancedLog=1
+RSTimeCTC=40)ini";
 
-constexpr char DEFAULT_CONFIG[] = "[DataServerInfo]\n"
-"CustomerName=\n"
-"CustomerHardwareId=\n"
-"DataServerPort=%d\n"
-"DataServerODBC=%s\n"
-"DataServerUSER=%s\n"
-"DataServerPASS=%s\n"
-"AdvancedLog=%d\n"
-"RSTimeCTC=%d\n";
+constexpr char DEFAULT_ALLOWABLE_IP_LIST[] = R"ini(0
+"127.0.0.1"
+end
+)ini";
 
-constexpr char DEFAULT_ALLOWABLE_IP_LIST[] = "0\n"
-"\"127.0.0.1\"\n"
-"end\n";
-
-constexpr char DEFAULT_BADSYNTAX[] = "end\n";
+constexpr char DEFAULT_BADSYNTAX[] = R"ini(end)ini";
 
 // Definición de las variables externas
 char ConfigFilePath[MAX_PATH];
@@ -83,8 +77,7 @@ bool CServerConfig::EnsureConfigFileExists() {
 			FileHandle file(ConfigFilePath, GENERIC_WRITE, CREATE_ALWAYS);
 			if (file.getHandle() != INVALID_HANDLE_VALUE) {
 				char buffer[2048];
-				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG, DEFAULT_DATA_SERVER_PORT, DEFAULT_DATA_SERVER_ODBC,
-					DEFAULT_DATA_SERVER_USER, DEFAULT_DATA_SERVER_PASS, DEFAULT_ADVANCED_LOG, DEFAULT_RSTIME_CTC);
+				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG);
 
 				DWORD bytesWritten;
 				if (file.write(buffer, static_cast<DWORD>(strlen(buffer)), bytesWritten)) {

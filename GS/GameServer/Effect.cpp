@@ -9,17 +9,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEffect::CEffect() // OK
+CEffect::CEffect()
 {
 	this->Clear();
 }
 
-CEffect::~CEffect() // OK
+CEffect::~CEffect()
 {
 
 }
 
-void CEffect::Clear() // OK
+void CEffect::Clear()
 {
 	this->m_index = 0xFF;
 	this->m_group = 0;
@@ -34,7 +34,7 @@ void CEffect::Clear() // OK
 	this->m_value[3] = 0;
 }
 
-bool CEffect::IsEffect() // OK
+bool CEffect::IsEffect()
 {
 	if (this->m_index == 0xFF)
 	{
@@ -44,7 +44,7 @@ bool CEffect::IsEffect() // OK
 	return 1;
 }
 
-bool CEffect::Set(BYTE index, BYTE group, BYTE save, BYTE type, BYTE flag, DWORD time, DWORD count, WORD value1, WORD value2, WORD value3, WORD value4) // OK
+bool CEffect::Set(BYTE index, BYTE group, BYTE save, BYTE type, BYTE flag, DWORD time, DWORD count, WORD value1, WORD value2, WORD value3, WORD value4)
 {
 	if (this->IsEffect() != 0)
 	{

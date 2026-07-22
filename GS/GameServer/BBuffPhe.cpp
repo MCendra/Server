@@ -142,7 +142,7 @@ void CBBuffPhe::LoadFileXML(char* FilePath)
 	LogAdd(LOG_BLUE, "[BuffPhe] Monter Point %d", this->mDBMonterPoint.size());
 
 }
-bool CBBuffPhe::CongHienBuffPhe(int aIndex, int Point) // OK
+bool CBBuffPhe::CongHienBuffPhe(int aIndex, int Point)
 {
 
 	if (OBJECT_RANGE(aIndex) == 0)
@@ -222,7 +222,7 @@ void CBBuffPhe::GetOptionCuongHoa(LPOBJ lpObj, bool flag)
 	// SD
 	lpObj->AddShield += BGetDataCH->TangSD;
 }
-void CBBuffPhe::SendInfoClient(int aIndex) // OK
+void CBBuffPhe::SendInfoClient(int aIndex)
 {
 
 	if (OBJECT_RANGE(aIndex) == 0)
@@ -471,7 +471,7 @@ void CBBuffPhe::GetInfoCharTop(int Type)
 	}
 	gDataServerConnection.DataSend((BYTE*)& pMsg, pMsg.header.size);
 }
-void CBBuffPhe::CacheDataBuffPhe(BUFFPHE_REQUESTDS_SETINFO* lpMsg) // OK
+void CBBuffPhe::CacheDataBuffPhe(BUFFPHE_REQUESTDS_SETINFO* lpMsg)
 {
 	//===
 	this->DT_TongPoint = 0;

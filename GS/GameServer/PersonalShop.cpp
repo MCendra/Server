@@ -20,17 +20,17 @@ CPersonalShop gPersonalShop;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPersonalShop::CPersonalShop() // OK
+CPersonalShop::CPersonalShop()
 {
 
 }
 
-CPersonalShop::~CPersonalShop() // OK
+CPersonalShop::~CPersonalShop()
 {
 
 }
 
-bool CPersonalShop::CheckPersonalShop(int aIndex) // OK
+bool CPersonalShop::CheckPersonalShop(int aIndex)
 {
 	for(int n=INVENTORY_EXT4_SIZE;n < INVENTORY_FULL_SIZE;n++)
 	{
@@ -43,7 +43,7 @@ bool CPersonalShop::CheckPersonalShop(int aIndex) // OK
 	return 1;
 }
 
-bool CPersonalShop::CheckPersonalShopOpen(int aIndex) // OK
+bool CPersonalShop::CheckPersonalShopOpen(int aIndex)
 {
 	int count = 0;
 
@@ -69,7 +69,7 @@ bool CPersonalShop::CheckPersonalShopOpen(int aIndex) // OK
 	return ((count==0)?0:1);
 }
 
-bool CPersonalShop::CheckPersonalShopViewport(int aIndex,int bIndex) // OK
+bool CPersonalShop::CheckPersonalShopViewport(int aIndex,int bIndex)
 {
 	for(int n=0;n < gObj[aIndex].VpPShopPlayerCount;n++)
 	{
@@ -82,7 +82,7 @@ bool CPersonalShop::CheckPersonalShopViewport(int aIndex,int bIndex) // OK
 	return 1;
 }
 
-bool CPersonalShop::CheckPersonalShopSearchItem(int aIndex,int ItemIndex) // OK
+bool CPersonalShop::CheckPersonalShopSearchItem(int aIndex,int ItemIndex)
 {
 	for(int n=INVENTORY_EXT4_SIZE;n < INVENTORY_FULL_SIZE;n++)
 	{
@@ -98,7 +98,7 @@ bool CPersonalShop::CheckPersonalShopSearchItem(int aIndex,int ItemIndex) // OK
 	return 0;
 }
 
-void CPersonalShop::GetRequireJewelCount(LPOBJ lpObj,int* count,int* table,int type,int value) // OK
+void CPersonalShop::GetRequireJewelCount(LPOBJ lpObj,int* count,int* table,int type,int value)
 {
 	int require[4] = {0,0,0,0};
 
@@ -163,7 +163,7 @@ void CPersonalShop::GetRequireJewelCount(LPOBJ lpObj,int* count,int* table,int t
 	}
 }
 
-void CPersonalShop::GetPaymentJewelCount(LPOBJ lpObj,int* count,int* table,int type,int value) // OK
+void CPersonalShop::GetPaymentJewelCount(LPOBJ lpObj,int* count,int* table,int type,int value)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -186,7 +186,7 @@ void CPersonalShop::GetPaymentJewelCount(LPOBJ lpObj,int* count,int* table,int t
 	(*count) += table[0]+table[1]+table[2]+table[3];
 }
 
-void CPersonalShop::SetRequireJewelCount(LPOBJ lpObj,int* table,int type) // OK
+void CPersonalShop::SetRequireJewelCount(LPOBJ lpObj,int* table,int type)
 {
 	switch(type)
 	{
@@ -211,7 +211,7 @@ void CPersonalShop::SetRequireJewelCount(LPOBJ lpObj,int* table,int type) // OK
 	}
 }
 
-void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj,int* table,int type) // OK
+void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj,int* table,int type)
 {
 	for(int n=0;n < table[0];n++)
 	{
@@ -278,7 +278,7 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj,int* table,int type) // OK
 	}
 }
 
-void CPersonalShop::CGPShopSetItemPriceRecv(PMSG_PSHOP_SET_ITEM_PRICE_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopSetItemPriceRecv(PMSG_PSHOP_SET_ITEM_PRICE_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -350,7 +350,7 @@ void CPersonalShop::CGPShopSetItemPriceRecv(PMSG_PSHOP_SET_ITEM_PRICE_RECV* lpMs
 	this->GCPShopSetItemPriceSend(aIndex,1,lpMsg->slot);
 }
 
-void CPersonalShop::CGPShopOpenRecv(PMSG_PSHOP_OPEN_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopOpenRecv(PMSG_PSHOP_OPEN_RECV* lpMsg,int aIndex)
 {
 	if(gServerInfo.m_PersonalShopSwitch == 0)
 	{
@@ -406,7 +406,7 @@ void CPersonalShop::CGPShopOpenRecv(PMSG_PSHOP_OPEN_RECV* lpMsg,int aIndex) // O
 	this->GCPShopOpenSend(aIndex,1);
 }
 
-void CPersonalShop::CGPShopCloseRecv(int aIndex) // OK
+void CPersonalShop::CGPShopCloseRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -426,7 +426,7 @@ void CPersonalShop::CGPShopCloseRecv(int aIndex) // OK
 	gCustomStore.OnPShopClose(lpObj);
 }
 
-void CPersonalShop::CGPShopItemListRecv(PMSG_PSHOP_ITEM_LIST_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopItemListRecv(PMSG_PSHOP_ITEM_LIST_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -494,7 +494,7 @@ void CPersonalShop::CGPShopItemListRecv(PMSG_PSHOP_ITEM_LIST_RECV* lpMsg,int aIn
 	
 }
 
-void CPersonalShop::CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aIndex)
 {
 	if(gCustomStore.OnPShopBuyItemRecv(lpMsg,aIndex) != 0)
 	{
@@ -771,7 +771,7 @@ void CPersonalShop::CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aInde
 	lpTarget->PShopTransaction = 0;
 }
 
-void CPersonalShop::CGPShopLeaveRecv(PMSG_PSHOP_LEAVE_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopLeaveRecv(PMSG_PSHOP_LEAVE_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -787,7 +787,7 @@ void CPersonalShop::CGPShopLeaveRecv(PMSG_PSHOP_LEAVE_RECV* lpMsg,int aIndex) //
 	memset(lpObj->PShopDealerName,0,sizeof(lpObj->PShopDealerName));
 }
 
-void CPersonalShop::CGPShopSearchRecv(PMSG_PSHOP_SEARCH_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopSearchRecv(PMSG_PSHOP_SEARCH_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -864,7 +864,7 @@ void CPersonalShop::CGPShopSearchRecv(PMSG_PSHOP_SEARCH_RECV* lpMsg,int aIndex) 
 	#endif
 }
 
-void CPersonalShop::CGPShopSearchLogRecv(PMSG_PSHOP_SEARCH_LOG_RECV* lpMsg,int aIndex) // OK
+void CPersonalShop::CGPShopSearchLogRecv(PMSG_PSHOP_SEARCH_LOG_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -885,7 +885,7 @@ void CPersonalShop::CGPShopSearchLogRecv(PMSG_PSHOP_SEARCH_LOG_RECV* lpMsg,int a
 	#endif
 }
 
-void CPersonalShop::GCPShopViewportSend(int aIndex) // OK
+void CPersonalShop::GCPShopViewportSend(int aIndex)
 {
 	if (gObjIsConnectedGP(aIndex) == 0)
 	{
@@ -1061,7 +1061,7 @@ void CPersonalShop::GCPShopViewportSend(int aIndex) // OK
 
 }
 
-void CPersonalShop::GCPShopSetItemPriceSend(int aIndex,BYTE result,BYTE slot) // OK
+void CPersonalShop::GCPShopSetItemPriceSend(int aIndex,BYTE result,BYTE slot)
 {
 	PMSG_PSHOP_SET_ITEM_PRICE_SEND pMsg;
 
@@ -1074,7 +1074,7 @@ void CPersonalShop::GCPShopSetItemPriceSend(int aIndex,BYTE result,BYTE slot) //
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CPersonalShop::GCPShopOpenSend(int aIndex,BYTE result) // OK
+void CPersonalShop::GCPShopOpenSend(int aIndex,BYTE result)
 {
 	PMSG_PSHOP_OPEN_SEND pMsg;
 
@@ -1087,7 +1087,7 @@ void CPersonalShop::GCPShopOpenSend(int aIndex,BYTE result) // OK
 	gCustomStore.GCOffActiveSend(aIndex,1);
 }
 
-void CPersonalShop::GCPShopCloseSend(int aIndex,BYTE result) // OK
+void CPersonalShop::GCPShopCloseSend(int aIndex,BYTE result)
 {
 	PMSG_PSHOP_CLOSE_SEND pMsg;
 
@@ -1109,7 +1109,7 @@ void CPersonalShop::GCPShopCloseSend(int aIndex,BYTE result) // OK
 	gCustomStore.GCOffActiveSend(aIndex,0);
 }
 
-void CPersonalShop::GCPShopItemListSend(int aIndex,int bIndex,BYTE result,BYTE type) // OK
+void CPersonalShop::GCPShopItemListSend(int aIndex,int bIndex,BYTE result,BYTE type)
 {
 	LPOBJ lpObj = &gObj[bIndex];
 
@@ -1184,7 +1184,7 @@ void CPersonalShop::GCPShopItemListSend(int aIndex,int bIndex,BYTE result,BYTE t
 	#endif
 }
 
-void CPersonalShop::GCPShopBuyItemSend(int aIndex, int bIndex, int slot, BYTE result) // OK
+void CPersonalShop::GCPShopBuyItemSend(int aIndex, int bIndex, int slot, BYTE result)
 {
 	LPOBJ aI = &gObj[aIndex];
 	LPOBJ bI = &gObj[bIndex];
@@ -1220,7 +1220,7 @@ void CPersonalShop::GCPShopBuyItemSend(int aIndex, int bIndex, int slot, BYTE re
 	}
 }
 
-void CPersonalShop::GCPShopSellItemSend(int aIndex,int bIndex,int slot) // OK
+void CPersonalShop::GCPShopSellItemSend(int aIndex,int bIndex,int slot)
 {
 	PMSG_PSHOP_SELL_ITEM_SEND pMsg;
 
@@ -1233,7 +1233,7 @@ void CPersonalShop::GCPShopSellItemSend(int aIndex,int bIndex,int slot) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CPersonalShop::GCPShopTextChangeSend(int aIndex) // OK
+void CPersonalShop::GCPShopTextChangeSend(int aIndex)
 {
 	PMSG_PSHOP_TEXT_CHANGE_SEND pMsg;
 
@@ -1250,7 +1250,7 @@ void CPersonalShop::GCPShopTextChangeSend(int aIndex) // OK
 	MsgSendV2(&gObj[aIndex],(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CPersonalShop::GCPShopLeaveSend(int aIndex,int bIndex) // OK
+void CPersonalShop::GCPShopLeaveSend(int aIndex,int bIndex)
 {
 	PMSG_PSHOP_LEAVE_SEND pMsg;
 
@@ -1263,7 +1263,7 @@ void CPersonalShop::GCPShopLeaveSend(int aIndex,int bIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CPersonalShop::GCPShopItemValueSend(int aIndex) // OK
+void CPersonalShop::GCPShopItemValueSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1320,7 +1320,7 @@ void CPersonalShop::GCPShopItemValueSend(int aIndex) // OK
 	#endif
 }
 
-void CPersonalShop::DGPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg) // OK
+void CPersonalShop::DGPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1366,7 +1366,7 @@ void CPersonalShop::DGPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg) // O
 	#endif
 }
 
-void CPersonalShop::GDPShopItemValueSend(int aIndex) // OK
+void CPersonalShop::GDPShopItemValueSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1390,7 +1390,7 @@ void CPersonalShop::GDPShopItemValueSend(int aIndex) // OK
 	#endif
 }
 
-void CPersonalShop::GDPShopItemValueSaveSend(int aIndex) // OK
+void CPersonalShop::GDPShopItemValueSaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1450,7 +1450,7 @@ void CPersonalShop::GDPShopItemValueSaveSend(int aIndex) // OK
 	#endif
 }
 
-void CPersonalShop::GDPShopItemValueInsertSaveSend(int aIndex,int slot,CItem* lpItem) // OK
+void CPersonalShop::GDPShopItemValueInsertSaveSend(int aIndex,int slot,CItem* lpItem)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1481,7 +1481,7 @@ void CPersonalShop::GDPShopItemValueInsertSaveSend(int aIndex,int slot,CItem* lp
 	#endif
 }
 
-void CPersonalShop::GDPShopItemValueDeleteSaveSend(int aIndex,int slot) // OK
+void CPersonalShop::GDPShopItemValueDeleteSaveSend(int aIndex,int slot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 

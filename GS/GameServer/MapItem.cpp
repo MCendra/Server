@@ -11,22 +11,22 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMapItem::CMapItem() // OK
+CMapItem::CMapItem()
 {
 
 }
 
-CMapItem::~CMapItem() // OK
+CMapItem::~CMapItem()
 {
 
 }
 
-void CMapItem::Init() // OK
+void CMapItem::Init()
 {
 	this->m_State = OBJECT_EMPTY;
 }
 
-void CMapItem::CreateItem(int index,int level,int x,int y,float dur,BYTE Option1,BYTE Option2,BYTE Option3,BYTE NewOption,BYTE SetOption,DWORD serial,BYTE JewelOfHarmonyOption,BYTE ItemOptionEx,BYTE SocketOption[MAX_SOCKET_OPTION],BYTE SocketOptionBonus,DWORD duration) // OK
+void CMapItem::CreateItem(int index,int level,int x,int y,float dur,BYTE Option1,BYTE Option2,BYTE Option3,BYTE NewOption,BYTE SetOption,DWORD serial,BYTE JewelOfHarmonyOption,BYTE ItemOptionEx,BYTE SocketOption[MAX_SOCKET_OPTION],BYTE SocketOptionBonus,DWORD duration)
 {
 	this->Init();
 
@@ -63,7 +63,7 @@ void CMapItem::CreateItem(int index,int level,int x,int y,float dur,BYTE Option1
 	this->m_Serial = serial;
 }
 
-void CMapItem::DropCreateItem(int index,int level,int x,int y,float dur,BYTE Option1,BYTE Option2,BYTE Option3,BYTE NewOption,BYTE SetOption,DWORD serial,int PetLevel,int PetExp,BYTE JewelOfHarmonyOption,BYTE ItemOptionEx,BYTE SocketOption[MAX_SOCKET_OPTION],BYTE SocketOptionBonus,DWORD duration) // OK
+void CMapItem::DropCreateItem(int index,int level,int x,int y,float dur,BYTE Option1,BYTE Option2,BYTE Option3,BYTE NewOption,BYTE SetOption,DWORD serial,int PetLevel,int PetExp,BYTE JewelOfHarmonyOption,BYTE ItemOptionEx,BYTE SocketOption[MAX_SOCKET_OPTION],BYTE SocketOptionBonus,DWORD duration)
 {
 	this->Init();
 

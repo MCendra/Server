@@ -20,17 +20,17 @@ CLifeStone gLifeStone;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CLifeStone::CLifeStone() // OK
+CLifeStone::CLifeStone()
 {
 
 }
 
-CLifeStone::~CLifeStone() // OK
+CLifeStone::~CLifeStone()
 {
 
 }
 
-bool CLifeStone::CreateLifeStone(int aIndex) // OK
+bool CLifeStone::CreateLifeStone(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -133,7 +133,7 @@ bool CLifeStone::CreateLifeStone(int aIndex) // OK
 	#endif
 }
 
-bool CLifeStone::DeleteLifeStone(int aIndex) // OK
+bool CLifeStone::DeleteLifeStone(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -159,7 +159,7 @@ bool CLifeStone::DeleteLifeStone(int aIndex) // OK
 	#endif
 }
 
-bool CLifeStone::SetReSpawnUserXY(int aIndex) // OK
+bool CLifeStone::SetReSpawnUserXY(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -207,7 +207,7 @@ bool CLifeStone::SetReSpawnUserXY(int aIndex) // OK
 	#endif
 }
 
-void CLifeStone::LifeStoneAct(int aIndex) // OK
+void CLifeStone::LifeStoneAct(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 

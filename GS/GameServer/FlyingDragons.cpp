@@ -9,17 +9,17 @@ cDragonMaps gDragonMaps;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-cDragonMaps::cDragonMaps() // OK
+cDragonMaps::cDragonMaps()
 {
 	this->Init();
 }
 
-cDragonMaps::~cDragonMaps() // OK
+cDragonMaps::~cDragonMaps()
 {
 
 }
 
-void cDragonMaps::Init() // OK
+void cDragonMaps::Init()
 {
 	for (int n = 0; n < MAX_MAP; n++)
 	{

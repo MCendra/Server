@@ -10,12 +10,12 @@
 class CCrywolfAltarInfo
 {
 public:
-	CCrywolfAltarInfo() // OK
+	CCrywolfAltarInfo()
 	{
 		this->Reset();
 	}
 
-	void Reset() // OK
+	void Reset()
 	{
 		this->m_AltarState = 0;
 		this->m_UserIndex = -1;
@@ -26,22 +26,22 @@ public:
 		this->m_LastValidContractTime = 0;
 	}
 
-	int GetRemainContractCount() // OK
+	int GetRemainContractCount()
 	{
 		return (((MAX_CRYWOLF_ALTAR_CONTRACT-this->m_ContractCount)<0)?0:(MAX_CRYWOLF_ALTAR_CONTRACT-this->m_ContractCount));
 	}
 
-	void SetAltarState(int state) // OK
+	void SetAltarState(int state)
 	{
 		this->m_AltarState = state;
 	}
 
-	int GetAltarState() // OK
+	int GetAltarState()
 	{
 		return this->m_AltarState;
 	}
 
-	void SetAltarIndex(int AltarIndex) // OK
+	void SetAltarIndex(int AltarIndex)
 	{
 		this->m_AltarIndex = AltarIndex;
 	}

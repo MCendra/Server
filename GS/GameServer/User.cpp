@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "Header.h"
 #include "User.h"
 #include "380ItemOption.h"
 #include "Attack.h"
@@ -120,19 +120,25 @@
 #include "DucTuong.h"
 #include "BBuffPhe.h"
 #include "BEventEndLess.h"
-int gObjCount;
-int gObjMonCount;
-int gObjBotCount;//MC bot
-int gObjCallMonCount;
-int gObjTotalUser;
-int gObjTotalMonster;
-int gObjTotalBot;//mc
-int gCloseMsg;
-int gCloseMsgTime;
-int gGameServerLogOut;
-int gGameServerDisconnect;
-int gObjOffStore;
-int gObjOffAttack;
+
+// Object counters
+int gObjCount = 0;
+int gObjMonCount = 0;
+int gObjBotCount = 0;
+int gObjCallMonCount = 0;
+int gObjTotalUser = 0;
+int gObjTotalMonster = 0;
+int gObjTotalBot = 0;
+
+// Server state
+int gCloseMsg = 0;
+int gCloseMsgTime = 0;
+int gGameServerLogOut = 0;
+int gGameServerDisconnect = 0;
+
+// Offline systems
+int gObjOffStore = 0;
+int gObjOffAttack = 0;
 
 OBJECTSTRUCT_HEADER gObj;
 
@@ -144,10 +150,7 @@ DWORD gCheckSum[MAX_CHECKSUM_KEY];
 
 DWORD gLevelExperience[MAX_CHARACTER_LEVEL+1];
 
-//**************************************************************************//
-// OBJECT MAIN FUNCTIONS ***************************************************//
-//**************************************************************************//
-void gObjEventRunProc() // OK
+void gObjEventRunProc()
 {
 #if(EVENT_END_LESS)
 
@@ -279,7 +282,7 @@ void gObjEventRunProc() // OK
 
 }
 
-void gObjViewportProc() // OK
+void gObjViewportProc()
 {
 	for(int n=0;n < MAX_OBJECT;n++)
 	{
@@ -319,7 +322,7 @@ void gObjViewportProc() // OK
 	gObjectManager.ObjectSetStateProc();
 }
 
-void gObjFirstProc() // OK
+void gObjFirstProc()
 {
 	for(int n=0;n < MAX_MAP;n++)
 	{
@@ -388,7 +391,7 @@ void gObjFirstProc() // OK
 	#endif
 }
 
-void gObjCloseProc() // OK
+void gObjCloseProc()
 {
 	if(gCloseMsg != 0)
 	{
@@ -418,7 +421,7 @@ void gObjCloseProc() // OK
 	}
 }
 
-void gObjCountProc() // OK
+void gObjCountProc()
 {
 	int TotalUser = 0;
 	int TotalBot = 0;
@@ -461,7 +464,7 @@ void gObjCountProc() // OK
 	gObjTotalMonster = TotalMonster;
 }
 
-void gObjAccountLevelProc() // OK
+void gObjAccountLevelProc()
 {
 	LPOBJ lpObj;
 
@@ -521,7 +524,7 @@ void gObjAccountLevelProc() // OK
 	}
 }
 
-void gObjPickProc() // OK
+void gObjPickProc()
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -532,7 +535,7 @@ void gObjPickProc() // OK
 	}
 }
 
-void gObjMathAuthenticatorProc() // OK
+void gObjMathAuthenticatorProc()
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -546,93 +549,92 @@ void gObjMathAuthenticatorProc() // OK
 
 	#endif
 }
-//**************************************************************************//
-// OBJECT BASE FUNCTIONS ***************************************************//
-//**************************************************************************//
-void gObjInit() // OK
+
+void gObjInit()
 {
 	gObjCount = OBJECT_START_USER;
-
 	gObjMonCount = OBJECT_START_MONSTER;
-
 	gObjCallMonCount = MAX_OBJECT_MONSTER;
 
-	memset(gObj.CommonStruct,0,sizeof(OBJECTSTRUCT));
+	std::memset(gObj.CommonStruct, 0, sizeof(OBJECTSTRUCT));
 
 	gMemoryAllocator.m_TempMemoryAllocatorInfo.Alloc();
-
-	gMemoryAllocator.BindMemoryAllocatorInfo(OBJECT_START_USER,gMemoryAllocator.m_TempMemoryAllocatorInfo);
+	gMemoryAllocator.BindMemoryAllocatorInfo(OBJECT_START_USER, gMemoryAllocator.m_TempMemoryAllocatorInfo);
 }
 
-void gObjAllLogOut() // OK
+void gObjAllLogOut()
 {
 	gGameServerLogOut = 1;
 
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
+	for (int index = OBJECT_START_USER; index < MAX_OBJECT; ++index)
 	{
-		if(gObj[n].Connected != OBJECT_OFFLINE && gObj[n].Type == OBJECT_USER)
+		LPOBJ lpObj = &gObj[index];
+
+		if (lpObj->Connected == OBJECT_OFFLINE || lpObj->Type != OBJECT_USER)
 		{
-			CloseClient(n);
-
-			gCustomAttack.OnAttackAlreadyConnected(&gObj[n]);
-
-			g_OfflineMode.OnHelperpAlreadyConnected(&gObj[n]);
-
-			gCustomStore.OnPShopAlreadyConnected(&gObj[n]);
-			//================================================================
-			//FakeOnline_EMU
-#if USE_FAKE_ONLINE	== TRUE
-			s_FakeOnline.OnAttackAlreadyConnected(&gObj[n]);
-#endif
-			//================================================================
+			continue;
 		}
+
+		CloseClient(index);
+
+		gCustomAttack.OnAttackAlreadyConnected(lpObj);
+
+		g_OfflineMode.OnHelperpAlreadyConnected(lpObj);
+
+		gCustomStore.OnPShopAlreadyConnected(lpObj);
+
+#if (USE_FAKE_ONLINE)
+		s_FakeOnline.OnAttackAlreadyConnected(lpObj);
+#endif
 	}
 }
 
-void gObjAllDisconnect() // OK
+void gObjAllDisconnect()
 {
 	gGameServerDisconnect = 1;
 
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
+	for (int index = OBJECT_START_USER; index < MAX_OBJECT; ++index)
 	{
-		if(gObj[n].Connected != OBJECT_OFFLINE && gObj[n].Type == OBJECT_USER)
+		OBJECTSTRUCT& lpObj = gObj[index];
+
+		if (lpObj.Connected == OBJECT_OFFLINE || lpObj.Type != OBJECT_USER)
 		{
-			CloseClient(n);
-
-			gCustomAttack.OnAttackAlreadyConnected(&gObj[n]);
-
-			g_OfflineMode.OnHelperpAlreadyConnected(&gObj[n]);
-
-			gCustomStore.OnPShopAlreadyConnected(&gObj[n]);
-			//================================================================
-			//FakeOnline_EMU
-#if USE_FAKE_ONLINE	== TRUE
-			s_FakeOnline.OnAttackAlreadyConnected(&gObj[n]);
-#endif
-			//================================================================
+			continue;
 		}
+
+		CloseClient(index);
+
+		gCustomAttack.OnAttackAlreadyConnected(&lpObj);
+
+		g_OfflineMode.OnHelperpAlreadyConnected(&lpObj);
+
+		gCustomStore.OnPShopAlreadyConnected(&lpObj);
+
+#if (USE_FAKE_ONLINE)
+		s_FakeOnline.OnAttackAlreadyConnected(&lpObj);
+#endif
 	}
 }
 
-void gObjSetExperienceTable() // OK
+void gObjSetExperienceTable()
 {
 	gLevelExperience[0] = 0;
 
 	DWORD over = 1;
 
-	for(int n=1;n <= MAX_CHARACTER_LEVEL;n++)
+	for (int level = 1; level <= MAX_CHARACTER_LEVEL; ++level)
 	{
-		gLevelExperience[n] = (((n+9)*n)*n)*10;
+		gLevelExperience[level] = (((level + 9) * level) * level) * 10;
 
-		if(n > 255)
+		if (level > 255)
 		{
-			gLevelExperience[n] += (((over+9)*over)*over)*1000;
-			over++;
+			gLevelExperience[level] += (((over + 9) * over) * over) * 1000;
+			++over;
 		}
 	}
 }
 
-void gObjCharZeroSet(int aIndex) // OK
+void gObjCharZeroSet(int aIndex)
 {
 	
 	LPOBJ lpObj = &gObj[aIndex];
@@ -1071,11 +1073,11 @@ void gObjCharZeroSet(int aIndex) // OK
 	lpObj->TimeTeamvsTeam = 0;
 #endif
 
-#if(HONCHIENCLASS == 1)
+#if(HONCHIENCLASS)
 	lpObj->PKEventTime = 0;
 #endif
 
-#if(NGAN_HANG_NGOC)
+#if (NGAN_HANG_NGOC)
 	lpObj->JewelBlessCount = 0;
 	lpObj->JewelSoulCount = 0;
 	lpObj->JewelLifeCount = 0;
@@ -1091,7 +1093,7 @@ void gObjCharZeroSet(int aIndex) // OK
 	//FakeOnline_EMU
 
 
-#if USE_FAKE_ONLINE == TRUE
+#if (USE_FAKE_ONLINE)
 	lpObj->IsFakeOnline = false;
 	lpObj->m_OfflineMoveDelay = 0;
 	lpObj->IsFakeRegen = false;
@@ -1107,10 +1109,9 @@ void gObjCharZeroSet(int aIndex) // OK
 	lpObj->CTCRegDay = 0;
 	lpObj->CTCKill = 0;
 
-#if(MOCNAP == 1)
+#if(MOCNAP)
 	lpObj->MOCNAPCOIN = 0;
 #endif
-	//======================================================
 	lpObj->BProtect_MAP = -1;
 	lpObj->BProtect_X = 0;
 	lpObj->BProtect_Y = 0;
@@ -1128,7 +1129,6 @@ void gObjCharZeroSet(int aIndex) // OK
 #endif
 #if(B_HON_HOAN)
 	lpObj->CapDoHonHoan = 0;
-	
 #endif
 	lpObj->LvCuongHoaHienTai = 0;
 	lpObj->PointUsePhe = 0;
@@ -1148,8 +1148,7 @@ void gObjCharZeroSet(int aIndex) // OK
 	{
 		gSMAttackProcMsg[aIndex][n].Clear();
 	}
-#if(SinhTon)
-
+#if(SinhTon) // Revisar
 	lpObj->CB_Status1 = 0;
 #endif
 #if(EVENT_END_LESS)
@@ -1166,404 +1165,277 @@ void gObjCharZeroSet(int aIndex) // OK
 #endif
 }
 
-void gObjClearPlayerOption(LPOBJ lpObj) // OK
+void gObjClearPlayerOption(LPOBJ lpObj)
 {
-	if(lpObj->Type != OBJECT_USER)
+	if (lpObj->Type != OBJECT_USER)
 	{
 		return;
 	}
 
-	for(int n=0;n < INVENTORY_SIZE;n++)
+	auto ClearArray = [](auto* array, const int count)
+		{
+			for (int i = 0; i < count; ++i)
+			{
+				array[i].Clear();
+			}
+		};
+
+	auto FillMap = [](BYTE* map, const int size)
+		{
+			memset(map, 0xFF, size);
+		};
+
+	ClearArray(lpObj->Inventory, INVENTORY_SIZE);
+	ClearArray(lpObj->Inventory1, INVENTORY_SIZE);
+	ClearArray(lpObj->Inventory2, INVENTORY_SIZE);
+	ClearArray(lpObj->Warehouse, WAREHOUSE_SIZE);
+
+	for (int i = 0; i < MAX_BUYSKIN_CB; ++i)
 	{
-		lpObj->Inventory[n].Clear();
+		lpObj->mInfoBuySkin[i].Clear();
 	}
 
-	for(int n=0;n < INVENTORY_SIZE;n++)
-	{
-		lpObj->Inventory1[n].Clear();
-	}
+#if (GAMESERVER_UPDATE >= 802)
 
-	for(int n=0;n < INVENTORY_SIZE;n++)
-	{
-		lpObj->Inventory2[n].Clear();
-	}
+	ClearArray(lpObj->EventInventory, EVENT_INVENTORY_SIZE);
+	ClearArray(lpObj->EventInventory1, EVENT_INVENTORY_SIZE);
+	ClearArray(lpObj->EventInventory2, EVENT_INVENTORY_SIZE);
 
-	for(int n=0;n < WAREHOUSE_SIZE;n++)
-	{
-		lpObj->Warehouse[n].Clear();
-	}
-	//==CBLoadCustom
-	for (int n = 0; n < MAX_BUYSKIN_CB; n++)
-	{
-		lpObj->mInfoBuySkin[n].Clear();
-	}
+#endif
 
+#if (GAMESERVER_UPDATE >= 803)
 
-	#if(GAMESERVER_UPDATE>=802)
+	ClearArray(lpObj->MuunInventory, MUUN_INVENTORY_SIZE);
 
-	for(int n=0;n < EVENT_INVENTORY_SIZE;n++)
-	{
-		lpObj->EventInventory[n].Clear();
-	}
+#endif
 
-	for(int n=0;n < EVENT_INVENTORY_SIZE;n++)
-	{
-		lpObj->EventInventory1[n].Clear();
-	}
-
-	for(int n=0;n < EVENT_INVENTORY_SIZE;n++)
-	{
-		lpObj->EventInventory2[n].Clear();
-	}
-
-	#endif
-
-	#if(GAMESERVER_UPDATE>=803)
-
-	for(int n=0;n < MUUN_INVENTORY_SIZE;n++)
-	{
-		lpObj->MuunInventory[n].Clear();
-	}
-
-	#endif
-
-	#if(GAMESERVER_UPDATE>=802)
+#if (GAMESERVER_UPDATE >= 802)
 
 	lpObj->MuRummyInfo->Clear();
 
-	#endif
+#endif
 
 	gTrade.ClearTrade(lpObj);
 
-	memset(lpObj->InventoryMap,0xFF,INVENTORY_SIZE);
+	FillMap(lpObj->InventoryMap, INVENTORY_SIZE);
+	FillMap(lpObj->InventoryMap1, INVENTORY_SIZE);
+	FillMap(lpObj->InventoryMap2, INVENTORY_SIZE);
+	FillMap(lpObj->WarehouseMap, WAREHOUSE_SIZE);
 
-	memset(lpObj->InventoryMap1,0xFF,INVENTORY_SIZE);
+#if (GAMESERVER_UPDATE >= 802)
 
-	memset(lpObj->InventoryMap2,0xFF,INVENTORY_SIZE);
+	FillMap(lpObj->EventInventoryMap, EVENT_INVENTORY_SIZE);
+	FillMap(lpObj->EventInventoryMap1, EVENT_INVENTORY_SIZE);
+	FillMap(lpObj->EventInventoryMap2, EVENT_INVENTORY_SIZE);
+	FillMap(lpObj->MuunInventoryMap, MUUN_INVENTORY_SIZE);
 
-	memset(lpObj->WarehouseMap,0xFF,WAREHOUSE_SIZE);
+#endif
 
-	#if(GAMESERVER_UPDATE>=802)
+	ClearArray(lpObj->MasterSkill, MAX_MASTER_SKILL_LIST);
+	ClearArray(lpObj->QuestKillCount, MAX_QUEST_KILL_COUNT);
 
-	memset(lpObj->EventInventoryMap,0xFF,EVENT_INVENTORY_SIZE);
-
-	memset(lpObj->EventInventoryMap1,0xFF,EVENT_INVENTORY_SIZE);
-
-	memset(lpObj->EventInventoryMap2,0xFF,EVENT_INVENTORY_SIZE);
-
-	memset(lpObj->MuunInventoryMap,0xFF,MUUN_INVENTORY_SIZE);
-
-	#endif
-
-	for(int n=0;n < MAX_MASTER_SKILL_LIST;n++)
+	for (int i = 0; i < MAX_QUEST_WORLD_LIST; ++i)
 	{
-		lpObj->MasterSkill[n].Clear();
+		memset(&lpObj->QuestWorldList[i], 0xFF, sizeof(lpObj->QuestWorldList[i]));
 	}
 
-	for(int n=0;n < MAX_QUEST_KILL_COUNT;n++)
+	for (int i = 0; i < MAX_GENS_SYSTEM_VICTIM; ++i)
 	{
-		lpObj->QuestKillCount[n].Clear();
+		lpObj->GensVictimList[i].Reset();
 	}
 
-	for(int n=0;n < MAX_QUEST_WORLD_LIST;n++)
-	{
-		memset(&lpObj->QuestWorldList[n],0xFF,sizeof(lpObj->QuestWorldList[n]));
-	}
+#if (GAMESERVER_UPDATE >= 701)
 
-	for(int n=0;n < MAX_GENS_SYSTEM_VICTIM;n++)
-	{
-		lpObj->GensVictimList[n].Reset();
-	}
+	ClearArray(lpObj->PentagramJewelInfo_Inventory, MAX_PENTAGRAM_JEWEL_INFO);
+	ClearArray(lpObj->PentagramJewelInfo_Warehouse, MAX_PENTAGRAM_JEWEL_INFO);
 
-	#if(GAMESERVER_UPDATE>=701)
+#endif
 
-	for(int n=0;n < MAX_PENTAGRAM_JEWEL_INFO;n++)
-	{
-		lpObj->PentagramJewelInfo_Inventory[n].Clear();
-	}
-
-	for(int n=0;n < MAX_PENTAGRAM_JEWEL_INFO;n++)
-	{
-		lpObj->PentagramJewelInfo_Warehouse[n].Clear();
-	}
-
-	#endif
-
-	for(int n=0;n < MAX_SKILL;n++)
-	{
-		memset(&lpObj->SkillDelay[n],0,sizeof(lpObj->SkillDelay[n]));
-	}
-
-	for(int n=0;n < MAX_HACK_PACKET_INFO;n++)
-	{
-		memset(&lpObj->HackPacketDelay[n],0,sizeof(lpObj->HackPacketDelay[n]));
-	}
-
-	for(int n=0;n < MAX_HACK_PACKET_INFO;n++)
-	{
-		memset(&lpObj->HackPacketCount[n],0,sizeof(lpObj->HackPacketCount[n]));
-	}
+	memset(lpObj->SkillDelay, 0, sizeof(DWORD) * MAX_SKILL);
+	memset(lpObj->HackPacketDelay, 0, sizeof(DWORD) * MAX_HACK_PACKET_INFO);
+	memset(lpObj->HackPacketCount, 0, sizeof(DWORD) * MAX_HACK_PACKET_INFO);
 }
 
-void gObjClearSpecialOption(LPOBJ lpObj) // OK
+void gObjCalcExperience(LPOBJ lpObj)
 {
-	#if(GAMESERVER_UPDATE>=701)
+	const int previousLevel = lpObj->Level - 1;
+	const int currentLevel = (lpObj->Level >= MAX_CHARACTER_LEVEL) ? MAX_CHARACTER_LEVEL : lpObj->Level;
 
-	memset(&lpObj->PentagramOption,0,sizeof(lpObj->PentagramOption));
+	lpObj->Experience = (lpObj->Experience < gLevelExperience[previousLevel])
+		? gLevelExperience[previousLevel]
+		: lpObj->Experience;
 
-	memset(&lpObj->PentagramJewelOption,0,sizeof(lpObj->PentagramJewelOption));
-
-	#endif
-
-	lpObj->ArmorSetBonus = 0;
-	lpObj->SkillDamageBonus = 0;
-	lpObj->DoubleDamageRate = 0;
-	lpObj->TripleDamageRate = 0;
-	lpObj->IgnoreDefenseRate = 0;
-	lpObj->IgnoreShieldGaugeRate = 0;
-	lpObj->CriticalDamageRate = 0;
-	lpObj->CriticalDamage = 0;
-	lpObj->ExcellentDamageRate = 0;
-	lpObj->ExcellentDamage = 0;
-	lpObj->ResistDoubleDamageRate = 0;
-	lpObj->ResistIgnoreDefenseRate = 0;
-	lpObj->ResistIgnoreShieldGaugeRate = 0;
-	lpObj->ResistCriticalDamageRate = 0;
-	lpObj->ResistExcellentDamageRate = 0;
-	lpObj->ResistStunRate = 0;
-	lpObj->ExperienceRate = 100;
-	lpObj->MasterExperienceRate = 100;
-	lpObj->ItemDropRate = 100;
-	lpObj->MoneyAmountDropRate = 100;
-	lpObj->HPRecovery = 0;
-	lpObj->MPRecovery = 0;
-	lpObj->BPRecovery = 2;
-	lpObj->SDRecovery = 0;
-	lpObj->HPRecoveryRate = 0;
-	lpObj->MPRecoveryRate = 0;
-	lpObj->BPRecoveryRate = 0;
-	lpObj->SDRecoveryRate = 0;
-	lpObj->SDRecoveryType = 0;
-	lpObj->MPConsumptionRate = 100;
-	lpObj->BPConsumptionRate = 100;
-	lpObj->ShieldGaugeRate = gServerInfo.m_ShieldGaugeRate;
-	lpObj->DecreaseShieldGaugeRate = 0;
-	lpObj->DamagePvP = 0;
-	lpObj->DefensePvP = 0;
-	lpObj->AttackSuccessRatePvP = 0;
-	lpObj->DefenseSuccessRatePvP = 0;
-	lpObj->ShieldDamageReduction = gServerInfo.m_DefenseConstA;
-	lpObj->ShieldDamageReductionTime = 0;
-
-	memset(lpObj->DamageReduction,0,sizeof(lpObj->DamageReduction));
-
-	lpObj->DamageReflect = 0;
-	lpObj->HuntHP = 0;
-	lpObj->HuntMP = 0;
-	lpObj->HuntBP = 0;
-	lpObj->HuntSD = 0;
-	lpObj->WeaponDurabilityRate = 100;
-	lpObj->ArmorDurabilityRate = 100;
-	lpObj->WingDurabilityRate = 100;
-	lpObj->GuardianDurabilityRate = 100;
-	lpObj->PendantDurabilityRate = 100;
-	lpObj->RingDurabilityRate = 100;
-	lpObj->PetDurabilityRate = 100;
-	lpObj->FullDamageReflectRate = 0;
-	lpObj->DefensiveFullHPRestoreRate = 0;
-	lpObj->DefensiveFullMPRestoreRate = 0;
-	lpObj->DefensiveFullSDRestoreRate = 0;
-	lpObj->DefensiveFullBPRestoreRate = 0;
-	lpObj->OffensiveFullHPRestoreRate = 0;
-	lpObj->OffensiveFullMPRestoreRate = 0;
-	lpObj->OffensiveFullSDRestoreRate = 0;
-	lpObj->OffensiveFullBPRestoreRate = 0;
-}
-
-void gObjCalcExperience(LPOBJ lpObj) // OK
-{
-	lpObj->Experience = ((lpObj->Experience<gLevelExperience[(lpObj->Level-1)])?gLevelExperience[(lpObj->Level-1)]:lpObj->Experience);
-
-	lpObj->NextExperience = gLevelExperience[((lpObj->Level>=MAX_CHARACTER_LEVEL)?MAX_CHARACTER_LEVEL:lpObj->Level)];
+	lpObj->NextExperience = gLevelExperience[currentLevel];
 
 	gMasterSkillTree.CalcMasterLevelNextExperience(lpObj);
 }
 
-bool gObjGetRandomFreeLocation(int map,int* ox,int* oy,int tx,int ty,int count) // OK
+bool gObjGetRandomFreeLocation(int map, int* ox, int* oy, int tx, int ty, int count)
 {
-	int x = (*ox);
-	int y = (*oy);
+	const int originX = *ox;
+	const int originY = *oy;
 
-	tx = ((tx<1)?1:tx);
-	ty = ((ty<1)?1:ty);
+	tx = (tx < 1) ? 1 : tx;
+	ty = (ty < 1) ? 1 : ty;
 
-	for(int n=0;n < count;n++)
+	for (int i = 0; i < count; ++i)
 	{
-		(*ox) = ((GetLargeRand()%(tx+1))*((GetLargeRand()%2==0)?-1:1))+x;
-		(*oy) = ((GetLargeRand()%(ty+1))*((GetLargeRand()%2==0)?-1:1))+y;
+		*ox = (((gUtil.GetLargeRand() % (tx + 1)) * ((gUtil.GetLargeRand() % 2 == 0) ? -1 : 1)) + originX);
+		*oy = (((gUtil.GetLargeRand() % (ty + 1)) * ((gUtil.GetLargeRand() % 2 == 0) ? -1 : 1)) + originY);
 
-		if(gMap[map].CheckAttr((*ox),(*oy),255) == 0)
+		if (gMap[map].CheckAttr(*ox, *oy, 255) == 0)
 		{
-			return 1;
+			return true;
 		}
 	}
 
-	return 0;
+	return false;
 }
 
-bool gObjAllocData(int aIndex) // OK
+bool gObjAllocData(int index)
 {
-	CMemoryAllocatorInfo MemoryAllocatorInfo;
+	CMemoryAllocatorInfo memoryAllocatorInfo;
 
-	if(gMemoryAllocator.GetMemoryAllocatorInfo(&MemoryAllocatorInfo,aIndex) == 0)
+	if (gMemoryAllocator.GetMemoryAllocatorInfo(&memoryAllocatorInfo, index) == 0)
 	{
-		gObj.ObjectStruct[aIndex] = new OBJECTSTRUCT;
+		gObj.ObjectStruct[index] = new OBJECTSTRUCT;
 
-		memset(gObj.ObjectStruct[aIndex],0,sizeof(OBJECTSTRUCT));
+		memset(gObj.ObjectStruct[index], 0, sizeof(OBJECTSTRUCT));
 
-		InitializeCriticalSection(&gObj.ObjectStruct[aIndex]->PShopTrade);
+		InitializeCriticalSection(&gObj.ObjectStruct[index]->PShopTrade);
 
-		MemoryAllocatorInfo.m_Index = aIndex;
+		memoryAllocatorInfo.Alloc();
 
-		MemoryAllocatorInfo.m_Active = 1;
+		if (OBJECT_MONSTER_RANGE(index))
+		{
+			gObjMonCount = ((++gObjMonCount >= MAX_OBJECT_MONSTER) ? OBJECT_START_MONSTER : gObjMonCount);
+		}
 
-		MemoryAllocatorInfo.m_ActiveTime = GetTickCount();
+		if (OBJECT_BOTS_RANGE(index))
+		{
+			gObjBotCount = ((++gObjBotCount >= MAX_OBJECT_BOTS) ? OBJECT_START_BOTS : gObjBotCount);
+		}
 
-		MemoryAllocatorInfo.Alloc();
+		if (OBJECT_SUMMON_RANGE(index))
+		{
+			gObjCallMonCount = ((++gObjCallMonCount >= OBJECT_START_USER) ? MAX_OBJECT_MONSTER : gObjCallMonCount);
+		}
 
-		gMemoryAllocator.InsertMemoryAllocatorInfo(MemoryAllocatorInfo);
-
-		gMemoryAllocator.BindMemoryAllocatorInfo(aIndex,MemoryAllocatorInfo);
-
-		if(OBJECT_MONSTER_RANGE(aIndex) != 0){gObjMonCount = (((++gObjMonCount)>=MAX_OBJECT_MONSTER)?OBJECT_START_MONSTER:gObjMonCount);}
-
-		if(OBJECT_BOTS_RANGE(aIndex) != 0){gObjBotCount = (((++gObjBotCount)>=MAX_OBJECT_BOTS)?OBJECT_START_BOTS:gObjBotCount);}
-
-		if(OBJECT_SUMMON_RANGE(aIndex) != 0){gObjCallMonCount = (((++gObjCallMonCount)>=OBJECT_START_USER)?MAX_OBJECT_MONSTER:gObjCallMonCount);}
-
-		if(OBJECT_USER_RANGE(aIndex) != 0){gObjCount = (((++gObjCount)>=MAX_OBJECT)?OBJECT_START_USER:gObjCount);}
-	}
-	else
-	{
-		MemoryAllocatorInfo.m_Index = aIndex;
-
-		MemoryAllocatorInfo.m_Active = 1;
-
-		MemoryAllocatorInfo.m_ActiveTime = GetTickCount();
-
-		gMemoryAllocator.InsertMemoryAllocatorInfo(MemoryAllocatorInfo);
-
-		gMemoryAllocator.BindMemoryAllocatorInfo(aIndex,MemoryAllocatorInfo);
+		if (OBJECT_USER_RANGE(index))
+		{
+			gObjCount = ((++gObjCount >= MAX_OBJECT) ? OBJECT_START_USER : gObjCount);
+		}
 	}
 
-	return 1;
+	memoryAllocatorInfo.m_Index = index;
+	memoryAllocatorInfo.m_Active = 1;
+	memoryAllocatorInfo.m_ActiveTime = GetTickCount64();
+
+	gMemoryAllocator.InsertMemoryAllocatorInfo(memoryAllocatorInfo);
+	gMemoryAllocator.BindMemoryAllocatorInfo(index, memoryAllocatorInfo);
+
+	return true;
 }
 
-void gObjFreeData(int aIndex) // OK
+void gObjFreeData(int index)
 {
-	CMemoryAllocatorInfo MemoryAllocatorInfo;
+	CMemoryAllocatorInfo memoryAllocatorInfo;
 
-	if(gMemoryAllocator.GetMemoryAllocatorInfo(&MemoryAllocatorInfo,aIndex) != 0)
+	if (gMemoryAllocator.GetMemoryAllocatorInfo(&memoryAllocatorInfo, index) == 0)
 	{
-		MemoryAllocatorInfo.m_Index = aIndex;
-
-		MemoryAllocatorInfo.m_Active = 0;
-
-		MemoryAllocatorInfo.m_ActiveTime = GetTickCount();
-
-		gMemoryAllocator.InsertMemoryAllocatorInfo(MemoryAllocatorInfo);
+		return;
 	}
+
+	memoryAllocatorInfo.m_Index = index;
+	memoryAllocatorInfo.m_Active = 0;
+	memoryAllocatorInfo.m_ActiveTime = GetTickCount64();
+
+	gMemoryAllocator.InsertMemoryAllocatorInfo(memoryAllocatorInfo);
 }
 
-short gObjAddSearch(SOCKET socket,char* IpAddress) // OK
+short gObjAddSearch(SOCKET socket, char* IpAddress)
 {
 	int index = -1;
 	int count = gObjCount;
 
-	if(gGameServerLogOut != 0)
+	if (gGameServerLogOut != 0 || gGameServerDisconnect != 0)
 	{
-		GCConnectAccountSend(0,2,socket);
+		GCConnectAccountSend(0, 2, socket);
 		return -1;
 	}
 
-	if(gGameServerDisconnect != 0)
+	if (gObjTotalUser >= gServerInfo.m_ServerMaxUserNumber)
 	{
-		GCConnectAccountSend(0,2,socket);
+		GCConnectAccountSend(0, 4, socket);
 		return -1;
 	}
 
-	if(gObjTotalUser >= gServerInfo.m_ServerMaxUserNumber)
+	if (gMemoryAllocator.GetMemoryAllocatorFree(&index, OBJECT_START_USER, MAX_OBJECT, 10000) != 0)
 	{
-		GCConnectAccountSend(0,4,socket);
-		return -1;
+		return static_cast<short>(index);
 	}
 
-	if(gMemoryAllocator.GetMemoryAllocatorFree(&index,OBJECT_START_USER,MAX_OBJECT,10000) != 0)
+	for (int i = OBJECT_START_USER; i < MAX_OBJECT; ++i)
 	{
-		return index;
-	}
-
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
-		if(gObj[count].Connected == OBJECT_OFFLINE)
+		if (gObj[count].Connected == OBJECT_OFFLINE)
 		{
-			return count;
+			return static_cast<short>(count);
 		}
-		else
-		{
-			count = (((++count)>=MAX_OBJECT)?OBJECT_START_USER:count);
-		}
+
+		count = ((++count >= MAX_OBJECT) ? OBJECT_START_USER : count);
 	}
 
 	return -1;
 }
 
-short gObjAdd(SOCKET socket,char* IpAddress,int aIndex) // OK
+short gObjAdd(SOCKET socket, char* IpAddress, int index)
 {
-	if(OBJECT_RANGE(aIndex) == 0)
+	if (!OBJECT_RANGE(index))
 	{
 		return -1;
 	}
 
-	if(gObj[aIndex].Connected != OBJECT_OFFLINE)
+	if (gObj[index].Connected != OBJECT_OFFLINE)
 	{
 		return -1;
 	}
 
-	if(gObjAllocData(aIndex) == 0)
+	if (!gObjAllocData(index))
 	{
 		return -1;
 	}
 
-	LPOBJ lpObj = &gObj[aIndex];
+	LPOBJ lpObj = &gObj[index];
 
-	gObjCharZeroSet(aIndex);
+	gObjCharZeroSet(index);
 
-	lpObj->Index = aIndex;
+	const ULONGLONG tick = GetTickCount64();
+
+	lpObj->Index = index;
 	lpObj->Connected = OBJECT_CONNECTED;
 	lpObj->LoginMessageSend = 0;
 	lpObj->LoginMessageCount = 0;
 	lpObj->Socket = socket;
 
-	strcpy_s(lpObj->IpAddr,IpAddress);
+	strcpy_s(lpObj->IpAddr, IpAddress);
 
-	lpObj->AutoSaveTime = GetTickCount();
-	lpObj->ConnectTickCount = GetTickCount();
+	lpObj->AutoSaveTime = tick;
+	lpObj->ConnectTickCount = tick;
 	lpObj->Type = OBJECT_USER;
 	lpObj->ExtWarehouse = 0;
 
-	memset(lpObj->Account,0,sizeof(lpObj->Account));
+	memset(lpObj->Account, 0, sizeof(lpObj->Account));
 
-	gSerialCheck[aIndex].Init();
+	gSerialCheck[index].Init();
 
 	gIpManager.InsertIpAddress(lpObj->IpAddr);
 
-	LogAddConnect(LOG_BLUE, "[Obj] [%d] Ip Client (%s)", aIndex,lpObj->IpAddr);
+	LogAddConnect(LOG_BLUE, "[Obj] [%d] Ip Client (%s)", index, lpObj->IpAddr);
 
-	return aIndex;
+	return static_cast<short>(index);
 }
 
-short gObjDel(int aIndex) // OK
+short gObjDel(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1612,7 +1484,7 @@ short gObjDel(int aIndex) // OK
 	return aIndex;
 }
 
-LPOBJ gObjFind(char* name) // OK
+LPOBJ gObjFind(char* name)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -1625,14 +1497,12 @@ LPOBJ gObjFind(char* name) // OK
 	return 0;
 }
 
-int gObjCalcDistance(LPOBJ lpObj,LPOBJ lpTarget) // OK
+int gObjCalcDistance(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	return (int)sqrt(pow(((float)lpObj->X-(float)lpTarget->X),2)+pow(((float)lpObj->Y-(float)lpTarget->Y),2));
 }
-//**************************************************************************//
-// OBJECT CHECK FUNCTIONS **************************************************//
-//**************************************************************************//
-bool gObjIsConnected(int aIndex) // OK
+
+bool gObjIsConnected(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1649,7 +1519,7 @@ bool gObjIsConnected(int aIndex) // OK
 	return 1;
 }
 
-bool gObjIsConnectedGP(int aIndex) // OK
+bool gObjIsConnectedGP(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1671,7 +1541,7 @@ bool gObjIsConnectedGP(int aIndex) // OK
 	return 1;
 }
 
-bool gObjIsConnectedGS(int aIndex) // OK
+bool gObjIsConnectedGS(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1693,7 +1563,7 @@ bool gObjIsConnectedGS(int aIndex) // OK
 	return 1;
 }
 
-bool gObjIsNameValid(int aIndex,char* name) // OK
+bool gObjIsNameValid(int aIndex,char* name)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1720,7 +1590,7 @@ bool gObjIsNameValid(int aIndex,char* name) // OK
 	return 1;
 }
 
-bool gObjIsAccountValid(int aIndex,char* account) // OK
+bool gObjIsAccountValid(int aIndex,char* account)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1747,7 +1617,7 @@ bool gObjIsAccountValid(int aIndex,char* account) // OK
 	return 1;
 }
 
-bool gObjIsChangeSkin(int aIndex) // OK
+bool gObjIsChangeSkin(int aIndex)
 {
 	if(gObj[aIndex].Change < 0)
 	{
@@ -1767,7 +1637,7 @@ bool gObjIsChangeSkin(int aIndex) // OK
 	return 1;
 }
 
-bool gObjCheckMaxMoney(int aIndex,DWORD AddMoney) // OK
+bool gObjCheckMaxMoney(int aIndex,DWORD AddMoney)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1782,7 +1652,7 @@ bool gObjCheckMaxMoney(int aIndex,DWORD AddMoney) // OK
 	return 1;
 }
 
-bool gObjCheckPersonalCode(int aIndex,char* PersonalCode) // OK
+bool gObjCheckPersonalCode(int aIndex,char* PersonalCode)
 {
 	if(gServerInfo.m_PersonalCodeCheck == 0)
 	{
@@ -1797,7 +1667,7 @@ bool gObjCheckPersonalCode(int aIndex,char* PersonalCode) // OK
 	return 0;
 }
 
-bool gObjCheckResistance(LPOBJ lpObj,int type) // OK
+bool gObjCheckResistance(LPOBJ lpObj,int type)
 {
 	BYTE resist = lpObj->Resistance[type];
 
@@ -1821,7 +1691,7 @@ bool gObjCheckResistance(LPOBJ lpObj,int type) // OK
 		resist += (resist*50)/100;
 	}
 
-	if((GetLargeRand()%(resist+1)) == 0)
+	if((gUtil.GetLargeRand()%(resist+1)) == 0)
 	{
 		return 0;
 	}
@@ -1829,7 +1699,7 @@ bool gObjCheckResistance(LPOBJ lpObj,int type) // OK
 	return 1;
 }
 
-bool gObjCheckTeleportArea(int aIndex,int x,int y) // OK
+bool gObjCheckTeleportArea(int aIndex,int x,int y)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1851,7 +1721,7 @@ bool gObjCheckTeleportArea(int aIndex,int x,int y) // OK
 	return 1;
 }
 
-bool gObjCheckMapTile(LPOBJ lpObj,int type) // OK
+bool gObjCheckMapTile(LPOBJ lpObj,int type)
 {
 	if(lpObj->Type != OBJECT_USER)
 	{
@@ -1904,7 +1774,7 @@ bool gObjCheckMapTile(LPOBJ lpObj,int type) // OK
 //**************************************************************************//
 // ITEM TRANSACTION FUNCTIONS **********************************************//
 //**************************************************************************//
-bool gObjFixInventoryPointer(int aIndex) // OK
+bool gObjFixInventoryPointer(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1941,19 +1811,19 @@ bool gObjFixInventoryPointer(int aIndex) // OK
 	return 0;
 }
 
-void gObjSetInventory1Pointer(LPOBJ lpObj) // OK
+void gObjSetInventory1Pointer(LPOBJ lpObj)
 {
 	lpObj->Inventory = lpObj->Inventory1;
 	lpObj->InventoryMap = lpObj->InventoryMap1;
 }
 
-void gObjSetInventory2Pointer(LPOBJ lpObj) // OK
+void gObjSetInventory2Pointer(LPOBJ lpObj)
 {
 	lpObj->Inventory = lpObj->Inventory2;
 	lpObj->InventoryMap = lpObj->InventoryMap2;
 }
 
-bool gObjFixEventInventoryPointer(int aIndex) // OK
+bool gObjFixEventInventoryPointer(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1994,7 +1864,7 @@ bool gObjFixEventInventoryPointer(int aIndex) // OK
 	#endif
 }
 
-void gObjSetEventInventory1Pointer(LPOBJ lpObj) // OK
+void gObjSetEventInventory1Pointer(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -2004,7 +1874,7 @@ void gObjSetEventInventory1Pointer(LPOBJ lpObj) // OK
 	#endif
 }
 
-void gObjSetEventInventory2Pointer(LPOBJ lpObj) // OK
+void gObjSetEventInventory2Pointer(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -2014,7 +1884,7 @@ void gObjSetEventInventory2Pointer(LPOBJ lpObj) // OK
 	#endif
 }
 
-bool gObjInventoryTransaction(int aIndex) // OK
+bool gObjInventoryTransaction(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -2063,7 +1933,7 @@ bool gObjInventoryTransaction(int aIndex) // OK
 	return 1;
 }
 
-bool gObjInventoryCommit(int aIndex) // OK
+bool gObjInventoryCommit(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -2107,7 +1977,7 @@ bool gObjInventoryCommit(int aIndex) // OK
 	return 1;
 }
 
-bool gObjInventoryRollback(int aIndex) // OK
+bool gObjInventoryRollback(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -2150,7 +2020,7 @@ bool gObjInventoryRollback(int aIndex) // OK
 //**************************************************************************//
 // VIEWPORT FUNCTIONS ******************************************************//
 //**************************************************************************//
-void gObjSetViewport(int aIndex,int state) // OK
+void gObjSetViewport(int aIndex,int state)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2188,7 +2058,7 @@ void gObjSetViewport(int aIndex,int state) // OK
 	}
 }
 
-void gObjClearViewport(LPOBJ lpObj) // OK
+void gObjClearViewport(LPOBJ lpObj)
 {
 	for(int n=0;n < MAX_VIEWPORT;n++)
 	{
@@ -2205,12 +2075,12 @@ void gObjClearViewport(LPOBJ lpObj) // OK
 	lpObj->VPCountItem = 0;
 }
 
-void gObjViewportListProtocolDestroy(LPOBJ lpObj) // OK
+void gObjViewportListProtocolDestroy(LPOBJ lpObj)
 {
 	gViewport.GCViewportSimpleDestroySend(lpObj);
 }
 
-void gObjViewportListProtocolCreate(LPOBJ lpObj) // OK
+void gObjViewportListProtocolCreate(LPOBJ lpObj)
 {
 	if(lpObj->Type == OBJECT_USER || lpObj->Type == OBJECT_BOTS) //MC
 	{
@@ -2229,7 +2099,7 @@ void gObjViewportListProtocolCreate(LPOBJ lpObj) // OK
 	}
 }
 
-void gObjViewportListProtocol(int aIndex) // OK
+void gObjViewportListProtocol(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2246,7 +2116,7 @@ void gObjViewportListProtocol(int aIndex) // OK
 
 	gObjSetViewport(aIndex,VIEWPORT_DESTROY);
 
-#if (BOT_STORE == 1)
+#if (BOT_STORE)
 	//if(lpObj->Type == OBJECT_USER)
 	//{
 	if (lpObj->Type == OBJECT_USER || lpObj->IsBot >= 1) //BOT_STORE
@@ -2267,7 +2137,7 @@ void gObjViewportListProtocol(int aIndex) // OK
 	gObjSetViewport(aIndex,VIEWPORT_SEND);
 }
 
-void gObjViewportListDestroy(int aIndex) // OK
+void gObjViewportListDestroy(int aIndex)
 {
 	if(gObjIsConnected(aIndex) == 0)
 	{
@@ -2285,7 +2155,7 @@ void gObjViewportListDestroy(int aIndex) // OK
 	gViewport.DestroyViewportItem(aIndex);
 }
 
-void gObjViewportListCreate(int aIndex) // OK
+void gObjViewportListCreate(int aIndex)
 {
 	if(gObjIsConnected(aIndex) == 0)
 	{
@@ -2306,7 +2176,7 @@ void gObjViewportListCreate(int aIndex) // OK
 //**************************************************************************//
 // USER FUNCTIONS **********************************************************//
 //**************************************************************************//
-void gObjSetKillCount(int aIndex,int type) // OK
+void gObjSetKillCount(int aIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2334,7 +2204,7 @@ void gObjSetKillCount(int aIndex,int type) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void gObjTeleportMagicUse(int aIndex,int x,int y) // OK
+void gObjTeleportMagicUse(int aIndex,int x,int y)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2361,7 +2231,7 @@ void gObjTeleportMagicUse(int aIndex,int x,int y) // OK
 	gObjViewportListProtocolDestroy(lpObj);
 }
 
-void gObjInterfaceCheckTime(LPOBJ lpObj) // OK
+void gObjInterfaceCheckTime(LPOBJ lpObj)
 {
 	if(lpObj->Interface.use == 0)
 	{
@@ -2481,7 +2351,7 @@ void gObjInterfaceCheckTime(LPOBJ lpObj) // OK
 	lpObj->InterfaceTime = GetTickCount();
 }
 
-void gObjSkillNovaCheckTime(LPOBJ lpObj) // OK
+void gObjSkillNovaCheckTime(LPOBJ lpObj)
 {
 	if(lpObj->SkillNovaState == 0)
 	{
@@ -2523,7 +2393,7 @@ void gObjSkillNovaCheckTime(LPOBJ lpObj) // OK
 	}
 }
 
-void gObjPKDownCheckTime(LPOBJ lpObj,int TargetLevel) // OK
+void gObjPKDownCheckTime(LPOBJ lpObj,int TargetLevel)
 {
 	if(lpObj->PKLevel == 3)
 	{
@@ -2577,7 +2447,7 @@ void gObjPKDownCheckTime(LPOBJ lpObj,int TargetLevel) // OK
 	}
 }
 
-void gObjUserDie(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void gObjUserDie(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpObj->Type != OBJECT_USER)
 	{
@@ -2762,7 +2632,7 @@ void gObjUserDie(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	gGensSystem.UserDieProc(lpObj,lpTarget);
 }
 
-void gObjPlayerKiller(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void gObjPlayerKiller(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpObj->Type != OBJECT_USER || lpTarget->Type != OBJECT_USER)
 	{
@@ -2956,7 +2826,7 @@ void gObjPlayerKiller(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-BOOL gObjMoveGate(int aIndex,int gate) // OK
+BOOL gObjMoveGate(int aIndex,int gate)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3224,7 +3094,7 @@ BOOL gObjMoveGate(int aIndex,int gate) // OK
 
 }
 }
-void gObjTeleport(int aIndex,int map,int x,int y) // OK
+void gObjTeleport(int aIndex,int map,int x,int y)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -3307,7 +3177,7 @@ void gObjTeleport(int aIndex,int map,int x,int y) // OK
 	lpObj->RegenOk = 1;
 }
 
-void gObjSummonAlly(LPOBJ lpObj,int map,int x,int y) // OK
+void gObjSummonAlly(LPOBJ lpObj,int map,int x,int y)
 {
 	lpObj->SkillSummonPartyTime = 0;
 	lpObj->SkillSummonPartyMap = 0;
@@ -3361,7 +3231,7 @@ void gObjSummonAlly(LPOBJ lpObj,int map,int x,int y) // OK
 	lpObj->RegenOk = 1;
 }
 
-void gObjSkillUseProc(LPOBJ lpObj) // OK
+void gObjSkillUseProc(LPOBJ lpObj)
 {
 	CMonsterSkillElementOption::CheckSkillElementOptionProc(lpObj);
 
@@ -3396,7 +3266,7 @@ void gObjSkillUseProc(LPOBJ lpObj) // OK
 	}
 }
 
-void gObjUserKill(int aIndex) // OK
+void gObjUserKill(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3407,7 +3277,7 @@ void gObjUserKill(int aIndex) // OK
 	}
 }
 
-bool gObjInventorySearchSerialNumber(LPOBJ lpObj, DWORD serial) // OK
+bool gObjInventorySearchSerialNumber(LPOBJ lpObj, DWORD serial)
 {
 	int count = 0;
 
@@ -3436,7 +3306,7 @@ bool gObjInventorySearchSerialNumber(LPOBJ lpObj, DWORD serial) // OK
 }
 
 
-bool gObjWarehouseSearchSerialNumber(LPOBJ lpObj,DWORD serial) // OK
+bool gObjWarehouseSearchSerialNumber(LPOBJ lpObj,DWORD serial)
 {
 	int count = 0;
 
@@ -3453,7 +3323,7 @@ bool gObjWarehouseSearchSerialNumber(LPOBJ lpObj,DWORD serial) // OK
 	return 1;
 }
 
-void gObjAddMsgSend(LPOBJ lpObj,int MsgCode,int SendUser,int SubCode) // OK
+void gObjAddMsgSend(LPOBJ lpObj,int MsgCode,int SendUser,int SubCode)
 {
 	for(int n=0;n < MAX_MONSTER_SEND_MSG;n++)
 	{
@@ -3472,7 +3342,7 @@ void gObjAddMsgSend(LPOBJ lpObj,int MsgCode,int SendUser,int SubCode) // OK
 	}
 }
 
-void gObjAddMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,int SubCode) // OK
+void gObjAddMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,int SubCode)
 {
 	for(int n=0;n < MAX_MONSTER_SEND_MSG;n++)
 	{
@@ -3491,7 +3361,7 @@ void gObjAddMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,i
 	}
 }
 
-void gObjAddAttackProcMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,int SubCode,int SubCode2) // OK
+void gObjAddAttackProcMsgSendDelay(LPOBJ lpObj,int MsgCode,int SendUser,int MsgTimeDelay,int SubCode,int SubCode2)
 {
 	for(int n=0;n < MAX_MONSTER_SEND_ATTACK_MSG;n++)
 	{
@@ -3925,7 +3795,7 @@ void gObjDelayLifeCheck(int aIndex)
 	}
 }
 
-BOOL gObjBackSpring(LPOBJ lpObj,LPOBJ lpTarget) // OK
+BOOL gObjBackSpring(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	LPOBJ lpTargetObj = lpTarget;
 	int tdir;
@@ -4034,7 +3904,7 @@ BOOL gObjBackSpring(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 	*/
 	
-	if ( (GetLargeRand()%3) == 0 )
+	if ( (gUtil.GetLargeRand()%3) == 0 )
 	{
 		if ( lpTargetObj->Dir < 4 )
 		{
@@ -4721,7 +4591,7 @@ int gObjGuildWarItemGive(GUILD_INFO_STRUCT * lpWinGuild, GUILD_INFO_STRUCT * lpL
 		return false;
 	}
 
-	int lose_user = r_userindex[GetLargeRand()%r_usercount];
+	int lose_user = r_userindex[gUtil.GetLargeRand()%r_usercount];
 
 	if(lose_user < 0)
 	{
@@ -4749,7 +4619,7 @@ int gObjGuildWarItemGive(GUILD_INFO_STRUCT * lpWinGuild, GUILD_INFO_STRUCT * lpL
 		return false;
 	}
 
-	int win_user = r_userindex[GetLargeRand()%r_usercount];
+	int win_user = r_userindex[gUtil.GetLargeRand() %r_usercount];
 
 	if(win_user < 0)
 	{
@@ -4769,7 +4639,7 @@ int gObjGuildWarItemGive(GUILD_INFO_STRUCT * lpWinGuild, GUILD_INFO_STRUCT * lpL
 
 	while(count--)
 	{
-		number = GetLargeRand()%12;
+		number = gUtil.GetLargeRand()%12;
 
 		if(lpObj->Inventory[number].IsItem()==1)
 		{
@@ -4785,7 +4655,7 @@ int gObjGuildWarItemGive(GUILD_INFO_STRUCT * lpWinGuild, GUILD_INFO_STRUCT * lpL
 
 	while(count--)
 	{
-		number = GetLargeRand()%64+12;
+		number = gUtil.GetLargeRand()%64+12;
 
 		if(lpObj->Inventory[number].IsItem()==1)
 		{
@@ -5380,7 +5250,7 @@ bool isRecconect(char* address, char* account){
 //========================================================================================
 //FakeOnline_EMU
 #if USE_FAKE_ONLINE == TRUE
-LPOBJ gObjFindByAcc(char* Account) // OK
+LPOBJ gObjFindByAcc(char* Account)
 {
 	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 	{

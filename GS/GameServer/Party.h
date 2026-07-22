@@ -158,8 +158,8 @@ public:
 	bool GetLevel(int party_number);
 	//-- BY TAKUMI12
 	void GCPartyLifeSend2(int index);
-	void CGPartyListRecv2(int aIndex); // OK
-	void GCPartyListSend2(int index); // OK
+	void CGPartyListRecv2(int aIndex);
+	void GCPartyListSend2(int index);
 public:
 	int m_PartyCount;
 	int maxlevel;

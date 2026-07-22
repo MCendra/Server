@@ -14,17 +14,17 @@ CMonsterSkillUnitInfo CMonsterSkillUnit::m_MonsterSkillUnitInfoArray[MAX_MONSTER
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillUnit::CMonsterSkillUnit() // OK
+CMonsterSkillUnit::CMonsterSkillUnit()
 {
 	CMonsterSkillUnit::DelAllSkillUnit();
 }
 
-CMonsterSkillUnit::~CMonsterSkillUnit() // OK
+CMonsterSkillUnit::~CMonsterSkillUnit()
 {
 
 }
 
-void CMonsterSkillUnit::LoadData(char* path) // OK
+void CMonsterSkillUnit::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -108,7 +108,7 @@ void CMonsterSkillUnit::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterSkillUnit::DelAllSkillUnit() // OK
+void CMonsterSkillUnit::DelAllSkillUnit()
 {
 	CMonsterSkillUnit::m_DataLoad = 0;
 
@@ -118,7 +118,7 @@ void CMonsterSkillUnit::DelAllSkillUnit() // OK
 	}
 }
 
-CMonsterSkillUnitInfo* CMonsterSkillUnit::FindSkillUnitInfo(int UnitNumber) // OK
+CMonsterSkillUnitInfo* CMonsterSkillUnit::FindSkillUnitInfo(int UnitNumber)
 {
 	if(UnitNumber < 0 || UnitNumber >= MAX_MONSTER_SKILL_UNIT_INFO_ARRAY)
 	{

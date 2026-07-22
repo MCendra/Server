@@ -32,7 +32,7 @@ struct CUSTOM_ARENA_START_TIME
 
 struct CUSTOM_ARENA_USER
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Index = -1;
 		this->Score = 0;

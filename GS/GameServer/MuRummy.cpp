@@ -17,17 +17,17 @@ CMuRummyMng gMuRummy;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMuRummyMng::CMuRummyMng() // OK
+CMuRummyMng::CMuRummyMng()
 {
 
 }
 
-CMuRummyMng::~CMuRummyMng() // OK
+CMuRummyMng::~CMuRummyMng()
 {
 
 }
 
-int CMuRummyMng::IsMuRummyEventOn() // OK
+int CMuRummyMng::IsMuRummyEventOn()
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -40,7 +40,7 @@ int CMuRummyMng::IsMuRummyEventOn() // OK
 	#endif
 }
 
-int CMuRummyMng::GetRewardScore1() // OK
+int CMuRummyMng::GetRewardScore1()
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -53,7 +53,7 @@ int CMuRummyMng::GetRewardScore1() // OK
 	#endif
 }
 
-int CMuRummyMng::GetRewardScore2() // OK
+int CMuRummyMng::GetRewardScore2()
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -66,7 +66,7 @@ int CMuRummyMng::GetRewardScore2() // OK
 	#endif
 }
 
-void CMuRummyMng::SetCardDeck(CMuRummyInfo* pMuRummyInfo) // OK
+void CMuRummyMng::SetCardDeck(CMuRummyInfo* pMuRummyInfo)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -118,7 +118,7 @@ void CMuRummyMng::SetCardDeck(CMuRummyInfo* pMuRummyInfo) // OK
 	#endif
 }
 
-void CMuRummyMng::CardShuffle(CMuRummyCardInfo* pCCardInfo) // OK
+void CMuRummyMng::CardShuffle(CMuRummyCardInfo* pCCardInfo)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -152,7 +152,7 @@ void CMuRummyMng::CardShuffle(CMuRummyCardInfo* pCCardInfo) // OK
 	#endif
 }
 
-bool CMuRummyMng::SetPlayCardInfo(CMuRummyInfo* pMuRummyInfo, _tagMuRummyCardInfo* pOutCardInfo) // OK
+bool CMuRummyMng::SetPlayCardInfo(CMuRummyInfo* pMuRummyInfo, _tagMuRummyCardInfo* pOutCardInfo)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -209,7 +209,7 @@ bool CMuRummyMng::SetPlayCardInfo(CMuRummyInfo* pMuRummyInfo, _tagMuRummyCardInf
 	#endif
 }
 
-BYTE CMuRummyMng::GetTempCardShowSlot(LPBYTE pSlotCardIndex) // OK
+BYTE CMuRummyMng::GetTempCardShowSlot(LPBYTE pSlotCardIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -250,7 +250,7 @@ BYTE CMuRummyMng::GetTempCardShowSlot(LPBYTE pSlotCardIndex) // OK
 	#endif
 }
 
-BYTE CMuRummyMng::CardSlotMove(CMuRummyInfo* pCMuRummyInfo, int sSlot, int tSlot, CMuRummyCardInfo* pCOutCardInfo, LPOBJ obj) // OK
+BYTE CMuRummyMng::CardSlotMove(CMuRummyInfo* pCMuRummyInfo, int sSlot, int tSlot, CMuRummyCardInfo* pCOutCardInfo, LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -304,7 +304,7 @@ BYTE CMuRummyMng::CardSlotMove(CMuRummyInfo* pCMuRummyInfo, int sSlot, int tSlot
 	#endif
 }
 
-BYTE CMuRummyMng::CardSlotReMove(CMuRummyInfo* pCMuRummyInfo, int sSlot) // OK
+BYTE CMuRummyMng::CardSlotReMove(CMuRummyInfo* pCMuRummyInfo, int sSlot)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -346,7 +346,7 @@ BYTE CMuRummyMng::CardSlotReMove(CMuRummyInfo* pCMuRummyInfo, int sSlot) // OK
 	#endif
 }
 
-BYTE CMuRummyMng::CardMatchCheck(CMuRummyInfo* pCMuRummyInfo, int& iOutScore, _tagMuRummyCardUpdateDS* pOutCardUpdateDS, LPOBJ obj) // OK
+BYTE CMuRummyMng::CardMatchCheck(CMuRummyInfo* pCMuRummyInfo, int& iOutScore, _tagMuRummyCardUpdateDS* pOutCardUpdateDS, LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -470,7 +470,7 @@ BYTE CMuRummyMng::CardMatchCheck(CMuRummyInfo* pCMuRummyInfo, int& iOutScore, _t
 	#endif
 }
 
-void CMuRummyMng::CardSortAscending(CMuRummyCardInfo* pCCardInfo) // OK
+void CMuRummyMng::CardSortAscending(CMuRummyCardInfo* pCCardInfo)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -503,7 +503,7 @@ void CMuRummyMng::CardSortAscending(CMuRummyCardInfo* pCCardInfo) // OK
 	#endif
 }
 
-int CMuRummyMng::IsCardSameColor(CMuRummyCardInfo* pCCardInfo) // OK
+int CMuRummyMng::IsCardSameColor(CMuRummyCardInfo* pCCardInfo)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -524,7 +524,7 @@ int CMuRummyMng::IsCardSameColor(CMuRummyCardInfo* pCCardInfo) // OK
 	#endif
 }
 
-int CMuRummyMng::IsCardNumber(CMuRummyCardInfo* pCCardInfo) // OK
+int CMuRummyMng::IsCardNumber(CMuRummyCardInfo* pCCardInfo)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -560,7 +560,7 @@ int CMuRummyMng::IsCardNumber(CMuRummyCardInfo* pCCardInfo) // OK
 	#endif
 }
 
-bool CMuRummyMng::FillEmptySlotCard(CMuRummyInfo* pMuRummyInfo, _tagMuRummyCardInfo* pOutCardInfo, LPOBJ obj) // OK
+bool CMuRummyMng::FillEmptySlotCard(CMuRummyInfo* pMuRummyInfo, _tagMuRummyCardInfo* pOutCardInfo, LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -631,7 +631,7 @@ bool CMuRummyMng::FillEmptySlotCard(CMuRummyInfo* pMuRummyInfo, _tagMuRummyCardI
 	#endif
 }
 
-void CMuRummyMng::CGReqMuRummyEventOpen(_tagPMSG_REQ_MURUMMY_EVENT_OPEN* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqMuRummyEventOpen(_tagPMSG_REQ_MURUMMY_EVENT_OPEN* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -706,7 +706,7 @@ void CMuRummyMng::CGReqMuRummyEventOpen(_tagPMSG_REQ_MURUMMY_EVENT_OPEN* lpMsg, 
 	#endif
 }
 
-void CMuRummyMng::CGReqMuRummyStart(_tagPMSG_REQ_MURUMMY_INFO* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqMuRummyStart(_tagPMSG_REQ_MURUMMY_INFO* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -799,7 +799,7 @@ void CMuRummyMng::CGReqMuRummyStart(_tagPMSG_REQ_MURUMMY_INFO* lpMsg, int aIndex
 	#endif
 }
 
-void CMuRummyMng::CGReqCardReveal(_tagPMSG_REQ_REVEAL_CARD* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqCardReveal(_tagPMSG_REQ_REVEAL_CARD* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -881,7 +881,7 @@ void CMuRummyMng::CGReqCardReveal(_tagPMSG_REQ_REVEAL_CARD* lpMsg, int aIndex) /
 	#endif
 }
 
-void CMuRummyMng::CGReqCardMove(_tagPMSG_REQ_CARD_MOVE* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqCardMove(_tagPMSG_REQ_CARD_MOVE* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -951,7 +951,7 @@ void CMuRummyMng::CGReqCardMove(_tagPMSG_REQ_CARD_MOVE* lpMsg, int aIndex) // OK
 	#endif
 }
 
-void CMuRummyMng::CGReqCardReMove(_tagPMSG_REQ_CARD_REMOVE* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqCardReMove(_tagPMSG_REQ_CARD_REMOVE* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1012,7 +1012,7 @@ void CMuRummyMng::CGReqCardReMove(_tagPMSG_REQ_CARD_REMOVE* lpMsg, int aIndex) /
 	#endif
 }
 
-void CMuRummyMng::CGReqCardMatch(_tagPMSG_REQ_CARD_MATCH* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqCardMatch(_tagPMSG_REQ_CARD_MATCH* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1071,7 +1071,7 @@ void CMuRummyMng::CGReqCardMatch(_tagPMSG_REQ_CARD_MATCH* lpMsg, int aIndex) // 
 	#endif
 }
 
-void CMuRummyMng::CGReqMuRummyEnd(_tagPMSG_REQ_MURUMMY_END* lpMsg, int aIndex) // OK
+void CMuRummyMng::CGReqMuRummyEnd(_tagPMSG_REQ_MURUMMY_END* lpMsg, int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1184,7 +1184,7 @@ void CMuRummyMng::CGReqMuRummyEnd(_tagPMSG_REQ_MURUMMY_END* lpMsg, int aIndex) /
 	#endif
 }
 
-void CMuRummyMng::GCSendCardList(int aIndex) // OK
+void CMuRummyMng::GCSendCardList(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1246,7 +1246,7 @@ void CMuRummyMng::GCSendCardList(int aIndex) // OK
 	#endif
 }
 
-void CMuRummyMng::GCSendMsg(int aIndex, BYTE btNotiIndex, int iValue) // OK
+void CMuRummyMng::GCSendMsg(int aIndex, BYTE btNotiIndex, int iValue)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1272,7 +1272,7 @@ void CMuRummyMng::GCSendMsg(int aIndex, BYTE btNotiIndex, int iValue) // OK
 	#endif
 }
 
-void CMuRummyMng::GDReqCardInfo(LPOBJ obj) // OK
+void CMuRummyMng::GDReqCardInfo(LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1303,7 +1303,7 @@ void CMuRummyMng::GDReqCardInfo(LPOBJ obj) // OK
 	#endif
 }
 
-void CMuRummyMng::GDAnsCardInfo(_tagPMSG_ANS_MURUMMY_SELECT_DS* lpMsg) // OK
+void CMuRummyMng::GDAnsCardInfo(_tagPMSG_ANS_MURUMMY_SELECT_DS* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1401,7 +1401,7 @@ void CMuRummyMng::GDAnsCardInfo(_tagPMSG_ANS_MURUMMY_SELECT_DS* lpMsg) // OK
 	#endif
 }
 
-void CMuRummyMng::GDReqCardInfoInsert(LPOBJ obj) // OK
+void CMuRummyMng::GDReqCardInfoInsert(LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1467,7 +1467,7 @@ void CMuRummyMng::GDReqCardInfoInsert(LPOBJ obj) // OK
 	#endif
 }
 
-void CMuRummyMng::GDReqCardInfoUpdate(LPOBJ obj, CMuRummyCardInfo* pCCardInfo, int iSeq) // OK
+void CMuRummyMng::GDReqCardInfoUpdate(LPOBJ obj, CMuRummyCardInfo* pCCardInfo, int iSeq)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1482,7 +1482,7 @@ void CMuRummyMng::GDReqCardInfoUpdate(LPOBJ obj, CMuRummyCardInfo* pCCardInfo, i
 	#endif
 }
 
-void CMuRummyMng::GDReqScoreUpdate(LPOBJ obj, WORD wScore, _tagMuRummyCardUpdateDS* pCardUpdateDS) // OK
+void CMuRummyMng::GDReqScoreUpdate(LPOBJ obj, WORD wScore, _tagMuRummyCardUpdateDS* pCardUpdateDS)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1497,7 +1497,7 @@ void CMuRummyMng::GDReqScoreUpdate(LPOBJ obj, WORD wScore, _tagMuRummyCardUpdate
 	#endif
 }
 
-void CMuRummyMng::GDReqScoreDelete(LPOBJ obj) // OK
+void CMuRummyMng::GDReqScoreDelete(LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1510,7 +1510,7 @@ void CMuRummyMng::GDReqScoreDelete(LPOBJ obj) // OK
 	#endif
 }
 
-void CMuRummyMng::GDReqSlotInfoUpdate(LPOBJ obj, BYTE btSeq, BYTE btSlotNum, BYTE btStatus) // OK
+void CMuRummyMng::GDReqSlotInfoUpdate(LPOBJ obj, BYTE btSeq, BYTE btSlotNum, BYTE btStatus)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -1532,7 +1532,7 @@ void CMuRummyMng::GDReqSlotInfoUpdate(LPOBJ obj, BYTE btSeq, BYTE btSlotNum, BYT
 	#endif
 }
 
-void CMuRummyMng::GDReqMuRummyInfoUpdate(LPOBJ obj) // OK
+void CMuRummyMng::GDReqMuRummyInfoUpdate(LPOBJ obj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 

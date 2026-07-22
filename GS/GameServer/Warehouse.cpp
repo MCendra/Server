@@ -20,17 +20,17 @@ CWarehouse gWarehouse;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CWarehouse::CWarehouse() // OK
+CWarehouse::CWarehouse()
 {
 
 }
 
-CWarehouse::~CWarehouse() // OK
+CWarehouse::~CWarehouse()
 {
 
 }
 
-int CWarehouse::GetWarehouseTaxMoney(int level,int lock) // OK
+int CWarehouse::GetWarehouseTaxMoney(int level,int lock)
 {
 	int tax = (int)(((level*level)*0.1)*0.4);
 
@@ -56,7 +56,7 @@ int CWarehouse::GetWarehouseTaxMoney(int level,int lock) // OK
 	return tax;
 }
 
-void CWarehouse::CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg,int aIndex) // OK
+void CWarehouse::CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -145,7 +145,7 @@ void CWarehouse::CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg,int aInde
 	this->GCWarehouseMoneySend(aIndex,1,lpObj->Money,lpObj->WarehouseMoney);
 }
 
-void CWarehouse::CGWarehouseClose(int aIndex) // OK
+void CWarehouse::CGWarehouseClose(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -215,7 +215,7 @@ void CWarehouse::CGWarehouseClose(int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.size);
 }
 
-void CWarehouse::CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg,int aIndex) // OK
+void CWarehouse::CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -277,7 +277,7 @@ void CWarehouse::CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg,int
 	}
 }
 
-void CWarehouse::GCWarehouseListSend(LPOBJ lpObj) // OK
+void CWarehouse::GCWarehouseListSend(LPOBJ lpObj)
 {
 	BYTE send[4096];
 
@@ -320,7 +320,7 @@ void CWarehouse::GCWarehouseListSend(LPOBJ lpObj) // OK
 	this->GCWarehouseMoneySend(lpObj->Index,1,lpObj->Money,lpObj->WarehouseMoney);
 }
 
-void CWarehouse::GCWarehouseMoneySend(int aIndex,BYTE result,int InventoryMoney,int WarehouseMoney) // OK
+void CWarehouse::GCWarehouseMoneySend(int aIndex,BYTE result,int InventoryMoney,int WarehouseMoney)
 {
 	PMSG_WAREHOUSE_MONEY_SEND pMsg;
 
@@ -335,7 +335,7 @@ void CWarehouse::GCWarehouseMoneySend(int aIndex,BYTE result,int InventoryMoney,
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CWarehouse::GCWarehouseStateSend(int aIndex,BYTE state) // OK
+void CWarehouse::GCWarehouseStateSend(int aIndex,BYTE state)
 {
 	PMSG_WAREHOUSE_STATE_SEND pMsg;
 
@@ -346,7 +346,7 @@ void CWarehouse::GCWarehouseStateSend(int aIndex,BYTE state) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CWarehouse::DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
+void CWarehouse::DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -405,7 +405,7 @@ void CWarehouse::DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
 	GDPetItemInfoSend(lpObj->Index,1);
 }
 
-void CWarehouse::DGWarehouseFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg) // OK
+void CWarehouse::DGWarehouseFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -451,7 +451,7 @@ void CWarehouse::DGWarehouseFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg) // OK
 	lpObj->LoadWarehouse = 1;
 }
 
-void CWarehouse::GDWarehouseItemSend(int aIndex,char* account) // OK
+void CWarehouse::GDWarehouseItemSend(int aIndex,char* account)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -476,7 +476,7 @@ void CWarehouse::GDWarehouseItemSend(int aIndex,char* account) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CWarehouse::GDWarehouseItemSaveSend(int aIndex) // OK
+void CWarehouse::GDWarehouseItemSaveSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -506,7 +506,7 @@ void CWarehouse::GDWarehouseItemSaveSend(int aIndex) // OK
 	GDPetItemInfoSaveSend(aIndex,1);
 }
 
-void CWarehouse::DGWarehouseGuildItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
+void CWarehouse::DGWarehouseGuildItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg)
 {
 
 	LPOBJ lpObj = &gObj[lpMsg->index];
@@ -559,7 +559,7 @@ void CWarehouse::DGWarehouseGuildItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
 	GDPetItemInfoSend(lpObj->Index,1);
 }
 
-void CWarehouse::DGWarehouseGuildFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg) // OK
+void CWarehouse::DGWarehouseGuildFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg)
 {
 
 	LPOBJ lpObj = &gObj[lpMsg->index];
@@ -599,7 +599,7 @@ void CWarehouse::DGWarehouseGuildFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg) // OK
 	lpObj->LoadWarehouse = 1;
 }
 
-void CWarehouse::GDWarehouseGuildConsult(int aIndex, char* account) // OK
+void CWarehouse::GDWarehouseGuildConsult(int aIndex, char* account)
 {
 	GUILD_INFO_STRUCT * lpGuild = gGuildClass.SearchGuild(account);
 
@@ -619,7 +619,7 @@ void CWarehouse::GDWarehouseGuildConsult(int aIndex, char* account) // OK
 	gDataServerConnection.DataSend((BYTE*)&pWareHouse, pWareHouse.header.size);
 }
 
-void CWarehouse::DGWarehouseGuildOpenRecv(SDHP_WAREHOUSE_GUILD_STATUS_RECV* lpMsg) // OK
+void CWarehouse::DGWarehouseGuildOpenRecv(SDHP_WAREHOUSE_GUILD_STATUS_RECV* lpMsg)
 {
 	LPOBJ lpObj = &gObj[lpMsg->index];
 
@@ -631,10 +631,10 @@ void CWarehouse::DGWarehouseGuildOpenRecv(SDHP_WAREHOUSE_GUILD_STATUS_RECV* lpMs
 		return;
 	}
 
-	this->GDWarehouseGuildItemSend(lpObj->Index,lpObj->GuildName); // OK
+	this->GDWarehouseGuildItemSend(lpObj->Index,lpObj->GuildName);
 }
 
-void CWarehouse::GDWarehouseGuildItemSend(int aIndex, char* account) // OK
+void CWarehouse::GDWarehouseGuildItemSend(int aIndex, char* account)
 {
 	GUILD_INFO_STRUCT * lpGuild = gGuildClass.SearchGuild(account);
 
@@ -706,7 +706,7 @@ void CWarehouse::GDWarehouseGuildItemSend(int aIndex, char* account) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CWarehouse::GDWarehouseGuildItemSaveSend(int aIndex) // OK
+void CWarehouse::GDWarehouseGuildItemSaveSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

@@ -16,7 +16,7 @@
 
 CEventRussianRoulette gEventRussianRoulette;
 
-CEventRussianRoulette::CEventRussianRoulette() // OK
+CEventRussianRoulette::CEventRussianRoulette()
 {
 	this->m_RemainTime = 0;
 	this->m_GmIndex = 0;
@@ -30,7 +30,7 @@ CEventRussianRoulette::CEventRussianRoulette() // OK
 	this->m_Members = 0;
 }
 
-CEventRussianRoulette::~CEventRussianRoulette() // OK
+CEventRussianRoulette::~CEventRussianRoulette()
 {
 
 }
@@ -60,7 +60,7 @@ void CEventRussianRoulette::Clear()
 	}
 }
 
-void CEventRussianRoulette::MainProc() // OK
+void CEventRussianRoulette::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -202,7 +202,7 @@ void CEventRussianRoulette::MainProc() // OK
 
 }
 
-void CEventRussianRoulette::CommandEventRussianRoulette(LPOBJ lpObj,char* arg) // OK 
+void CEventRussianRoulette::CommandEventRussianRoulette(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventRussianRouletteSwitch == 0)
@@ -239,7 +239,7 @@ void CEventRussianRoulette::CommandEventRussianRoulette(LPOBJ lpObj,char* arg) /
 	LogAdd(LOG_EVENT,"[EVENT RUSSIAN ROULETTE] Start by %s",lpObj->Name);
 }
 
-void CEventRussianRoulette::CommandEventRussianRouletteJoin(LPOBJ lpObj,char* arg) // OK 
+void CEventRussianRoulette::CommandEventRussianRouletteJoin(LPOBJ lpObj,char* arg) 
 {
 	if(gServerInfo.m_EventRussianRouletteSwitch == 0)
 	{
@@ -277,7 +277,7 @@ void CEventRussianRoulette::CommandEventRussianRouletteJoin(LPOBJ lpObj,char* ar
 	LogAdd(LOG_EVENT,"[EVENT RUSSIAN ROULETTE] Member add (%s)",lpObj->Name);
 }
 
-int CEventRussianRoulette::EventRussianRouletteTrade(int aIndex,int bIndex) // OK 
+int CEventRussianRoulette::EventRussianRouletteTrade(int aIndex,int bIndex) 
 {
 	if(gServerInfo.m_EventRussianRouletteSwitch == 0)
 	{

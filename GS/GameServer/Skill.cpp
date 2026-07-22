@@ -11,17 +11,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSkill::CSkill() // OK
+CSkill::CSkill()
 {
 	this->Clear();
 }
 
-CSkill::~CSkill() // OK
+CSkill::~CSkill()
 {
 
 }
 
-void CSkill::Clear() // OK
+void CSkill::Clear()
 {
 	this->m_level = 0;
 	this->m_skill = 0xFFFF;
@@ -30,7 +30,7 @@ void CSkill::Clear() // OK
 	this->m_DamageMax = 0;
 }
 
-bool CSkill::IsSkill() // OK
+bool CSkill::IsSkill()
 {
 	if(this->m_index == 0xFFFF)
 	{
@@ -40,7 +40,7 @@ bool CSkill::IsSkill() // OK
 	return 1;
 }
 
-bool CSkill::IsMasterSkill() // OK
+bool CSkill::IsMasterSkill()
 {
 	if(this->m_index == 0xFFFF || this->m_index < 0x12C)
 	{
@@ -50,7 +50,7 @@ bool CSkill::IsMasterSkill() // OK
 	return 1;
 }
 
-bool CSkill::Set(int index,int level) // OK
+bool CSkill::Set(int index,int level)
 {
 	if(this->IsSkill() != 0 && index < 300)
 	{

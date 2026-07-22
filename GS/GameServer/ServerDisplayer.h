@@ -14,7 +14,7 @@
 #define MAX_LOGGLOBAL_TEXT_LINE 8
 #define MAX_LOGGLOBAL_TEXT_SIZE 100
 
-enum eLogColor
+enum LogColor
 {
 	LOG_BLACK = 0, // Mensajes generales, informativos o de sistema standar
 	LOG_RED = 1, // Errores criticos, caidas de conexion o excepciones
@@ -30,20 +30,20 @@ enum eLogColor
 
 struct LOG_DISPLAY_INFO
 {
-	char text[MAX_LOG_TEXT_SIZE];
-	eLogColor color;
+	char Text[MAX_LOG_TEXT_SIZE];
+	LogColor Color;
 };
 
 struct LOGCONNECT_DISPLAY_INFO
 {
-	char text[MAX_LOGCONNECT_TEXT_SIZE];
-	eLogColor color;
+	char Text[MAX_LOGCONNECT_TEXT_SIZE];
+	LogColor Color;
 };
 
 struct LOGGLOBAL_DISPLAY_INFO
 {
-	char text[MAX_LOGGLOBAL_TEXT_SIZE];
-	eLogColor color;
+	char Text[MAX_LOGGLOBAL_TEXT_SIZE];
+	LogColor Color;
 };
 
 class CServerDisplayer

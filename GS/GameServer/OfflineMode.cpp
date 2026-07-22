@@ -49,7 +49,7 @@ void OfflineMode::ReadOffLine(char* section, char* path)
 	this->m_MUOffHelperTimer[3] = GetPrivateProfileInt(section, "MuOffHelperTime_AL3", -1, path);
 }
 
-void OfflineMode::OnHelperpAlreadyConnected(LPOBJ lpObj) // OK
+void OfflineMode::OnHelperpAlreadyConnected(LPOBJ lpObj)
 {
 	if (lpObj->m_OfflineMode != 0)
 	{
@@ -155,7 +155,7 @@ void OfflineMode::Start(CG_OFFMODE_RESULT* aRecv, int aIndex)
 	lpObj->orderskill = 0;
 }
 
-void OfflineMode::OnAttackSecondProcHelper(LPOBJ lpObj) // OK
+void OfflineMode::OnAttackSecondProcHelper(LPOBJ lpObj)
 {
 	if (lpObj->m_OfflineMode != 0)
 	{

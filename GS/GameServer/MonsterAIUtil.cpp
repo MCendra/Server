@@ -14,17 +14,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIUtil::CMonsterAIUtil() // OK
+CMonsterAIUtil::CMonsterAIUtil()
 {
 
 }
 
-CMonsterAIUtil::~CMonsterAIUtil() // OK
+CMonsterAIUtil::~CMonsterAIUtil()
 {
 
 }
 
-BOOL CMonsterAIUtil::FindPathToMoveMonster(LPOBJ lpObj,int tx,int ty,int MaxPathCount,bool PreventOverMoving) // OK
+BOOL CMonsterAIUtil::FindPathToMoveMonster(LPOBJ lpObj,int tx,int ty,int MaxPathCount,bool PreventOverMoving)
 {
 	if(CMonsterAIUtil::CheckMovingCondition(lpObj) == 0)
 	{
@@ -83,7 +83,7 @@ BOOL CMonsterAIUtil::FindPathToMoveMonster(LPOBJ lpObj,int tx,int ty,int MaxPath
 	return 1;
 }
 
-void CMonsterAIUtil::SendMonsterMoveMsg(LPOBJ lpObj) // OK
+void CMonsterAIUtil::SendMonsterMoveMsg(LPOBJ lpObj)
 {
 	PMSG_MOVE_SEND pMsg;
 
@@ -102,7 +102,7 @@ void CMonsterAIUtil::SendMonsterMoveMsg(LPOBJ lpObj) // OK
 	MsgSendV2(lpObj,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-BOOL CMonsterAIUtil::CheckMovingCondition(LPOBJ lpObj) // OK
+BOOL CMonsterAIUtil::CheckMovingCondition(LPOBJ lpObj)
 {
 	if(lpObj->Live == 0 || lpObj->RegenOk > 0 || lpObj->Teleport != 0 || lpObj->State != OBJECT_PLAYING)
 	{
@@ -117,7 +117,7 @@ BOOL CMonsterAIUtil::CheckMovingCondition(LPOBJ lpObj) // OK
 	return 1;
 }
 
-BOOL CMonsterAIUtil::GetXYToPatrol(LPOBJ lpObj) // OK
+BOOL CMonsterAIUtil::GetXYToPatrol(LPOBJ lpObj)
 {
 	lpObj->NextActionTime = 1000;
 
@@ -137,7 +137,7 @@ BOOL CMonsterAIUtil::GetXYToPatrol(LPOBJ lpObj) // OK
 	return 0;
 }
 
-BOOL CMonsterAIUtil::GetXYToEascape(LPOBJ lpObj) // OK
+BOOL CMonsterAIUtil::GetXYToEascape(LPOBJ lpObj)
 {
 	if(OBJECT_RANGE(lpObj->TargetNumber) == 0)
 	{
@@ -201,7 +201,7 @@ BOOL CMonsterAIUtil::GetXYToEascape(LPOBJ lpObj) // OK
 	return 0;
 }
 
-BOOL CMonsterAIUtil::GetXYToChase(LPOBJ lpObj) // OK
+BOOL CMonsterAIUtil::GetXYToChase(LPOBJ lpObj)
 {
 	if(OBJECT_RANGE(lpObj->TargetNumber) == 0)
 	{
@@ -265,7 +265,7 @@ BOOL CMonsterAIUtil::GetXYToChase(LPOBJ lpObj) // OK
 	return 0;
 }
 
-BOOL CMonsterAIUtil::FindMonViewportObj(int aIndex,int bIndex) // OK
+BOOL CMonsterAIUtil::FindMonViewportObj(int aIndex,int bIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0 || OBJECT_RANGE(bIndex) == 0)
 	{
@@ -286,7 +286,7 @@ BOOL CMonsterAIUtil::FindMonViewportObj(int aIndex,int bIndex) // OK
 	return 0;
 }
 
-BOOL CMonsterAIUtil::FindMonViewportObj2(int aIndex,int bIndex) // OK
+BOOL CMonsterAIUtil::FindMonViewportObj2(int aIndex,int bIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0 || OBJECT_RANGE(bIndex) == 0)
 	{
@@ -307,7 +307,7 @@ BOOL CMonsterAIUtil::FindMonViewportObj2(int aIndex,int bIndex) // OK
 	return 0;
 }
 
-long CMonsterAIUtil::FindMonsterToHeal(LPOBJ lpObj,int rate,int distance) // OK
+long CMonsterAIUtil::FindMonsterToHeal(LPOBJ lpObj,int rate,int distance)
 {
 	int TargetIndex = -1;
 	int TargetValue = rate;

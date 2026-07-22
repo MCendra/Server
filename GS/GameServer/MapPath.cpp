@@ -9,7 +9,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMapPath::CMapPath() // OK
+CMapPath::CMapPath()
 {
 	this->m_PathDir[0] = -1;
 	this->m_PathDir[1] = -1;
@@ -29,19 +29,19 @@ CMapPath::CMapPath() // OK
 	this->m_PathDir[15] = 0;
 }
 
-CMapPath::~CMapPath() // OK
+CMapPath::~CMapPath()
 {
 
 }
 
-int CMapPath::GetDist(int x1,int y1,int x2,int y2) // OK
+int CMapPath::GetDist(int x1,int y1,int x2,int y2)
 {
 	int distx = x2 - x1;
 	int disty = y2 - y1;
 	return (distx * distx) + (disty * disty);
 }
 
-int CMapPath::VerifyThatOnPath(int x,int y) // OK
+int CMapPath::VerifyThatOnPath(int x,int y)
 {
 	for ( int i = 0 ; i < this->m_NumPath ; i++ )
 	{
@@ -53,7 +53,7 @@ int CMapPath::VerifyThatOnPath(int x,int y) // OK
 	return -1;
 }
 
-BOOL CMapPath::CanWeMoveForward(int x,int y) // OK
+BOOL CMapPath::CanWeMoveForward(int x,int y)
 {
 	int which = x+ y * this->m_width  ;
 
@@ -70,7 +70,7 @@ BOOL CMapPath::CanWeMoveForward(int x,int y) // OK
 	return TRUE;
 }
 
-BOOL CMapPath::CanWeMoveForward2(int x,int y) // OK
+BOOL CMapPath::CanWeMoveForward2(int x,int y)
 {
 	int which = x +  y* this->m_width ;
 
@@ -87,7 +87,7 @@ BOOL CMapPath::CanWeMoveForward2(int x,int y) // OK
 	return TRUE;
 }
 
-BOOL CMapPath::CanWeMoveForward3(int x,int y) // OK
+BOOL CMapPath::CanWeMoveForward3(int x,int y)
 {
 	int which = x +  y* this->m_width ;
 
@@ -104,7 +104,7 @@ BOOL CMapPath::CanWeMoveForward3(int x,int y) // OK
 	return TRUE;
 }
 
-BOOL CMapPath::IsThisSpotOK(int x,int y) // OK
+BOOL CMapPath::IsThisSpotOK(int x,int y)
 {
 	int pos;
 
@@ -121,7 +121,7 @@ BOOL CMapPath::IsThisSpotOK(int x,int y) // OK
 	return true;
 }
 
-int CMapPath::FindNextDir(int sx,int sy,int dx,int dy,int dirstart,bool First,bool ErrorCheck) // OK
+int CMapPath::FindNextDir(int sx,int sy,int dx,int dy,int dirstart,bool First,bool ErrorCheck)
 {
 	int MinDist = 10000000;
 	long ldir;
@@ -251,7 +251,7 @@ int CMapPath::FindNextDir(int sx,int sy,int dx,int dy,int dirstart,bool First,bo
 	return -1;
 }
 
-int CMapPath::FindNextDir2(int sx,int sy,int dx,int dy,int dirstart,bool First,bool ErrorCheck) // OK
+int CMapPath::FindNextDir2(int sx,int sy,int dx,int dy,int dirstart,bool First,bool ErrorCheck)
 {
 	int MinDist = 10000000;
 	long ldir;
@@ -382,7 +382,7 @@ int CMapPath::FindNextDir2(int sx,int sy,int dx,int dy,int dirstart,bool First,b
 	return -1;
 }
 
-int CMapPath::FindNextDir3(int sx,int sy,int dx,int dy,int dirstart,bool First,bool ErrorCheck) // OK
+int CMapPath::FindNextDir3(int sx,int sy,int dx,int dy,int dirstart,bool First,bool ErrorCheck)
 {
 	int MinDist = 10000000;
 	long ldir;
@@ -504,7 +504,7 @@ int CMapPath::FindNextDir3(int sx,int sy,int dx,int dy,int dirstart,bool First,b
 	return -1;
 }
 
-bool CMapPath::FindPath(int startx,int starty,int endx,int endy,bool ErrorCheck) // OK
+bool CMapPath::FindPath(int startx,int starty,int endx,int endy,bool ErrorCheck)
 {
 	this->m_NumPath = 0;
 
@@ -571,7 +571,7 @@ bool CMapPath::FindPath(int startx,int starty,int endx,int endy,bool ErrorCheck)
 	return true;
 }
 
-bool CMapPath::FindPath2(int startx,int starty,int endx,int endy,bool ErrorCheck) // OK
+bool CMapPath::FindPath2(int startx,int starty,int endx,int endy,bool ErrorCheck)
 {
 	this->m_NumPath = 0;
 
@@ -639,7 +639,7 @@ bool CMapPath::FindPath2(int startx,int starty,int endx,int endy,bool ErrorCheck
 	return true;
 }
 
-bool CMapPath::FindPath3(int startx,int starty,int endx,int endy,bool ErrorCheck) // OK
+bool CMapPath::FindPath3(int startx,int starty,int endx,int endy,bool ErrorCheck)
 {
 	this->m_NumPath = 0;
 
@@ -707,7 +707,7 @@ bool CMapPath::FindPath3(int startx,int starty,int endx,int endy,bool ErrorCheck
 	return true;
 }
 
-void CMapPath::SetMapDimensions(int width,int height,BYTE* MapAttr) // OK
+void CMapPath::SetMapDimensions(int width,int height,BYTE* MapAttr)
 {
 	this->m_width = width;
 
@@ -718,17 +718,17 @@ void CMapPath::SetMapDimensions(int width,int height,BYTE* MapAttr) // OK
 	this->m_HitAttr = new BYTE[this->m_width*this->m_height];
 }
 
-int CMapPath::GetPath() // OK
+int CMapPath::GetPath()
 {
 	return this->m_NumPath;
 }
 
-BYTE* CMapPath::GetPathX() // OK
+BYTE* CMapPath::GetPathX()
 {
 	return this->m_PathX;
 }
 
-BYTE* CMapPath::GetPathY() // OK
+BYTE* CMapPath::GetPathY()
 {
 	return this->m_PathY;
 }

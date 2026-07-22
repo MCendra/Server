@@ -4,16 +4,6 @@
 
 CIpManager gIpManager;
 
-// Construction/Destruction
-
-CIpManager::CIpManager()
-{
-}
-
-CIpManager::~CIpManager()
-{
-}
-
 bool CIpManager::CheckIpAddress(const std::string& IpAddress)
 {
     // Verificar que el formato de la IP sea valido

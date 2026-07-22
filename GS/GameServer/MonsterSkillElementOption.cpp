@@ -12,12 +12,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillElementOption::CMonsterSkillElementOption() // OK
+CMonsterSkillElementOption::CMonsterSkillElementOption()
 {
 	this->Reset();
 }
 
-void CMonsterSkillElementOption::Reset() // OK
+void CMonsterSkillElementOption::Reset()
 {
 	this->ResetDefense();
 	this->ResetAttack();
@@ -30,154 +30,154 @@ void CMonsterSkillElementOption::Reset() // OK
 	this->ResetBerserk();
 }
 
-void CMonsterSkillElementOption::ResetDefense() // OK
+void CMonsterSkillElementOption::ResetDefense()
 {
 	this->m_SkillElementDefense = 0;
 	this->m_SkillElementDefenseTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetAttack() // OK
+void CMonsterSkillElementOption::ResetAttack()
 {
 	this->m_SkillElementAttack = 0;
 	this->m_SkillElementAttackTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetAutoHP() // OK
+void CMonsterSkillElementOption::ResetAutoHP()
 {
 	this->m_SkillElementAutoHP = 0;
 	this->m_SkillElementAutoHPCycle = 0;
 	this->m_SkillElementAutoHPTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetAutoMP() // OK
+void CMonsterSkillElementOption::ResetAutoMP()
 {
 	this->m_SkillElementAutoMP = 0;
 	this->m_SkillElementAutoMPCycle = 0;
 	this->m_SkillElementAutoMPTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetAutoAG() // OK
+void CMonsterSkillElementOption::ResetAutoAG()
 {
 	this->m_SkillElementAutoAG = 0;
 	this->m_SkillElementAutoAGCycle = 0;
 	this->m_SkillElementAutoAGTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetImmune() // OK
+void CMonsterSkillElementOption::ResetImmune()
 {
 	this->m_SkillElementImmuneNumber = 0;
 	this->m_SkillElementImmuneTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetResist() // OK
+void CMonsterSkillElementOption::ResetResist()
 {
 	this->m_SkillElementResistNumber = 0;
 	this->m_SkillElementResistTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetModifyStat() // OK
+void CMonsterSkillElementOption::ResetModifyStat()
 {
 	this->m_SkillElementModifyStat = 0;
 	this->m_SkillElementModifyStatType = 0;
 	this->m_SkillElementModifyStatTime = 0;
 }
 
-void CMonsterSkillElementOption::ResetBerserk() // OK
+void CMonsterSkillElementOption::ResetBerserk()
 {
 	this->m_SkillElementBerserkTime = 0;
 }
 
-BOOL CMonsterSkillElementOption::CheckDefenseTime() // OK
+BOOL CMonsterSkillElementOption::CheckDefenseTime()
 {
 	return ((this->m_SkillElementDefenseTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckAttackTime() // OK
+BOOL CMonsterSkillElementOption::CheckAttackTime()
 {
 	return ((this->m_SkillElementAttackTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckAutoHPTime() // OK
+BOOL CMonsterSkillElementOption::CheckAutoHPTime()
 {
 	return ((this->m_SkillElementAutoHPTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckAutoMPTime() // OK
+BOOL CMonsterSkillElementOption::CheckAutoMPTime()
 {
 	return ((this->m_SkillElementAutoMPTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckAutoAGTime() // OK
+BOOL CMonsterSkillElementOption::CheckAutoAGTime()
 {
 	return ((this->m_SkillElementAutoAGTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckImmuneTime() // OK
+BOOL CMonsterSkillElementOption::CheckImmuneTime()
 {
 	return ((this->m_SkillElementImmuneTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckResistTime() // OK
+BOOL CMonsterSkillElementOption::CheckResistTime()
 {
 	return ((this->m_SkillElementResistTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckModifyStatTime() // OK
+BOOL CMonsterSkillElementOption::CheckModifyStatTime()
 {
 	return ((this->m_SkillElementModifyStatTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::CheckBerserkTime() // OK
+BOOL CMonsterSkillElementOption::CheckBerserkTime()
 {
 	return ((this->m_SkillElementBerserkTime<=0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecDefenseTime() // OK
+BOOL CMonsterSkillElementOption::DecDefenseTime()
 {
 	return (((--this->m_SkillElementDefense)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecAttackTime() // OK
+BOOL CMonsterSkillElementOption::DecAttackTime()
 {
 	return (((--this->m_SkillElementAttack)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecAutoHPTime() // OK
+BOOL CMonsterSkillElementOption::DecAutoHPTime()
 {
 	return (((--this->m_SkillElementAutoHPTime)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecAutoMPTime() // OK
+BOOL CMonsterSkillElementOption::DecAutoMPTime()
 {
 	return (((--this->m_SkillElementAutoMPTime)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecAutoAGTime() // OK
+BOOL CMonsterSkillElementOption::DecAutoAGTime()
 {
 	return (((--this->m_SkillElementAutoAGTime)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecImmuneTime() // OK
+BOOL CMonsterSkillElementOption::DecImmuneTime()
 {
 	return (((--this->m_SkillElementImmuneTime)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecResistTime() // OK
+BOOL CMonsterSkillElementOption::DecResistTime()
 {
 	return (((--this->m_SkillElementResistTime)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecModifyStatTime() // OK
+BOOL CMonsterSkillElementOption::DecModifyStatTime()
 {
 	return (((--this->m_SkillElementModifyStatTime)>0)?0:1);
 }
 
-BOOL CMonsterSkillElementOption::DecBerserkTime() // OK
+BOOL CMonsterSkillElementOption::DecBerserkTime()
 {
 	return (((--this->m_SkillElementBerserkTime)>0)?0:1);
 }
 
-void CMonsterSkillElementOption::CycleAutoHP(LPOBJ lpObj) // OK
+void CMonsterSkillElementOption::CycleAutoHP(LPOBJ lpObj)
 {
 	if(lpObj->MonsterSkillElementOption.m_SkillElementAutoHPCycle == MSE_INCDEC_TYPE_CYCLE_PERCENTINC)
 	{
@@ -195,7 +195,7 @@ void CMonsterSkillElementOption::CycleAutoHP(LPOBJ lpObj) // OK
 	GCLifeSend(lpObj->Index,0xFF,(int)lpObj->Life,lpObj->Shield);
 }
 
-void CMonsterSkillElementOption::CycleAutoMP(LPOBJ lpObj) // OK
+void CMonsterSkillElementOption::CycleAutoMP(LPOBJ lpObj)
 {
 	if(lpObj->MonsterSkillElementOption.m_SkillElementAutoMPCycle == MSE_INCDEC_TYPE_CYCLE_PERCENTINC)
 	{
@@ -213,7 +213,7 @@ void CMonsterSkillElementOption::CycleAutoMP(LPOBJ lpObj) // OK
 	GCManaSend(lpObj->Index,0xFF,(int)lpObj->Mana,lpObj->BP);
 }
 
-void CMonsterSkillElementOption::CycleAutoAG(LPOBJ lpObj) // OK
+void CMonsterSkillElementOption::CycleAutoAG(LPOBJ lpObj)
 {
 	if(lpObj->MonsterSkillElementOption.m_SkillElementAutoAGCycle == MSE_INCDEC_TYPE_CYCLE_PERCENTINC)
 	{
@@ -231,7 +231,7 @@ void CMonsterSkillElementOption::CycleAutoAG(LPOBJ lpObj) // OK
 	GCManaSend(lpObj->Index,0xFF,(int)lpObj->Mana,lpObj->BP);
 }
 
-void CMonsterSkillElementOption::CheckSkillElementOptionProc(LPOBJ lpObj) // OK
+void CMonsterSkillElementOption::CheckSkillElementOptionProc(LPOBJ lpObj)
 {
 	((lpObj->MonsterSkillElementOption.CheckDefenseTime()==0)?0:((lpObj->MonsterSkillElementOption.DecDefenseTime()==0)?0:lpObj->MonsterSkillElementOption.ResetDefense()));
 

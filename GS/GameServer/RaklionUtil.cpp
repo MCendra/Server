@@ -13,17 +13,17 @@ CRaklionUtil gRaklionUtil;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklionUtil::CRaklionUtil() // OK
+CRaklionUtil::CRaklionUtil()
 {
 
 }
 
-CRaklionUtil::~CRaklionUtil() // OK
+CRaklionUtil::~CRaklionUtil()
 {
 
 }
 
-void CRaklionUtil::NotifyRaklionState(int aIndex,int state,int DetailState) // OK
+void CRaklionUtil::NotifyRaklionState(int aIndex,int state,int DetailState)
 {
 	PMSG_RAKLION_STATE_SEND pMsg;
 
@@ -36,7 +36,7 @@ void CRaklionUtil::NotifyRaklionState(int aIndex,int state,int DetailState) // O
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CRaklionUtil::NotifyRaklionChangeState(int state,int DetailState) // OK
+void CRaklionUtil::NotifyRaklionChangeState(int state,int DetailState)
 {
 	PMSG_RAKLION_STATE_CHANGE_SEND pMsg;
 
@@ -49,7 +49,7 @@ void CRaklionUtil::NotifyRaklionChangeState(int state,int DetailState) // OK
 	this->SendDataRaklionMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CRaklionUtil::NotifyRaklionResult(int result) // OK
+void CRaklionUtil::NotifyRaklionResult(int result)
 {
 	PMSG_RAKLION_SUCCESS_SEND pMsg;
 
@@ -60,7 +60,7 @@ void CRaklionUtil::NotifyRaklionResult(int result) // OK
 	this->SendDataRaklionBossMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CRaklionUtil::NotifyRaklionAreaAttack(int aIndex,int bIndex,int type) // OK
+void CRaklionUtil::NotifyRaklionAreaAttack(int aIndex,int bIndex,int type)
 {
 	PMSG_RAKLION_AREA_ATTACK_SEND pMsg;
 
@@ -75,7 +75,7 @@ void CRaklionUtil::NotifyRaklionAreaAttack(int aIndex,int bIndex,int type) // OK
 	DataSend(bIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CRaklionUtil::NotifyRaklionObjectCount(int MonsterCount,int UserCount) // OK
+void CRaklionUtil::NotifyRaklionObjectCount(int MonsterCount,int UserCount)
 {
 	PMSG_RAKLION_OBJECT_COUNT_SEND pMsg;
 
@@ -88,7 +88,7 @@ void CRaklionUtil::NotifyRaklionObjectCount(int MonsterCount,int UserCount) // O
 	this->SendDataRaklionBossMapUser((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CRaklionUtil::SendDataRaklionMapUser(BYTE* lpMsg,int size) // OK
+void CRaklionUtil::SendDataRaklionMapUser(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -99,7 +99,7 @@ void CRaklionUtil::SendDataRaklionMapUser(BYTE* lpMsg,int size) // OK
 	}
 }
 
-void CRaklionUtil::SendDataRaklionBossMapUser(BYTE* lpMsg,int size) // OK
+void CRaklionUtil::SendDataRaklionBossMapUser(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{

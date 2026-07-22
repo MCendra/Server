@@ -4,7 +4,7 @@
 #include "ServerInfo.h"
 #include "SkillManager.h"
 
-void CComboSkill::Init() // OK
+void CComboSkill::Init()
 {
 	this->m_time = 0;
 	this->m_skill[0] = 0xFFFF;
@@ -12,7 +12,7 @@ void CComboSkill::Init() // OK
 	this->m_index = -1;
 }
 
-int CComboSkill::GetSkillType(WORD skill) // OK
+int CComboSkill::GetSkillType(WORD skill)
 {
 	if (gServerInfo.m_EnableComboToAllSwitch == 1)
 	{
@@ -46,7 +46,7 @@ int CComboSkill::GetSkillType(WORD skill) // OK
 	}
 }
 
-bool CComboSkill::CheckCombo(WORD skill) // OK
+bool CComboSkill::CheckCombo(WORD skill)
 {
 	int type = this->GetSkillType(skill);
 

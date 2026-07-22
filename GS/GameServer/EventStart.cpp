@@ -15,7 +15,7 @@
 
 CEventStart gEventStart;
 
-CEventStart::CEventStart() // OK
+CEventStart::CEventStart()
 {
 	this->m_RemainTime = 0;
 	this->m_TickCount = GetTickCount();
@@ -24,7 +24,7 @@ CEventStart::CEventStart() // OK
 	this->m_MapY = 0;
 }
 
-CEventStart::~CEventStart() // OK
+CEventStart::~CEventStart()
 {
 
 }
@@ -38,7 +38,7 @@ void CEventStart::Clear()
 	this->m_MapY = 0;
 }
 
-void CEventStart::MainProc() // OK
+void CEventStart::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -71,7 +71,7 @@ void CEventStart::MainProc() // OK
 
 }
 
-void CEventStart::CommandEventStart(LPOBJ lpObj,char* arg) // OK 
+void CEventStart::CommandEventStart(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventStartSwitch == 0)
@@ -105,7 +105,7 @@ void CEventStart::CommandEventStart(LPOBJ lpObj,char* arg) // OK
 	LogAdd(LOG_EVENT,"[EVENT START] Start");
 }
 
-void CEventStart::CommandEventStartJoin(LPOBJ lpObj,char* arg) // OK 
+void CEventStart::CommandEventStartJoin(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventStartSwitch == 0)

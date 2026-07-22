@@ -1,9 +1,5 @@
-// Guild.h: interface for the CGuild class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// Guild.h
 #pragma once
-
 #include "Protocol.h"
 
 enum eGuildStatus
@@ -15,9 +11,7 @@ enum eGuildStatus
 	GUILD_STATUS_NONE = 255,
 };
 
-//**********************************************//
-//************ Client -> GameServer ************//
-//**********************************************//
+// Client -> GameServer
 
 struct PMSG_GUILD_REQUEST_RECV
 {
@@ -47,9 +41,7 @@ struct PMSG_GUILD_ASSIGN_STATUS_RECV
 	char name[10];
 };
 
-//**********************************************//
-//************ GameServer -> Client ************//
-//**********************************************//
+// GameServer -> Client
 
 struct PMSG_GUILD_REQUEST_SEND
 {
@@ -71,10 +63,10 @@ struct PMSG_GUILD_LIST_SEND
 	DWORD TotalScore;
 	BYTE score;
 	char RivalGuild[9];
-	#if(GAMESERVER_UPDATE>=701)
+#if(GAMESERVER_UPDATE>=701)
 	BYTE RivalCount;
 	BYTE RivalMark[32];
-	#endif
+#endif
 };
 
 struct PMSG_GUILD_LIST
@@ -113,34 +105,30 @@ struct PMSG_GUILD_ASSIGN_STATUS_SEND
 	char name[10];
 };
 
-//**********************************************//
-//**********************************************//
-//**********************************************//
-
 struct GUILD_INFO_STRUCT
 {
-	int GetTimeStamp() // OK
+	int GetTimeStamp()
 	{
 		return this->TimeStamp;
 	}
 
-	BOOL CheckTimeStamp(int time) // OK
+	BOOL CheckTimeStamp(int time)
 	{
 		return ((time==this->TimeStamp)?1:0);
 	}
 
-	void SetTimeStamp() // OK
+	void SetTimeStamp()
 	{
 		this->TimeStamp++;
 	}
 
-	void SetGuildUnion(int GuildNumber) // OK
+	void SetGuildUnion(int GuildNumber)
 	{
 		this->GuildUnion = GuildNumber;
 		this->SetTimeStamp();
 	}
 
-	void SetGuildRival(int GuildNumber) // OK
+	void SetGuildRival(int GuildNumber)
 	{
 		this->GuildRival = GuildNumber;
 		this->SetTimeStamp();
@@ -165,11 +153,9 @@ struct GUILD_INFO_STRUCT
 	BYTE BattleTeamCode;
 	BYTE PlayScore;
 	int TotalScore;
-
-#if(NEWBOSSGUILD == 1)
+#if(NEWBOSSGUILD)
 	int TotalScore1;
 #endif
-
 	char Notice[60];
 	int GuildStatus[MAX_GUILD_USER];
 	BYTE GuildType;

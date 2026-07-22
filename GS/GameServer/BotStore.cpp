@@ -293,7 +293,7 @@ BYTE gObjInventoryInsertItemPos(int aIndex, CItem item, int pos, BOOL RequestChe
 
 	return pos;
 }
-BYTE PSInventoryRectCheck(int aIndex, int x, int y, int width, int height) // OK
+BYTE PSInventoryRectCheck(int aIndex, int x, int y, int width, int height)
 {
 	int slot = ((y * 8) + x) + INVENTORY_WEAR_SIZE;
 

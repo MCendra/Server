@@ -16,17 +16,17 @@ CFruit gFruit;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CFruit::CFruit() // OK
+CFruit::CFruit()
 {
 	this->Init();
 }
 
-CFruit::~CFruit() // OK
+CFruit::~CFruit()
 {
 
 }
 
-void CFruit::Init() // OK
+void CFruit::Init()
 {
 	int NRMaxFruitPoint = 2;
 	int MGMaxFruitPoint = 2;
@@ -47,7 +47,7 @@ void CFruit::Init() // OK
 	}
 }
 
-int CFruit::GetMaxFruitPoint(LPOBJ lpObj) // OK
+int CFruit::GetMaxFruitPoint(LPOBJ lpObj)
 {
 	if(lpObj->Level < 1 || lpObj->Level > MAX_CHARACTER_LEVEL)
 	{
@@ -67,7 +67,7 @@ int CFruit::GetMaxFruitPoint(LPOBJ lpObj) // OK
 	return this->m_NRMaxFruitPointTable[lpObj->Level-1];
 }
 
-bool CFruit::UseFruitAddPoint(LPOBJ lpObj,int type) // OK
+bool CFruit::UseFruitAddPoint(LPOBJ lpObj,int type)
 {
 	PMSG_FRUIT_RESULT_SEND pMsg;
 
@@ -215,7 +215,7 @@ bool CFruit::UseFruitAddPoint(LPOBJ lpObj,int type) // OK
 	return 1;
 }
 
-bool CFruit::UseFruitSubPoint(LPOBJ lpObj,int type) // OK
+bool CFruit::UseFruitSubPoint(LPOBJ lpObj,int type)
 {
 	PMSG_FRUIT_RESULT_SEND pMsg;
 
@@ -355,7 +355,7 @@ bool CFruit::UseFruitSubPoint(LPOBJ lpObj,int type) // OK
 	return 1;
 }
 
-bool CFruit::UseFruitResetPoint(LPOBJ lpObj,int type,int amount) // OK
+bool CFruit::UseFruitResetPoint(LPOBJ lpObj,int type,int amount)
 {
 	PMSG_FRUIT_RESULT_SEND pMsg;
 
@@ -445,7 +445,7 @@ bool CFruit::UseFruitResetPoint(LPOBJ lpObj,int type,int amount) // OK
 	return 1;
 }
 
-void CFruit::GCFruitResultSend(LPOBJ lpObj,int result,int value,int type) // OK
+void CFruit::GCFruitResultSend(LPOBJ lpObj,int result,int value,int type)
 {
 	PMSG_FRUIT_RESULT_SEND pMsg;
 

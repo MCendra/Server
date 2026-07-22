@@ -14,17 +14,17 @@ CSetItemOption gSetItemOption;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSetItemOption::CSetItemOption() // OK
+CSetItemOption::CSetItemOption()
 {
 	this->Init();
 }
 
-CSetItemOption::~CSetItemOption() // OK
+CSetItemOption::~CSetItemOption()
 {
 
 }
 
-void CSetItemOption::Init() // OK
+void CSetItemOption::Init()
 {
 	for (int n = 0; n < MAX_SET_ITEM_OPTION; n++)
 	{
@@ -32,7 +32,7 @@ void CSetItemOption::Init() // OK
 	}
 }
 
-void CSetItemOption::Load(char* path) // OK
+void CSetItemOption::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -99,7 +99,7 @@ void CSetItemOption::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CSetItemOption::SetInfo(SET_ITEM_OPTION_INFO info) // OK
+void CSetItemOption::SetInfo(SET_ITEM_OPTION_INFO info)
 {
 	if (info.Index < 0 || info.Index >= MAX_SET_ITEM_OPTION)
 	{
@@ -109,7 +109,7 @@ void CSetItemOption::SetInfo(SET_ITEM_OPTION_INFO info) // OK
 	this->m_SetItemOptionInfo[info.Index] = info;
 }
 
-SET_ITEM_OPTION_INFO* CSetItemOption::GetInfo(int index) // OK
+SET_ITEM_OPTION_INFO* CSetItemOption::GetInfo(int index)
 {
 	if (index < 0 || index >= MAX_SET_ITEM_OPTION)
 	{
@@ -124,7 +124,7 @@ SET_ITEM_OPTION_INFO* CSetItemOption::GetInfo(int index) // OK
 	return &this->m_SetItemOptionInfo[index];
 }
 
-bool CSetItemOption::IsSetItem(CItem* lpItem) // OK
+bool CSetItemOption::IsSetItem(CItem* lpItem)
 {
 	if ((lpItem->m_SetOption & 3) == 0)
 	{
@@ -134,7 +134,7 @@ bool CSetItemOption::IsSetItem(CItem* lpItem) // OK
 	return 1;
 }
 
-int CSetItemOption::GetSetItemMaxOptionCount(int index) // OK
+int CSetItemOption::GetSetItemMaxOptionCount(int index)
 {
 	SET_ITEM_OPTION_INFO* lpInfo = this->GetInfo(index);
 
@@ -160,7 +160,7 @@ int CSetItemOption::GetSetItemMaxOptionCount(int index) // OK
 	return count;
 }
 
-int CSetItemOption::GetInventorySetItemOptionCount(LPOBJ lpObj, int index) // OK
+int CSetItemOption::GetInventorySetItemOptionCount(LPOBJ lpObj, int index)
 {
 	int OptionCount = 0;
 	int WeaponOptionIndex = 0;
@@ -214,7 +214,7 @@ int CSetItemOption::GetInventorySetItemOptionCount(LPOBJ lpObj, int index) // OK
 	return OptionCount;
 }
 
-void CSetItemOption::CalcSetItemStat(LPOBJ lpObj) // OK
+void CSetItemOption::CalcSetItemStat(LPOBJ lpObj)
 {
 	for (int n = 0; n < INVENTORY_WEAR_SIZE; n++)
 	{
@@ -239,7 +239,7 @@ void CSetItemOption::CalcSetItemStat(LPOBJ lpObj) // OK
 	}
 }
 
-void CSetItemOption::CalcSetItemOption(LPOBJ lpObj, bool flag) // OK
+void CSetItemOption::CalcSetItemOption(LPOBJ lpObj, bool flag)
 {
 	lpObj->IsFullSetItem = 0;
 
@@ -285,7 +285,7 @@ void CSetItemOption::CalcSetItemOption(LPOBJ lpObj, bool flag) // OK
 	}
 }
 
-void CSetItemOption::InsertOption(LPOBJ lpObj, int index, int value, bool flag) // OK
+void CSetItemOption::InsertOption(LPOBJ lpObj, int index, int value, bool flag)
 {
 	if (flag == 0)
 	{

@@ -564,7 +564,7 @@
     <ClInclude Include="QuestWorld.h" />
     <ClInclude Include="QuestWorldObjective.h" />
     <ClInclude Include="QuestWorldReward.h" />
-    <ClInclude Include="Queue.h" />
+    <ClInclude Include="QueueHandle.h" />
     <ClInclude Include="QueueTimer.h" />
     <ClInclude Include="Raklion.h" />
     <ClInclude Include="RaklionBattleOfSelupan.h" />
@@ -874,7 +874,7 @@
     <ClCompile Include="QuestWorld.cpp" />
     <ClCompile Include="QuestWorldObjective.cpp" />
     <ClCompile Include="QuestWorldReward.cpp" />
-    <ClCompile Include="Queue.cpp" />
+    <ClCompile Include="QueueHandle.cpp" />
     <ClCompile Include="QueueTimer.cpp" />
     <ClCompile Include="Raklion.cpp" />
     <ClCompile Include="RaklionBattleOfSelupan.cpp" />
@@ -908,7 +908,9 @@
     <ClCompile Include="SkyEvent.cpp" />
     <ClCompile Include="SocketItemOption.cpp" />
     <ClCompile Include="SocketItemType.cpp" />
-    <ClCompile Include="SocketManager.cpp" />
+    <ClCompile Include="SocketManager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="SocketManagerUdp.cpp" />
     <ClCompile Include="StatsAdvance.cpp" />
     <ClCompile Include="stdafx.cpp">

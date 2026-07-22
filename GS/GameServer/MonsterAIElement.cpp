@@ -15,17 +15,17 @@ CMonsterAIMovePath CMonsterAIElement::m_MonsterAIMovePath[MAX_MAP];
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIElement::CMonsterAIElement() // OK
+CMonsterAIElement::CMonsterAIElement()
 {
 	CMonsterAIElement::DelAllAIElement();
 }
 
-CMonsterAIElement::~CMonsterAIElement() // OK
+CMonsterAIElement::~CMonsterAIElement()
 {
 
 }
 
-void CMonsterAIElement::LoadData(char* path) // OK
+void CMonsterAIElement::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -108,7 +108,7 @@ void CMonsterAIElement::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterAIElement::DelAllAIElement() // OK
+void CMonsterAIElement::DelAllAIElement()
 {
 	CMonsterAIElement::m_DataLoad = 0;
 
@@ -118,7 +118,7 @@ void CMonsterAIElement::DelAllAIElement() // OK
 	}
 }
 
-CMonsterAIElementInfo* CMonsterAIElement::FindAIElementInfo(int ElementNumber) // OK
+CMonsterAIElementInfo* CMonsterAIElement::FindAIElementInfo(int ElementNumber)
 {
 	if(ElementNumber < 0 || ElementNumber >= MAX_MONSTER_AI_ELEMENT_INFO)
 	{

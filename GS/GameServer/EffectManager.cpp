@@ -20,17 +20,17 @@ CEffectManager gEffectManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEffectManager::CEffectManager() // OK
+CEffectManager::CEffectManager()
 {
 	this->Init();
 }
 
-CEffectManager::~CEffectManager() // OK
+CEffectManager::~CEffectManager()
 {
 
 }
 
-void CEffectManager::Init() // OK
+void CEffectManager::Init()
 {
 	for(int n=0;n < MAX_EFFECT;n++)
 	{
@@ -38,7 +38,7 @@ void CEffectManager::Init() // OK
 	}
 }
 
-void CEffectManager::Load(char* path) // OK
+void CEffectManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -108,7 +108,7 @@ void CEffectManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CEffectManager::SetInfo(EFFECT_INFO info) // OK
+void CEffectManager::SetInfo(EFFECT_INFO info)
 {
 	if(EFFECT_RANGE(info.Index) == 0)
 	{
@@ -118,7 +118,7 @@ void CEffectManager::SetInfo(EFFECT_INFO info) // OK
 	this->m_EffectInfo[info.Index] = info;
 }
 
-EFFECT_INFO* CEffectManager::GetInfo(int index) // OK
+EFFECT_INFO* CEffectManager::GetInfo(int index)
 {
 	if(EFFECT_RANGE(index) == 0)
 	{
@@ -133,7 +133,7 @@ EFFECT_INFO* CEffectManager::GetInfo(int index) // OK
 	return &this->m_EffectInfo[index];
 }
 
-EFFECT_INFO* CEffectManager::GetInfoByItem(int ItemIndex) // OK
+EFFECT_INFO* CEffectManager::GetInfoByItem(int ItemIndex)
 {
 	for(int n=0;n < MAX_EFFECT;n++)
 	{
@@ -153,7 +153,7 @@ EFFECT_INFO* CEffectManager::GetInfoByItem(int ItemIndex) // OK
 	return 0;
 }
 
-void CEffectManager::MainProc() // OK
+void CEffectManager::MainProc()
 {
 	for(int n=0;n < MAX_OBJECT;n++)
 	{
@@ -188,7 +188,7 @@ void CEffectManager::MainProc() // OK
 	}
 }
 
-bool CEffectManager::AddEffect(LPOBJ lpObj,bool type,int index,int count,WORD value1,WORD value2,WORD value3,WORD value4) // OK
+bool CEffectManager::AddEffect(LPOBJ lpObj,bool type,int index,int count,WORD value1,WORD value2,WORD value3,WORD value4)
 {
 	EFFECT_INFO* lpInfo = this->GetInfo(index);
 
@@ -258,7 +258,7 @@ bool CEffectManager::AddEffect(LPOBJ lpObj,bool type,int index,int count,WORD va
 	return 0;
 }
 
-bool CEffectManager::DelEffect(LPOBJ lpObj,int index) // OK
+bool CEffectManager::DelEffect(LPOBJ lpObj,int index)
 {
 	for(int n=0;n < MAX_EFFECT_LIST;n++)
 	{
@@ -281,7 +281,7 @@ bool CEffectManager::DelEffect(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-bool CEffectManager::DelEffectByGroup(LPOBJ lpObj,int group) // OK
+bool CEffectManager::DelEffectByGroup(LPOBJ lpObj,int group)
 {
 	for(int n=0;n < MAX_EFFECT_LIST;n++)
 	{
@@ -304,7 +304,7 @@ bool CEffectManager::DelEffectByGroup(LPOBJ lpObj,int group) // OK
 	return 0;
 }
 
-CEffect* CEffectManager::GetEffect(LPOBJ lpObj,int index) // OK
+CEffect* CEffectManager::GetEffect(LPOBJ lpObj,int index)
 {
 	for(int n=0;n < MAX_EFFECT_LIST;n++)
 	{
@@ -324,7 +324,7 @@ CEffect* CEffectManager::GetEffect(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-CEffect* CEffectManager::GetEffectByGroup(LPOBJ lpObj,int group) // OK
+CEffect* CEffectManager::GetEffectByGroup(LPOBJ lpObj,int group)
 {
 	for(int n=0;n < MAX_EFFECT_LIST;n++)
 	{
@@ -344,7 +344,7 @@ CEffect* CEffectManager::GetEffectByGroup(LPOBJ lpObj,int group) // OK
 	return 0;
 }
 
-bool CEffectManager::CheckEffect(LPOBJ lpObj,int index) // OK
+bool CEffectManager::CheckEffect(LPOBJ lpObj,int index)
 {
 	if(this->GetEffect(lpObj,index) != 0)
 	{
@@ -354,7 +354,7 @@ bool CEffectManager::CheckEffect(LPOBJ lpObj,int index) // OK
 	return 0;
 }
 
-bool CEffectManager::CheckEffectByGroup(LPOBJ lpObj,int group) // OK
+bool CEffectManager::CheckEffectByGroup(LPOBJ lpObj,int group)
 {
 	if(this->GetEffectByGroup(lpObj,group) != 0)
 	{
@@ -364,7 +364,7 @@ bool CEffectManager::CheckEffectByGroup(LPOBJ lpObj,int group) // OK
 	return 0;
 }
 
-void CEffectManager::InsertEffect(LPOBJ lpObj,CEffect* lpEffect) // OK
+void CEffectManager::InsertEffect(LPOBJ lpObj,CEffect* lpEffect)
 {
 	switch(lpEffect->m_index)
 	{
@@ -932,7 +932,7 @@ void CEffectManager::InsertEffect(LPOBJ lpObj,CEffect* lpEffect) // OK
 	gObjectManager.CharacterCalcAttribute(lpObj->Index);
 }
 
-void CEffectManager::RemoveEffect(LPOBJ lpObj,CEffect* lpEffect) // OK
+void CEffectManager::RemoveEffect(LPOBJ lpObj,CEffect* lpEffect)
 {
 	switch(lpEffect->m_index)
 	{
@@ -1512,7 +1512,7 @@ void CEffectManager::RemoveEffect(LPOBJ lpObj,CEffect* lpEffect) // OK
 	gObjectManager.CharacterCalcAttribute(lpObj->Index);
 }
 
-bool CEffectManager::ConvertEffectByte(CEffect* lpEffect,BYTE* lpMsg) // OK
+bool CEffectManager::ConvertEffectByte(CEffect* lpEffect,BYTE* lpMsg)
 {
 	if(lpMsg[0] == 0xFF)
 	{
@@ -1530,7 +1530,7 @@ bool CEffectManager::ConvertEffectByte(CEffect* lpEffect,BYTE* lpMsg) // OK
 	return 1;
 }
 
-void CEffectManager::EffectByteConvert(BYTE* lpMsg,CEffect* lpEffect) // OK
+void CEffectManager::EffectByteConvert(BYTE* lpMsg,CEffect* lpEffect)
 {
 	if(lpEffect->IsEffect() == 0 || lpEffect->m_save == 0)
 	{
@@ -1568,7 +1568,7 @@ void CEffectManager::EffectByteConvert(BYTE* lpMsg,CEffect* lpEffect) // OK
 	lpMsg[12] = SET_NUMBERLB(lpEffect->m_value[3]);
 }
 
-int CEffectManager::GenerateEffectList(LPOBJ lpObj,BYTE* lpMsg,int* size) // OK
+int CEffectManager::GenerateEffectList(LPOBJ lpObj,BYTE* lpMsg,int* size)
 {
 	int count = 0;
 
@@ -1590,7 +1590,7 @@ int CEffectManager::GenerateEffectList(LPOBJ lpObj,BYTE* lpMsg,int* size) // OK
 	return count;
 }
 
-int CEffectManager::GeneratePartyEffectList(LPOBJ lpObj,BYTE* lpMsg,int* size) // OK
+int CEffectManager::GeneratePartyEffectList(LPOBJ lpObj,BYTE* lpMsg,int* size)
 {
 	int count = 0;
 
@@ -1614,7 +1614,7 @@ int CEffectManager::GeneratePartyEffectList(LPOBJ lpObj,BYTE* lpMsg,int* size) /
 	return count;
 }
 
-bool CEffectManager::CheckStunEffect(LPOBJ lpObj) // OK
+bool CEffectManager::CheckStunEffect(LPOBJ lpObj)
 {
 	if(this->CheckEffect(lpObj,EFFECT_STERN) != 0 || this->CheckEffect(lpObj,EFFECT_SLEEP) != 0 || this->CheckEffect(lpObj,EFFECT_EARTH_PRISON) != 0 || this->CheckEffect(lpObj,EFFECT_PENTAGRAM_JEWEL_STUN) != 0)
 	{
@@ -1626,7 +1626,7 @@ bool CEffectManager::CheckStunEffect(LPOBJ lpObj) // OK
 	}
 }
 
-bool CEffectManager::CheckImmobilizeEffect(LPOBJ lpObj) // OK
+bool CEffectManager::CheckImmobilizeEffect(LPOBJ lpObj)
 {
 	if(this->CheckEffect(lpObj,EFFECT_ICE_ARROW) != 0 || this->CheckEffect(lpObj,EFFECT_ORDER_OF_RESTRAINT) != 0 || this->CheckEffect(lpObj,EFFECT_ICE_STORM_ENHANCED) != 0)
 	{
@@ -1638,7 +1638,7 @@ bool CEffectManager::CheckImmobilizeEffect(LPOBJ lpObj) // OK
 	}
 }
 
-void CEffectManager::ClearAllEffect(LPOBJ lpObj) // OK
+void CEffectManager::ClearAllEffect(LPOBJ lpObj)
 {
 	for(int n=0;n < MAX_EFFECT_LIST;n++)
 	{
@@ -1655,7 +1655,7 @@ void CEffectManager::ClearAllEffect(LPOBJ lpObj) // OK
 	}
 }
 
-void CEffectManager::ClearDebuffEffect(LPOBJ lpObj,int count) // OK
+void CEffectManager::ClearDebuffEffect(LPOBJ lpObj,int count)
 {
 	for(int n=0;n < MAX_EFFECT_LIST;n++)
 	{
@@ -1675,7 +1675,7 @@ void CEffectManager::ClearDebuffEffect(LPOBJ lpObj,int count) // OK
 	}
 }
 
-void CEffectManager::PeriodicEffect(LPOBJ lpObj, CEffect* lpEffect) // OK
+void CEffectManager::PeriodicEffect(LPOBJ lpObj, CEffect* lpEffect)
 {
 	if (lpEffect->m_index != EFFECT_POISON && lpEffect->m_index != EFFECT_NEIL && lpEffect->m_index != EFFECT_SAHAMUTT && lpEffect->m_index != EFFECT_DEATH_STAB_ENHANCED && lpEffect->m_index != EFFECT_DRAIN_LIFE_ENHANCED && lpEffect->m_index != EFFECT_DRAGON_ROAR_ENHANCED && lpEffect->m_index != EFFECT_CHAIN_DRIVER_ENHANCED && lpEffect->m_index != EFFECT_POISON_ARROW && lpEffect->m_index != EFFECT_POISON_ARROW_IMPROVED)
 	{
@@ -1804,7 +1804,7 @@ void CEffectManager::PeriodicEffect(LPOBJ lpObj, CEffect* lpEffect) // OK
 	}
 }
 
-void CEffectManager::GCEffectStateSend(LPOBJ lpObj,BYTE state,BYTE effect) // OK
+void CEffectManager::GCEffectStateSend(LPOBJ lpObj,BYTE state,BYTE effect)
 {
 	PMSG_EFFECT_STATE_SEND pMsg;
 
@@ -1830,7 +1830,7 @@ void CEffectManager::GCEffectStateSend(LPOBJ lpObj,BYTE state,BYTE effect) // OK
 	}
 }
 
-void CEffectManager::GCPeriodicEffectSend(LPOBJ lpObj,WORD group,WORD value,BYTE state,DWORD time,BYTE effect) // OK
+void CEffectManager::GCPeriodicEffectSend(LPOBJ lpObj,WORD group,WORD value,BYTE state,DWORD time,BYTE effect)
 {
 	PMSG_PERIODIC_EFFECT_SEND pMsg;
 
@@ -1855,7 +1855,7 @@ void CEffectManager::GCPeriodicEffectSend(LPOBJ lpObj,WORD group,WORD value,BYTE
 	this->GCEffectStateSend(lpObj,((state==0)?1:0),effect);
 }
 
-void CEffectManager::GCPartyEffectListSend(LPOBJ lpObj) // OK
+void CEffectManager::GCPartyEffectListSend(LPOBJ lpObj)
 {
 #if(GAMESERVER_UPDATE>=802 || GAMESERVER_UPDATE == 603)
 

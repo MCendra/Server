@@ -12,22 +12,22 @@ CDefaultClassInfo gDefaultClassInfo;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDefaultClassInfo::CDefaultClassInfo() // OK
+CDefaultClassInfo::CDefaultClassInfo()
 {
 	this->Init();
 }
 
-CDefaultClassInfo::~CDefaultClassInfo() // OK
+CDefaultClassInfo::~CDefaultClassInfo()
 {
 
 }
 
-void CDefaultClassInfo::Init() // OK
+void CDefaultClassInfo::Init()
 {
 	memset(this->m_DefaultClassInfo,0,sizeof(this->m_DefaultClassInfo));
 }
 
-void CDefaultClassInfo::Load(char* path) // OK
+void CDefaultClassInfo::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -97,7 +97,7 @@ void CDefaultClassInfo::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CDefaultClassInfo::SetInfo(DEFAULT_CLASS_INFO info) // OK
+void CDefaultClassInfo::SetInfo(DEFAULT_CLASS_INFO info)
 {
 	if(CHECK_RANGE(info.Class,MAX_CLASS) == 0)
 	{
@@ -107,7 +107,7 @@ void CDefaultClassInfo::SetInfo(DEFAULT_CLASS_INFO info) // OK
 	this->m_DefaultClassInfo[info.Class] = info;
 }
 
-int CDefaultClassInfo::GetCharacterDefaultStat(int Class,int stat) // OK
+int CDefaultClassInfo::GetCharacterDefaultStat(int Class,int stat)
 {
 	if(CHECK_RANGE(Class,MAX_CLASS) == 0)
 	{

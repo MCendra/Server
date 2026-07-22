@@ -1,124 +1,113 @@
-// IpManager.cpp: implementation of the CIpManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
+// IpManager.cpp
+#include "Header.h"
 #include "IpManager.h"
 #include "ServerInfo.h"
 #include "Log.h"
 #include "Util.h"
 
 CIpManager gIpManager;
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-CIpManager::CIpManager() // OK
+bool CIpManager::CheckIpAddress(char* IpAddress)
 {
+	auto it = m_IpAddressInfo.find(IpAddress);
 
-}
-
-CIpManager::~CIpManager() // OK
-{
-
-}
-//antiflood - replace entire ipmanager.cpp and ipmanager.h
-bool CIpManager::CheckIpAddress(char* IpAddress) // OK
-{
-	std::map<std::string, IP_ADDRESS_INFO>::iterator it = this->m_IpAddressInfo.find(std::string(IpAddress));
-
-	if (it == this->m_IpAddressInfo.end())
+	if (it == m_IpAddressInfo.end())
 	{
-		return ((gServerInfo.m_MaxIpConnection == 0) ? 0 : 1);
+		return (gServerInfo.m_MaxIpConnection != 0);
 	}
 
-	if (it->second.IpBlocked > 0)
+	IP_ADDRESS_INFO& info = it->second;
+	const ULONGLONG currentTick = GetTickCount64();
+
+	if (info.IpBlocked != 0)
 	{
-		if (it->second.IpRealUser == 1 || GetTickCount() - it->second.IpBlockedTime > gServerInfo.m_IpConnectionBlockedTime)
+		if (info.IpRealUser != 0 || (currentTick - info.IpBlockedTime) > gServerInfo.m_IpConnectionBlockedTime)
 		{
-			//check banned time or real user and unban the ip.
-			gLog.Output(LOG_HACK, "IP IS UNBAN: %s", IpAddress);
-			LogAdd(LOG_RED, "IP IS UNBAN: %s", IpAddress);
-			it->second.IpBlocked = 0;
-			it->second.IpBlockedTime = 0;
+			Log.ToDispAndFile(LOG_RED, LogType::HACK, "[IpManager - CheckIpAddress] IP desbaneada: %s", IpAddress);
+			info.IpBlocked = 0;
+			info.IpBlockedTime = 0;
 		}
 		else
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	if (it->second.IpRealUser == 0 && it->second.IpTick != 0 && GetTickCount() - it->second.IpTick < 1000)
+	if (info.IpRealUser == 0 && info.IpTick != 0 && (currentTick - info.IpTick) < 1000ULL)
 	{
-		it->second.IpBlocked = 1;
-		it->second.IpBlockedTime = GetTickCount();
-		gLog.Output(LOG_HACK, "FLOOD ATTEMPT DETECTED - BAN IP: %s", IpAddress);
-		LogAdd(LOG_RED, "FLOOD ATTEMPT DETECTED - BAN IP: %s", IpAddress);
-		return 0;
+		info.IpBlocked = 1;
+		info.IpBlockedTime = currentTick;
+
+		Log.ToDispAndFile(LOG_RED, LogType::HACK, "[IpManager - CheckIpAddress] Intento de flood detectado - Banear IP: %s", IpAddress);
+		return false;
 	}
 
-	it->second.IpTick = GetTickCount();
+	info.IpTick = currentTick;
 
-	if (it->second.IpAddressCount >= gServerInfo.m_MaxIpConnection)
+	if (info.IpAddressCount >= gServerInfo.m_MaxIpConnection)
 	{
-		if (it->second.IpRealUser == 0)
+		if (info.IpRealUser == 0)
 		{
-			it->second.IpBlocked = 1;
-			it->second.IpBlockedTime = GetTickCount();
-			gLog.Output(LOG_HACK, "FLOOD ATTEMPT DETECTED - BAN IP: %s", IpAddress);
-			LogAdd(LOG_RED, "FLOOD ATTEMPT DETECTED - BAN IP: %s", IpAddress);
+			info.IpBlocked = 1;
+			info.IpBlockedTime = currentTick;
+
+			Log.ToDispAndFile(LOG_RED, LogType::HACK, "[IpManager - CheckIpAddress] Intento de flood detectado - Banear IP: %s", IpAddress);
 		}
-		return 0;
+
+		return false;
 	}
-	return 1;
+
+	return true;
 }
 
-void CIpManager::InsertIpAddress(char* IpAddress) // OK
+void CIpManager::InsertIpAddress(char* IpAddress)
 {
-	IP_ADDRESS_INFO info;
+	auto it = m_IpAddressInfo.find(IpAddress);
+
+	if (it != m_IpAddressInfo.end())
+	{
+		++it->second.IpAddressCount;
+		return;
+	}
+
+	IP_ADDRESS_INFO info{};
 
 	strcpy_s(info.IpAddress, IpAddress);
 
 	info.IpAddressCount = 1;
-	info.IpTick = GetTickCount();
+	info.IpTick = GetTickCount64();
 	info.IpBlocked = 0;
 	info.IpBlockedTime = 0;
+	info.IpFloodAttemps = 0;
+	info.IpFloodLastTime = 0;
 	info.IpRealUser = 0;
 
-	std::map<std::string, IP_ADDRESS_INFO>::iterator it = this->m_IpAddressInfo.find(std::string(IpAddress));
+	m_IpAddressInfo.emplace(IpAddress, info);
+}
 
-	if (it == this->m_IpAddressInfo.end())
+void CIpManager::RemoveIpAddress(char* IpAddress)
+{
+	auto it = m_IpAddressInfo.find(IpAddress);
+
+	if (it == m_IpAddressInfo.end())
 	{
-		this->m_IpAddressInfo.insert(std::pair<std::string, IP_ADDRESS_INFO>(std::string(IpAddress), info));
+		return;
 	}
-	else
+
+	IP_ADDRESS_INFO& info = it->second;
+
+	if (info.IpBlocked == 0 && --info.IpAddressCount == 0)
 	{
-		it->second.IpAddressCount++;
+		m_IpAddressInfo.erase(it);
 	}
 }
 
-void CIpManager::RemoveIpAddress(char* IpAddress) // OK
+void CIpManager::InsertRealUser(char* IpAddress)
 {
-	std::map<std::string, IP_ADDRESS_INFO>::iterator it = this->m_IpAddressInfo.find(std::string(IpAddress));
+	auto it = m_IpAddressInfo.find(IpAddress);
 
-	if (it != this->m_IpAddressInfo.end())
+	if (it != m_IpAddressInfo.end())
 	{
-		if (it->second.IpBlocked == 0 && (--it->second.IpAddressCount) == 0)
-		{
-			this->m_IpAddressInfo.erase(it);
-		}
-	}
-}
-
-void CIpManager::InsertRealUser(char* IpAddress) // OK
-{
-	std::map<std::string, IP_ADDRESS_INFO>::iterator it = this->m_IpAddressInfo.find(std::string(IpAddress));
-
-	if (it != this->m_IpAddressInfo.end())
-	{
-		if (it->second.IpRealUser == 0)
-		{
-			it->second.IpRealUser = 1;
-		}
+		it->second.IpRealUser = 1;
 	}
 }

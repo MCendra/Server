@@ -15,24 +15,24 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuMaya::CKanturuMaya() // OK
+CKanturuMaya::CKanturuMaya()
 {
 	this->Init();
 }
 
-CKanturuMaya::~CKanturuMaya() // OK
+CKanturuMaya::~CKanturuMaya()
 {
 
 }
 
-void CKanturuMaya::Init() // OK
+void CKanturuMaya::Init()
 {
 	this->m_MayaObjIndex = -1;
 	this->m_MayaSkillTime = 0;
 	this->m_IceStormCount = 0;
 }
 
-void CKanturuMaya::KanturuMayaAct_IceStorm(int rate) // OK
+void CKanturuMaya::KanturuMayaAct_IceStorm(int rate)
 {
 	if((GetLargeRand()%10000) > rate)
 	{
@@ -57,7 +57,7 @@ void CKanturuMaya::KanturuMayaAct_IceStorm(int rate) // OK
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ IceStorm ] Skill Using(%d) : Index(%d) %s",this->m_IceStormCount,this->m_MayaObjIndex,gObj[this->m_MayaObjIndex].Name);
 }
 
-void CKanturuMaya::KanturuMayaAct_Hands() // OK
+void CKanturuMaya::KanturuMayaAct_Hands()
 {
 	if((GetTickCount()-this->m_MayaSkillTime) < 20000)
 	{
@@ -91,7 +91,7 @@ void CKanturuMaya::KanturuMayaAct_Hands() // OK
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BrokenShower ] Skill Using : Index(%d) %s",this->m_MayaObjIndex,gObj[this->m_MayaObjIndex].Name);
 }
 
-void CKanturuMaya::SetMayaObjIndex(int aIndex) // OK
+void CKanturuMaya::SetMayaObjIndex(int aIndex)
 {
 	this->m_MayaObjIndex = aIndex;
 }

@@ -16,19 +16,19 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemBagEx::CItemBagEx() // OK
+CItemBagEx::CItemBagEx()
 {
 	this->m_ItemBagInfo.clear();
 
 	this->m_ItemBagItemInfo.clear();
 }
 
-CItemBagEx::~CItemBagEx() // OK
+CItemBagEx::~CItemBagEx()
 {
 
 }
 
-void CItemBagEx::Load(char* path) // OK
+void CItemBagEx::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -165,7 +165,7 @@ void CItemBagEx::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemBagEx::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
+bool CItemBagEx::GetItem(LPOBJ lpObj,CItem* lpItem)
 {
 	for(std::map<int,ITEM_BAG_EX_INFO>::iterator it=this->m_ItemBagInfo.begin();it != this->m_ItemBagInfo.end();it++)
 	{
@@ -242,7 +242,7 @@ bool CItemBagEx::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
 	return 0;
 }
 
-bool CItemBagEx::DropItem(LPOBJ lpObj,int map,int x,int y) // OK
+bool CItemBagEx::DropItem(LPOBJ lpObj,int map,int x,int y)
 {
 	for(std::map<int,ITEM_BAG_EX_INFO>::iterator it=this->m_ItemBagInfo.begin();it != this->m_ItemBagInfo.end();it++)
 	{
@@ -331,7 +331,7 @@ bool CItemBagEx::DropItem(LPOBJ lpObj,int map,int x,int y) // OK
 	return 1;
 }
 
-bool CItemBagEx::CheckDropClass(LPOBJ lpObj,int type,int RequireClass[MAX_CLASS]) // OK
+bool CItemBagEx::CheckDropClass(LPOBJ lpObj,int type,int RequireClass[MAX_CLASS])
 {
 	int aIndex = -1;
 
@@ -359,7 +359,7 @@ bool CItemBagEx::CheckDropClass(LPOBJ lpObj,int type,int RequireClass[MAX_CLASS]
 	return 0;
 }
 
-bool::CItemBagEx::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count) // OK
+bool::CItemBagEx::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count)
 {
 	int x = (*ox);
 	int y = (*oy);

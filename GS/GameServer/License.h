@@ -6,8 +6,8 @@ class License
 {
 public:
 	bool CheckingGetComputerHardwareId(LPCSTR HDWID);
-	bool GetComputerHardwareId(); // OK
-	inline void ErrorMessageBox(); // OK
+	bool GetComputerHardwareId();
+	inline void ErrorMessageBox();
 	inline void SafeExitProcess();
 
 	char ComputerHardware[36];

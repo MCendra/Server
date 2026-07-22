@@ -257,7 +257,7 @@ void CTvTEvent::MainProc()
 	}
 }
 
-void CTvTEvent::ProcState_BLANK() // OK
+void CTvTEvent::ProcState_BLANK()
 {
 
 }
@@ -266,7 +266,7 @@ void CTvTEvent::ProcState_BLANK() // OK
 
 
 
-void CTvTEvent::ProcState_EMPTY() // OK
+void CTvTEvent::ProcState_EMPTY()
 {
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= (this->m_WarningTime * 60))
 	{
@@ -291,7 +291,7 @@ void CTvTEvent::ProcState_EMPTY() // OK
 	}
 }
 
-void CTvTEvent::ProcState_STAND() // OK
+void CTvTEvent::ProcState_STAND()
 {
 	this->CheckUser();
 
@@ -318,7 +318,7 @@ void CTvTEvent::ProcState_STAND() // OK
 	}
 }
 
-void CTvTEvent::ProcState_START() // OK
+void CTvTEvent::ProcState_START()
 {
 	this->CheckUser();
 
@@ -341,7 +341,7 @@ void CTvTEvent::ProcState_START() // OK
 	}
 }
 
-void CTvTEvent::ProcState_CLEAN() // OK
+void CTvTEvent::ProcState_CLEAN()
 {
 	this->CheckUser();
 
@@ -351,7 +351,7 @@ void CTvTEvent::ProcState_CLEAN() // OK
 	}
 }
 
-void CTvTEvent::SetState(int state) // OK
+void CTvTEvent::SetState(int state)
 {
 	switch ((this->m_State = state))
 	{
@@ -373,12 +373,12 @@ void CTvTEvent::SetState(int state) // OK
 	}
 }
 
-void CTvTEvent::SetState_BLANK() // OK
+void CTvTEvent::SetState_BLANK()
 {
 
 }
 
-void CTvTEvent::SetState_EMPTY() // OK
+void CTvTEvent::SetState_EMPTY()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -391,7 +391,7 @@ void CTvTEvent::SetState_EMPTY() // OK
 	this->CheckSync();
 }
 
-void CTvTEvent::SetState_STAND() // OK
+void CTvTEvent::SetState_STAND()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -402,7 +402,7 @@ void CTvTEvent::SetState_STAND() // OK
 	this->TargetTime = (int)(time(0) + this->m_RemainTime);
 }
 
-void CTvTEvent::SetState_START() // OK
+void CTvTEvent::SetState_START()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -413,7 +413,7 @@ void CTvTEvent::SetState_START() // OK
 	this->TargetTime = (int)(time(0) + this->m_RemainTime);
 }
 
-void CTvTEvent::SetState_CLEAN() // OK
+void CTvTEvent::SetState_CLEAN()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -470,7 +470,7 @@ void CTvTEvent::SetState_CLEAN() // OK
 	this->TargetTime = (int)(time(0) + this->m_RemainTime);
 }
 
-void CTvTEvent::CheckSync() // OK
+void CTvTEvent::CheckSync()
 {
 	if (this->m_TVTStartTime.empty() != 0)
 	{
@@ -498,7 +498,7 @@ void CTvTEvent::CheckSync() // OK
 	this->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-int CTvTEvent::GetState() // OK
+int CTvTEvent::GetState()
 {
 	return this->m_State;
 }
@@ -629,22 +629,22 @@ bool CTvTEvent::CheckReqItems(LPOBJ lpObj)
 	return true;
 }
 
-int CTvTEvent::GetEnterEnabled() // OK
+int CTvTEvent::GetEnterEnabled()
 {
 	return this->EnterEnabled;
 }
 
-int CTvTEvent::GetEnteredUserCount() // OK
+int CTvTEvent::GetEnteredUserCount()
 {
 	return this->GetUserCount();
 }
 
-bool CTvTEvent::CheckEnteredUser(int aIndex) // OK
+bool CTvTEvent::CheckEnteredUser(int aIndex)
 {
 	return ((this->GetUser(aIndex) == 0) ? 0 : 1);
 }
 
-bool CTvTEvent::CheckPlayerTarget(LPOBJ lpObj) // OK
+bool CTvTEvent::CheckPlayerTarget(LPOBJ lpObj)
 {
 	if (this->GetState() == TVT_EVENT_STATE_START)
 	{
@@ -659,7 +659,7 @@ bool CTvTEvent::CheckPlayerTarget(LPOBJ lpObj) // OK
 	return 0;
 }
 
-bool CTvTEvent::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CTvTEvent::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->GetState() != TVT_EVENT_STATE_BLANK)
 	{
@@ -694,7 +694,7 @@ bool CTvTEvent::CheckSelfTeam(LPOBJ lpObj, LPOBJ lpTarget)
 	return 0;
 }
 
-bool CTvTEvent::AddUser(int aIndex) // OK
+bool CTvTEvent::AddUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -722,7 +722,7 @@ bool CTvTEvent::AddUser(int aIndex) // OK
 	return 0;
 }
 
-bool CTvTEvent::DelUser(int aIndex) // OK
+bool CTvTEvent::DelUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -741,7 +741,7 @@ bool CTvTEvent::DelUser(int aIndex) // OK
 	return 1;
 }
 
-TVT_EVENT_USER* CTvTEvent::GetUser(int aIndex) // OK
+TVT_EVENT_USER* CTvTEvent::GetUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -758,7 +758,7 @@ TVT_EVENT_USER* CTvTEvent::GetUser(int aIndex) // OK
 	return 0;
 }
 
-void CTvTEvent::CleanUser() // OK
+void CTvTEvent::CleanUser()
 {
 	for (int n = 0; n < MAX_TVTEVENT_USER; n++)
 	{
@@ -767,7 +767,7 @@ void CTvTEvent::CleanUser() // OK
 	}
 }
 
-void CTvTEvent::ClearUser() // OK
+void CTvTEvent::ClearUser()
 {
 	for (int n = 0; n < MAX_TVTEVENT_USER; n++)
 	{
@@ -792,7 +792,7 @@ void CTvTEvent::ClearUser() // OK
 	}
 }
 
-void CTvTEvent::CheckUser() // OK
+void CTvTEvent::CheckUser()
 {
 	for (int n = 0; n < MAX_TVTEVENT_USER; n++)
 	{
@@ -815,7 +815,7 @@ void CTvTEvent::CheckUser() // OK
 	}
 }
 
-int CTvTEvent::GetUserCount() // OK
+int CTvTEvent::GetUserCount()
 {
 	int count = 0;
 
@@ -830,7 +830,7 @@ int CTvTEvent::GetUserCount() // OK
 	return count;
 }
 
-bool CTvTEvent::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level) // OK
+bool CTvTEvent::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level)
 {
 	if (gServerInfo.m_TvTEventSwitch == 0)
 	{
@@ -950,7 +950,7 @@ int CTvTEvent::ReturnMaxReset()
 	return Index;
 }
 
-void CTvTEvent::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CTvTEvent::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (gServerInfo.m_TvTEventSwitch == 0)
 	{
@@ -1011,7 +1011,7 @@ void CTvTEvent::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-void CTvTEvent::NoticeSendToAll(int type, char* message, ...) // OK
+void CTvTEvent::NoticeSendToAll(int type, char* message, ...)
 {
 	char buff[256];
 

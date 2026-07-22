@@ -13,17 +13,17 @@ CItemMove gItemMove;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemMove::CItemMove() // OK
+CItemMove::CItemMove()
 {
 	this->m_ItemMoveInfo.clear();
 }
 
-CItemMove::~CItemMove() // OK
+CItemMove::~CItemMove()
 {
 
 }
 
-void CItemMove::Load(char* path) // OK
+void CItemMove::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -79,7 +79,7 @@ void CItemMove::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemMove::CheckItemMoveAllowDrop(int index) // OK
+bool CItemMove::CheckItemMoveAllowDrop(int index)
 {
 	std::map<int,ITEM_MOVE_INFO>::iterator it = this->m_ItemMoveInfo.find(index);
 
@@ -93,7 +93,7 @@ bool CItemMove::CheckItemMoveAllowDrop(int index) // OK
 	}
 }
 
-bool CItemMove::CheckItemMoveAllowSell(int index) // OK
+bool CItemMove::CheckItemMoveAllowSell(int index)
 {
 	std::map<int,ITEM_MOVE_INFO>::iterator it = this->m_ItemMoveInfo.find(index);
 
@@ -107,7 +107,7 @@ bool CItemMove::CheckItemMoveAllowSell(int index) // OK
 	}
 }
 
-bool CItemMove::CheckItemMoveAllowTrade(int index) // OK
+bool CItemMove::CheckItemMoveAllowTrade(int index)
 {
 	std::map<int,ITEM_MOVE_INFO>::iterator it = this->m_ItemMoveInfo.find(index);
 
@@ -121,7 +121,7 @@ bool CItemMove::CheckItemMoveAllowTrade(int index) // OK
 	}
 }
 
-bool CItemMove::CheckItemMoveAllowVault(int index) // OK
+bool CItemMove::CheckItemMoveAllowVault(int index)
 {
 	std::map<int,ITEM_MOVE_INFO>::iterator it = this->m_ItemMoveInfo.find(index);
 

@@ -26,7 +26,7 @@ void CuongHoaWing::Init()
 	this->m_CuongHoaWing.Damage5 = 0;
 }
 
-void CuongHoaWing::Load(char* path) // OK
+void CuongHoaWing::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

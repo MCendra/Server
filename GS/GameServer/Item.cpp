@@ -28,12 +28,12 @@ CPetItemExp gPetItemExp;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItem::CItem() // OK
+CItem::CItem()
 {
 	this->Clear();
 }
 
-void CItem::Clear() // OK
+void CItem::Clear()
 {
 	this->m_Serial = 0;
 	this->m_Index = -1;
@@ -94,7 +94,7 @@ void CItem::Clear() // OK
 	memset(this->m_SocketOption, 0xFF, sizeof(this->m_SocketOption));
 }
 
-bool CItem::IsItem() // OK
+bool CItem::IsItem()
 {
 	if (CHECK_RANGE(this->m_Index, MAX_ITEM) == 0)
 	{
@@ -106,7 +106,7 @@ bool CItem::IsItem() // OK
 	}
 }
 
-bool CItem::IsExcItem() // OK
+bool CItem::IsExcItem()
 {
 	if (this->m_Index == GET_ITEM(13, 3) || this->m_Index == GET_ITEM(13, 37)) // Dinorant,Fenrir
 	{
@@ -207,58 +207,58 @@ bool CItem::IsExtMonsterMoney()
 	return 0;
 }
 
-bool CItem::IsSetItem() // OK
+bool CItem::IsSetItem()
 {
 	return gSetItemOption.IsSetItem(this);
 }
 
-bool CItem::IsJewelOfHarmonyItem() // OK
+bool CItem::IsJewelOfHarmonyItem()
 {
 	return gJewelOfHarmonyOption.IsJewelOfHarmonyItem(this);
 }
 
-bool CItem::Is380Item() // OK
+bool CItem::Is380Item()
 {
 	return g380ItemOption.Is380Item(this);
 }
 
-bool CItem::IsSocketItem() // OK
+bool CItem::IsSocketItem()
 {
 	return gSocketItemOption.IsSocketItem(this);
 }
 
 
-bool CItem::IsLuckyItem() // OK
+bool CItem::IsLuckyItem()
 {
 	return gLuckyItem.IsLuckyItem(this);
 }
 
-bool CItem::IsPentagramItem() // OK
+bool CItem::IsPentagramItem()
 {
 	return gPentagramSystem.IsPentagramItem(this);
 }
 
-bool CItem::IsPentagramJewel() // OK
+bool CItem::IsPentagramJewel()
 {
 	return gPentagramSystem.IsPentagramJewel(this);
 }
 
-bool CItem::IsPentagramMithril() // OK
+bool CItem::IsPentagramMithril()
 {
 	return gPentagramSystem.IsPentagramMithril(this);
 }
 
-bool CItem::IsEventItem() // OK
+bool CItem::IsEventItem()
 {
 	return gEventInventory.IsEventItem(this);
 }
 
-bool CItem::IsMuunItem() // OK
+bool CItem::IsMuunItem()
 {
 	return gMuunSystem.IsMuunItem(this);
 }
 
-bool CItem::IsMuunUtil() // OK
+bool CItem::IsMuunUtil()
 {
 	return gMuunSystem.IsMuunUtil(this);
 }
@@ -278,7 +278,7 @@ bool CItem::IsJewel()
 }
 #endif
 
-bool CItem::IsClass(int Class, int ChangeUp) // OK
+bool CItem::IsClass(int Class, int ChangeUp)
 {
 	if (CHECK_RANGE(Class, MAX_CLASS) == 0)
 	{
@@ -302,7 +302,7 @@ bool CItem::IsClass(int Class, int ChangeUp) // OK
 	}
 }
 
-void CItem::Convert(int index, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption, BYTE JewelOfHarmonyOption, BYTE ItemOptionEx, BYTE SocketOption[MAX_SOCKET_OPTION], BYTE SocketOptionBonus) // OK
+void CItem::Convert(int index, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption, BYTE JewelOfHarmonyOption, BYTE ItemOptionEx, BYTE SocketOption[MAX_SOCKET_OPTION], BYTE SocketOptionBonus)
 {
 	ITEM_INFO ItemInfo;
 
@@ -1044,7 +1044,7 @@ void CItem::Convert(int index, BYTE Option1, BYTE Option2, BYTE Option3, BYTE Ne
 	}
 }
 
-void CItem::Value() // OK
+void CItem::Value()
 {
 	if (this->IsItem() == 0)
 	{
@@ -1299,7 +1299,7 @@ void CItem::Value() // OK
 	this->m_SellMoney = (DWORD)(this->m_BuyMoney / 3);
 }
 
-void CItem::OldValue() // OK
+void CItem::OldValue()
 {
 	if (this->IsItem() == 0)
 	{
@@ -1332,7 +1332,7 @@ void CItem::OldValue() // OK
 	}
 }
 
-void CItem::PetValue() // OK
+void CItem::PetValue()
 {
 	int price = this->m_BuyMoney;
 
@@ -1359,7 +1359,7 @@ void CItem::PetValue() // OK
 	this->m_SellMoney = ((this->m_SellMoney >= 1000) ? ((this->m_SellMoney / 100) * 100) : this->m_SellMoney);
 }
 
-void CItem::SetPetItemInfo(int PetLevel, int PetExp) // OK
+void CItem::SetPetItemInfo(int PetLevel, int PetExp)
 {
 	if (this->m_Index == GET_ITEM(13, 4)) // Dark Horse
 	{
@@ -1396,7 +1396,7 @@ void CItem::SetPetItemInfo(int PetLevel, int PetExp) // OK
 	}
 }
 
-int CItem::GetDamageMin() // OK
+int CItem::GetDamageMin()
 {
 	if (this->IsItem() == 0 || this->m_IsValidItem == 0 || this->m_Durability == 0)
 	{
@@ -1408,7 +1408,7 @@ int CItem::GetDamageMin() // OK
 	}
 }
 
-int CItem::GetDamageMax() // OK
+int CItem::GetDamageMax()
 {
 	if (this->IsItem() == 0 || this->m_IsValidItem == 0 || this->m_Durability == 0)
 	{
@@ -1420,7 +1420,7 @@ int CItem::GetDamageMax() // OK
 	}
 }
 
-int CItem::GetDefense() // OK
+int CItem::GetDefense()
 {
 	if (this->IsItem() == 0 || this->m_IsValidItem == 0 || this->m_Durability == 0)
 	{
@@ -1432,7 +1432,7 @@ int CItem::GetDefense() // OK
 	}
 }
 
-int CItem::GetDefenseSuccessRate() // OK
+int CItem::GetDefenseSuccessRate()
 {
 	if (this->IsItem() == 0 || this->m_IsValidItem == 0 || this->m_Durability == 0)
 	{
@@ -1444,7 +1444,7 @@ int CItem::GetDefenseSuccessRate() // OK
 	}
 }
 
-int CItem::GetBookSuccessRate() // OK
+int CItem::GetBookSuccessRate()
 {
 	if (this->IsItem() == 0 || this->m_IsValidItem == 0 || this->m_Durability == 0)
 	{
@@ -1456,7 +1456,7 @@ int CItem::GetBookSuccessRate() // OK
 	}
 }
 
-bool CItem::WeaponDurabilityDown(int aIndex, int defense, int type) // OK
+bool CItem::WeaponDurabilityDown(int aIndex, int defense, int type)
 {
 	if (this->m_Durability < 1 || this->IsLuckyItem() != 0 || this->m_IsPeriodicItem != 0)
 	{
@@ -1513,7 +1513,7 @@ bool CItem::WeaponDurabilityDown(int aIndex, int defense, int type) // OK
 	return 0;
 }
 
-bool CItem::ArmorDurabilityDown(int aIndex, int damage) // OK
+bool CItem::ArmorDurabilityDown(int aIndex, int damage)
 {
 	if (this->m_Durability < 1 || this->IsLuckyItem() != 0 || this->m_IsPeriodicItem != 0)
 	{
@@ -1587,7 +1587,7 @@ bool CItem::ArmorDurabilityDown(int aIndex, int damage) // OK
 	return 0;
 }
 
-bool CItem::WingDurabilityDown(int aIndex, int decrease) // OK
+bool CItem::WingDurabilityDown(int aIndex, int decrease)
 {
 	if (this->m_Durability < 1 || this->IsLuckyItem() != 0 || this->m_IsPeriodicItem != 0)
 	{
@@ -1611,7 +1611,7 @@ bool CItem::WingDurabilityDown(int aIndex, int decrease) // OK
 	return 0;
 }
 
-bool CItem::PendantDurabilityDown(int aIndex, int decrease) // OK
+bool CItem::PendantDurabilityDown(int aIndex, int decrease)
 {
 	if (this->m_Durability < 1 || this->IsLuckyItem() != 0 || this->m_IsPeriodicItem != 0)
 	{
@@ -1635,7 +1635,7 @@ bool CItem::PendantDurabilityDown(int aIndex, int decrease) // OK
 	return 0;
 }
 
-bool CItem::RingDurabilityDown(int aIndex, int decrease) // OK
+bool CItem::RingDurabilityDown(int aIndex, int decrease)
 {
 	if (this->m_Durability < 1 || this->IsLuckyItem() != 0 || this->m_IsPeriodicItem != 0)
 	{
@@ -1659,7 +1659,7 @@ bool CItem::RingDurabilityDown(int aIndex, int decrease) // OK
 	return 0;
 }
 
-bool CItem::LuckyDurabilityDown(int aIndex, int decrease) // OK
+bool CItem::LuckyDurabilityDown(int aIndex, int decrease)
 {
 	if (this->m_Durability < 1 || this->IsLuckyItem() == 0)
 	{
@@ -1683,7 +1683,7 @@ bool CItem::LuckyDurabilityDown(int aIndex, int decrease) // OK
 	return 0;
 }
 
-bool CItem::CheckDurabilityState() // OK
+bool CItem::CheckDurabilityState()
 {
 	if (this->m_Durability == 0)
 	{
@@ -1743,7 +1743,7 @@ bool CItem::CheckDurabilityState() // OK
 	return 0;
 }
 
-bool CItem::AddPetItemExp(int amount) // OK
+bool CItem::AddPetItemExp(int amount)
 {
 	if (this->m_Durability == 0 || this->m_LoadPetItemInfo == 0)
 	{
@@ -1797,7 +1797,7 @@ bool CItem::AddPetItemExp(int amount) // OK
 	return 0;
 }
 
-bool CItem::DecPetItemExp(int amount) // OK
+bool CItem::DecPetItemExp(int amount)
 {
 	if (this->m_Durability == 0 || this->m_LoadPetItemInfo == 0)
 	{
@@ -1883,11 +1883,11 @@ char * CItem::GetName()
 }
 
 //===Info Buy Skin
-CInfoSkinBuy::CInfoSkinBuy() // OK
+CInfoSkinBuy::CInfoSkinBuy()
 {
 	this->Clear();
 }
-bool CInfoSkinBuy::IsBuy(int SkinIndex) // OK
+bool CInfoSkinBuy::IsBuy(int SkinIndex)
 {
 	if (this->SkinIndex == SkinIndex && this->StatusBuy == 1)
 	{
@@ -1895,14 +1895,14 @@ bool CInfoSkinBuy::IsBuy(int SkinIndex) // OK
 	}
 	return 0;
 }
-void CInfoSkinBuy::Clear() // OK
+void CInfoSkinBuy::Clear()
 {
 	this->SkinIndex = -1;
 	this->StatusBuy = -1;
 	this->CountSkinBuy = 0;
 
 }
-void CInfoSkinBuy::AddListBuySkin(int SkinIndex) // OK
+void CInfoSkinBuy::AddListBuySkin(int SkinIndex)
 {
 	if (!SkinIndex) { return; }
 	this->SkinIndex = SkinIndex;

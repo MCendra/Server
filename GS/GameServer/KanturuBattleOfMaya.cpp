@@ -17,7 +17,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuBattleOfMaya::CKanturuBattleOfMaya() // OK
+CKanturuBattleOfMaya::CKanturuBattleOfMaya()
 {
 	this->SetBattleOfMayaState(KANTURU_MAYA_NONE);
 
@@ -52,12 +52,12 @@ CKanturuBattleOfMaya::CKanturuBattleOfMaya() // OK
 	this->ResetAllData();
 }
 
-CKanturuBattleOfMaya::~CKanturuBattleOfMaya() // OK
+CKanturuBattleOfMaya::~CKanturuBattleOfMaya()
 {
 
 }
 
-void CKanturuBattleOfMaya::ResetAllData() // OK
+void CKanturuBattleOfMaya::ResetAllData()
 {
 	this->m_FileDataLoad = 0;
 
@@ -82,7 +82,7 @@ void CKanturuBattleOfMaya::ResetAllData() // OK
 	this->m_MayaIceStormUsingRate = 0;
 }
 
-void CKanturuBattleOfMaya::Load(char* path) // OK
+void CKanturuBattleOfMaya::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -203,7 +203,7 @@ void CKanturuBattleOfMaya::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CKanturuBattleOfMaya::MainProc() // OK
+void CKanturuBattleOfMaya::MainProc()
 {
 	this->CheckStateTime();
 
@@ -275,22 +275,22 @@ void CKanturuBattleOfMaya::MainProc() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::ProcState_NONE() // OK
+void CKanturuBattleOfMaya::ProcState_NONE()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_STANBY1() // OK
+void CKanturuBattleOfMaya::ProcState_STANBY1()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_NOTIFY1() // OK
+void CKanturuBattleOfMaya::ProcState_NOTIFY1()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_START1() // OK
+void CKanturuBattleOfMaya::ProcState_START1()
 {
 	if(gKanturuMonsterMng.IsExistAliveMonster() == 0)
 	{
@@ -308,7 +308,7 @@ void CKanturuBattleOfMaya::ProcState_START1() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::ProcState_MAYA1() // OK
+void CKanturuBattleOfMaya::ProcState_MAYA1()
 {
 	if(gObj[this->m_MayaLeftHandObjIndex].Live == 0)
 	{
@@ -342,17 +342,17 @@ void CKanturuBattleOfMaya::ProcState_MAYA1() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::ProcState_END_MAYA1() // OK
+void CKanturuBattleOfMaya::ProcState_END_MAYA1()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_ENDCYCLE_MAYA1() // OK
+void CKanturuBattleOfMaya::ProcState_ENDCYCLE_MAYA1()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_STANBY2() // OK
+void CKanturuBattleOfMaya::ProcState_STANBY2()
 {
 
 }
@@ -409,22 +409,22 @@ void CKanturuBattleOfMaya::ProcState_MAYA2()
 	}
 }
 
-void CKanturuBattleOfMaya::ProcState_END_MAYA2() // OK
+void CKanturuBattleOfMaya::ProcState_END_MAYA2()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_ENDCYCLE_MAYA2() // OK
+void CKanturuBattleOfMaya::ProcState_ENDCYCLE_MAYA2()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_STANBY3() // OK
+void CKanturuBattleOfMaya::ProcState_STANBY3()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_START3() // OK
+void CKanturuBattleOfMaya::ProcState_START3()
 {
 	if(gKanturuMonsterMng.IsExistAliveMonster() == 0)
 	{
@@ -442,7 +442,7 @@ void CKanturuBattleOfMaya::ProcState_START3() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::ProcState_MAYA3() // OK
+void CKanturuBattleOfMaya::ProcState_MAYA3()
 {
 	if(gObj[this->m_MayaLeftHandObjIndex].Live == 0 && gObj[this->m_MayaRightHandObjIndex].Live == 0)
 	{
@@ -483,27 +483,27 @@ void CKanturuBattleOfMaya::ProcState_MAYA3() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::ProcState_END_MAYA3() // OK
+void CKanturuBattleOfMaya::ProcState_END_MAYA3()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_ENDCYCLE_MAYA3() // OK
+void CKanturuBattleOfMaya::ProcState_ENDCYCLE_MAYA3()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_END() // OK
+void CKanturuBattleOfMaya::ProcState_END()
 {
 
 }
 
-void CKanturuBattleOfMaya::ProcState_ENDCYCLE() // OK
+void CKanturuBattleOfMaya::ProcState_ENDCYCLE()
 {
 
 }
 
-void CKanturuBattleOfMaya::SetState(int state) // OK
+void CKanturuBattleOfMaya::SetState(int state)
 {
 	this->m_StateInfo[state].SetConditionAppliedTime();
 
@@ -577,7 +577,7 @@ void CKanturuBattleOfMaya::SetState(int state) // OK
 	gKanturuUtil.NotifyKanturuChangeState(KANTURU_STATE_BATTLE_OF_MAYA,this->m_BattleOfMayaState);
 }
 
-void CKanturuBattleOfMaya::SetState_NONE() // OK
+void CKanturuBattleOfMaya::SetState_NONE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> NONE",this->m_BattleOfMayaState);
 
@@ -586,7 +586,7 @@ void CKanturuBattleOfMaya::SetState_NONE() // OK
 	this->SetEntrancePermit(0);
 }
 
-void CKanturuBattleOfMaya::SetState_STANBY1() // OK
+void CKanturuBattleOfMaya::SetState_STANBY1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> STANBY1",this->m_BattleOfMayaState);
 
@@ -597,7 +597,7 @@ void CKanturuBattleOfMaya::SetState_STANBY1() // OK
 	gKanturuBattleUserMng.ResetAllData();
 }
 
-void CKanturuBattleOfMaya::SetState_NOTIFY1() // OK
+void CKanturuBattleOfMaya::SetState_NOTIFY1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> NOTIFY1",this->m_BattleOfMayaState);
 
@@ -606,7 +606,7 @@ void CKanturuBattleOfMaya::SetState_NOTIFY1() // OK
 	this->SetEntrancePermit(0);
 }
 
-void CKanturuBattleOfMaya::SetState_START1() // OK
+void CKanturuBattleOfMaya::SetState_START1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> START1",this->m_BattleOfMayaState);
 
@@ -632,7 +632,7 @@ void CKanturuBattleOfMaya::SetState_START1() // OK
 	this->m_KanturuMaya.SetMayaObjIndex(gKanturuMonsterMng.GetMayaObjIndex());
 }
 
-void CKanturuBattleOfMaya::SetState_MAYA1() // OK
+void CKanturuBattleOfMaya::SetState_MAYA1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> MAYA1",this->m_BattleOfMayaState);
 
@@ -655,7 +655,7 @@ void CKanturuBattleOfMaya::SetState_MAYA1() // OK
 	this->m_MayaLeftHandObjIndex = CMonsterAIGroup::FindGroupLeader(this->m_MayaHandGroupNumber[0]);
 }
 
-void CKanturuBattleOfMaya::SetState_END_MAYA1() // OK
+void CKanturuBattleOfMaya::SetState_END_MAYA1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> END_MAYA1",this->m_BattleOfMayaState);
 
@@ -670,7 +670,7 @@ void CKanturuBattleOfMaya::SetState_END_MAYA1() // OK
 	gKanturuUtil.NotifyKanturuResult(this->GetSuccessValue());
 }
 
-void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA1() // OK
+void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA1()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> ENDCYCLE_MAYA1",this->m_BattleOfMayaState);
 
@@ -681,7 +681,7 @@ void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA1() // OK
 	gKanturuUtil.SendMsgKanturuBossMapUser(gMessage.GetMessage(340));
 }
 
-void CKanturuBattleOfMaya::SetState_STANBY2() // OK
+void CKanturuBattleOfMaya::SetState_STANBY2()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> STANBY2",this->m_BattleOfMayaState);
 
@@ -690,7 +690,7 @@ void CKanturuBattleOfMaya::SetState_STANBY2() // OK
 	this->SetEntrancePermit(1);
 }
 
-void CKanturuBattleOfMaya::SetState_START2() // OK
+void CKanturuBattleOfMaya::SetState_START2()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> START2",this->m_BattleOfMayaState);
 
@@ -716,7 +716,7 @@ void CKanturuBattleOfMaya::SetState_START2() // OK
 	this->m_KanturuMaya.SetMayaObjIndex(gKanturuMonsterMng.GetMayaObjIndex());
 }
 
-void CKanturuBattleOfMaya::SetState_MAYA2() // OK
+void CKanturuBattleOfMaya::SetState_MAYA2()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> MAYA2",this->m_BattleOfMayaState);
 
@@ -739,7 +739,7 @@ void CKanturuBattleOfMaya::SetState_MAYA2() // OK
 	this->m_MayaRightHandObjIndex = CMonsterAIGroup::FindGroupLeader(this->m_MayaHandGroupNumber[1]);
 }
 
-void CKanturuBattleOfMaya::SetState_END_MAYA2() // OK
+void CKanturuBattleOfMaya::SetState_END_MAYA2()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> END_MAYA2",this->m_BattleOfMayaState);
 
@@ -754,7 +754,7 @@ void CKanturuBattleOfMaya::SetState_END_MAYA2() // OK
 	gKanturuUtil.NotifyKanturuResult(this->GetSuccessValue());
 }
 
-void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA2() // OK
+void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA2()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> ENDCYCLE_MAYA2",this->m_BattleOfMayaState);
 
@@ -765,7 +765,7 @@ void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA2() // OK
 	gKanturuUtil.SendMsgKanturuBossMapUser(gMessage.GetMessage(340));
 }
 
-void CKanturuBattleOfMaya::SetState_STANBY3() // OK
+void CKanturuBattleOfMaya::SetState_STANBY3()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> STANBY3",this->m_BattleOfMayaState);
 
@@ -774,7 +774,7 @@ void CKanturuBattleOfMaya::SetState_STANBY3() // OK
 	this->SetEntrancePermit(1);
 }
 
-void CKanturuBattleOfMaya::SetState_START3() // OK
+void CKanturuBattleOfMaya::SetState_START3()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> START3",this->m_BattleOfMayaState);
 
@@ -798,7 +798,7 @@ void CKanturuBattleOfMaya::SetState_START3() // OK
 	gKanturuMonsterMng.SetKanturuMonster(1);
 }
 
-void CKanturuBattleOfMaya::SetState_MAYA3() // OK
+void CKanturuBattleOfMaya::SetState_MAYA3()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> MAYA3",this->m_BattleOfMayaState);
 
@@ -823,7 +823,7 @@ void CKanturuBattleOfMaya::SetState_MAYA3() // OK
 	this->m_MayaRightHandObjIndex = CMonsterAIGroup::FindGroupMemberObjectIndex(this->m_MayaHandGroupNumber[2],1);
 }
 
-void CKanturuBattleOfMaya::SetState_END_MAYA3() // OK
+void CKanturuBattleOfMaya::SetState_END_MAYA3()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> END_MAYA3",this->m_BattleOfMayaState);
 
@@ -838,7 +838,7 @@ void CKanturuBattleOfMaya::SetState_END_MAYA3() // OK
 	gKanturuUtil.NotifyKanturuResult(this->GetSuccessValue());
 }
 
-void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA3() // OK
+void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA3()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> ENDCYCLE_MAYA3",this->m_BattleOfMayaState);
 
@@ -847,7 +847,7 @@ void CKanturuBattleOfMaya::SetState_ENDCYCLE_MAYA3() // OK
 	this->SetEntrancePermit(0);
 }
 
-void CKanturuBattleOfMaya::SetState_END() // OK
+void CKanturuBattleOfMaya::SetState_END()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> END",this->m_BattleOfMayaState);
 
@@ -873,7 +873,7 @@ void CKanturuBattleOfMaya::SetState_END() // OK
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] Success Value[%d]",this->GetSuccessValue());
 }
 
-void CKanturuBattleOfMaya::SetState_ENDCYCLE() // OK
+void CKanturuBattleOfMaya::SetState_ENDCYCLE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfMaya ] State(%d) -> ENDCYCLE",this->m_BattleOfMayaState);
 
@@ -888,7 +888,7 @@ void CKanturuBattleOfMaya::SetState_ENDCYCLE() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::CheckStateTime() // OK
+void CKanturuBattleOfMaya::CheckStateTime()
 {
 	if(this->GetBattleOfMayaState() != KANTURU_MAYA_NONE && this->m_StateInfo[this->GetBattleOfMayaState()].GetCondition() == 1 && this->m_StateInfo[this->GetBattleOfMayaState()].IsTimeOut() != 0)
 	{
@@ -896,7 +896,7 @@ void CKanturuBattleOfMaya::CheckStateTime() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::CheckMayaBattleTime() // OK
+void CKanturuBattleOfMaya::CheckMayaBattleTime()
 {
 	if(this->GetBattleSceneState() != -1 && this->m_BattleTimeInfo[this->m_SceneState].GetCondition() == 1 && this->GetSceneSuccessValue() == 0 && this->GetBattleOfMayaState() != KANTURU_MAYA_END && this->m_BattleTimeInfo[this->m_SceneState].IsTimeOut() != 0)
 	{
@@ -910,7 +910,7 @@ void CKanturuBattleOfMaya::CheckMayaBattleTime() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::CheckMayaBattleUser() // OK
+void CKanturuBattleOfMaya::CheckMayaBattleUser()
 {
 	if(this->GetBattleOfMayaState() == KANTURU_MAYA_NOTIFY1 || this->GetBattleOfMayaState() == KANTURU_MAYA_START1 || this->GetBattleOfMayaState() == KANTURU_MAYA1 || this->GetBattleOfMayaState() == KANTURU_MAYA_START2 || this->GetBattleOfMayaState() == KANTURU_MAYA2 || this->GetBattleOfMayaState() == KANTURU_MAYA_START3 || this->GetBattleOfMayaState() == KANTURU_MAYA3)
 	{
@@ -927,7 +927,7 @@ void CKanturuBattleOfMaya::CheckMayaBattleUser() // OK
 	}
 }
 
-void CKanturuBattleOfMaya::ResetAIMonster() // OK
+void CKanturuBattleOfMaya::ResetAIMonster()
 {
 	if(OBJECT_RANGE(this->m_MayaLeftHandObjIndex) != 0)
 	{
@@ -953,7 +953,7 @@ void CKanturuBattleOfMaya::ResetAIMonster() // OK
 	this->m_MayaHandCurrentAI = 0;
 }
 
-void CKanturuBattleOfMaya::SetAIMonsterGroup(int GroupNumber) // OK
+void CKanturuBattleOfMaya::SetAIMonsterGroup(int GroupNumber)
 {
 	CMonsterAIGroup::Init(GroupNumber);
 
@@ -962,7 +962,7 @@ void CKanturuBattleOfMaya::SetAIMonsterGroup(int GroupNumber) // OK
 	this->m_MayaHandAIAppliedTime = GetTickCount();
 }
 
-void CKanturuBattleOfMaya::ChangeAI(int GroupNumber) // OK
+void CKanturuBattleOfMaya::ChangeAI(int GroupNumber)
 {
 	if((GetTickCount()-this->m_MayaHandAIAppliedTime) >= ((DWORD)this->m_MayaHandAIChangeTime[this->m_MayaHandCurrentAI]))
 	{
@@ -974,57 +974,57 @@ void CKanturuBattleOfMaya::ChangeAI(int GroupNumber) // OK
 	}
 }
 
-void CKanturuBattleOfMaya::SetBattleOfMayaState(int state) // OK
+void CKanturuBattleOfMaya::SetBattleOfMayaState(int state)
 {
 	this->m_BattleOfMayaState = state;
 }
 
-void CKanturuBattleOfMaya::SetBattleSceneState(int scene) // OK
+void CKanturuBattleOfMaya::SetBattleSceneState(int scene)
 {
 	this->m_SceneState = scene;
 }
 
-void CKanturuBattleOfMaya::SetEntrancePermit(int permit) // OK
+void CKanturuBattleOfMaya::SetEntrancePermit(int permit)
 {
 	this->m_EntrancePermit = permit;
 }
 
-void CKanturuBattleOfMaya::SetSuccessValue(int success) // OK
+void CKanturuBattleOfMaya::SetSuccessValue(int success)
 {
 	this->m_IsSucccess = success;
 }
 
-void CKanturuBattleOfMaya::SetSceneSuccessValue(int success) // OK
+void CKanturuBattleOfMaya::SetSceneSuccessValue(int success)
 {
 	this->m_IsSceneSuccess = success;
 }
 
-int CKanturuBattleOfMaya::GetBattleOfMayaState() // OK
+int CKanturuBattleOfMaya::GetBattleOfMayaState()
 {
 	return this->m_BattleOfMayaState;
 }
 
-int CKanturuBattleOfMaya::GetBattleSceneState() // OK
+int CKanturuBattleOfMaya::GetBattleSceneState()
 {
 	return this->m_SceneState;
 }
 
-int CKanturuBattleOfMaya::GetRemainTime() // OK
+int CKanturuBattleOfMaya::GetRemainTime()
 {
 	return this->m_StateInfo[this->GetBattleOfMayaState()].GetRemainTime();
 }
 
-int CKanturuBattleOfMaya::GetEntrancePermit() // OK
+int CKanturuBattleOfMaya::GetEntrancePermit()
 {
 	return this->m_EntrancePermit;
 }
 
-int CKanturuBattleOfMaya::GetSuccessValue() // OK
+int CKanturuBattleOfMaya::GetSuccessValue()
 {
 	return this->m_IsSucccess;
 }
 
-int CKanturuBattleOfMaya::GetSceneSuccessValue() // OK
+int CKanturuBattleOfMaya::GetSceneSuccessValue()
 {
 	return this->m_IsSceneSuccess;
 }

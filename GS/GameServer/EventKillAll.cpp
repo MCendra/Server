@@ -17,7 +17,7 @@
 
 CEventKillAll gEventKillAll;
 
-CEventKillAll::CEventKillAll() // OK
+CEventKillAll::CEventKillAll()
 {
 	this->m_RemainTime = 0;
 	this->m_TickCount = GetTickCount();
@@ -36,7 +36,7 @@ CEventKillAll::CEventKillAll() // OK
 
 }
 
-CEventKillAll::~CEventKillAll() // OK
+CEventKillAll::~CEventKillAll()
 {
 
 }
@@ -79,7 +79,7 @@ void CEventKillAll::Clear()
 	}
 }
 
-void CEventKillAll::MainProc() // OK
+void CEventKillAll::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -186,7 +186,7 @@ void CEventKillAll::MainProc() // OK
 
 }
 
-bool CEventKillAll::CommandEventKillAll(LPOBJ lpObj,char* arg) // OK 
+bool CEventKillAll::CommandEventKillAll(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventKillAllSwitch == 0)
@@ -224,7 +224,7 @@ bool CEventKillAll::CommandEventKillAll(LPOBJ lpObj,char* arg) // OK
 	return 1;
 }
 
-void CEventKillAll::CommandEventKillAllJoin(LPOBJ lpObj,char* arg) // OK 
+void CEventKillAll::CommandEventKillAllJoin(LPOBJ lpObj,char* arg) 
 {
 	if(gServerInfo.m_EventKillAllSwitch == 0)
 	{
@@ -267,7 +267,7 @@ void CEventKillAll::CommandEventKillAllJoin(LPOBJ lpObj,char* arg) // OK
 	LogAdd(LOG_EVENT,"[EVENT KILL ALL] Member add (%s)",lpObj->Name);
 }
 
-bool CEventKillAll::AddUser(int aIndex) // OK
+bool CEventKillAll::AddUser(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -296,7 +296,7 @@ bool CEventKillAll::AddUser(int aIndex) // OK
 	return 0;
 }
 
-void CEventKillAll::CalcUserRank() // OK
+void CEventKillAll::CalcUserRank()
 {
 	for(int n=0;n < MAX_KILLALL_USER;n++)
 	{
@@ -338,7 +338,7 @@ void CEventKillAll::CalcUserRank() // OK
 	}
 }
 
-bool CEventKillAll::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CEventKillAll::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(this->m_EventKillAllActive != 0)
 	{
@@ -348,7 +348,7 @@ bool CEventKillAll::CheckPlayerTarget(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	return 0;
 }
 
-void CEventKillAll::CheckUser() // OK
+void CEventKillAll::CheckUser()
 {
 	for(int n=0;n < MAX_KILLALL_USER;n++)
 	{
@@ -380,7 +380,7 @@ void CEventKillAll::CheckUser() // OK
 }
 
 
-void CEventKillAll::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CEventKillAll::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(gServerInfo.m_EventKillAllSwitch == 0)
 	{
@@ -413,7 +413,7 @@ void CEventKillAll::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-bool CEventKillAll::Respawn(LPOBJ lpObj,int* gate,int* map,int* x,int* y,int* dir,int* level) // OK
+bool CEventKillAll::Respawn(LPOBJ lpObj,int* gate,int* map,int* x,int* y,int* dir,int* level)
 {
 	if(gServerInfo.m_EventKillAllSwitch == 0)
 	{

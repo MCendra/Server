@@ -15,19 +15,19 @@ CKanturuMonsterMng gKanturuMonsterMng;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuMonsterMng::CKanturuMonsterMng() // OK
+CKanturuMonsterMng::CKanturuMonsterMng()
 {
 	this->ResetLoadData();
 
 	this->ResetRegenMonsterObjData();
 }
 
-CKanturuMonsterMng::~CKanturuMonsterMng() // OK
+CKanturuMonsterMng::~CKanturuMonsterMng()
 {
 
 }
 
-void CKanturuMonsterMng::ResetLoadData() // OK
+void CKanturuMonsterMng::ResetLoadData()
 {
 	this->m_MaxMonsterCount = 0;
 
@@ -41,7 +41,7 @@ void CKanturuMonsterMng::ResetLoadData() // OK
 	this->m_FileDataLoad = 0;
 }
 
-void CKanturuMonsterMng::Load(char* path) // OK
+void CKanturuMonsterMng::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -117,7 +117,7 @@ void CKanturuMonsterMng::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CKanturuMonsterMng::SetMonsterSetBaseInfo(KANTURU_MONSTER_SETBASE_INFO info) // OK
+void CKanturuMonsterMng::SetMonsterSetBaseInfo(KANTURU_MONSTER_SETBASE_INFO info)
 {
 	if(this->m_MaxMonsterCount < 0 || this->m_MaxMonsterCount >= MAX_KANTURU_MONSTER)
 	{
@@ -127,7 +127,7 @@ void CKanturuMonsterMng::SetMonsterSetBaseInfo(KANTURU_MONSTER_SETBASE_INFO info
 	this->m_SetBaseInfo[this->m_MaxMonsterCount++] = info;
 }
 
-void CKanturuMonsterMng::MonsterDie(int aIndex) // OK
+void CKanturuMonsterMng::MonsterDie(int aIndex)
 {
 	for(int n=0;n < this->m_KanturuMonster.GetCount();n++)
 	{
@@ -139,7 +139,7 @@ void CKanturuMonsterMng::MonsterDie(int aIndex) // OK
 	}
 }
 
-void CKanturuMonsterMng::ResetRegenMonsterObjData() // OK
+void CKanturuMonsterMng::ResetRegenMonsterObjData()
 {
 	if(OBJECT_RANGE(this->m_MayaObjIndex) != 0)
 	{
@@ -162,7 +162,7 @@ void CKanturuMonsterMng::ResetRegenMonsterObjData() // OK
 	this->m_AliveMonsterCount = 0;
 }
 
-int CKanturuMonsterMng::SetKanturuMonster(int GroupNumber) // OK
+int CKanturuMonsterMng::SetKanturuMonster(int GroupNumber)
 {
 	int RegenMonsterCount = 0;
 
@@ -235,7 +235,7 @@ int CKanturuMonsterMng::SetKanturuMonster(int GroupNumber) // OK
 	return RegenMonsterCount;
 }
 
-int CKanturuMonsterMng::GetPosition(int index,short map,short* x,short* y) // OK
+int CKanturuMonsterMng::GetPosition(int index,short map,short* x,short* y)
 {
 	if(index < 0 || index >= MAX_KANTURU_MONSTER)
 	{
@@ -265,17 +265,17 @@ int CKanturuMonsterMng::GetPosition(int index,short map,short* x,short* y) // OK
 	return 0;
 }
 
-int CKanturuMonsterMng::GetMayaObjIndex() // OK
+int CKanturuMonsterMng::GetMayaObjIndex()
 {
 	return this->m_MayaObjIndex;
 }
 
-int CKanturuMonsterMng::GetAliveMonsterCount() // OK
+int CKanturuMonsterMng::GetAliveMonsterCount()
 {
 	return this->m_AliveMonsterCount;
 }
 
-int CKanturuMonsterMng::IsExistAliveMonster() // OK
+int CKanturuMonsterMng::IsExistAliveMonster()
 {
 	return ((this->m_AliveMonsterCount<=0)?0:1);
 }

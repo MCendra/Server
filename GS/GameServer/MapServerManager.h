@@ -13,17 +13,17 @@
 class CMapServerData
 {
 public:
-	CMapServerData() // OK
+	CMapServerData()
 	{
 		this->Clear(1);
 	}
 
-	virtual ~CMapServerData() // OK
+	virtual ~CMapServerData()
 	{
 
 	}
 
-	void Clear(int value) // OK
+	void Clear(int value)
 	{
 		this->m_used = 0;
 		this->m_MapServerGroup = -1;
@@ -31,7 +31,7 @@ public:
 
 		memset(this->m_IpAddr,0,sizeof(this->m_IpAddr));
 
-		this->m_port = 0;
+		this->m_Port = 0;
 
 		for(int n=0;n < MAX_MAP;n++)
 		{
@@ -54,7 +54,7 @@ public:
 	BYTE m_MapServerGroup;
 	short m_ServerCode;
 	char m_IpAddr[16];
-	WORD m_port;
+	WORD m_Port;
 	short m_MapMove[MAX_MAP];
 };
 

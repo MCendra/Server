@@ -15,7 +15,7 @@ CCastleSiegeWeapon gCastleSiegeWeapon;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCastleSiegeWeapon::CCastleSiegeWeapon() // OK
+CCastleSiegeWeapon::CCastleSiegeWeapon()
 {
 	for(int n=0;n < MAX_CS_WEAPON_DAMAGED_TARGET;n++)
 	{
@@ -28,12 +28,12 @@ CCastleSiegeWeapon::CCastleSiegeWeapon() // OK
 	}
 }
 
-CCastleSiegeWeapon::~CCastleSiegeWeapon() // OK
+CCastleSiegeWeapon::~CCastleSiegeWeapon()
 {
 
 }
 
-void CCastleSiegeWeapon::MainProc() // OK
+void CCastleSiegeWeapon::MainProc()
 {
 	for(int n=0;n < MAX_CS_WEAPON_DAMAGED_TARGET;n++)
 	{
@@ -69,7 +69,7 @@ void CCastleSiegeWeapon::MainProc() // OK
 	}
 }
 
-void CCastleSiegeWeapon::CastleSiegeWeaponAct(int aIndex) // OK
+void CCastleSiegeWeapon::CastleSiegeWeaponAct(int aIndex)
 {
 	for(int n=0;n < MAX_CS_WEAPON_CAL_DAMAGER;n++)
 	{
@@ -83,7 +83,7 @@ void CCastleSiegeWeapon::CastleSiegeWeaponAct(int aIndex) // OK
 	}
 }
 
-bool CCastleSiegeWeapon::AddWeaponDamagedTargetInfo(int aIndex,int bIndex,int DelayTime) // OK
+bool CCastleSiegeWeapon::AddWeaponDamagedTargetInfo(int aIndex,int bIndex,int DelayTime)
 {
 	for(int n=0;n < MAX_CS_WEAPON_DAMAGED_TARGET;n++)
 	{
@@ -100,7 +100,7 @@ bool CCastleSiegeWeapon::AddWeaponDamagedTargetInfo(int aIndex,int bIndex,int De
 	return 0;
 }
 
-bool CCastleSiegeWeapon::AddWeaponCalDamageInfo(int aIndex,BYTE tx,BYTE ty,int DelayTime) // OK
+bool CCastleSiegeWeapon::AddWeaponCalDamageInfo(int aIndex,BYTE tx,BYTE ty,int DelayTime)
 {
 	for(int n=0;n < MAX_CS_WEAPON_CAL_DAMAGER;n++)
 	{
@@ -118,7 +118,7 @@ bool CCastleSiegeWeapon::AddWeaponCalDamageInfo(int aIndex,BYTE tx,BYTE ty,int D
 	return 0;
 }
 
-bool CCastleSiegeWeapon::GetWeaponCalDamageInfo(int aIndex,BYTE* ox,BYTE* oy) // OK
+bool CCastleSiegeWeapon::GetWeaponCalDamageInfo(int aIndex,BYTE* ox,BYTE* oy)
 {
 	for(int n=0;n < MAX_CS_WEAPON_CAL_DAMAGER;n++)
 	{
@@ -134,7 +134,7 @@ bool CCastleSiegeWeapon::GetWeaponCalDamageInfo(int aIndex,BYTE* ox,BYTE* oy) //
 	return 0;
 }
 
-void CCastleSiegeWeapon::GetTargetPointXY(int type,int PointIndex,BYTE* ox,BYTE* oy) // OK
+void CCastleSiegeWeapon::GetTargetPointXY(int type,int PointIndex,BYTE* ox,BYTE* oy)
 {
 	if(PointIndex < 0 || PointIndex >= MAX_CS_WEAPON_ZONE)
 	{
@@ -154,7 +154,7 @@ void CCastleSiegeWeapon::GetTargetPointXY(int type,int PointIndex,BYTE* ox,BYTE*
 	}
 }
 
-bool CCastleSiegeWeapon::Attack(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CCastleSiegeWeapon::Attack(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	if(lpObj->Index == lpTarget->Index)
 	{
@@ -232,7 +232,7 @@ bool CCastleSiegeWeapon::Attack(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	return 1;
 }
 
-void CCastleSiegeWeapon::NpcCastleSiegeWeaponOffense(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CCastleSiegeWeapon::NpcCastleSiegeWeaponOffense(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	lpObj->Interface.use = 1;
 	lpObj->Interface.type = INTERFACE_CASTLE_SIEGE_WEAPON_OFFENSE;
@@ -253,7 +253,7 @@ void CCastleSiegeWeapon::NpcCastleSiegeWeaponOffense(LPOBJ lpNpc,LPOBJ lpObj) //
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CCastleSiegeWeapon::NpcCastleSiegeWeaponDefense(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CCastleSiegeWeapon::NpcCastleSiegeWeaponDefense(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	lpObj->Interface.use = 1;
 	lpObj->Interface.type = INTERFACE_CASTLE_SIEGE_WEAPON_DEFENSE;
@@ -274,7 +274,7 @@ void CCastleSiegeWeapon::NpcCastleSiegeWeaponDefense(LPOBJ lpNpc,LPOBJ lpObj) //
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CCastleSiegeWeapon::CGCastleSiegeWeaponUseRecv(PMSG_CASTLE_SIEGE_WEAPON_USE_RECV* lpMsg,int aIndex) // OK
+void CCastleSiegeWeapon::CGCastleSiegeWeaponUseRecv(PMSG_CASTLE_SIEGE_WEAPON_USE_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -330,7 +330,7 @@ void CCastleSiegeWeapon::CGCastleSiegeWeaponUseRecv(PMSG_CASTLE_SIEGE_WEAPON_USE
 	this->AddWeaponCalDamageInfo(bIndex,pMsg.x,pMsg.y,10000);
 }
 
-void CCastleSiegeWeapon::CGCastleSiegeWeaponDamageRecv(PMSG_CASTLE_SIEGE_WEAPON_DAMAGE_RECV* lpMsg,int aIndex) // OK
+void CCastleSiegeWeapon::CGCastleSiegeWeaponDamageRecv(PMSG_CASTLE_SIEGE_WEAPON_DAMAGE_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -381,7 +381,7 @@ void CCastleSiegeWeapon::CGCastleSiegeWeaponDamageRecv(PMSG_CASTLE_SIEGE_WEAPON_
 	}
 }
 
-void CCastleSiegeWeapon::GCCastleSiegeWeaponAttackRegionSend(int aIndex,int type,BYTE x,BYTE y) // OK
+void CCastleSiegeWeapon::GCCastleSiegeWeaponAttackRegionSend(int aIndex,int type,BYTE x,BYTE y)
 {
 	PMSG_CASTLE_SIEGE_WEAPON_ATTACK_REGION_SEND pMsg;
 

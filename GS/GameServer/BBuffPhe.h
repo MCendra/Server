@@ -124,7 +124,7 @@ public:
 	void CBBuffPhe::MainProc();
 	void CBBuffPhe::GetInfoCharTop(int Type);
 	void CBBuffPhe::RecvCharInfoAddBot(INFOCHAR_BUFFPHE* lpMsg);
-	void CBBuffPhe::SendInfoClient(int aIndex); // OK
+	void CBBuffPhe::SendInfoClient(int aIndex);
 	void CBBuffPhe::GetOptionCuongHoa(LPOBJ lpObj, bool flag);
 	bool CBBuffPhe::CongHienBuffPhe(int aIndex, int Point);
 };

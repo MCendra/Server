@@ -10,17 +10,17 @@ cCPKFree gPKFree;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-cCPKFree::cCPKFree() // OK
+cCPKFree::cCPKFree()
 {
 	this->m_PKFreeInfo.clear();
 }
 
-cCPKFree::~cCPKFree() // OK
+cCPKFree::~cCPKFree()
 {
 
 }
 
-void cCPKFree::Load(char* path) // OK
+void cCPKFree::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -78,7 +78,7 @@ void cCPKFree::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool cCPKFree::CheckPKZona(int map,int x,int y) // OK
+bool cCPKFree::CheckPKZona(int map,int x,int y)
 {
 	for(std::vector<MOVE_PKFREE_INFO>::iterator it=this->m_PKFreeInfo.begin();it != this->m_PKFreeInfo.end();it++)
 	{
@@ -100,7 +100,7 @@ bool cCPKFree::CheckPKZona(int map,int x,int y) // OK
 	return false;
 }
 
-bool cCPKFree::CheckPKFree(int map,int x,int y) // OK
+bool cCPKFree::CheckPKFree(int map,int x,int y)
 {
 
 

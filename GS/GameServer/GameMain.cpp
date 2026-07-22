@@ -30,7 +30,7 @@ bool IsMeAuth = false;
 CConnection gJoinServerConnection;
 CConnection gDataServerConnection;
 
-void GameMainInit(HWND hwnd) // OK
+void GameMainInit(HWND hwnd)
 {
 	if (CreateMutex(0, 0, gServerInfo.m_ServerMutex) == 0 || GetLastError() == ERROR_ALREADY_EXISTS)
 	{
@@ -83,7 +83,7 @@ void GameMainInit(HWND hwnd) // OK
 
 }
 
-void ConnectServerInfoSend() // OK
+void ConnectServerInfoSend()
 {
 	PROTECT_START
 
@@ -115,7 +115,7 @@ void ConnectServerInfoSend() // OK
 	PROTECT_FINAL
 }
 
-bool JoinServerConnect(DWORD wMsg) // OK
+bool JoinServerConnect(DWORD wMsg)
 {
 	if (gJoinServerConnection.Connect(gServerInfo.m_JoinServerAddress, (WORD)gServerInfo.m_JoinServerPort, wMsg) == 0)
 	{
@@ -126,7 +126,7 @@ bool JoinServerConnect(DWORD wMsg) // OK
 	return 1;
 }
 
-bool DataServerConnect(DWORD wMsg) // OK
+bool DataServerConnect(DWORD wMsg)
 {
 	if (gDataServerConnection.Connect(gServerInfo.m_DataServerAddress, (WORD)gServerInfo.m_DataServerPort, wMsg) == 0)
 	{
@@ -137,7 +137,7 @@ bool DataServerConnect(DWORD wMsg) // OK
 	return 1;
 }
 
-bool JoinServerReconnect(HWND hwnd, DWORD wMsg) // OK
+bool JoinServerReconnect(HWND hwnd, DWORD wMsg)
 {
 	if (gJoinServerConnection.CheckState() == 0)
 	{
@@ -148,7 +148,7 @@ bool JoinServerReconnect(HWND hwnd, DWORD wMsg) // OK
 	return 1;
 }
 
-bool DataServerReconnect(HWND hwnd, DWORD wMsg) // OK
+bool DataServerReconnect(HWND hwnd, DWORD wMsg)
 {
 	if (gDataServerConnection.CheckState() == 0)
 	{
@@ -159,7 +159,7 @@ bool DataServerReconnect(HWND hwnd, DWORD wMsg) // OK
 	return 1;
 }
 
-void JoinServerMsgProc(WPARAM wParam, LPARAM lParam) // OK
+void JoinServerMsgProc(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(lParam))
 	{
@@ -176,7 +176,7 @@ void JoinServerMsgProc(WPARAM wParam, LPARAM lParam) // OK
 	}
 }
 
-void DataServerMsgProc(WPARAM wParam, LPARAM lParam) // OK
+void DataServerMsgProc(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(lParam))
 	{
@@ -193,7 +193,7 @@ void DataServerMsgProc(WPARAM wParam, LPARAM lParam) // OK
 	}
 }
 
-void CALLBACK QueueTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired) // OK
+void CALLBACK QueueTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
 	PROTECT_START
 

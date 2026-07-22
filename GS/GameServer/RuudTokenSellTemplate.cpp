@@ -30,7 +30,7 @@ RuudTokenSellTemplate::~RuudTokenSellTemplate()
 {
 }
 
-void RuudTokenSellTemplate::Load_RuudTokenSell(char* path) // OK
+void RuudTokenSellTemplate::Load_RuudTokenSell(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

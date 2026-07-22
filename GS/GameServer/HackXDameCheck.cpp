@@ -22,17 +22,17 @@ CHackXDameCheck gHackXDameCheck;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CHackXDameCheck::CHackXDameCheck() // OK
+CHackXDameCheck::CHackXDameCheck()
 {
 	this->m_HackXDameInfo.clear();
 }
 
-CHackXDameCheck::~CHackXDameCheck() // OK
+CHackXDameCheck::~CHackXDameCheck()
 {
 
 }
 
-void CHackXDameCheck::Load(char* path) // OK
+void CHackXDameCheck::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -92,7 +92,7 @@ void CHackXDameCheck::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CHackXDameCheck::GetInfo(int index, HACK_XDAME_INFO* lpInfo) // OK
+bool CHackXDameCheck::GetInfo(int index, HACK_XDAME_INFO* lpInfo)
 {
 	std::map<int, HACK_XDAME_INFO>::iterator it = this->m_HackXDameInfo.find(index);
 
@@ -107,7 +107,7 @@ bool CHackXDameCheck::GetInfo(int index, HACK_XDAME_INFO* lpInfo) // OK
 	}
 }
 
-bool CHackXDameCheck::GetInfoByXDame(int Speed, HACK_XDAME_INFO* lpInfo) // OK
+bool CHackXDameCheck::GetInfoByXDame(int Speed, HACK_XDAME_INFO* lpInfo)
 {
 	for (std::map<int, HACK_XDAME_INFO>::iterator it = this->m_HackXDameInfo.begin(); it != this->m_HackXDameInfo.end(); it++)
 	{
@@ -121,7 +121,7 @@ bool CHackXDameCheck::GetInfoByXDame(int Speed, HACK_XDAME_INFO* lpInfo) // OK
 	return 0;
 }
 
-bool CHackXDameCheck::CheckXDameHack(LPOBJ lpObj, int skill) // OK
+bool CHackXDameCheck::CheckXDameHack(LPOBJ lpObj, int skill)
 {
 	if (gServerInfo.m_XdameHackSkillEnable != 1)
 	{

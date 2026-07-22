@@ -12,19 +12,19 @@ CCommand gCommand;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCommand::CCommand() // OK
+CCommand::CCommand()
 {
 	memset(this->m_DefaultCommand,0,sizeof(this->m_DefaultCommand));
 
 	this->m_CommandInfo.clear();
 }
 
-CCommand::~CCommand() // OK
+CCommand::~CCommand()
 {
 
 }
 
-void CCommand::Load(char* path) // OK
+void CCommand::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -132,7 +132,7 @@ void CCommand::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-char* CCommand::GetCommand(int index) // OK
+char* CCommand::GetCommand(int index)
 {
 	std::map<int,COMMAND_LIST>::iterator it = this->m_CommandInfo.find(index);
 
@@ -147,7 +147,7 @@ char* CCommand::GetCommand(int index) // OK
 	}
 }
 
-bool CCommand::GetInfo(int index,COMMAND_LIST* lpInfo) // OK
+bool CCommand::GetInfo(int index,COMMAND_LIST* lpInfo)
 {
 	std::map<int,COMMAND_LIST>::iterator it = this->m_CommandInfo.find(index);
 
@@ -162,7 +162,7 @@ bool CCommand::GetInfo(int index,COMMAND_LIST* lpInfo) // OK
 	}
 }
 
-bool CCommand::GetInfoByName(char* label,COMMAND_LIST* lpInfo) // OK
+bool CCommand::GetInfoByName(char* label,COMMAND_LIST* lpInfo)
 {
 	for(std::map<int,COMMAND_LIST>::iterator it=this->m_CommandInfo.begin();it != this->m_CommandInfo.end();it++)
 	{

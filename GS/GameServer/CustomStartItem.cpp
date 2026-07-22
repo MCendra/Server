@@ -12,17 +12,17 @@
 
 CCustomStartItem gCustomStartItem;
 
-CCustomStartItem::CCustomStartItem() // OK
+CCustomStartItem::CCustomStartItem()
 {
 	this->Init();
 }
 
-CCustomStartItem::~CCustomStartItem() // OK
+CCustomStartItem::~CCustomStartItem()
 {
 
 }
 
-void CCustomStartItem::Init() // OK
+void CCustomStartItem::Init()
 {
 	for (int n = 0; n < MAX_CLASS; n++)
 	{
@@ -31,7 +31,7 @@ void CCustomStartItem::Init() // OK
 	}
 }
 
-void CCustomStartItem::Load(char* path) // OK
+void CCustomStartItem::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -148,7 +148,7 @@ void CCustomStartItem::Load(char* path) // OK
 }
 
 
-void CCustomStartItem::SetBuffs(CustomStartBuff_INFO buffs) // OK
+void CCustomStartItem::SetBuffs(CustomStartBuff_INFO buffs)
 {
 	if (CHECK_RANGE(buffs.Class, MAX_CLASS) == 0)
 	{
@@ -158,7 +158,7 @@ void CCustomStartItem::SetBuffs(CustomStartBuff_INFO buffs) // OK
 	this->m_CustomStartBuffInfo[buffs.Class] = buffs;
 }
 
-bool CCustomStartItem::CheckSkillEffect(int m_index) // OK
+bool CCustomStartItem::CheckSkillEffect(int m_index)
 {
 	bool skill = false;
 	switch(m_index)

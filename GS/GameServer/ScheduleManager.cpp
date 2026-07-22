@@ -9,19 +9,19 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CScheduleManager::CScheduleManager() // OK
+CScheduleManager::CScheduleManager()
 {
 	this->m_StartTime = CTime::GetTickCount();
 
 	this->m_ScheduleTimeInfo.clear();
 }
 
-CScheduleManager::~CScheduleManager() // OK
+CScheduleManager::~CScheduleManager()
 {
 
 }
 
-bool CScheduleManager::GetSchedule(CTime* lpScheduleTime) // OK
+bool CScheduleManager::GetSchedule(CTime* lpScheduleTime)
 {
 	int count = 0;
 
@@ -37,7 +37,7 @@ bool CScheduleManager::GetSchedule(CTime* lpScheduleTime) // OK
 	return ((count==0)?0:1);
 }
 
-bool CScheduleManager::AddSchedule(int Year,int Month,int Day,int Hour,int Minute,int Second,int DayOfWeek) // OK
+bool CScheduleManager::AddSchedule(int Year,int Month,int Day,int Hour,int Minute,int Second,int DayOfWeek)
 {
 	CTime ScheduleTime(((Year==-1)?this->m_StartTime.GetYear():Year),((Month==-1)?1:Month),((Day==-1)?1:Day),((Hour==-1)?0:Hour),((Minute==-1)?0:Minute),((Second==-1)?0:Second),-1); //Correção do horário de verão no ultimo campo, Padrão: -1
 
@@ -76,7 +76,7 @@ bool CScheduleManager::AddSchedule(int Year,int Month,int Day,int Hour,int Minut
 	return 1;
 }
 
-bool CScheduleManager::AdjustSchedule(CTime* lpScheduleTime,bool IsYear,bool IsMonth,bool IsDay,bool IsHour,bool IsMinute,bool IsSecond) // OK
+bool CScheduleManager::AdjustSchedule(CTime* lpScheduleTime,bool IsYear,bool IsMonth,bool IsDay,bool IsHour,bool IsMinute,bool IsSecond)
 {
 	int AdjustYear = 0;
 	int AdjustMonth = 0;
@@ -155,7 +155,7 @@ bool CScheduleManager::AdjustSchedule(CTime* lpScheduleTime,bool IsYear,bool IsM
 	return 1;
 }
 
-bool CScheduleManager::AdjustScheduleDayOfWeek(CTime* lpScheduleTime,bool IsYear,bool IsMonth,bool IsDay,bool IsHour,bool IsMinute,bool IsSecond,int DayOfWeek) // OK
+bool CScheduleManager::AdjustScheduleDayOfWeek(CTime* lpScheduleTime,bool IsYear,bool IsMonth,bool IsDay,bool IsHour,bool IsMinute,bool IsSecond,int DayOfWeek)
 {
 	if(DayOfWeek != -1)
 	{

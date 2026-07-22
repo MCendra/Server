@@ -19,7 +19,7 @@ CMercenary gMercenary;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMercenary::CMercenary() // OK
+CMercenary::CMercenary()
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -28,12 +28,12 @@ CMercenary::CMercenary() // OK
 	#endif
 }
 
-CMercenary::~CMercenary() // OK
+CMercenary::~CMercenary()
 {
 
 }
 
-bool CMercenary::CreateMercenary(int aIndex,int MonsterClass,BYTE x,BYTE y) // OK
+bool CMercenary::CreateMercenary(int aIndex,int MonsterClass,BYTE x,BYTE y)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -141,7 +141,7 @@ bool CMercenary::CreateMercenary(int aIndex,int MonsterClass,BYTE x,BYTE y) // O
 	#endif
 }
 
-bool CMercenary::DeleteMercenary(int aIndex) // OK
+bool CMercenary::DeleteMercenary(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -170,7 +170,7 @@ bool CMercenary::DeleteMercenary(int aIndex) // OK
 	#endif
 }
 
-bool CMercenary::SearchEnemy(LPOBJ lpObj) // OK
+bool CMercenary::SearchEnemy(LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -249,7 +249,7 @@ bool CMercenary::SearchEnemy(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CMercenary::MercenaryAct(int aIndex) // OK
+void CMercenary::MercenaryAct(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 

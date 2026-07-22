@@ -25,7 +25,7 @@ CChaosCastle gChaosCastle;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CChaosCastle::CChaosCastle() // OK
+CChaosCastle::CChaosCastle()
 {
 	for(int n=0;n < MAX_CC_LEVEL;n++)
 	{
@@ -52,12 +52,12 @@ CChaosCastle::CChaosCastle() // OK
 	memset(this->m_ChaosCastleExperienceTable,0,sizeof(this->m_ChaosCastleExperienceTable));
 }
 
-CChaosCastle::~CChaosCastle() // OK
+CChaosCastle::~CChaosCastle()
 {
 
 }
 
-void CChaosCastle::Init() // OK
+void CChaosCastle::Init()
 {
 	for(int n=0;n < MAX_CC_LEVEL;n++)
 	{
@@ -72,7 +72,7 @@ void CChaosCastle::Init() // OK
 	}
 }
 
-void CChaosCastle::Load(char* path) // OK
+void CChaosCastle::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -189,7 +189,7 @@ void CChaosCastle::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CChaosCastle::MainProc() // OK
+void CChaosCastle::MainProc()
 {
 	for(int n=0;n < MAX_CC_LEVEL;n++)
 	{
@@ -262,12 +262,12 @@ void CChaosCastle::MainProc() // OK
 	}
 }
 
-void CChaosCastle::ProcState_BLANK(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ProcState_BLANK(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 
 }
 
-void CChaosCastle::ProcState_EMPTY(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ProcState_EMPTY(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	if(lpLevel->RemainTime > 0 && lpLevel->RemainTime <= (this->m_WarningTime*60))
 	{
@@ -314,7 +314,7 @@ void CChaosCastle::ProcState_EMPTY(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::ProcState_STAND(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ProcState_STAND(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -346,7 +346,7 @@ void CChaosCastle::ProcState_STAND(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::ProcState_START(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ProcState_START(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -406,7 +406,7 @@ void CChaosCastle::ProcState_START(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::ProcState_CLEAN(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ProcState_CLEAN(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -429,7 +429,7 @@ void CChaosCastle::ProcState_CLEAN(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::SetState(CHAOS_CASTLE_LEVEL* lpLevel,int state) // OK
+void CChaosCastle::SetState(CHAOS_CASTLE_LEVEL* lpLevel,int state)
 {
 	lpLevel->State = state;
 
@@ -453,12 +453,12 @@ void CChaosCastle::SetState(CHAOS_CASTLE_LEVEL* lpLevel,int state) // OK
 	}
 }
 
-void CChaosCastle::SetState_BLANK(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetState_BLANK(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	//LogAdd(LOG_BLACK,"[Chaos Castle] (%d) SetState BLANK",(lpLevel->Level+1));
 }
 
-void CChaosCastle::SetState_EMPTY(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetState_EMPTY(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -488,7 +488,7 @@ void CChaosCastle::SetState_EMPTY(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Chaos Castle] (%d) SetState EMPTY",(lpLevel->Level+1));
 }
 
-void CChaosCastle::SetState_STAND(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetState_STAND(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -503,7 +503,7 @@ void CChaosCastle::SetState_STAND(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Chaos Castle] (%d) SetState STAND",(lpLevel->Level+1));
 }
 
-void CChaosCastle::SetState_START(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetState_START(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -553,7 +553,7 @@ void CChaosCastle::SetState_START(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Chaos Castle] (%d) SetState START",(lpLevel->Level+1));
 }
 
-void CChaosCastle::SetState_CLEAN(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetState_CLEAN(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -596,7 +596,7 @@ void CChaosCastle::SetState_CLEAN(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Chaos Castle] (%d) SetState CLEAN",(lpLevel->Level+1));
 }
 
-void CChaosCastle::SetStage0(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetStage0(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	if((this->GetUserCount(lpLevel)+this->GetMonsterCount(lpLevel)) > 40)
 	{
@@ -610,7 +610,7 @@ void CChaosCastle::SetStage0(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	this->SetHollowZone(lpLevel,1);
 }
 
-void CChaosCastle::SetStage1(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetStage1(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	if((this->GetUserCount(lpLevel)+this->GetMonsterCount(lpLevel)) > 30)
 	{
@@ -624,7 +624,7 @@ void CChaosCastle::SetStage1(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	this->SetHollowZone(lpLevel,2);
 }
 
-void CChaosCastle::SetStage2(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetStage2(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	if((this->GetUserCount(lpLevel)+this->GetMonsterCount(lpLevel)) > 20)
 	{
@@ -638,12 +638,12 @@ void CChaosCastle::SetStage2(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	this->SetHollowZone(lpLevel,3);
 }
 
-void CChaosCastle::SetStage3(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetStage3(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 
 }
 
-void CChaosCastle::CheckSync(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CheckSync(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	if(this->m_ChaosCastleStartTime.empty() != 0)
 	{
@@ -673,7 +673,7 @@ void CChaosCastle::CheckSync(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Chaos Castle] (%d) Sync Start Time. [%d] min remain",(lpLevel->Level+1),(lpLevel->RemainTime/60));
 }
 
-int CChaosCastle::GetState(int level) // OK
+int CChaosCastle::GetState(int level)
 {
 	if(CC_LEVEL_RANGE(level) == 0)
 	{
@@ -683,7 +683,7 @@ int CChaosCastle::GetState(int level) // OK
 	return this->m_ChaosCastleLevel[level].State;
 }
 
-int CChaosCastle::GetRemainTime(int level) // OK
+int CChaosCastle::GetRemainTime(int level)
 {
 	if(CC_LEVEL_RANGE(level) == 0)
 	{
@@ -714,7 +714,7 @@ int CChaosCastle::GetRemainTime(int level) // OK
 	return (((RemainTime%60)==0)?(RemainTime/60):((RemainTime/60)+1));
 }
 
-int CChaosCastle::GetEnterEnabled(int level) // OK
+int CChaosCastle::GetEnterEnabled(int level)
 {
 	if(CC_LEVEL_RANGE(level) == 0)
 	{
@@ -724,7 +724,7 @@ int CChaosCastle::GetEnterEnabled(int level) // OK
 	return this->m_ChaosCastleLevel[level].EnterEnabled;
 }
 
-int CChaosCastle::GetEnteredUserCount(int level) // OK
+int CChaosCastle::GetEnteredUserCount(int level)
 {
 	if(CC_LEVEL_RANGE(level) == 0)
 	{
@@ -734,7 +734,7 @@ int CChaosCastle::GetEnteredUserCount(int level) // OK
 	return this->GetUserCount(&this->m_ChaosCastleLevel[level]);
 }
 
-bool CChaosCastle::AddUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CChaosCastle::AddUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -764,7 +764,7 @@ bool CChaosCastle::AddUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CChaosCastle::DelUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CChaosCastle::DelUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -786,7 +786,7 @@ bool CChaosCastle::DelUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-CHAOS_CASTLE_USER* CChaosCastle::GetUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+CHAOS_CASTLE_USER* CChaosCastle::GetUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -804,7 +804,7 @@ CHAOS_CASTLE_USER* CChaosCastle::GetUser(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 	return 0;
 }
 
-void CChaosCastle::CleanUser(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CleanUser(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_USER;n++)
 	{
@@ -816,7 +816,7 @@ void CChaosCastle::CleanUser(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::ClearUser(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ClearUser(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_USER;n++)
 	{
@@ -835,7 +835,7 @@ void CChaosCastle::ClearUser(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::CheckUser(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CheckUser(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_USER;n++)
 	{
@@ -858,7 +858,7 @@ void CChaosCastle::CheckUser(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CChaosCastle::GetUserCount(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+int CChaosCastle::GetUserCount(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -873,7 +873,7 @@ int CChaosCastle::GetUserCount(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-int CChaosCastle::GetUserAbleLevel(LPOBJ lpObj) // OK
+int CChaosCastle::GetUserAbleLevel(LPOBJ lpObj)
 {
 	int level = -1;
 
@@ -949,7 +949,7 @@ int CChaosCastle::GetUserAbleLevel(LPOBJ lpObj) // OK
 	return level;
 }
 
-int CChaosCastle::GetUserWinner(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+int CChaosCastle::GetUserWinner(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	if(this->GetMonsterCount(lpLevel) > 0)
 	{
@@ -976,7 +976,7 @@ int CChaosCastle::GetUserWinner(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	return WinnerIndex;
 }
 
-void CChaosCastle::GiveUserRewardExperience(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+void CChaosCastle::GiveUserRewardExperience(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	CHAOS_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1004,7 +1004,7 @@ void CChaosCastle::GiveUserRewardExperience(CHAOS_CASTLE_LEVEL* lpLevel,int aInd
 	GCRewardExperienceSend(lpUser->Index,lpUser->RewardExperience);
 }
 
-void CChaosCastle::GiveUserRewardItem(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+void CChaosCastle::GiveUserRewardItem(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	CHAOS_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1047,7 +1047,7 @@ void CChaosCastle::GiveUserRewardItem(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) //
 	}
 }
 
-bool CChaosCastle::AddMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CChaosCastle::AddMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1073,7 +1073,7 @@ bool CChaosCastle::AddMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CChaosCastle::DelMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CChaosCastle::DelMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1091,7 +1091,7 @@ bool CChaosCastle::DelMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-int* CChaosCastle::GetMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+int* CChaosCastle::GetMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1109,7 +1109,7 @@ int* CChaosCastle::GetMonster(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-void CChaosCastle::CleanMonster(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CleanMonster(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_MONSTER;n++)
 	{
@@ -1117,7 +1117,7 @@ void CChaosCastle::CleanMonster(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::ClearMonster(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::ClearMonster(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_MONSTER;n++)
 	{
@@ -1129,7 +1129,7 @@ void CChaosCastle::ClearMonster(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CChaosCastle::GetMonsterCount(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+int CChaosCastle::GetMonsterCount(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -1144,7 +1144,7 @@ int CChaosCastle::GetMonsterCount(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-void CChaosCastle::SetMonster(CHAOS_CASTLE_LEVEL* lpLevel,int MonsterClass) // OK
+void CChaosCastle::SetMonster(CHAOS_CASTLE_LEVEL* lpLevel,int MonsterClass)
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{
@@ -1191,7 +1191,7 @@ void CChaosCastle::SetMonster(CHAOS_CASTLE_LEVEL* lpLevel,int MonsterClass) // O
 	}
 }
 
-void CChaosCastle::SetSafeZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetSafeZone(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int x=gChaosCastleSafeZone[0];x <= gChaosCastleSafeZone[2];x++)
 	{
@@ -1210,7 +1210,7 @@ void CChaosCastle::SetSafeZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::DelSafeZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::DelSafeZone(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int x=gChaosCastleSafeZone[0];x <= gChaosCastleSafeZone[2];x++)
 	{
@@ -1229,7 +1229,7 @@ void CChaosCastle::DelSafeZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::SetHollowZone(CHAOS_CASTLE_LEVEL* lpLevel,int stage) // OK
+void CChaosCastle::SetHollowZone(CHAOS_CASTLE_LEVEL* lpLevel,int stage)
 {
 	for(int n=0;n < MAX_CC_HOLLOW_ZONE;n++)
 	{
@@ -1243,7 +1243,7 @@ void CChaosCastle::SetHollowZone(CHAOS_CASTLE_LEVEL* lpLevel,int stage) // OK
 	}
 }
 
-void CChaosCastle::DelHollowZone(CHAOS_CASTLE_LEVEL* lpLevel,int stage) // OK
+void CChaosCastle::DelHollowZone(CHAOS_CASTLE_LEVEL* lpLevel,int stage)
 {
 	for(int n=0;n < MAX_CC_HOLLOW_ZONE;n++)
 	{
@@ -1257,7 +1257,7 @@ void CChaosCastle::DelHollowZone(CHAOS_CASTLE_LEVEL* lpLevel,int stage) // OK
 	}
 }
 
-void CChaosCastle::SetCenterHollowZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::SetCenterHollowZone(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_CENTER_HOLLOW_ZONE;n++)
 	{
@@ -1271,7 +1271,7 @@ void CChaosCastle::SetCenterHollowZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::DelCenterHollowZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::DelCenterHollowZone(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_CENTER_HOLLOW_ZONE;n++)
 	{
@@ -1285,7 +1285,7 @@ void CChaosCastle::DelCenterHollowZone(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::CheckUserPosition(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CheckUserPosition(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_USER;n++)
 	{
@@ -1314,7 +1314,7 @@ void CChaosCastle::CheckUserPosition(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::CheckMonsterPosition(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CheckMonsterPosition(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_CC_MONSTER;n++)
 	{
@@ -1339,7 +1339,7 @@ void CChaosCastle::CheckMonsterPosition(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::CheckItemPosition(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CheckItemPosition(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_MAP_ITEM;n++)
 	{
@@ -1357,7 +1357,7 @@ void CChaosCastle::CheckItemPosition(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::SearchUserAndBlow(CHAOS_CASTLE_LEVEL* lpLevel,int x,int y) // OK
+void CChaosCastle::SearchUserAndBlow(CHAOS_CASTLE_LEVEL* lpLevel,int x,int y)
 {
 	for(int n=0;n < MAX_CC_USER;n++)
 	{
@@ -1378,7 +1378,7 @@ void CChaosCastle::SearchUserAndBlow(CHAOS_CASTLE_LEVEL* lpLevel,int x,int y) //
 	}
 }
 
-void CChaosCastle::BlowUserFromPoint(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int x,int y) // OK
+void CChaosCastle::BlowUserFromPoint(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int x,int y)
 {
 	int px = gObj[aIndex].X-x;
 	int py = gObj[aIndex].Y-y;
@@ -1407,7 +1407,7 @@ void CChaosCastle::BlowUserFromPoint(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int 
 	gObj[aIndex].ChaosCastleBlowTime = GetTickCount();
 }
 
-bool CChaosCastle::GetFreePosition(CHAOS_CASTLE_LEVEL* lpLevel,int* ox,int* oy) // OK
+bool CChaosCastle::GetFreePosition(CHAOS_CASTLE_LEVEL* lpLevel,int* ox,int* oy)
 {
 	for(int x=((*ox)-8);x < ((*ox)+8);x++)
 	{
@@ -1425,7 +1425,7 @@ bool CChaosCastle::GetFreePosition(CHAOS_CASTLE_LEVEL* lpLevel,int* ox,int* oy) 
 	return 0;
 }
 
-void CChaosCastle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CChaosCastle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int level = GET_CC_LEVEL(lpObj->Map);
 
@@ -1467,7 +1467,7 @@ void CChaosCastle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	lpUser->UserKillCount++;
 }
 
-void CChaosCastle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CChaosCastle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 
@@ -1517,7 +1517,7 @@ void CChaosCastle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	lpUser->MonsterKillCount++;
 }
 
-void CChaosCastle::CheckDelayScore(CHAOS_CASTLE_LEVEL* lpLevel) // OK
+void CChaosCastle::CheckDelayScore(CHAOS_CASTLE_LEVEL* lpLevel)
 {
 	for(std::vector<CHAOS_CASTLE_DELAY_SCORE>::iterator it=lpLevel->DelayScore.begin();it != lpLevel->DelayScore.end();)
 	{
@@ -1536,7 +1536,7 @@ void CChaosCastle::CheckDelayScore(CHAOS_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CChaosCastle::NoticeSendToAll(CHAOS_CASTLE_LEVEL* lpLevel,int type,char* message,...) // OK
+void CChaosCastle::NoticeSendToAll(CHAOS_CASTLE_LEVEL* lpLevel,int type,char* message,...)
 {
 	char buff[256];
 
@@ -1554,7 +1554,7 @@ void CChaosCastle::NoticeSendToAll(CHAOS_CASTLE_LEVEL* lpLevel,int type,char* me
 	}
 }
 
-void CChaosCastle::DataSendToAll(CHAOS_CASTLE_LEVEL* lpLevel,BYTE* lpMsg,int size) // OK
+void CChaosCastle::DataSendToAll(CHAOS_CASTLE_LEVEL* lpLevel,BYTE* lpMsg,int size)
 {
 	for(int n=0;n < MAX_CC_USER;n++)
 	{
@@ -1565,7 +1565,7 @@ void CChaosCastle::DataSendToAll(CHAOS_CASTLE_LEVEL* lpLevel,BYTE* lpMsg,int siz
 	}
 }
 
-void CChaosCastle::CGChaosCastleEnterRecv(PMSG_CHAOS_CASTLE_ENTER_RECV* lpMsg,int aIndex) // OK
+void CChaosCastle::CGChaosCastleEnterRecv(PMSG_CHAOS_CASTLE_ENTER_RECV* lpMsg,int aIndex)
 {
 	if(gServerInfo.m_ChaosCastleEvent == 0)
 	{
@@ -1737,7 +1737,7 @@ void CChaosCastle::CGChaosCastleEnterRecv(PMSG_CHAOS_CASTLE_ENTER_RECV* lpMsg,in
 	}
 }
 
-void CChaosCastle::CGChaosCastlePositionRecv(PMSG_CHAOS_CASTLE_POSITION_RECV* lpMsg,int aIndex) // OK
+void CChaosCastle::CGChaosCastlePositionRecv(PMSG_CHAOS_CASTLE_POSITION_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1765,7 +1765,7 @@ void CChaosCastle::CGChaosCastlePositionRecv(PMSG_CHAOS_CASTLE_POSITION_RECV* lp
 	lpObj->ChaosCastleBlowTime = GetTickCount();
 }
 
-void CChaosCastle::GCChaosCastleScoreSend(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int type) // OK
+void CChaosCastle::GCChaosCastleScoreSend(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int type)
 {
 	CHAOS_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1793,7 +1793,7 @@ void CChaosCastle::GCChaosCastleScoreSend(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex
 	DataSend(lpUser->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CChaosCastle::GCChaosCastleDelayScoreSend(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int type) // OK
+void CChaosCastle::GCChaosCastleDelayScoreSend(CHAOS_CASTLE_LEVEL* lpLevel,int aIndex,int type)
 {
 	CHAOS_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1825,7 +1825,7 @@ void CChaosCastle::GCChaosCastleDelayScoreSend(CHAOS_CASTLE_LEVEL* lpLevel,int a
 	lpLevel->DelayScore.push_back(DelayScore);
 }
 
-void CChaosCastle::GCChaosCastleStateSend(CHAOS_CASTLE_LEVEL* lpLevel,int state) // OK
+void CChaosCastle::GCChaosCastleStateSend(CHAOS_CASTLE_LEVEL* lpLevel,int state)
 {
 	PMSG_CHAOS_CASTLE_STATE_SEND pMsg;
 
@@ -1846,7 +1846,7 @@ void CChaosCastle::GCChaosCastleStateSend(CHAOS_CASTLE_LEVEL* lpLevel,int state)
 	this->DataSendToAll(lpLevel,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CChaosCastle::GCChaosCastleSimpleStateSend(CHAOS_CASTLE_LEVEL* lpLevel,int state,int aIndex) // OK
+void CChaosCastle::GCChaosCastleSimpleStateSend(CHAOS_CASTLE_LEVEL* lpLevel,int state,int aIndex)
 {
 	PMSG_CHAOS_CASTLE_STATE_SEND pMsg;
 

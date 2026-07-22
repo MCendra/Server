@@ -14,17 +14,17 @@ CSocketItemOption gSocketItemOption;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSocketItemOption::CSocketItemOption() // OK
+CSocketItemOption::CSocketItemOption()
 {
 	this->Init();
 }
 
-CSocketItemOption::~CSocketItemOption() // OK
+CSocketItemOption::~CSocketItemOption()
 {
 
 }
 
-void CSocketItemOption::Init() // OK
+void CSocketItemOption::Init()
 {
 	for(int n=0;n < MAX_SOCKET_ITEM_OPTION;n++)
 	{
@@ -34,7 +34,7 @@ void CSocketItemOption::Init() // OK
 	}
 }
 
-void CSocketItemOption::Load(char* path) // OK
+void CSocketItemOption::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -161,7 +161,7 @@ void CSocketItemOption::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CSocketItemOption::SetInfo(SOCKET_ITEM_OPTION_INFO info) // OK
+void CSocketItemOption::SetInfo(SOCKET_ITEM_OPTION_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_SOCKET_ITEM_OPTION)
 	{
@@ -171,7 +171,7 @@ void CSocketItemOption::SetInfo(SOCKET_ITEM_OPTION_INFO info) // OK
 	this->m_SocketItemOptionInfo[info.Index] = info;
 }
 
-void CSocketItemOption::SetBonusInfo(SOCKET_ITEM_BONUS_OPTION_INFO info) // OK
+void CSocketItemOption::SetBonusInfo(SOCKET_ITEM_BONUS_OPTION_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_SOCKET_ITEM_OPTION)
 	{
@@ -181,7 +181,7 @@ void CSocketItemOption::SetBonusInfo(SOCKET_ITEM_BONUS_OPTION_INFO info) // OK
 	this->m_SocketItemBonusOptionInfo[info.Index] = info;
 }
 
-void CSocketItemOption::SetPackageInfo(SOCKET_ITEM_PACKAGE_OPTION_INFO info) // OK
+void CSocketItemOption::SetPackageInfo(SOCKET_ITEM_PACKAGE_OPTION_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_SOCKET_ITEM_OPTION)
 	{
@@ -191,7 +191,7 @@ void CSocketItemOption::SetPackageInfo(SOCKET_ITEM_PACKAGE_OPTION_INFO info) // 
 	this->m_SocketItemPackageOptionInfo[info.Index] = info;
 }
 
-SOCKET_ITEM_OPTION_INFO* CSocketItemOption::GetInfo(int index) // OK
+SOCKET_ITEM_OPTION_INFO* CSocketItemOption::GetInfo(int index)
 {
 	if(index < 0 || index >= MAX_SOCKET_ITEM_OPTION)
 	{
@@ -206,7 +206,7 @@ SOCKET_ITEM_OPTION_INFO* CSocketItemOption::GetInfo(int index) // OK
 	return &this->m_SocketItemOptionInfo[index];
 }
 
-SOCKET_ITEM_BONUS_OPTION_INFO* CSocketItemOption::GetBonusInfo(int index) // OK
+SOCKET_ITEM_BONUS_OPTION_INFO* CSocketItemOption::GetBonusInfo(int index)
 {
 	if(index < 0 || index >= MAX_SOCKET_ITEM_OPTION)
 	{
@@ -221,7 +221,7 @@ SOCKET_ITEM_BONUS_OPTION_INFO* CSocketItemOption::GetBonusInfo(int index) // OK
 	return &this->m_SocketItemBonusOptionInfo[index];
 }
 
-SOCKET_ITEM_PACKAGE_OPTION_INFO* CSocketItemOption::GetPackageInfo(int index) // OK
+SOCKET_ITEM_PACKAGE_OPTION_INFO* CSocketItemOption::GetPackageInfo(int index)
 {
 	if(index < 0 || index >= MAX_SOCKET_ITEM_OPTION)
 	{
@@ -236,7 +236,7 @@ SOCKET_ITEM_PACKAGE_OPTION_INFO* CSocketItemOption::GetPackageInfo(int index) //
 	return &this->m_SocketItemPackageOptionInfo[index];
 }
 
-bool CSocketItemOption::IsSocketItem(CItem* lpItem) // OK
+bool CSocketItemOption::IsSocketItem(CItem* lpItem)
 {
 	for(int n=0;n < MAX_SOCKET_ITEM_OPTION_TABLE;n++)
 	{
@@ -249,7 +249,7 @@ bool CSocketItemOption::IsSocketItem(CItem* lpItem) // OK
 	return 0;
 }
 
-int CSocketItemOption::GetSocketItemOptionCount(CItem* lpItem) // OK
+int CSocketItemOption::GetSocketItemOptionCount(CItem* lpItem)
 {
 	int count = 0;
 
@@ -264,7 +264,7 @@ int CSocketItemOption::GetSocketItemOptionCount(CItem* lpItem) // OK
 	return count;
 }
 
-int CSocketItemOption::GetSocketItemExtraMoney(CItem* lpItem) // OK
+int CSocketItemOption::GetSocketItemExtraMoney(CItem* lpItem)
 {
 	int money = 0;
 
@@ -296,7 +296,7 @@ int CSocketItemOption::GetSocketItemExtraMoney(CItem* lpItem) // OK
 	return money;
 }
 
-int CSocketItemOption::GetSocketItemSeedOption(int index,int type) // OK
+int CSocketItemOption::GetSocketItemSeedOption(int index,int type)
 {
 	SOCKET_ITEM_OPTION_INFO* lpInfo = this->GetInfo(index);
 
@@ -313,7 +313,7 @@ int CSocketItemOption::GetSocketItemSeedOption(int index,int type) // OK
 	return lpInfo->SubIndex;
 }
 
-int CSocketItemOption::GetSocketItemRandomOption(int type) // OK
+int CSocketItemOption::GetSocketItemRandomOption(int type)
 {
 	int SocketItemOption = -1;
 
@@ -346,7 +346,7 @@ int CSocketItemOption::GetSocketItemRandomOption(int type) // OK
 	}
 }
 
-BYTE CSocketItemOption::GetSocketItemOption(CItem* lpItem,int type,int option,int level) // OK
+BYTE CSocketItemOption::GetSocketItemOption(CItem* lpItem,int type,int option,int level)
 {
 	for(int n=0;n < MAX_SOCKET_ITEM_OPTION;n++)
 	{
@@ -378,7 +378,7 @@ BYTE CSocketItemOption::GetSocketItemOption(CItem* lpItem,int type,int option,in
 	return SOCKET_ITEM_OPTION_NONE;
 }
 
-BYTE CSocketItemOption::GetSocketItemBonusOption(CItem* lpItem) // OK
+BYTE CSocketItemOption::GetSocketItemBonusOption(CItem* lpItem)
 {
 	for(int n=0;n < MAX_SOCKET_ITEM_OPTION;n++)
 	{
@@ -400,7 +400,7 @@ BYTE CSocketItemOption::GetSocketItemBonusOption(CItem* lpItem) // OK
 	return SOCKET_ITEM_BONUS_OPTION_NONE;
 }
 
-bool CSocketItemOption::CheckSocketItemOption(int index,CItem* lpItem) // OK
+bool CSocketItemOption::CheckSocketItemOption(int index,CItem* lpItem)
 {
 	SOCKET_ITEM_OPTION_INFO* lpInfo = this->GetInfo(index);
 
@@ -439,7 +439,7 @@ bool CSocketItemOption::CheckSocketItemOption(int index,CItem* lpItem) // OK
 	return 0;
 }
 
-bool CSocketItemOption::CheckSocketItemBonusOption(int index,CItem* lpItem) // OK
+bool CSocketItemOption::CheckSocketItemBonusOption(int index,CItem* lpItem)
 {
 	SOCKET_ITEM_BONUS_OPTION_INFO* lpBonusInfo = this->GetBonusInfo(index);
 
@@ -481,7 +481,7 @@ bool CSocketItemOption::CheckSocketItemBonusOption(int index,CItem* lpItem) // O
 	return 1;
 }
 
-bool CSocketItemOption::CheckSocketItemPackageOption(int index,int* ItemOptionTypeCount) // OK
+bool CSocketItemOption::CheckSocketItemPackageOption(int index,int* ItemOptionTypeCount)
 {
 	SOCKET_ITEM_PACKAGE_OPTION_INFO* lpPackageInfo = this->GetPackageInfo(index);
 
@@ -501,7 +501,7 @@ bool CSocketItemOption::CheckSocketItemPackageOption(int index,int* ItemOptionTy
 	return 1;
 }
 
-void CSocketItemOption::CalcSocketItemOption(LPOBJ lpObj,bool flag) // OK
+void CSocketItemOption::CalcSocketItemOption(LPOBJ lpObj,bool flag)
 {
 	int ItemOptionTypeCount[MAX_SOCKET_ITEM_OPTION_TYPE] = {0,0,0,0,0,0};
 
@@ -554,7 +554,7 @@ void CSocketItemOption::CalcSocketItemOption(LPOBJ lpObj,bool flag) // OK
 	this->CalcSocketItemPackageOption(lpObj,ItemOptionTypeCount,flag);
 }
 
-void CSocketItemOption::CalcSocketItemPackageOption(LPOBJ lpObj,int* ItemOptionTypeCount,bool flag) // OK
+void CSocketItemOption::CalcSocketItemPackageOption(LPOBJ lpObj,int* ItemOptionTypeCount,bool flag)
 {
 	for(int n=0;n < MAX_SOCKET_ITEM_OPTION;n++)
 	{
@@ -574,7 +574,7 @@ void CSocketItemOption::CalcSocketItemPackageOption(LPOBJ lpObj,int* ItemOptionT
 	}
 }
 
-void CSocketItemOption::InsertOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CSocketItemOption::InsertOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	if(flag == 0)
 	{
@@ -708,7 +708,7 @@ void CSocketItemOption::InsertOption(LPOBJ lpObj,int index,int value,bool flag) 
 	}
 }
 
-void CSocketItemOption::InsertBonusOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CSocketItemOption::InsertBonusOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	if(flag != 0)
 	{
@@ -748,7 +748,7 @@ void CSocketItemOption::InsertBonusOption(LPOBJ lpObj,int index,int value,bool f
 	}
 }
 
-void CSocketItemOption::InsertPackageOption(LPOBJ lpObj,int index,int value,bool flag) // OK
+void CSocketItemOption::InsertPackageOption(LPOBJ lpObj,int index,int value,bool flag)
 {
 	if(flag != 0)
 	{

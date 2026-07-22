@@ -75,7 +75,7 @@
 #include "BBuffPhe.h"
 #include "ThueFlag.h"
 
-void DataServerProtocolCore(BYTE head,BYTE* lpMsg,int size) // OK
+void DataServerProtocolCore(BYTE head,BYTE* lpMsg,int size)
 {
 	PROTECT_START
 
@@ -746,12 +746,12 @@ void DataServerProtocolCore(BYTE head,BYTE* lpMsg,int size) // OK
 
 
 
-void DGServerInfoRecv(SDHP_DATA_SERVER_INFO_RECV* lpMsg) // OK
+void DGServerInfoRecv(SDHP_DATA_SERVER_INFO_RECV* lpMsg)
 {
 
 }
 
-void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
+void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
@@ -1181,7 +1181,7 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 	GCCharacterCreationEnableSend(lpMsg->index, 0, gObj[lpMsg->index].ClassCode);
 }
 
-void DGCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg) // OK
+void DGCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -1211,7 +1211,7 @@ void DGCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg) // OK
 	DataSend(lpMsg->index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void DGCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg) // OK
+void DGCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -1229,7 +1229,7 @@ void DGCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg) // OK
 	DataSend(lpMsg->index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg) // OK
+void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -1803,7 +1803,7 @@ void GDSaveTheGiftData(int aIndex)
 }
 
 
-void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg) // OK
+void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -1952,7 +1952,7 @@ void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg) // OK
 	}
 }
 
-void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg) // OK
+void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -2015,7 +2015,7 @@ void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg) // OK
 	}
 }
 
-void DGOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg) // OK
+void DGOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -2059,7 +2059,7 @@ void DGOptionDataRecv(SDHP_OPTION_DATA_RECV* lpMsg) // OK
 	DataSend(lpMsg->index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void DGCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg) // OK
+void DGCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2083,7 +2083,7 @@ void DGCharacterNameCheckRecv(SDHP_CHARACTER_NAME_CHECK_RECV* lpMsg) // OK
 	#endif
 }
 
-void DGCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg) // OK
+void DGCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2109,7 +2109,7 @@ void DGCharacterNameChangeRecv(SDHP_CHARACTER_NAME_CHANGE_RECV* lpMsg) // OK
 	#endif
 }
 
-void DGCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg) // OK
+void DGCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg)
 {
 	if(gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
 	{
@@ -2128,7 +2128,7 @@ void DGCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg) // OK
 	LogAdd(LOG_BLUE,"[ CRYWOLF ] SYNC Occupation: %d, State: %d",lpMsg->OccupationState,lpMsg->CrywolfState);
 }
 
-void DGCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg) // OK
+void DGCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg)
 {
 	if(gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
 	{
@@ -2145,7 +2145,7 @@ void DGCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg) // OK
 	}
 }
 
-void DGGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg) // OK
+void DGGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg)
 {
 	if(gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
 	{
@@ -2171,7 +2171,7 @@ void DGGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg) // OK
 	}
 }
 
-void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg) // OK
+void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg)
 {
 	if(gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
 	{
@@ -2181,7 +2181,7 @@ void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg) // OK
 	gNotice.GCNoticeSendToAll(lpMsg->type,lpMsg->count,lpMsg->opacity,lpMsg->delay,lpMsg->color,lpMsg->speed,"%s",lpMsg->message);
 }
 
-void DGSNSDataRecv(SDHP_SNS_DATA_RECV* lpMsg) // OK
+void DGSNSDataRecv(SDHP_SNS_DATA_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -2205,7 +2205,7 @@ void DGSNSDataRecv(SDHP_SNS_DATA_RECV* lpMsg) // OK
 	#endif
 }
 
-void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg) // OK
+void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -2225,7 +2225,7 @@ void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg) // OK
 	gLog.Output(LOG_CHAT,"[Whisper][%s][%s] - (Name:%s, Message: %s)",lpMsg->account,lpMsg->name,lpMsg->TargetName,lpMsg->message);
 }
 
-void DGGlobalWhisperEchoRecv(SDHP_GLOBAL_WHISPER_ECHO_RECV* lpMsg) // OK
+void DGGlobalWhisperEchoRecv(SDHP_GLOBAL_WHISPER_ECHO_RECV* lpMsg)
 {
 	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
 	{
@@ -2241,7 +2241,7 @@ void DGGlobalWhisperEchoRecv(SDHP_GLOBAL_WHISPER_ECHO_RECV* lpMsg) // OK
 	GCChatWhisperSend(lpMsg->index,lpMsg->SourceName,lpMsg->message);
 }
 
-void GDServerInfoSend() // OK
+void GDServerInfoSend()
 {
 	SDHP_DATA_SERVER_INFO_SEND pMsg;
 
@@ -2258,7 +2258,7 @@ void GDServerInfoSend() // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDCharacterListSend(int aIndex) // OK
+void GDCharacterListSend(int aIndex)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2276,7 +2276,7 @@ void GDCharacterListSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDCharacterCreateSend(int aIndex,char* name,BYTE Class) // OK
+void GDCharacterCreateSend(int aIndex,char* name,BYTE Class)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2298,7 +2298,7 @@ void GDCharacterCreateSend(int aIndex,char* name,BYTE Class) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDCharacterDeleteSend(int aIndex,char* name) // OK
+void GDCharacterDeleteSend(int aIndex,char* name)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2334,7 +2334,7 @@ void GDCharacterDeleteSend(int aIndex,char* name) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDCharacterInfoSend(int aIndex,char* name) // OK
+void GDCharacterInfoSend(int aIndex,char* name)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2354,7 +2354,7 @@ void GDCharacterInfoSend(int aIndex,char* name) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDCreateItemSend(int aIndex, BYTE map,BYTE x,BYTE y,int index,BYTE level,BYTE dur,BYTE Option1,BYTE Option2,BYTE Option3,int LootIndex,BYTE NewOption,BYTE SetOption,BYTE JewelOfHarmonyOption,BYTE ItemOptionEx,BYTE SocketOption[MAX_SOCKET_OPTION],BYTE SocketOptionBonus,DWORD duration) // OK
+void GDCreateItemSend(int aIndex, BYTE map,BYTE x,BYTE y,int index,BYTE level,BYTE dur,BYTE Option1,BYTE Option2,BYTE Option3,int LootIndex,BYTE NewOption,BYTE SetOption,BYTE JewelOfHarmonyOption,BYTE ItemOptionEx,BYTE SocketOption[MAX_SOCKET_OPTION],BYTE SocketOptionBonus,DWORD duration)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2419,7 +2419,7 @@ void GDCreateItemSend(int aIndex, BYTE map,BYTE x,BYTE y,int index,BYTE level,BY
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDOptionDataSend(int aIndex) // OK
+void GDOptionDataSend(int aIndex)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2439,7 +2439,7 @@ void GDOptionDataSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDPetItemInfoSend(int aIndex,int type) // OK
+void GDPetItemInfoSend(int aIndex,int type)
 {
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
 	{
@@ -2522,7 +2522,7 @@ void GDPetItemInfoSend(int aIndex,int type) // OK
 	}
 }
 
-void GDCharacterNameCheckSend(int aIndex,char* name) // OK
+void GDCharacterNameCheckSend(int aIndex,char* name)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2546,7 +2546,7 @@ void GDCharacterNameCheckSend(int aIndex,char* name) // OK
 	#endif
 }
 
-void GDCharacterNameChangeSend(int aIndex,char* OldName,char* NewName) // OK
+void GDCharacterNameChangeSend(int aIndex,char* OldName,char* NewName)
 {
 	#if(GAMESERVER_UPDATE>=401)
 
@@ -2572,7 +2572,7 @@ void GDCharacterNameChangeSend(int aIndex,char* OldName,char* NewName) // OK
 	#endif
 }
 
-void GDCrywolfSyncSend(int MapServerGroup,int CrywolfState,int OccupationState) // OK
+void GDCrywolfSyncSend(int MapServerGroup,int CrywolfState,int OccupationState)
 {
 	SDHP_CRYWOLF_SYNC_SEND pMsg;
 
@@ -2587,7 +2587,7 @@ void GDCrywolfSyncSend(int MapServerGroup,int CrywolfState,int OccupationState) 
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDCrywolfInfoSend(int MapServerGroup) // OK
+void GDCrywolfInfoSend(int MapServerGroup)
 {
 	SDHP_CRYWOLF_INFO_SEND pMsg;
 
@@ -2598,7 +2598,7 @@ void GDCrywolfInfoSend(int MapServerGroup) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDGlobalPostSend(int MapServerGroup, BYTE type, char* name, char* message) // OK
+void GDGlobalPostSend(int MapServerGroup, BYTE type, char* name, char* message)
 {
 	SDHP_GLOBAL_POST_SEND pMsg;
 
@@ -2615,7 +2615,7 @@ void GDGlobalPostSend(int MapServerGroup, BYTE type, char* name, char* message) 
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDGlobalItemPostSend(int MapServerGroup, char* name, char* message, char* item_data) // OK
+void GDGlobalItemPostSend(int MapServerGroup, char* name, char* message, char* item_data)
 {
 	SDHP_GLOBAL_ITEM_POST_SEND pMsg;
 
@@ -2632,7 +2632,7 @@ void GDGlobalItemPostSend(int MapServerGroup, char* name, char* message, char* i
 	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
 }
 
-void GDGlobalNoticeSend(int MapServerGroup,BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message) // OK
+void GDGlobalNoticeSend(int MapServerGroup,BYTE type,BYTE count,BYTE opacity,WORD delay,DWORD color,BYTE speed,char* message)
 {
 	SDHP_GLOBAL_NOTICE_SEND pMsg;
 
@@ -2657,7 +2657,7 @@ void GDGlobalNoticeSend(int MapServerGroup,BYTE type,BYTE count,BYTE opacity,WOR
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDSNSDataSend(int aIndex) // OK
+void GDSNSDataSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -2681,7 +2681,7 @@ void GDSNSDataSend(int aIndex) // OK
 	#endif
 }
 
-void GDCharacterInfoSaveSend(int aIndex) // OK
+void GDCharacterInfoSaveSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 #if(EVENT_END_LESS)
@@ -2854,7 +2854,7 @@ void GDCharacterInfoSaveSend(int aIndex) // OK
 	#endif
 }
 
-void GDInventoryItemSaveSend(int aIndex) // OK
+void GDInventoryItemSaveSend(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2873,7 +2873,7 @@ void GDInventoryItemSaveSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDOptionDataSaveSend(int aIndex,BYTE* SkillKey,BYTE GameOption,BYTE QKey,BYTE WKey,BYTE EKey,BYTE ChatWindow,BYTE RKey,DWORD QWERLevel) // OK
+void GDOptionDataSaveSend(int aIndex,BYTE* SkillKey,BYTE GameOption,BYTE QKey,BYTE WKey,BYTE EKey,BYTE ChatWindow,BYTE RKey,DWORD QWERLevel)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2912,7 +2912,7 @@ void GDOptionDataSaveSend(int aIndex,BYTE* SkillKey,BYTE GameOption,BYTE QKey,BY
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDPetItemInfoSaveSend(int aIndex,int type) // OK
+void GDPetItemInfoSaveSend(int aIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2998,7 +2998,7 @@ void GDPetItemInfoSaveSend(int aIndex,int type) // OK
 	}
 }
 
-void GDResetInfoSaveSend(int aIndex,int ResetDay,int ResetWek,int ResetMon) // OK
+void GDResetInfoSaveSend(int aIndex,int ResetDay,int ResetWek,int ResetMon)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3023,7 +3023,7 @@ void GDResetInfoSaveSend(int aIndex,int ResetDay,int ResetWek,int ResetMon) // O
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDMasterResetInfoSaveSend(int aIndex,int MasterResetDay,int MasterResetWek,int MasterResetMon) // OK
+void GDMasterResetInfoSaveSend(int aIndex,int MasterResetDay,int MasterResetWek,int MasterResetMon)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3050,7 +3050,7 @@ void GDMasterResetInfoSaveSend(int aIndex,int MasterResetDay,int MasterResetWek,
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDRankingDuelSaveSend(int aIndex,DWORD WinScore,DWORD LoseScore) // OK
+void GDRankingDuelSaveSend(int aIndex,DWORD WinScore,DWORD LoseScore)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3071,7 +3071,7 @@ void GDRankingDuelSaveSend(int aIndex,DWORD WinScore,DWORD LoseScore) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDRankingBloodCastleSaveSend(int aIndex,DWORD Score) // OK
+void GDRankingBloodCastleSaveSend(int aIndex,DWORD Score)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3090,7 +3090,7 @@ void GDRankingBloodCastleSaveSend(int aIndex,DWORD Score) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDRankingChaosCastleSaveSend(int aIndex,DWORD Score) // OK
+void GDRankingChaosCastleSaveSend(int aIndex,DWORD Score)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3109,7 +3109,7 @@ void GDRankingChaosCastleSaveSend(int aIndex,DWORD Score) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDRankingDevilSquareSaveSend(int aIndex,DWORD Score) // OK
+void GDRankingDevilSquareSaveSend(int aIndex,DWORD Score)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3128,7 +3128,7 @@ void GDRankingDevilSquareSaveSend(int aIndex,DWORD Score) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDRankingIllusionTempleSaveSend(int aIndex,DWORD Score) // OK
+void GDRankingIllusionTempleSaveSend(int aIndex,DWORD Score)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3147,7 +3147,7 @@ void GDRankingIllusionTempleSaveSend(int aIndex,DWORD Score) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDCreationCardSaveSend(int aIndex,BYTE ExtClass) // OK
+void GDCreationCardSaveSend(int aIndex,BYTE ExtClass)
 {
 	SDHP_CREATION_CARD_SAVE_SEND pMsg;
 
@@ -3162,7 +3162,7 @@ void GDCreationCardSaveSend(int aIndex,BYTE ExtClass) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDCrywolfInfoSaveSend(int MapServerGroup,int CrywolfState,int OccupationState) // OK
+void GDCrywolfInfoSaveSend(int MapServerGroup,int CrywolfState,int OccupationState)
 {
 	SDHP_CRYWOLF_INFO_SAVE_SEND pMsg;
 
@@ -3177,7 +3177,7 @@ void GDCrywolfInfoSaveSend(int MapServerGroup,int CrywolfState,int OccupationSta
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDSNSDataSaveSend(int aIndex,BYTE* data) // OK
+void GDSNSDataSaveSend(int aIndex,BYTE* data)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -3198,7 +3198,7 @@ void GDSNSDataSaveSend(int aIndex,BYTE* data) // OK
 	#endif
 }
 
-void GDCustomMonsterRewardSaveSend(int aIndex,int MonsterClass,int MapNumber,int RewardValue1,int RewardValue2,int RewardValue3,int RewardValue4) // OK
+void GDCustomMonsterRewardSaveSend(int aIndex,int MonsterClass,int MapNumber,int RewardValue1,int RewardValue2,int RewardValue3,int RewardValue4)
 {
 	SDHP_CUSTOM_MONSTER_REWARD_SAVE_SEND pMsg;
 
@@ -3226,7 +3226,7 @@ void GDCustomMonsterRewardSaveSend(int aIndex,int MonsterClass,int MapNumber,int
 }
 
 
-void GDRankingCustomArenaSaveSend(int aIndex,DWORD number,DWORD score,DWORD rank) // OK
+void GDRankingCustomArenaSaveSend(int aIndex,DWORD number,DWORD score,DWORD rank)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -3249,7 +3249,7 @@ void GDRankingCustomArenaSaveSend(int aIndex,DWORD number,DWORD score,DWORD rank
 	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
-void GDConnectCharacterSend(int aIndex) // OK
+void GDConnectCharacterSend(int aIndex)
 {
 	SDHP_CONNECT_CHARACTER_SEND pMsg;
 
@@ -3264,7 +3264,7 @@ void GDConnectCharacterSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDDisconnectCharacterSend(int aIndex) // OK
+void GDDisconnectCharacterSend(int aIndex)
 {
 	SDHP_DISCONNECT_CHARACTER_SEND pMsg;
 
@@ -3279,7 +3279,7 @@ void GDDisconnectCharacterSend(int aIndex) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void GDGlobalWhisperSend(int aIndex,char* TargetName,char* message) // OK
+void GDGlobalWhisperSend(int aIndex,char* TargetName,char* message)
 {
 	SDHP_GLOBAL_WHISPER_SEND pMsg;
 
@@ -4771,7 +4771,7 @@ void GS_DGAnsCastleNpcUpdate(LPBYTE lpRecv)
 #endif
 }
 
-void DGGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg) // OK
+void DGGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg)
 {
 	if (gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
 	{
@@ -4799,7 +4799,7 @@ void DGGlobalItemPostRecv(SDHP_GLOBAL_ITEM_POST_RECV* lpMsg) // OK
 }
 
 //marry system
-void GDMarryInfoSaveSend(int aIndex,char* marryname,char* mode) // OK
+void GDMarryInfoSaveSend(int aIndex,char* marryname,char* mode)
 {
     LPOBJ lpObj = &gObj[aIndex];
 
@@ -4832,7 +4832,7 @@ void GDMarryInfoSaveSend(int aIndex,char* marryname,char* mode) // OK
 }
 
 //Set Coin System
-void GDSetCoinSend(int aIndex, int value1, int value2, int value3, char * LogName) // OK
+void GDSetCoinSend(int aIndex, int value1, int value2, int value3, char * LogName)
 {
     LPOBJ lpObj = &gObj[aIndex];
 
@@ -4904,7 +4904,7 @@ void GDSetCoinSend(int aIndex, int value1, int value2, int value3, char * LogNam
 
 }
 
-void GDKillSystemSend(int aIndex,int bIndex) // OK
+void GDKillSystemSend(int aIndex,int bIndex)
 {
 	return;
 	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0 || gObjIsAccountValid(bIndex,gObj[bIndex].Account) == 0)
@@ -4995,7 +4995,7 @@ void GCServerMsgStringSendToMap(BYTE Map, BYTE type, char* szMsg, ...)
 #endif
 
 #if(BOT_STATUE == 1)
-void GDBotInfoSend(int aIndex, int Rank, int TypeTop) // OK
+void GDBotInfoSend(int aIndex, int Rank, int TypeTop)
 {
 	SDHP_BOT_INFO_GET pMsg;
 

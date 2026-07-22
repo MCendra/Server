@@ -21,17 +21,17 @@ CHackSkillCheck gHackSkillCheck;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CHackSkillCheck::CHackSkillCheck() // OK
+CHackSkillCheck::CHackSkillCheck()
 {
 	this->m_HackSkillInfo.clear();
 }
 
-CHackSkillCheck::~CHackSkillCheck() // OK
+CHackSkillCheck::~CHackSkillCheck()
 {
 
 }
 
-void CHackSkillCheck::Load(char* path) // OK
+void CHackSkillCheck::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -93,7 +93,7 @@ void CHackSkillCheck::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CHackSkillCheck::GetInfo(int index, HACKSKILL_INFO* lpInfo) // OK
+bool CHackSkillCheck::GetInfo(int index, HACKSKILL_INFO* lpInfo)
 {
 	std::map<int, HACKSKILL_INFO>::iterator it = this->m_HackSkillInfo.find(index);
 
@@ -108,7 +108,7 @@ bool CHackSkillCheck::GetInfo(int index, HACKSKILL_INFO* lpInfo) // OK
 	}
 }
 
-bool CHackSkillCheck::GetInfoBySpeed(int Skill, int Speed, HACKSKILL_INFO* lpInfo) // OK
+bool CHackSkillCheck::GetInfoBySpeed(int Skill, int Speed, HACKSKILL_INFO* lpInfo)
 {
 	for (std::map<int, HACKSKILL_INFO>::iterator it = this->m_HackSkillInfo.begin(); it != this->m_HackSkillInfo.end(); it++)
 	{
@@ -122,7 +122,7 @@ bool CHackSkillCheck::GetInfoBySpeed(int Skill, int Speed, HACKSKILL_INFO* lpInf
 	return 0;
 }
 
-bool CHackSkillCheck::CheckSpeedHack(LPOBJ lpObj, int skill) // OK
+bool CHackSkillCheck::CheckSpeedHack(LPOBJ lpObj, int skill)
 {
 	if (gServerInfo.m_SpeedHackSkillEnable != 1)
 	{

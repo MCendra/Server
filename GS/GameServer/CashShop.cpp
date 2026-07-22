@@ -27,7 +27,7 @@ CCashShop gCashShop;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCashShop::CCashShop() // OK
+CCashShop::CCashShop()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -37,12 +37,12 @@ CCashShop::CCashShop() // OK
 	#endif
 }
 
-CCashShop::~CCashShop() // OK
+CCashShop::~CCashShop()
 {
 
 }
 
-void CCashShop::LoadPackage(char* path) // OK
+void CCashShop::LoadPackage(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -118,7 +118,7 @@ void CCashShop::LoadPackage(char* path) // OK
 	#endif
 }
 
-void CCashShop::LoadProduct(char* path) // OK
+void CCashShop::LoadProduct(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -208,7 +208,7 @@ void CCashShop::LoadProduct(char* path) // OK
 	#endif
 }
 
-void CCashShop::SetPackageInfo(CASH_SHOP_PACKAGE_INFO info) // OK
+void CCashShop::SetPackageInfo(CASH_SHOP_PACKAGE_INFO info)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -222,7 +222,7 @@ void CCashShop::SetPackageInfo(CASH_SHOP_PACKAGE_INFO info) // OK
 	#endif
 }
 
-void CCashShop::SetProductInfo(CASH_SHOP_PRODUCT_INFO info) // OK
+void CCashShop::SetProductInfo(CASH_SHOP_PRODUCT_INFO info)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -236,7 +236,7 @@ void CCashShop::SetProductInfo(CASH_SHOP_PRODUCT_INFO info) // OK
 	#endif
 }
 
-CASH_SHOP_PACKAGE_INFO* CCashShop::GetPackageInfo(int index) // OK
+CASH_SHOP_PACKAGE_INFO* CCashShop::GetPackageInfo(int index)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -257,7 +257,7 @@ CASH_SHOP_PACKAGE_INFO* CCashShop::GetPackageInfo(int index) // OK
 	#endif
 }
 
-CASH_SHOP_PRODUCT_INFO* CCashShop::GetProductInfo(int index) // OK
+CASH_SHOP_PRODUCT_INFO* CCashShop::GetProductInfo(int index)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -278,7 +278,7 @@ CASH_SHOP_PRODUCT_INFO* CCashShop::GetProductInfo(int index) // OK
 	#endif
 }
 
-CASH_SHOP_PRODUCT_INFO* CCashShop::GetProductInfoByBaseIndex(int index) // OK
+CASH_SHOP_PRODUCT_INFO* CCashShop::GetProductInfoByBaseIndex(int index)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -299,7 +299,7 @@ CASH_SHOP_PRODUCT_INFO* CCashShop::GetProductInfoByBaseIndex(int index) // OK
 	#endif
 }
 
-void CCashShop::MainProc() // OK
+void CCashShop::MainProc()
 {
 #if(GAMESERVER_UPDATE>=501)
 
@@ -379,7 +379,7 @@ void CCashShop::MainProc() // OK
 #endif
 }
 
-int CCashShop::GetPackageProductBaseIndexCount(CASH_SHOP_PACKAGE_INFO* lpPackageInfo) // OK
+int CCashShop::GetPackageProductBaseIndexCount(CASH_SHOP_PACKAGE_INFO* lpPackageInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -402,7 +402,7 @@ int CCashShop::GetPackageProductBaseIndexCount(CASH_SHOP_PACKAGE_INFO* lpPackage
 	#endif
 }
 
-int CCashShop::GetPackageProductMainIndexCount(CASH_SHOP_PACKAGE_INFO* lpPackageInfo) // OK
+int CCashShop::GetPackageProductMainIndexCount(CASH_SHOP_PACKAGE_INFO* lpPackageInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -425,7 +425,7 @@ int CCashShop::GetPackageProductMainIndexCount(CASH_SHOP_PACKAGE_INFO* lpPackage
 	#endif
 }
 
-void CCashShop::CGCashShopPointRecv(int aIndex) // OK
+void CCashShop::CGCashShopPointRecv(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -478,7 +478,7 @@ void CCashShop::CGCashShopPointRecv(int aIndex) // OK
 	#endif
 }
 
-void CCashShop::CGCashShopOpenRecv(PMSG_CASH_SHOP_OPEN_RECV* lpMsg,int aIndex) // OK
+void CCashShop::CGCashShopOpenRecv(PMSG_CASH_SHOP_OPEN_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -566,7 +566,7 @@ void CCashShop::CGCashShopOpenRecv(PMSG_CASH_SHOP_OPEN_RECV* lpMsg,int aIndex) /
 	#endif
 }
 
-void CCashShop::CGCashShopItemBuyRecv(PMSG_CASH_SHOP_ITEM_BUY_RECV* lpMsg,int aIndex) // OK
+void CCashShop::CGCashShopItemBuyRecv(PMSG_CASH_SHOP_ITEM_BUY_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -624,7 +624,7 @@ void CCashShop::CGCashShopItemBuyRecv(PMSG_CASH_SHOP_ITEM_BUY_RECV* lpMsg,int aI
 	#endif
 }
 
-void CCashShop::CGCashShopItemGifRecv(PMSG_CASH_SHOP_ITEM_GIF_RECV* lpMsg,int aIndex) // OK
+void CCashShop::CGCashShopItemGifRecv(PMSG_CASH_SHOP_ITEM_GIF_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -676,7 +676,7 @@ void CCashShop::CGCashShopItemGifRecv(PMSG_CASH_SHOP_ITEM_GIF_RECV* lpMsg,int aI
 	#endif
 }
 
-void CCashShop::CGCashShopItemNumRecv(PMSG_CASH_SHOP_ITEM_NUM_RECV* lpMsg,int aIndex) // OK
+void CCashShop::CGCashShopItemNumRecv(PMSG_CASH_SHOP_ITEM_NUM_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -714,7 +714,7 @@ void CCashShop::CGCashShopItemNumRecv(PMSG_CASH_SHOP_ITEM_NUM_RECV* lpMsg,int aI
 	#endif
 }
 
-void CCashShop::CGCashShopItemUseRecv(PMSG_CASH_SHOP_ITEM_USE_RECV* lpMsg,int aIndex) // OK
+void CCashShop::CGCashShopItemUseRecv(PMSG_CASH_SHOP_ITEM_USE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -756,7 +756,7 @@ void CCashShop::CGCashShopItemUseRecv(PMSG_CASH_SHOP_ITEM_USE_RECV* lpMsg,int aI
 	#endif
 }
 
-void CCashShop::GCCashShopInitSend(LPOBJ lpObj) // OK
+void CCashShop::GCCashShopInitSend(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -778,7 +778,7 @@ void CCashShop::GCCashShopInitSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CCashShop::GCCashShopScriptVersionSend(LPOBJ lpObj) // OK
+void CCashShop::GCCashShopScriptVersionSend(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -797,7 +797,7 @@ void CCashShop::GCCashShopScriptVersionSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CCashShop::GCCashShopBannerVersionSend(LPOBJ lpObj) // OK
+void CCashShop::GCCashShopBannerVersionSend(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -816,7 +816,7 @@ void CCashShop::GCCashShopBannerVersionSend(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CCashShop::GCCashShopItemSend(LPOBJ lpObj,int PageCount,CASH_SHOP_INVENTORY* CashInventory) // OK
+void CCashShop::GCCashShopItemSend(LPOBJ lpObj,int PageCount,CASH_SHOP_INVENTORY* CashInventory)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -846,7 +846,7 @@ void CCashShop::GCCashShopItemSend(LPOBJ lpObj,int PageCount,CASH_SHOP_INVENTORY
 	#endif
 }
 
-void CCashShop::GCCashShopGiftSend(LPOBJ lpObj,int PageCount,CASH_SHOP_INVENTORY* CashInventory) // OK
+void CCashShop::GCCashShopGiftSend(LPOBJ lpObj,int PageCount,CASH_SHOP_INVENTORY* CashInventory)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -880,7 +880,7 @@ void CCashShop::GCCashShopGiftSend(LPOBJ lpObj,int PageCount,CASH_SHOP_INVENTORY
 	#endif
 }
 
-void CCashShop::GCCashShopPeriodicItemSend(int aIndex,int index,int slot,int time) // OK
+void CCashShop::GCCashShopPeriodicItemSend(int aIndex,int index,int slot,int time)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -899,7 +899,7 @@ void CCashShop::GCCashShopPeriodicItemSend(int aIndex,int index,int slot,int tim
 	#endif
 }
 
-void CCashShop::DGCashShopPointRecv(SDHP_CASH_SHOP_POINT_RECV* lpMsg) // OK
+void CCashShop::DGCashShopPointRecv(SDHP_CASH_SHOP_POINT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -972,7 +972,7 @@ void CCashShop::DGCashShopPointRecv(SDHP_CASH_SHOP_POINT_RECV* lpMsg) // OK
 	this->GCSendCoin(lpObj, lpObj->Coin1, lpObj->Coin2, lpObj->Coin3);
 }
 
-void CCashShop::DGCashShopItemBuyRecv(SDHP_CASH_SHOP_ITEM_BUY_RECV* lpMsg) // OK
+void CCashShop::DGCashShopItemBuyRecv(SDHP_CASH_SHOP_ITEM_BUY_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1131,7 +1131,7 @@ void CCashShop::DGCashShopItemBuyRecv(SDHP_CASH_SHOP_ITEM_BUY_RECV* lpMsg) // OK
 	#endif
 }
 
-void CCashShop::DGCashShopItemGifRecv(SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg) // OK
+void CCashShop::DGCashShopItemGifRecv(SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1294,7 +1294,7 @@ void CCashShop::DGCashShopItemGifRecv(SDHP_CASH_SHOP_ITEM_GIF_RECV* lpMsg) // OK
 	#endif
 }
 
-void CCashShop::DGCashShopItemNumRecv(SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg) // OK
+void CCashShop::DGCashShopItemNumRecv(SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1366,7 +1366,7 @@ void CCashShop::DGCashShopItemNumRecv(SDHP_CASH_SHOP_ITEM_NUM_RECV* lpMsg) // OK
 	#endif
 }
 
-void CCashShop::DGCashShopItemUseRecv(SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg) // OK
+void CCashShop::DGCashShopItemUseRecv(SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1568,7 +1568,7 @@ void CCashShop::DGCashShopItemUseRecv(SDHP_CASH_SHOP_ITEM_USE_RECV* lpMsg) // OK
 	#endif
 }
 
-void CCashShop::DGCashShopPeriodicItemRecv(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lpMsg) // OK
+void CCashShop::DGCashShopPeriodicItemRecv(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1620,7 +1620,7 @@ void CCashShop::DGCashShopPeriodicItemRecv(SDHP_CASH_SHOP_PERIODIC_ITEM_RECV* lp
 	#endif
 }
 
-void CCashShop::DGCashShopRecievePointRecv(SDHP_CASH_SHOP_RECIEVE_POINT_RECV* lpMsg) // OK
+void CCashShop::DGCashShopRecievePointRecv(SDHP_CASH_SHOP_RECIEVE_POINT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1638,7 +1638,7 @@ void CCashShop::DGCashShopRecievePointRecv(SDHP_CASH_SHOP_RECIEVE_POINT_RECV* lp
 	#endif
 }
 
-void CCashShop::GDCashShopPeriodicItemSend(int aIndex) // OK
+void CCashShop::GDCashShopPeriodicItemSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1700,7 +1700,7 @@ void CCashShop::GDCashShopPeriodicItemSend(int aIndex) // OK
 	#endif
 }
 
-void CCashShop::GDCashShopRecievePointSend(int aIndex,DWORD CallbackFunc,DWORD CallbackArg1,DWORD CallbackArg2) // OK
+void CCashShop::GDCashShopRecievePointSend(int aIndex,DWORD CallbackFunc,DWORD CallbackArg1,DWORD CallbackArg2)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1730,7 +1730,7 @@ void CCashShop::GDCashShopRecievePointSend(int aIndex,DWORD CallbackFunc,DWORD C
 	#endif
 }
 
-void CCashShop::GDCashShopAddPointSaveSend(int aIndex,char* GiftAccount,DWORD AddWCoinC,DWORD AddWCoinP,DWORD AddGoblinPoint,DWORD AddRuud) // OK
+void CCashShop::GDCashShopAddPointSaveSend(int aIndex,char* GiftAccount,DWORD AddWCoinC,DWORD AddWCoinP,DWORD AddGoblinPoint,DWORD AddRuud)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1764,7 +1764,7 @@ void CCashShop::GDCashShopAddPointSaveSend(int aIndex,char* GiftAccount,DWORD Ad
 	#endif
 }
 
-void CCashShop::GDCashShopSubPointSaveSend(int aIndex,char* GiftAccount,DWORD SubWCoinC,DWORD SubWCoinP,DWORD SubGoblinPoint, DWORD SubRuud) // OK
+void CCashShop::GDCashShopSubPointSaveSend(int aIndex,char* GiftAccount,DWORD SubWCoinC,DWORD SubWCoinP,DWORD SubGoblinPoint, DWORD SubRuud)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1798,7 +1798,7 @@ void CCashShop::GDCashShopSubPointSaveSend(int aIndex,char* GiftAccount,DWORD Su
 	#endif
 }
 
-void CCashShop::GDCashShopInsertItemSaveSend(int aIndex,char* GiftAccount,BYTE InventoryType,DWORD PackageMainIndex,DWORD ProductBaseIndex,DWORD ProductMainIndex,double CoinValue,BYTE ProductType,char* GiftName,char* GiftText) // OK
+void CCashShop::GDCashShopInsertItemSaveSend(int aIndex,char* GiftAccount,BYTE InventoryType,DWORD PackageMainIndex,DWORD ProductBaseIndex,DWORD ProductMainIndex,double CoinValue,BYTE ProductType,char* GiftName,char* GiftText)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1854,7 +1854,7 @@ void CCashShop::GDCashShopInsertItemSaveSend(int aIndex,char* GiftAccount,BYTE I
 	#endif
 }
 
-void CCashShop::GDCashShopDeleteItemSaveSend(int aIndex,char* GiftAccount,DWORD BaseItemCode,DWORD MainItemCode) // OK
+void CCashShop::GDCashShopDeleteItemSaveSend(int aIndex,char* GiftAccount,DWORD BaseItemCode,DWORD MainItemCode)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1884,7 +1884,7 @@ void CCashShop::GDCashShopDeleteItemSaveSend(int aIndex,char* GiftAccount,DWORD 
 	#endif
 }
 
-void CCashShop::GDCashShopPeriodicItemSaveSend(int aIndex) // OK
+void CCashShop::GDCashShopPeriodicItemSaveSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1946,7 +1946,7 @@ void CCashShop::GDCashShopPeriodicItemSaveSend(int aIndex) // OK
 	#endif
 }
 
-void CCashShop::GCSendCoin(LPOBJ lpObj, int coin1, int coin2, int coin3) // OK
+void CCashShop::GCSendCoin(LPOBJ lpObj, int coin1, int coin2, int coin3)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 	if (OBJECT_RANGE(lpObj->Index) == 0)
@@ -1971,7 +1971,7 @@ void CCashShop::GCSendCoin(LPOBJ lpObj, int coin1, int coin2, int coin3) // OK
 
 }
 #if(SOIITEM)
-void CCashShop::GCCashShopPeriodicViewItemSend(int aIndex, int index, int slot, int time) // OK
+void CCashShop::GCCashShopPeriodicViewItemSend(int aIndex, int index, int slot, int time)
 {
 #if(GAMESERVER_UPDATE>=501)
 

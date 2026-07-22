@@ -52,8 +52,8 @@ public:
 	void SuDungMauMana(int aIndex);
 	void TuDongBuffSkill(int aIndex);
 	void TuDongDanhSkill(int aIndex);
-	bool GetTargetPlayer(LPOBJ lpObj, int SkillNumber, int* MonsterIndex); // OK
-	bool GetTargetMonster(LPOBJ lpObj, int SkillNumber, int* MonsterIndex); // OK
+	bool GetTargetPlayer(LPOBJ lpObj, int SkillNumber, int* MonsterIndex);
+	bool GetTargetMonster(LPOBJ lpObj, int SkillNumber, int* MonsterIndex);
 	//===
 	void SendSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber);
 	void SendMultiSkillAttack(LPOBJ lpObj, int aIndex, int SkillNumber);

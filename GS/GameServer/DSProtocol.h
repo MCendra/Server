@@ -885,7 +885,7 @@ void GDDisconnectCharacterSend(int aIndex);
 void GDGlobalWhisperSend(int aIndex,char* TargetName,char* message);
 void GDMarryInfoSaveSend(int aIndex,char* marryname,char* mode);
 void GDSetCoinSend(int aIndex, int value1, int value2, int value3, char * LogName);
-void GDKillSystemSend(int aIndex,int bIndex); // OK
+void GDKillSystemSend(int aIndex,int bIndex);
 #if(TEAMVSTEAM == 1)
 void GDRankingTvTEventSaveSend(int aIndex, DWORD KillCount, DWORD DeathCount);
 #endif
@@ -896,7 +896,7 @@ void GDRankingThanMaChienSaveSend(int aIndex, DWORD KillCount, DWORD DeathCount)
 void GCServerMsgStringSendToMap(BYTE Map, BYTE type, char* szMsg, ...);
 #endif
 #if(BOT_STATUE == 1)
-void GDBotInfoSend(int aIndex, int Rank, int TypeTop); // OK
+void GDBotInfoSend(int aIndex, int Rank, int TypeTop);
 #endif
 
 //**************************************************************************//

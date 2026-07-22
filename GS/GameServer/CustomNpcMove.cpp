@@ -18,17 +18,17 @@ CCustomNpcMove gCustomNpcMove;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomNpcMove::CCustomNpcMove() // OK
+CCustomNpcMove::CCustomNpcMove()
 {
 	this->m_CustomNpcMove.clear();
 }
 
-CCustomNpcMove::~CCustomNpcMove() // OK
+CCustomNpcMove::~CCustomNpcMove()
 {
 
 }
 
-void CCustomNpcMove::Load(char* path) // OK
+void CCustomNpcMove::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -106,7 +106,7 @@ void CCustomNpcMove::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CCustomNpcMove::GetNpcMove(LPOBJ lpObj,int MonsterClass,int Map,int X,int Y) // OK
+bool CCustomNpcMove::GetNpcMove(LPOBJ lpObj,int MonsterClass,int Map,int X,int Y)
 {
 
 	for(std::map<int,NPC_MOVE_INFO>::iterator it=this->m_CustomNpcMove.begin();it != this->m_CustomNpcMove.end();it++)

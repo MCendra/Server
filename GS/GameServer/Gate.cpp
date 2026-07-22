@@ -14,17 +14,17 @@ CGate gGate;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGate::CGate() // OK
+CGate::CGate()
 {
 	this->m_GateInfo.clear();
 }
 
-CGate::~CGate() // OK
+CGate::~CGate()
 {
 
 }
 
-void CGate::Load(char* path) // OK
+void CGate::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -98,7 +98,7 @@ void CGate::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CGate::GetInfo(int index,GATE_INFO* lpInfo) // OK
+bool CGate::GetInfo(int index,GATE_INFO* lpInfo)
 {
 	std::map<int,GATE_INFO>::iterator it = this->m_GateInfo.find(index);
 
@@ -113,7 +113,7 @@ bool CGate::GetInfo(int index,GATE_INFO* lpInfo) // OK
 	}
 }
 
-int CGate::GetGateMap(int index) // OK
+int CGate::GetGateMap(int index)
 {
 	GATE_INFO info;
 
@@ -125,7 +125,7 @@ int CGate::GetGateMap(int index) // OK
 	return info.Map;
 }
 
-int CGate::GetMoveLevel(LPOBJ lpObj,int map,int level) // OK
+int CGate::GetMoveLevel(LPOBJ lpObj,int map,int level)
 {
 	if(map != MAP_SWAMP_OF_CALMNESS && (lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF))
 	{
@@ -135,7 +135,7 @@ int CGate::GetMoveLevel(LPOBJ lpObj,int map,int level) // OK
 	return level;
 }
 
-bool CGate::IsGate(int index) // OK
+bool CGate::IsGate(int index)
 {
 	GATE_INFO info;
 
@@ -149,7 +149,7 @@ bool CGate::IsGate(int index) // OK
 	}
 }
 
-bool CGate::IsInGate(LPOBJ lpObj,int index) // OK
+bool CGate::IsInGate(LPOBJ lpObj,int index)
 {
 	GATE_INFO info;
 
@@ -196,7 +196,7 @@ bool CGate::IsInGate(LPOBJ lpObj,int index) // OK
 	return 1;
 }
 
-bool CGate::GetGate(int index,int* gate,int* map,int* x,int* y,int* dir,int* level) // OK
+bool CGate::GetGate(int index,int* gate,int* map,int* x,int* y,int* dir,int* level)
 {
 	GATE_INFO info;
 
@@ -246,7 +246,7 @@ bool CGate::GetGate(int index,int* gate,int* map,int* x,int* y,int* dir,int* lev
 
 	return 0;
 }
-bool CGate::MapIsInGate(LPOBJ lpObj, int index) // OK
+bool CGate::MapIsInGate(LPOBJ lpObj, int index)
 {
 	GATE_INFO info;
 

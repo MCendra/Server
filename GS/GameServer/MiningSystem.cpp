@@ -18,7 +18,7 @@ CMiningSystem gMiningSystem;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMiningSystem::CMiningSystem() // OK
+CMiningSystem::CMiningSystem()
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -27,12 +27,12 @@ CMiningSystem::CMiningSystem() // OK
 	#endif
 }
 
-CMiningSystem::~CMiningSystem() // OK
+CMiningSystem::~CMiningSystem()
 {
 
 }
 
-void CMiningSystem::Load(char* path) // OK
+void CMiningSystem::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -100,7 +100,7 @@ void CMiningSystem::Load(char* path) // OK
 	#endif
 }
 
-bool CMiningSystem::GetMiningInfo(int index,int stage,MINING_INFO* lpInfo) // OK
+bool CMiningSystem::GetMiningInfo(int index,int stage,MINING_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -125,7 +125,7 @@ bool CMiningSystem::GetMiningInfo(int index,int stage,MINING_INFO* lpInfo) // OK
 	#endif
 }
 
-void CMiningSystem::CreateMiningReward(int aIndex,int ItemIndex,int PackIndex,int ItemCount) // OK
+void CMiningSystem::CreateMiningReward(int aIndex,int ItemIndex,int PackIndex,int ItemCount)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -168,7 +168,7 @@ void CMiningSystem::CreateMiningReward(int aIndex,int ItemIndex,int PackIndex,in
 	#endif
 }
 
-void CMiningSystem::CGMiningStartRecv(PMSG_MINING_START_RECV* lpMsg,int aIndex) // OK
+void CMiningSystem::CGMiningStartRecv(PMSG_MINING_START_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -311,7 +311,7 @@ void CMiningSystem::CGMiningStartRecv(PMSG_MINING_START_RECV* lpMsg,int aIndex) 
 	#endif
 }
 
-void CMiningSystem::CGMiningSuccessRecv(PMSG_MINING_SUCCESS_RECV* lpMsg,int aIndex) // OK
+void CMiningSystem::CGMiningSuccessRecv(PMSG_MINING_SUCCESS_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -413,7 +413,7 @@ void CMiningSystem::CGMiningSuccessRecv(PMSG_MINING_SUCCESS_RECV* lpMsg,int aInd
 	#endif
 }
 
-void CMiningSystem::CGMiningFailureRecv(PMSG_MINING_FAILURE_RECV* lpMsg,int aIndex) // OK
+void CMiningSystem::CGMiningFailureRecv(PMSG_MINING_FAILURE_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -470,7 +470,7 @@ void CMiningSystem::CGMiningFailureRecv(PMSG_MINING_FAILURE_RECV* lpMsg,int aInd
 	#endif
 }
 
-void CMiningSystem::GCMiningStartSend(int aIndex,int MonsterIndex,int MonsterClass,int map,int stage,int value,int result) // OK
+void CMiningSystem::GCMiningStartSend(int aIndex,int MonsterIndex,int MonsterClass,int map,int stage,int value,int result)
 {
 	#if(GAMESERVER_UPDATE>=801)
 
@@ -497,7 +497,7 @@ void CMiningSystem::GCMiningStartSend(int aIndex,int MonsterIndex,int MonsterCla
 	#endif
 }
 
-void CMiningSystem::GCMiningSuccessSend(int aIndex,int MonsterIndex,int MonsterClass,int map,int stage,int result) // OK
+void CMiningSystem::GCMiningSuccessSend(int aIndex,int MonsterIndex,int MonsterClass,int map,int stage,int result)
 {
 	#if(GAMESERVER_UPDATE>=801)
 

@@ -1,12 +1,6 @@
 // QueueHandle.cpp
 #include "QueueHandle.h"
 
-// Construction/Destruction
-
-CQueue::CQueue() = default;
-
-CQueue::~CQueue() = default;
-
 void CQueue::ClearQueue()
 {
 	CCriticalSection::CLock lock(m_critical);

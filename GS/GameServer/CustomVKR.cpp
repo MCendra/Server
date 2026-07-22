@@ -24,7 +24,7 @@ void VuKhiRong::Init()
 	this->m_VuKhiRong.Dame7 = 0;
 }
 
-void VuKhiRong::Load(char* path) // OK
+void VuKhiRong::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

@@ -14,17 +14,17 @@ CHackPacketCheck gHackPacketCheck;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CHackPacketCheck::CHackPacketCheck() // OK
+CHackPacketCheck::CHackPacketCheck()
 {
 	this->Init();
 }
 
-CHackPacketCheck::~CHackPacketCheck() // OK
+CHackPacketCheck::~CHackPacketCheck()
 {
 
 }
 
-void CHackPacketCheck::Init() // OK
+void CHackPacketCheck::Init()
 {
 	for(int n=0;n < MAX_HACK_PACKET_INFO;n++)
 	{
@@ -33,7 +33,7 @@ void CHackPacketCheck::Init() // OK
 	}
 }
 
-void CHackPacketCheck::Load(char* path) // OK
+void CHackPacketCheck::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -91,7 +91,7 @@ void CHackPacketCheck::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CHackPacketCheck::SetInfo(HACK_PACKET_INFO info) // OK
+void CHackPacketCheck::SetInfo(HACK_PACKET_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_HACK_PACKET_INFO)
 	{
@@ -103,7 +103,7 @@ void CHackPacketCheck::SetInfo(HACK_PACKET_INFO info) // OK
 	if(info.Value != -1){this->m_HackPacketInfo[info.Index].ValueInfo[info.Value] = info;}
 }
 
-HACK_PACKET_INFO* CHackPacketCheck::GetInfo(int index,int value) // OK
+HACK_PACKET_INFO* CHackPacketCheck::GetInfo(int index,int value)
 {
 	if(index < 0 || index >= MAX_HACK_PACKET_INFO)
 	{
@@ -128,7 +128,7 @@ HACK_PACKET_INFO* CHackPacketCheck::GetInfo(int index,int value) // OK
 	return ((this->m_HackPacketInfo[index].IndexInfo.Value==-1)?&this->m_HackPacketInfo[index].IndexInfo:&this->m_HackPacketInfo[index].ValueInfo[value]);
 }
 
-bool CHackPacketCheck::CheckPacketHack(int aIndex,int index,int value,int encrypt,int serial) // OK
+bool CHackPacketCheck::CheckPacketHack(int aIndex,int index,int value,int encrypt,int serial)
 {
 	HACK_PACKET_INFO* lpInfo = this->GetInfo(index,value);
 
@@ -165,17 +165,17 @@ bool CHackPacketCheck::CheckPacketHack(int aIndex,int index,int value,int encryp
 	return 1;
 }
 
-bool CHackPacketCheck::CheckPacketHackMaxDelay(int aIndex,int index,int MaxDelay) // OK
+bool CHackPacketCheck::CheckPacketHackMaxDelay(int aIndex,int index,int MaxDelay)
 {
 	return ((MaxDelay==0)?1:(((GetTickCount()-gObj[aIndex].HackPacketDelay[index])>=((DWORD)MaxDelay))?0:1));
 }
 
-bool CHackPacketCheck::CheckPacketHackMinCount(int aIndex,int index,int MinCount) // OK
+bool CHackPacketCheck::CheckPacketHackMinCount(int aIndex,int index,int MinCount)
 {
 	return ((MinCount==0)?1:(((++gObj[aIndex].HackPacketCount[index])>((DWORD)MinCount))?0:1));
 }
 
-bool CHackPacketCheck::CheckPacketHackMaxCount(int aIndex,int index,int MaxCount) // OK
+bool CHackPacketCheck::CheckPacketHackMaxCount(int aIndex,int index,int MaxCount)
 {
 	return ((MaxCount==0)?1:((gObj[aIndex].HackPacketCount[index]>((DWORD)MaxCount))?0:1));
 }

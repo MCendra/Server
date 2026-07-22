@@ -25,7 +25,7 @@ CCustomQuiz gCustomQuiz;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomQuiz::CCustomQuiz() // OK
+CCustomQuiz::CCustomQuiz()
 {
 	this->m_CustomQuiz.clear();
 
@@ -47,12 +47,12 @@ CCustomQuiz::CCustomQuiz() // OK
 	}
 }
 
-CCustomQuiz::~CCustomQuiz() // OK
+CCustomQuiz::~CCustomQuiz()
 {
 
 }
 
-void CCustomQuiz::Init() // OK
+void CCustomQuiz::Init()
 {
 	for(int n=0;n < MAX_CUSTOM_QUIZ;n++)
 	{
@@ -67,7 +67,7 @@ void CCustomQuiz::Init() // OK
 	}
 }
 
-void CCustomQuiz::Load(char* path) // OK
+void CCustomQuiz::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -185,7 +185,7 @@ void CCustomQuiz::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomQuiz::MainProc() // OK
+void CCustomQuiz::MainProc()
 {
 	for(int n=0;n < MAX_CUSTOM_QUIZ;n++)
 	{
@@ -238,12 +238,12 @@ void CCustomQuiz::MainProc() // OK
 	}
 }
 
-void CCustomQuiz::ProcState_BLANK(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::ProcState_BLANK(CUSTOM_QUIZ_INFO* lpInfo)
 {
 
 }
 
-void CCustomQuiz::ProcState_EMPTY(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::ProcState_EMPTY(CUSTOM_QUIZ_INFO* lpInfo)
 {
 	if(lpInfo->RemainTime > 0 && lpInfo->RemainTime <= (lpInfo->RuleInfo.AlarmTime*60))
 	{
@@ -284,7 +284,7 @@ void CCustomQuiz::ProcState_EMPTY(CUSTOM_QUIZ_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomQuiz::ProcState_START(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::ProcState_START(CUSTOM_QUIZ_INFO* lpInfo)
 {
 	if(this->Active == 0)
 	{
@@ -329,7 +329,7 @@ void CCustomQuiz::ProcState_START(CUSTOM_QUIZ_INFO* lpInfo) // OK
 	}
 }
 
-void CCustomQuiz::SetState(CUSTOM_QUIZ_INFO* lpInfo,int state) // OK
+void CCustomQuiz::SetState(CUSTOM_QUIZ_INFO* lpInfo,int state)
 {
 	switch((lpInfo->State=state))
 	{
@@ -345,12 +345,12 @@ void CCustomQuiz::SetState(CUSTOM_QUIZ_INFO* lpInfo,int state) // OK
 	}
 }
 
-void CCustomQuiz::SetState_BLANK(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::SetState_BLANK(CUSTOM_QUIZ_INFO* lpInfo)
 {
 
 }
 
-void CCustomQuiz::SetState_EMPTY(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::SetState_EMPTY(CUSTOM_QUIZ_INFO* lpInfo)
 {
 	lpInfo->AlarmMinSave = -1;
 	lpInfo->AlarmMinLeft = -1;
@@ -358,7 +358,7 @@ void CCustomQuiz::SetState_EMPTY(CUSTOM_QUIZ_INFO* lpInfo) // OK
 	this->CheckSync(lpInfo);
 }
 
-void CCustomQuiz::SetState_START(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::SetState_START(CUSTOM_QUIZ_INFO* lpInfo)
 {
 	lpInfo->AlarmMinSave = -1;
 	lpInfo->AlarmMinLeft = -1;
@@ -368,7 +368,7 @@ void CCustomQuiz::SetState_START(CUSTOM_QUIZ_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)(time(0)+lpInfo->RemainTime);
 }
 
-void CCustomQuiz::CheckSync(CUSTOM_QUIZ_INFO* lpInfo) // OK
+void CCustomQuiz::CheckSync(CUSTOM_QUIZ_INFO* lpInfo)
 {
 	if(lpInfo->StartTime.empty() != 0)
 	{
@@ -396,7 +396,7 @@ void CCustomQuiz::CheckSync(CUSTOM_QUIZ_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-bool CCustomQuiz::GetInfo(int index,CUSTOMQUIZ_QUESTION* lpInfo) // OK
+bool CCustomQuiz::GetInfo(int index,CUSTOMQUIZ_QUESTION* lpInfo)
 {
 	std::map<int,CUSTOMQUIZ_QUESTION>::iterator it = this->m_CustomQuiz.find(index);
 

@@ -12,22 +12,22 @@ CSkillHitBox gSkillHitBox;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSkillHitBox::CSkillHitBox() // OK
+CSkillHitBox::CSkillHitBox()
 {
 
 }
 
-CSkillHitBox::~CSkillHitBox() // OK
+CSkillHitBox::~CSkillHitBox()
 {
 
 }
 
-void CSkillHitBox::Init() // OK
+void CSkillHitBox::Init()
 {
 	memset(this->m_table,0,sizeof(this->m_table));
 }
 
-void CSkillHitBox::Load(char* path) // OK
+void CSkillHitBox::Load(char* path)
 {
 	this->Init();
 
@@ -58,7 +58,7 @@ void CSkillHitBox::Load(char* path) // OK
 	CloseHandle(file);
 }
 
-int CSkillHitBox::Check(int dir,int x,int y) // OK
+int CSkillHitBox::Check(int dir,int x,int y)
 {
 	if(dir < 0 || dir >= 36 || x < 0 || x >= 21 || y < 0 || y >= 21)
 	{
@@ -68,7 +68,7 @@ int CSkillHitBox::Check(int dir,int x,int y) // OK
 	return this->m_table[dir][(y*21)+x];
 }
 
-int CSkillHitBox::HitCheck(int dir,int x,int y,int tx,int ty) // OK
+int CSkillHitBox::HitCheck(int dir,int x,int y,int tx,int ty)
 {
 	dir /= 10;
 

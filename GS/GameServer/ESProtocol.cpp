@@ -50,7 +50,7 @@ void ESDataSend(BYTE* lpMsg,int size)
 	}
 }
 
-void ESDataRecv(BYTE head,BYTE* lpMsg,int size) // OK
+void ESDataRecv(BYTE head,BYTE* lpMsg,int size)
 {
 	switch(lpMsg[0])
 	{
@@ -87,7 +87,7 @@ void ESDataRecv(BYTE head,BYTE* lpMsg,int size) // OK
 	}
 }
 
-void ExDBServerProtocolCore(BYTE head,BYTE* lpMsg,int size) // OK
+void ExDBServerProtocolCore(BYTE head,BYTE* lpMsg,int size)
 {
 	PROTECT_START
 

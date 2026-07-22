@@ -34,7 +34,7 @@ struct TVT_EVENT_START_TIME
 
 struct TVT_EVENT_USER
 {
-	void Reset() // OK
+	void Reset()
 	{
 		this->Index = -1;
 		this->Available = false;

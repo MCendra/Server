@@ -18,7 +18,7 @@ CPcPoint gPcPoint;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPcPoint::CPcPoint() // OK
+CPcPoint::CPcPoint()
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -27,12 +27,12 @@ CPcPoint::CPcPoint() // OK
 	#endif
 }
 
-CPcPoint::~CPcPoint() // OK
+CPcPoint::~CPcPoint()
 {
 
 }
 
-void CPcPoint::Load(char* path) // OK
+void CPcPoint::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -114,7 +114,7 @@ void CPcPoint::Load(char* path) // OK
 	#endif
 }
 
-void CPcPoint::MainProc() // OK
+void CPcPoint::MainProc()
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -138,7 +138,7 @@ void CPcPoint::MainProc() // OK
 	#endif
 }
 
-void CPcPoint::CGPcPointItemBuyRecv(PMSG_PC_POINT_ITEM_BUY_RECV* lpMsg,int aIndex) // OK
+void CPcPoint::CGPcPointItemBuyRecv(PMSG_PC_POINT_ITEM_BUY_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -174,7 +174,7 @@ void CPcPoint::CGPcPointItemBuyRecv(PMSG_PC_POINT_ITEM_BUY_RECV* lpMsg,int aInde
 	#endif
 }
 
-void CPcPoint::CGPcPointOpenRecv(PMSG_PC_POINT_OPEN_RECV* lpMsg,int aIndex) // OK
+void CPcPoint::CGPcPointOpenRecv(PMSG_PC_POINT_OPEN_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -230,7 +230,7 @@ void CPcPoint::CGPcPointOpenRecv(PMSG_PC_POINT_OPEN_RECV* lpMsg,int aIndex) // O
 	#endif
 }
 
-void CPcPoint::DGPcPointPointRecv(SDHP_PC_POINT_POINT_RECV* lpMsg) // OK
+void CPcPoint::DGPcPointPointRecv(SDHP_PC_POINT_POINT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -260,7 +260,7 @@ void CPcPoint::DGPcPointPointRecv(SDHP_PC_POINT_POINT_RECV* lpMsg) // OK
 	#endif
 }
 
-void CPcPoint::DGPcPointItemBuyRecv(SDHP_PC_POINT_ITEM_BUY_RECV* lpMsg) // OK
+void CPcPoint::DGPcPointItemBuyRecv(SDHP_PC_POINT_ITEM_BUY_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -375,7 +375,7 @@ void CPcPoint::DGPcPointItemBuyRecv(SDHP_PC_POINT_ITEM_BUY_RECV* lpMsg) // OK
 	#endif
 }
 
-void CPcPoint::DGPcPointRecievePointRecv(SDHP_PC_POINT_RECIEVE_POINT_RECV* lpMsg) // OK
+void CPcPoint::DGPcPointRecievePointRecv(SDHP_PC_POINT_RECIEVE_POINT_RECV* lpMsg)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -393,7 +393,7 @@ void CPcPoint::DGPcPointRecievePointRecv(SDHP_PC_POINT_RECIEVE_POINT_RECV* lpMsg
 	#endif
 }
 
-void CPcPoint::GDPcPointPointSend(int aIndex) // OK
+void CPcPoint::GDPcPointPointSend(int aIndex)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -427,7 +427,7 @@ void CPcPoint::GDPcPointPointSend(int aIndex) // OK
 	#endif
 }
 
-void CPcPoint::GDPcPointRecievePointSend(int aIndex,DWORD CallbackFunc,DWORD CallbackArg1,DWORD CallbackArg2) // OK
+void CPcPoint::GDPcPointRecievePointSend(int aIndex,DWORD CallbackFunc,DWORD CallbackArg1,DWORD CallbackArg2)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -457,7 +457,7 @@ void CPcPoint::GDPcPointRecievePointSend(int aIndex,DWORD CallbackFunc,DWORD Cal
 	#endif
 }
 
-void CPcPoint::GDPcPointAddPointSaveSend(int aIndex,DWORD AddPcPoint) // OK
+void CPcPoint::GDPcPointAddPointSaveSend(int aIndex,DWORD AddPcPoint)
 {
 	#if(GAMESERVER_UPDATE<=402)
 
@@ -482,7 +482,7 @@ void CPcPoint::GDPcPointAddPointSaveSend(int aIndex,DWORD AddPcPoint) // OK
 	#endif
 }
 
-void CPcPoint::GDPcPointSubPointSaveSend(int aIndex,DWORD SubPcPoint) // OK
+void CPcPoint::GDPcPointSubPointSaveSend(int aIndex,DWORD SubPcPoint)
 {
 	#if(GAMESERVER_UPDATE<=402)
 

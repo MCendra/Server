@@ -18,17 +18,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillElementInfo::CMonsterSkillElementInfo() // OK
+CMonsterSkillElementInfo::CMonsterSkillElementInfo()
 {
 	this->Reset();
 }
 
-CMonsterSkillElementInfo::~CMonsterSkillElementInfo() // OK
+CMonsterSkillElementInfo::~CMonsterSkillElementInfo()
 {
 
 }
 
-void CMonsterSkillElementInfo::Reset() // OK
+void CMonsterSkillElementInfo::Reset()
 {
 	memset(this->m_ElementName,0,sizeof(this->m_ElementName));
 
@@ -43,7 +43,7 @@ void CMonsterSkillElementInfo::Reset() // OK
 	this->m_CharacterLevel = -1;
 }
 
-void CMonsterSkillElementInfo::ForceSkillElementInfo(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ForceSkillElementInfo(int aIndex,int bIndex)
 {
 	if((GetLargeRand()%100) > ((this->m_ElementType==MSE_TYPE_STUN)?(this->m_SuccessRate-gObj[bIndex].ResistStunRate):this->m_SuccessRate))
 	{
@@ -121,7 +121,7 @@ void CMonsterSkillElementInfo::ForceSkillElementInfo(int aIndex,int bIndex) // O
 	}
 }
 
-void CMonsterSkillElementInfo::ApplyElementStun(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementStun(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{
@@ -145,12 +145,12 @@ void CMonsterSkillElementInfo::ApplyElementStun(int aIndex,int bIndex) // OK
 	gObjSetPosition(bIndex,gObj[bIndex].X,gObj[bIndex].Y);
 }
 
-void CMonsterSkillElementInfo::ApplyElementMove(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementMove(int aIndex,int bIndex)
 {
 
 }
 
-void CMonsterSkillElementInfo::ApplyElementHP(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementHP(int aIndex,int bIndex)
 {
 	int IncAndDecValue = 0;
 
@@ -197,7 +197,7 @@ void CMonsterSkillElementInfo::ApplyElementHP(int aIndex,int bIndex) // OK
 	GCLifeSend(bIndex,0xFF,(int)gObj[bIndex].Life,gObj[bIndex].Shield);
 }
 
-void CMonsterSkillElementInfo::ApplyElementMP(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementMP(int aIndex,int bIndex)
 {
 	int IncAndDecValue = 0;
 
@@ -244,7 +244,7 @@ void CMonsterSkillElementInfo::ApplyElementMP(int aIndex,int bIndex) // OK
 	GCManaSend(bIndex,0xFF,(int)gObj[bIndex].Mana,gObj[bIndex].BP);
 }
 
-void CMonsterSkillElementInfo::ApplyElementAG(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementAG(int aIndex,int bIndex)
 {
 	int IncAndDecValue = 0;
 
@@ -291,7 +291,7 @@ void CMonsterSkillElementInfo::ApplyElementAG(int aIndex,int bIndex) // OK
 	GCManaSend(bIndex,0xFF,(int)gObj[bIndex].Mana,gObj[bIndex].BP);
 }
 
-void CMonsterSkillElementInfo::ApplyElementDefense(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementDefense(int aIndex,int bIndex)
 {
 	int IncAndDecValue = 0;
 
@@ -319,7 +319,7 @@ void CMonsterSkillElementInfo::ApplyElementDefense(int aIndex,int bIndex) // OK
 	gObj[bIndex].MonsterSkillElementOption.m_SkillElementDefense = IncAndDecValue;
 }
 
-void CMonsterSkillElementInfo::ApplyElementAttack(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementAttack(int aIndex,int bIndex)
 {
 	int IncAndDecValue = 0;
 
@@ -347,7 +347,7 @@ void CMonsterSkillElementInfo::ApplyElementAttack(int aIndex,int bIndex) // OK
 	gObj[bIndex].MonsterSkillElementOption.m_SkillElementAttack = IncAndDecValue;
 }
 
-void CMonsterSkillElementInfo::ApplyElementDurability(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementDurability(int aIndex,int bIndex)
 {
 	if(gObj[bIndex].Type != OBJECT_USER)
 	{
@@ -385,7 +385,7 @@ void CMonsterSkillElementInfo::ApplyElementDurability(int aIndex,int bIndex) // 
 	gItemManager.GCItemDurSend(bIndex,IncAndDecSlot,(BYTE)gObj[bIndex].Inventory[IncAndDecSlot].m_Durability,0);
 }
 
-void CMonsterSkillElementInfo::ApplyElementSummon(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementSummon(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0 || gObj[bIndex].Type != OBJECT_MONSTER)
 	{
@@ -440,7 +440,7 @@ void CMonsterSkillElementInfo::ApplyElementSummon(int aIndex,int bIndex) // OK
 	gObjViewportListCreate(bIndex);
 }
 
-void CMonsterSkillElementInfo::ApplyElementPush(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementPush(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{
@@ -462,27 +462,27 @@ void CMonsterSkillElementInfo::ApplyElementPush(int aIndex,int bIndex) // OK
 	}
 }
 
-void CMonsterSkillElementInfo::ApplyElementStatEnergy(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementStatEnergy(int aIndex,int bIndex)
 {
 
 }
 
-void CMonsterSkillElementInfo::ApplyElementStatStrength(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementStatStrength(int aIndex,int bIndex)
 {
 
 }
 
-void CMonsterSkillElementInfo::ApplyElementStatDexiterity(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementStatDexiterity(int aIndex,int bIndex)
 {
 
 }
 
-void CMonsterSkillElementInfo::ApplyElementStatVitality(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementStatVitality(int aIndex,int bIndex)
 {
 
 }
 
-void CMonsterSkillElementInfo::ApplyElementRemoveSkill(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementRemoveSkill(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{
@@ -505,14 +505,14 @@ void CMonsterSkillElementInfo::ApplyElementRemoveSkill(int aIndex,int bIndex) //
 	}
 }
 
-void CMonsterSkillElementInfo::ApplyElementResistSkill(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementResistSkill(int aIndex,int bIndex)
 {
 	gObj[aIndex].MonsterSkillElementOption.m_SkillElementResistNumber = this->m_NullifiedSkill;
 
 	gObj[aIndex].MonsterSkillElementOption.m_SkillElementResistTime = this->m_ContinuanceTime;
 }
 
-void CMonsterSkillElementInfo::ApplyElementImmuneSkill(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementImmuneSkill(int aIndex,int bIndex)
 {
 	gObj[aIndex].MonsterSkillElementOption.m_SkillElementImmuneNumber = this->m_NullifiedSkill;
 
@@ -528,7 +528,7 @@ void CMonsterSkillElementInfo::ApplyElementImmuneSkill(int aIndex,int bIndex) //
 	}
 }
 
-void CMonsterSkillElementInfo::ApplyElementTeleportSkill(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementTeleportSkill(int aIndex,int bIndex)
 {
 	if(gEffectManager.CheckStunEffect(&gObj[aIndex]) != 0)
 	{
@@ -556,7 +556,7 @@ void CMonsterSkillElementInfo::ApplyElementTeleportSkill(int aIndex,int bIndex) 
 	gObj[aIndex].TargetNumber = -1;
 }
 
-void CMonsterSkillElementInfo::ApplyElementDoubleHP(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementDoubleHP(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{
@@ -568,7 +568,7 @@ void CMonsterSkillElementInfo::ApplyElementDoubleHP(int aIndex,int bIndex) // OK
 	gObjAddMsgSendDelay(&gObj[aIndex],55,bIndex,1000,0);
 }
 
-void CMonsterSkillElementInfo::ApplyElementPoison(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementPoison(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{
@@ -588,7 +588,7 @@ void CMonsterSkillElementInfo::ApplyElementPoison(int aIndex,int bIndex) // OK
 	}
 }
 
-void CMonsterSkillElementInfo::ApplyElementNormalAttack(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementNormalAttack(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{
@@ -615,7 +615,7 @@ void CMonsterSkillElementInfo::ApplyElementNormalAttack(int aIndex,int bIndex) /
 	}
 }
 
-void CMonsterSkillElementInfo::ApplyElementBerserk(int aIndex,int bIndex) // OK
+void CMonsterSkillElementInfo::ApplyElementBerserk(int aIndex,int bIndex)
 {
 	if(gObjIsConnected(bIndex) == 0)
 	{

@@ -14,6 +14,8 @@ CUtil gUtil;
 
 char* WorkingPath = nullptr;                 // Path del ejecutable declarado en Header.h
 
+constexpr char ERROR_TITLE[] = "Error";
+
 namespace
 {
 	std::mt19937 g_RandomEngine{ std::random_device{}() };
@@ -69,22 +71,45 @@ void CUtil::GetExecutablePath()
 	}
 }
 
-//void CUtil::SetLargeRand()
-//{
-//	seed.seed(std::random_device{}());
-//}
+// IMPORTANTE: "message" debe ser SIEMPRE un string literal o constante interna.
+// NUNCA pasar aquí texto proveniente de un cliente, archivo de configuración,
+// o cualquier fuente externa: es un formato de printf y un %s/%n malicioso
+// podría leer/escribir memoria fuera de buff.
+void CUtil::ErrorMessageBox(const char* message, ...)
+{
+
+	if (message == nullptr)
+	{
+		MessageBoxA(nullptr, "Unknown error", ERROR_TITLE, MB_OK | MB_ICONERROR);
+		ExitProcess(0);
+	}
+
+	char buff[512] = {};
+
+	va_list arg;
+	va_start(arg, message);
+
+	vsnprintf_s(buff, sizeof(buff), _TRUNCATE, message, arg);
+
+	va_end(arg);
+
+	MessageBoxA(nullptr, buff, ERROR_TITLE, MB_OK | MB_ICONERROR);
+
+	ExitProcess(0);
+
+}
 
 int CUtil::GetLargeRand()
 {
 	return g_RandomDistribution(g_RandomEngine);
 }
 
-int SafeGetItem(int index) // OK
+int SafeGetItem(int index)
 {
 	return CHECK_ITEM(index);
 }
 
-flt GetRoundValue(float value) // OK
+flt GetRoundValue(float value)
 {
 	float integral;
 
@@ -96,7 +121,7 @@ flt GetRoundValue(float value) // OK
 	return floor(value);
 }
 
-BYTE GetNewOptionCount(BYTE NewOption) // OK
+BYTE GetNewOptionCount(BYTE NewOption)
 {
 	BYTE count = 0;
 
@@ -111,7 +136,7 @@ BYTE GetNewOptionCount(BYTE NewOption) // OK
 	return count;
 }
 
-BYTE GetSocketOptionCount(BYTE SocketOption[5]) // OK
+BYTE GetSocketOptionCount(BYTE SocketOption[5])
 {
 	BYTE count = 0;
 
@@ -126,7 +151,7 @@ BYTE GetSocketOptionCount(BYTE SocketOption[5]) // OK
 	return count;
 }
 
-BYTE GetPathPacketDirPos(int px,int py) // OK
+BYTE GetPathPacketDirPos(int px,int py)
 {
 	if(px <= -1 && py <= -1)
 	{
@@ -164,7 +189,7 @@ BYTE GetPathPacketDirPos(int px,int py) // OK
 	return 0;
 }
 
-void PacketArgumentDecrypt(char* out_buff,char* in_buff,int size) // OK
+void PacketArgumentDecrypt(char* out_buff,char* in_buff,int size)
 {
 	BYTE XorTable[3] = {0xFC,0xCF,0xAB};
 
@@ -174,7 +199,7 @@ void PacketArgumentDecrypt(char* out_buff,char* in_buff,int size) // OK
 	}
 }
 
-void ErrorMessageBox(char* message,...) // OK
+void ErrorMessageBox(char* message,...)
 {
 	VM_START
 
@@ -194,7 +219,7 @@ void ErrorMessageBox(char* message,...) // OK
 	ExitProcess(0);
 }
 
-void LogAdd(eLogColor color,char* text,...) // OK
+void LogAdd(eLogColor color,char* text,...)
 {
 	tm today;
 	time_t ltime;
@@ -226,7 +251,7 @@ void LogAdd(eLogColor color,char* text,...) // OK
 	gServerDisplayer.LogAddText(color,log,strlen(log));
 }
 
-void LogAddConnect(eLogColor color,char* text,...) // OK
+void LogAddConnect(eLogColor color,char* text,...)
 {
 	tm today;
 	time_t ltime;
@@ -258,7 +283,7 @@ void LogAddConnect(eLogColor color,char* text,...) // OK
 	gServerDisplayer.LogAddTextConnect(color,log,strlen(log));
 }
 
-bool DataSend(int aIndex,BYTE* lpMsg,DWORD size) // OK
+bool DataSend(int aIndex,BYTE* lpMsg,DWORD size)
 {
 #if(OFFLINE_MODE == TRUE)
 	if (gObj[aIndex].m_OfflineMode == 1)
@@ -270,7 +295,7 @@ bool DataSend(int aIndex,BYTE* lpMsg,DWORD size) // OK
 	return gSocketManager.DataSend(aIndex,lpMsg,size);
 }
 
-void DataSendAll(BYTE* lpMsg,int size) // OK
+void DataSendAll(BYTE* lpMsg,int size)
 {
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
@@ -281,7 +306,7 @@ void DataSendAll(BYTE* lpMsg,int size) // OK
 	}
 }
 
-bool DataSendSocket(SOCKET socket,BYTE* lpMsg,DWORD size) // OK
+bool DataSendSocket(SOCKET socket,BYTE* lpMsg,DWORD size)
 {
 	if(socket == INVALID_SOCKET)
 	{
@@ -315,7 +340,7 @@ bool DataSendSocket(SOCKET socket,BYTE* lpMsg,DWORD size) // OK
 	return 1;
 }
 
-void MsgSendV2(LPOBJ lpObj,BYTE* lpMsg,int size) // OK
+void MsgSendV2(LPOBJ lpObj,BYTE* lpMsg,int size)
 {
 	for(int n=0;n < MAX_VIEWPORT;n++)
 	{
@@ -326,12 +351,12 @@ void MsgSendV2(LPOBJ lpObj,BYTE* lpMsg,int size) // OK
 	}
 }
 
-void CloseClient(int aIndex) // OK
+void CloseClient(int aIndex)
 {
 	gSocketManager.Disconnect(aIndex);
 }
 
-void PostMessage1(char* name,char* message,char* text) // OK
+void PostMessage1(char* name,char* message,char* text)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -378,7 +403,7 @@ void PostMessage1(char* name,char* message,char* text) // OK
 	#endif
 }
 
-void PostMessage2(char* name,char* message,char* text) // OK
+void PostMessage2(char* name,char* message,char* text)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -419,7 +444,7 @@ void PostMessage2(char* name,char* message,char* text) // OK
 	#endif
 }
 
-void PostMessage3(char* name,char* message,char* text) // OK
+void PostMessage3(char* name,char* message,char* text)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -460,7 +485,7 @@ void PostMessage3(char* name,char* message,char* text) // OK
 	#endif
 }
 
-void PostMessage4(char* name,char* message,char* text) // OK
+void PostMessage4(char* name,char* message,char* text)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -501,7 +526,7 @@ void PostMessage4(char* name,char* message,char* text) // OK
 	#endif
 }
 
-void PostMessagePK(char* name,char* message,char* text) // OK
+void PostMessagePK(char* name,char* message,char* text)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -542,7 +567,7 @@ void PostMessagePK(char* name,char* message,char* text) // OK
 	#endif
 }
 
-void PostMessageUserON(char* name,char* message) // OK
+void PostMessageUserON(char* name,char* message)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -583,7 +608,7 @@ void PostMessageUserON(char* name,char* message) // OK
 	#endif
 }
 
-void PostMessageNew(char* name,char* message,char* text) // OK
+void PostMessageNew(char* name,char* message,char* text)
 {
 	#if(GAMESERVER_UPDATE>=701)
 
@@ -621,27 +646,4 @@ void PostMessageNew(char* name,char* message,char* text) // OK
 
 	DataSendAll((BYTE*)&pMsg,pMsg.header.size);
 	#endif
-}
-
-
-
-
-
-
-void MsgBox(char* message, ...) // OK
-{
-	VM_START
-
-		char buff[256];
-
-	memset(buff, 0, sizeof(buff));
-
-	va_list arg;
-	va_start(arg, message);
-	vsprintf_s(buff, message, arg);
-	va_end(arg);
-
-	MessageBox(0, buff, "Error", MB_OK | MB_ICONERROR);
-
-	VM_END
 }

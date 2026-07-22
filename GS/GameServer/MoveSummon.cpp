@@ -19,17 +19,17 @@ CMoveSummon gMoveSummon;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMoveSummon::CMoveSummon() // OK
+CMoveSummon::CMoveSummon()
 {
 	this->m_MoveSummonInfo.clear();
 }
 
-CMoveSummon::~CMoveSummon() // OK
+CMoveSummon::~CMoveSummon()
 {
 
 }
 
-void CMoveSummon::Load(char* path) // OK
+void CMoveSummon::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -95,7 +95,7 @@ void CMoveSummon::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CMoveSummon::CheckMoveSummon(LPOBJ lpObj,int map,int x,int y) // OK
+bool CMoveSummon::CheckMoveSummon(LPOBJ lpObj,int map,int x,int y)
 {
 	if(lpObj->Interface.use != 0 || lpObj->Teleport != 0 || lpObj->DieRegen != 0 || lpObj->PShopOpen != 0)
 	{

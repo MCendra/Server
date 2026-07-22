@@ -17,7 +17,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuBattleOfNightmare::CKanturuBattleOfNightmare() // OK
+CKanturuBattleOfNightmare::CKanturuBattleOfNightmare()
 {
 	this->SetBattleOfNightmareState(KANTURU_NIGHTMARE_NONE);
 
@@ -30,12 +30,12 @@ CKanturuBattleOfNightmare::CKanturuBattleOfNightmare() // OK
 	this->ResetAllData();
 }
 
-CKanturuBattleOfNightmare::~CKanturuBattleOfNightmare() // OK
+CKanturuBattleOfNightmare::~CKanturuBattleOfNightmare()
 {
 
 }
 
-void CKanturuBattleOfNightmare::ResetAllData() // OK
+void CKanturuBattleOfNightmare::ResetAllData()
 {
 	this->m_FileDataLoad = 0;
 
@@ -47,7 +47,7 @@ void CKanturuBattleOfNightmare::ResetAllData() // OK
 	this->m_StateInfoCount = 0;
 }
 
-void CKanturuBattleOfNightmare::Load(char* path) // OK
+void CKanturuBattleOfNightmare::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -129,7 +129,7 @@ void CKanturuBattleOfNightmare::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CKanturuBattleOfNightmare::MainProc() // OK
+void CKanturuBattleOfNightmare::MainProc()
 {
 	this->CheckStateTime();
 
@@ -160,22 +160,22 @@ void CKanturuBattleOfNightmare::MainProc() // OK
 	}
 }
 
-void CKanturuBattleOfNightmare::ProcState_NONE() // OK
+void CKanturuBattleOfNightmare::ProcState_NONE()
 {
 
 }
 
-void CKanturuBattleOfNightmare::ProcState_IDLE() // OK
+void CKanturuBattleOfNightmare::ProcState_IDLE()
 {
 
 }
 
-void CKanturuBattleOfNightmare::ProcState_NOTIFY() // OK
+void CKanturuBattleOfNightmare::ProcState_NOTIFY()
 {
 
 }
 
-void CKanturuBattleOfNightmare::ProcState_START() // OK
+void CKanturuBattleOfNightmare::ProcState_START()
 {
 	gKanturuUtil.NotifyKanturuObjectCount(gKanturuMonsterMng.GetAliveMonsterCount(),gKanturuBattleUserMng.GetUserCount());
 
@@ -189,17 +189,17 @@ void CKanturuBattleOfNightmare::ProcState_START() // OK
 	}
 }
 
-void CKanturuBattleOfNightmare::ProcState_END() // OK
+void CKanturuBattleOfNightmare::ProcState_END()
 {
 
 }
 
-void CKanturuBattleOfNightmare::ProcState_ENDCYCLE() // OK
+void CKanturuBattleOfNightmare::ProcState_ENDCYCLE()
 {
 	CMonsterAIGroup::DelGroupInstance(this->m_NightmareAIGroupNumber);
 }
 
-void CKanturuBattleOfNightmare::SetState(int state) // OK
+void CKanturuBattleOfNightmare::SetState(int state)
 {
 	this->m_StateInfo[state].SetConditionAppliedTime();
 
@@ -232,7 +232,7 @@ void CKanturuBattleOfNightmare::SetState(int state) // OK
 	gKanturuUtil.NotifyKanturuChangeState(KANTURU_STATE_BATTLE_OF_NIGHTMARE,this->m_BattleOfNightmareState);
 }
 
-void CKanturuBattleOfNightmare::SetState_NONE() // OK
+void CKanturuBattleOfNightmare::SetState_NONE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfNightmare ] State(%d) -> NONE",this->m_BattleOfNightmareState);
 
@@ -241,7 +241,7 @@ void CKanturuBattleOfNightmare::SetState_NONE() // OK
 	CMonsterAIGroup::DelGroupInstance(this->m_NightmareAIGroupNumber);
 }
 
-void CKanturuBattleOfNightmare::SetState_IDLE() // OK
+void CKanturuBattleOfNightmare::SetState_IDLE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfNightmare ] State(%d) -> IDLE",this->m_BattleOfNightmareState);
 
@@ -254,14 +254,14 @@ void CKanturuBattleOfNightmare::SetState_IDLE() // OK
 	gKanturuBattleUserMng.MoveAllUser(134);
 }
 
-void CKanturuBattleOfNightmare::SetState_NOTIFY() // OK
+void CKanturuBattleOfNightmare::SetState_NOTIFY()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfNightmare ] State(%d) -> NOTIFY",this->m_BattleOfNightmareState);
 
 	this->SetBattleOfNightmareState(KANTURU_NIGHTMARE_NOTIFY);
 }
 
-void CKanturuBattleOfNightmare::SetState_START() // OK
+void CKanturuBattleOfNightmare::SetState_START()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfNightmare ] State(%d) -> START",this->m_BattleOfNightmareState);
 
@@ -281,7 +281,7 @@ void CKanturuBattleOfNightmare::SetState_START() // OK
 	this->m_NightmareObjIndex = CMonsterAIGroup::FindGroupLeader(this->m_NightmareAIGroupNumber);
 }
 
-void CKanturuBattleOfNightmare::SetState_END() // OK
+void CKanturuBattleOfNightmare::SetState_END()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfNightmare ] State(%d) -> END",this->m_BattleOfNightmareState);
 
@@ -296,7 +296,7 @@ void CKanturuBattleOfNightmare::SetState_END() // OK
 	}
 }
 
-void CKanturuBattleOfNightmare::SetState_ENDCYCLE() // OK
+void CKanturuBattleOfNightmare::SetState_ENDCYCLE()
 {
 	//LogAdd(LOG_BLACK,"[ KANTURU ][ BattleOfNightmare ] State(%d) -> ENDCYCLE",this->m_BattleOfNightmareState);
 
@@ -321,7 +321,7 @@ void CKanturuBattleOfNightmare::CheckStateTime()
 	}
 }
 
-void CKanturuBattleOfNightmare::CheckNightmareBattleUser() // OK
+void CKanturuBattleOfNightmare::CheckNightmareBattleUser()
 {
 	if(this->GetBattleOfNightmareState() == KANTURU_NIGHTMARE_NOTIFY || this->GetBattleOfNightmareState() == KANTURU_NIGHTMARE_START)
 	{
@@ -338,27 +338,27 @@ void CKanturuBattleOfNightmare::CheckNightmareBattleUser() // OK
 	}
 }
 
-void CKanturuBattleOfNightmare::SetBattleOfNightmareState(int state) // OK
+void CKanturuBattleOfNightmare::SetBattleOfNightmareState(int state)
 {
 	this->m_BattleOfNightmareState = state;
 }
 
-void CKanturuBattleOfNightmare::SetSuccessValue(int success) // OK
+void CKanturuBattleOfNightmare::SetSuccessValue(int success)
 {
 	this->m_IsSucccess = success;
 }
 
-int CKanturuBattleOfNightmare::GetBattleOfNightmareState() // OK
+int CKanturuBattleOfNightmare::GetBattleOfNightmareState()
 {
 	return this->m_BattleOfNightmareState;
 }
 
-int CKanturuBattleOfNightmare::GetSuccessValue() // OK
+int CKanturuBattleOfNightmare::GetSuccessValue()
 {
 	return this->m_IsSucccess;
 }
 
-int CKanturuBattleOfNightmare::GetRemainTime() // OK
+int CKanturuBattleOfNightmare::GetRemainTime()
 {
 	return this->m_StateInfo[this->GetBattleOfNightmareState()].GetRemainTime();
 }

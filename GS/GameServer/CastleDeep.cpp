@@ -20,7 +20,7 @@ CCastleDeep gCastleDeep;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCastleDeep::CCastleDeep() // OK
+CCastleDeep::CCastleDeep()
 {
 	this->m_State = CD_STATE_EMPTY;
 	this->m_RemainTime = 0;
@@ -39,12 +39,12 @@ CCastleDeep::CCastleDeep() // OK
 	this->m_CastleDeepMonster.clear();
 }
 
-CCastleDeep::~CCastleDeep() // OK
+CCastleDeep::~CCastleDeep()
 {
 
 }
 
-void CCastleDeep::Init() // OK
+void CCastleDeep::Init()
 {
 	if(gServerInfo.m_CastleDeepEvent == 0)
 	{
@@ -56,7 +56,7 @@ void CCastleDeep::Init() // OK
 	}
 }
 
-void CCastleDeep::Load(char* path) // OK
+void CCastleDeep::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -193,7 +193,7 @@ void CCastleDeep::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCastleDeep::MainProc() // OK
+void CCastleDeep::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -250,12 +250,12 @@ void CCastleDeep::MainProc() // OK
 	}
 }
 
-void CCastleDeep::ProcState_BLANK() // OK
+void CCastleDeep::ProcState_BLANK()
 {
 
 }
 
-void CCastleDeep::ProcState_EMPTY() // OK
+void CCastleDeep::ProcState_EMPTY()
 {
 	if(this->m_RemainTime > 0 && this->m_RemainTime <= 300 && this->m_TimeNotify == 0)
 	{
@@ -272,7 +272,7 @@ void CCastleDeep::ProcState_EMPTY() // OK
 	}
 }
 
-void CCastleDeep::ProcState_START() // OK
+void CCastleDeep::ProcState_START()
 {
 	for(std::vector<CASTLE_DEEP_SPAWN>::iterator it=this->m_CastleDeepSpawn.begin();it != this->m_CastleDeepSpawn.end();it++)
 	{
@@ -292,7 +292,7 @@ void CCastleDeep::ProcState_START() // OK
 	}
 }
 
-void CCastleDeep::SetState(int state) // OK
+void CCastleDeep::SetState(int state)
 {
 	this->m_State = state;
 
@@ -310,12 +310,12 @@ void CCastleDeep::SetState(int state) // OK
 	}
 }
 
-void CCastleDeep::SetState_BLANK() // OK
+void CCastleDeep::SetState_BLANK()
 {
 	//LogAdd(LOG_BLACK,"[Castle Deep] SetState BLANK");
 }
 
-void CCastleDeep::SetState_EMPTY() // OK
+void CCastleDeep::SetState_EMPTY()
 {
 	this->m_TimeNotify = 0;
 	this->m_Stage = 1;
@@ -328,7 +328,7 @@ void CCastleDeep::SetState_EMPTY() // OK
 	//LogAdd(LOG_BLACK,"[Castle Deep] SetState EMPTY");
 }
 
-void CCastleDeep::SetState_START() // OK
+void CCastleDeep::SetState_START()
 {
 	this->m_RemainTime = gServerInfo.m_CastleDeepEventTime*60;
 
@@ -349,7 +349,7 @@ void CCastleDeep::SetState_START() // OK
 	//LogAdd(LOG_BLACK,"[Castle Deep] SetState START");
 }
 
-void CCastleDeep::CheckSync() // OK
+void CCastleDeep::CheckSync()
 {
 	if(this->m_CastleDeepStartTime.empty() != 0)
 	{
@@ -379,7 +379,7 @@ void CCastleDeep::CheckSync() // OK
 	//LogAdd(LOG_BLACK,"[Castle Deep] Sync Start Time. [%d] min remain",(this->m_RemainTime/60));
 }
 
-void CCastleDeep::ClearMonster() // OK
+void CCastleDeep::ClearMonster()
 {
 	for(int n=0;n < MAX_OBJECT_MONSTER;n++)
 	{
@@ -390,7 +390,7 @@ void CCastleDeep::ClearMonster() // OK
 	}
 }
 
-void CCastleDeep::AddMonster(int stage,int group) // OK 
+void CCastleDeep::AddMonster(int stage,int group) 
 {
 	for(std::vector<CASTLE_DEEP_MONSTER>::iterator it=this->m_CastleDeepMonster.begin();it != this->m_CastleDeepMonster.end();it++)
 	{
@@ -446,7 +446,7 @@ void CCastleDeep::AddMonster(int stage,int group) // OK
 	}
 }
 
-void CCastleDeep::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CCastleDeep::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 

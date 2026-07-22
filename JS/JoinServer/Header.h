@@ -99,3 +99,39 @@ extern char JoinServerPASS[32];
 extern char GlobalPassword[32];
 extern BOOL CaseSensitive;
 extern BOOL MD5Encryption;
+
+constexpr BYTE SET_NUMBERHB(DWORD x) {
+	return static_cast<BYTE>(x >> 8);
+}
+
+constexpr BYTE SET_NUMBERLB(DWORD x) {
+	return static_cast<BYTE>(x & 0xFF);
+}
+
+constexpr WORD SET_NUMBERHW(DWORD x) {
+	return static_cast<WORD>(x >> 16);
+}
+
+constexpr WORD SET_NUMBERLW(DWORD x) {
+	return static_cast<WORD>(x & 0xFFFF);
+}
+
+constexpr DWORD SET_NUMBERHDW(QWORD x) {
+	return static_cast<DWORD>(x >> 32);
+}
+
+constexpr DWORD SET_NUMBERLDW(QWORD x) {
+	return static_cast<DWORD>(x & 0xFFFFFFFF);
+}
+
+constexpr WORD MAKE_NUMBERW(BYTE x, BYTE y) {
+	return static_cast<WORD>((static_cast<WORD>(y) & 0xFF) | (static_cast<WORD>(x) << 8));
+}
+
+constexpr DWORD MAKE_NUMBERDW(WORD x, WORD y) {
+	return static_cast<DWORD>((static_cast<DWORD>(y) & 0xFFFF) | (static_cast<DWORD>(x) << 16));
+}
+
+constexpr QWORD MAKE_NUMBERQW(DWORD x, DWORD y) {
+	return (static_cast<QWORD>(y) & 0xFFFFFFFF) | (static_cast<QWORD>(x) << 32);
+}

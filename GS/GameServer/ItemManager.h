@@ -36,7 +36,7 @@
 #define WAREHOUSE_EXT1_RANGE(x) (((x)<WAREHOUSE_EXT1_SIZE)?0:((x)>=WAREHOUSE_SIZE)?0:1)
 #define CHAOS_BOX_RANGE(x) (((x)<0)?0:((x)>=CHAOS_BOX_SIZE)?0:1)
 
-#define MAX_ITEM_SPECIAL_ATTRIBUTE 7 //MC bot
+#define MAX_ITEM_SPECIAL_ATTRIBUTE 7
 
 //**********************************************//
 //************ Client -> GameServer ************//
@@ -406,21 +406,21 @@ public:
 #endif
 #if(FixDupeItem)
 	//-> Thêm Mới Fix Dupe
-	bool CItemManager::ChaosBoxHasItem(LPOBJ lpObj); // OK
-	bool CItemManager::TradeHasItem(LPOBJ lpObj); // OK
+	bool CItemManager::ChaosBoxHasItem(LPOBJ lpObj);
+	bool CItemManager::TradeHasItem(LPOBJ lpObj);
 #endif
 
 
-	//bool ChaosBoxHasItem(LPOBJ lpObj); // OK
-	//bool TradeHasItem(LPOBJ lpObj); // OK
+	//bool ChaosBoxHasItem(LPOBJ lpObj);
+	//bool TradeHasItem(LPOBJ lpObj);
 
 #if(MOVE_ITEM)
-	BYTE InventoryCheckInsertItem(int aIndex, WORD item); // OK
+	BYTE InventoryCheckInsertItem(int aIndex, WORD item);
 	void CGMoveItemProc(PMSG_MOVEITEM* aRecv, short aIndex);
 #endif
 
-	bool CheckItemRequireClassUnick(WORD Class,int index); // OK
-	bool CheckItemNotSlot(int index); // OK
+	bool CheckItemRequireClassUnick(WORD Class,int index);
+	bool CheckItemNotSlot(int index);
 #if(NGAN_HANG_NGOC)
 	int CItemManager::CheckItemInventorySpaceCount(LPOBJ lpObj, int width, int height);
 #endif

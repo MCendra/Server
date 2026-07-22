@@ -19,7 +19,7 @@ enum eQuestObjectiveType
 
 struct QUEST_KILL_COUNT
 {
-	void Clear() // OK
+	void Clear()
 	{
 		this->MonsterClass = -1;
 		this->KillCount = 0;

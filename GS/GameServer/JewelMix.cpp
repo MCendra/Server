@@ -16,17 +16,17 @@ CJewelMix gJewelMix;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CJewelMix::CJewelMix() // OK
+CJewelMix::CJewelMix()
 {
 
 }
 
-CJewelMix::~CJewelMix() // OK
+CJewelMix::~CJewelMix()
 {
 
 }
 
-int CJewelMix::GetJewelSimpleIndex(int type) // OK
+int CJewelMix::GetJewelSimpleIndex(int type)
 {
 	switch(type)
 	{
@@ -55,7 +55,7 @@ int CJewelMix::GetJewelSimpleIndex(int type) // OK
 	return -1;
 }
 
-int CJewelMix::GetJewelBundleIndex(int type) // OK
+int CJewelMix::GetJewelBundleIndex(int type)
 {
 	switch(type)
 	{
@@ -84,7 +84,7 @@ int CJewelMix::GetJewelBundleIndex(int type) // OK
 	return -1;
 }
 
-void CJewelMix::CGJewelMixRecv(PMSG_JEWEL_MIX_RECV* lpMsg,int aIndex) // OK
+void CJewelMix::CGJewelMixRecv(PMSG_JEWEL_MIX_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -151,7 +151,7 @@ void CJewelMix::CGJewelMixRecv(PMSG_JEWEL_MIX_RECV* lpMsg,int aIndex) // OK
 	lpObj->ChaosLock = 0;
 }
 
-void CJewelMix::CGJewelUnMixRecv(PMSG_JEWEL_UNMIX_RECV* lpMsg,int aIndex) // OK
+void CJewelMix::CGJewelUnMixRecv(PMSG_JEWEL_UNMIX_RECV* lpMsg,int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -250,7 +250,7 @@ void CJewelMix::CGJewelUnMixRecv(PMSG_JEWEL_UNMIX_RECV* lpMsg,int aIndex) // OK
 	lpObj->ChaosLock = 0;
 }
 
-void CJewelMix::GCJewelMixResultSend(int aIndex,BYTE result) // OK
+void CJewelMix::GCJewelMixResultSend(int aIndex,BYTE result)
 {
 	PMSG_JEWEL_MIX_RESULT_SEND pMsg;
 
@@ -261,7 +261,7 @@ void CJewelMix::GCJewelMixResultSend(int aIndex,BYTE result) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CJewelMix::GCJewelUnMixResultSend(int aIndex,BYTE result) // OK
+void CJewelMix::GCJewelUnMixResultSend(int aIndex,BYTE result)
 {
 	PMSG_JEWEL_MIX_RESULT_SEND pMsg;
 
@@ -274,7 +274,7 @@ void CJewelMix::GCJewelUnMixResultSend(int aIndex,BYTE result) // OK
 
 
 
-bool CJewelMix::CommandJewelMix(LPOBJ lpObj,char* arg) // OK
+bool CJewelMix::CommandJewelMix(LPOBJ lpObj,char* arg)
 {
 	if(gObjIsConnectedGP(lpObj->Index) == 0)
 	{
@@ -416,7 +416,7 @@ bool CJewelMix::CommandJewelMix(LPOBJ lpObj,char* arg) // OK
 	return 1;
 }
 
-bool CJewelMix::CommandJewelUnMix(LPOBJ lpObj,char* arg) // OK
+bool CJewelMix::CommandJewelUnMix(LPOBJ lpObj,char* arg)
 {
 	if(gObjIsConnectedGP(lpObj->Index) == 0)
 	{

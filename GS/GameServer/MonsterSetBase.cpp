@@ -13,17 +13,17 @@ CMonsterSetBase gMonsterSetBase;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSetBase::CMonsterSetBase() // OK
+CMonsterSetBase::CMonsterSetBase()
 {
 	this->m_count = 0;
 }
 
-CMonsterSetBase::~CMonsterSetBase() // OK
+CMonsterSetBase::~CMonsterSetBase()
 {
 
 }
 
-void CMonsterSetBase::Load(char* path) // OK
+void CMonsterSetBase::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -118,7 +118,7 @@ void CMonsterSetBase::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterSetBase::SetInfo(MONSTER_SET_BASE_INFO info) // OK
+void CMonsterSetBase::SetInfo(MONSTER_SET_BASE_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_MSB_MONSTER)
 	{
@@ -135,7 +135,7 @@ void CMonsterSetBase::SetInfo(MONSTER_SET_BASE_INFO info) // OK
 	this->m_MonsterSetBaseInfo[this->m_count++] = info;
 }
 
-bool CMonsterSetBase::GetPosition(int index,short map,short* ox,short* oy) // OK
+bool CMonsterSetBase::GetPosition(int index,short map,short* ox,short* oy)
 {
 	if(index < 0 || index >= MAX_MSB_MONSTER)
 	{
@@ -162,7 +162,7 @@ bool CMonsterSetBase::GetPosition(int index,short map,short* ox,short* oy) // OK
 	return 0;
 }
 
-bool CMonsterSetBase::GetBoxPosition(int map,int x,int y,int tx,int ty,short* ox,short* oy) // OK
+bool CMonsterSetBase::GetBoxPosition(int map,int x,int y,int tx,int ty,short* ox,short* oy)
 {
 	for(int n=0;n < 100;n++)
 	{
@@ -186,7 +186,7 @@ bool CMonsterSetBase::GetBoxPosition(int map,int x,int y,int tx,int ty,short* ox
 	return 0;
 }
 
-void CMonsterSetBase::SetBoxPosition(int index,int map,int x,int y,int tx,int ty) // OK
+void CMonsterSetBase::SetBoxPosition(int index,int map,int x,int y,int tx,int ty)
 {
 	if(index < 0 || index >= MAX_MSB_MONSTER)
 	{

@@ -22,7 +22,7 @@ CBonusManager gBonusManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CBonusManager::CBonusManager() // OK
+CBonusManager::CBonusManager()
 {
 	for(int n=0;n < MAX_BONUS;n++)
 	{
@@ -40,12 +40,12 @@ CBonusManager::CBonusManager() // OK
 	}
 }
 
-CBonusManager::~CBonusManager() // OK
+CBonusManager::~CBonusManager()
 {
 
 }
 
-void CBonusManager::Init() // OK
+void CBonusManager::Init()
 {
 	for(int n=0;n < MAX_BONUS;n++)
 	{
@@ -60,7 +60,7 @@ void CBonusManager::Init() // OK
 	}
 }
 
-void CBonusManager::Load(char* path) // OK
+void CBonusManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -191,7 +191,7 @@ void CBonusManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CBonusManager::MainProc() // OK
+void CBonusManager::MainProc()
 {
 	for(int n=0;n < MAX_BONUS;n++)
 	{
@@ -247,12 +247,12 @@ void CBonusManager::MainProc() // OK
 	}
 }
 
-void CBonusManager::ProcState_BLANK(BONUS_INFO* lpInfo) // OK
+void CBonusManager::ProcState_BLANK(BONUS_INFO* lpInfo)
 {
 
 }
 
-void CBonusManager::ProcState_EMPTY(BONUS_INFO* lpInfo) // OK
+void CBonusManager::ProcState_EMPTY(BONUS_INFO* lpInfo)
 {
 	if(lpInfo->RemainTime <= 0)
 	{
@@ -261,7 +261,7 @@ void CBonusManager::ProcState_EMPTY(BONUS_INFO* lpInfo) // OK
 	}
 }
 
-void CBonusManager::ProcState_START(BONUS_INFO* lpInfo) // OK
+void CBonusManager::ProcState_START(BONUS_INFO* lpInfo)
 {
 	if(lpInfo->RemainTime <= 0)
 	{
@@ -270,7 +270,7 @@ void CBonusManager::ProcState_START(BONUS_INFO* lpInfo) // OK
 	}
 }
 
-void CBonusManager::SetState(BONUS_INFO* lpInfo,int state) // OK
+void CBonusManager::SetState(BONUS_INFO* lpInfo,int state)
 {
 	switch((lpInfo->State=state))
 	{
@@ -286,24 +286,24 @@ void CBonusManager::SetState(BONUS_INFO* lpInfo,int state) // OK
 	}
 }
 
-void CBonusManager::SetState_BLANK(BONUS_INFO* lpInfo) // OK
+void CBonusManager::SetState_BLANK(BONUS_INFO* lpInfo)
 {
 
 }
 
-void CBonusManager::SetState_EMPTY(BONUS_INFO* lpInfo) // OK
+void CBonusManager::SetState_EMPTY(BONUS_INFO* lpInfo)
 {
 	this->CheckSync(lpInfo);
 }
 
-void CBonusManager::SetState_START(BONUS_INFO* lpInfo) // OK
+void CBonusManager::SetState_START(BONUS_INFO* lpInfo)
 {
 	lpInfo->RemainTime = lpInfo->BonusTime;
 
 	lpInfo->TargetTime = (int)(time(0)+lpInfo->RemainTime);
 }
 
-void CBonusManager::CheckSync(BONUS_INFO* lpInfo) // OK
+void CBonusManager::CheckSync(BONUS_INFO* lpInfo)
 {
 	if(lpInfo->StartTime.empty() != 0)
 	{
@@ -331,7 +331,7 @@ void CBonusManager::CheckSync(BONUS_INFO* lpInfo) // OK
 	lpInfo->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-int CBonusManager::GetState(int index) // OK
+int CBonusManager::GetState(int index)
 {
 	if(CHECK_RANGE(index,MAX_BONUS) == 0)
 	{
@@ -343,7 +343,7 @@ int CBonusManager::GetState(int index) // OK
 	}
 }
 
-int CBonusManager::GetRemainTime(int index) // OK
+int CBonusManager::GetRemainTime(int index)
 {
 	if(CHECK_RANGE(index,MAX_BONUS) == 0)
 	{
@@ -376,7 +376,7 @@ int CBonusManager::GetRemainTime(int index) // OK
 	return (((RemainTime%60)==0)?(RemainTime/60):((RemainTime/60)+1));
 }
 
-int CBonusManager::GetBonusValue(LPOBJ lpObj,int BonusIndex,int BonusValue,int ItemIndex,int ItemLevel,int MonsterClass,int MonsterLevel) // OK
+int CBonusManager::GetBonusValue(LPOBJ lpObj,int BonusIndex,int BonusValue,int ItemIndex,int ItemLevel,int MonsterClass,int MonsterLevel)
 {
 	for(int n=0;n < MAX_BONUS;n++)
 	{

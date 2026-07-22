@@ -10,22 +10,22 @@ CPath gPath;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CPath::CPath() // OK
+CPath::CPath()
 {
 
 }
 
-CPath::~CPath() // OK
+CPath::~CPath()
 {
 
 }
 
-void CPath::SetMainPath(char* path) // OK
+void CPath::SetMainPath(char* path)
 {
 	strcpy_s(this->m_MainPath, path);
 }
 
-char* CPath::GetFullPath(char* file) // OK
+char* CPath::GetFullPath(char* file)
 {
 	strcpy_s(this->m_FullPath, this->m_MainPath);
 	strcat_s(this->m_FullPath, file);

@@ -9,12 +9,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterSkillInfo::CMonsterSkillInfo() // OK
+CMonsterSkillInfo::CMonsterSkillInfo()
 {
 	this->Reset();
 }
 
-void CMonsterSkillInfo::Reset() // OK
+void CMonsterSkillInfo::Reset()
 {
 	this->m_MonsterIndex = -1;
 	this->m_SkillUnitCount = 0;
@@ -40,7 +40,7 @@ void CMonsterSkillInfo::Reset() // OK
 	this->m_SkillUnitArray[9] = 0;
 }
 
-BOOL CMonsterSkillInfo::IsValid() // OK
+BOOL CMonsterSkillInfo::IsValid()
 {
 	if(this->m_MonsterIndex == -1 || this->m_SkillUnitCount == 0)
 	{

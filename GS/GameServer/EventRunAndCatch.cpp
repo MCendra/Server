@@ -16,7 +16,7 @@
 
 CEventRunAndCatch gEventRunAndCatch;
 
-CEventRunAndCatch::CEventRunAndCatch() // OK
+CEventRunAndCatch::CEventRunAndCatch()
 {
 	this->m_RemainTime = 0;
 	this->m_GmIndex = 0;
@@ -30,7 +30,7 @@ CEventRunAndCatch::CEventRunAndCatch() // OK
 	this->m_Members = 0;
 }
 
-CEventRunAndCatch::~CEventRunAndCatch() // OK
+CEventRunAndCatch::~CEventRunAndCatch()
 {
 
 }
@@ -60,7 +60,7 @@ void CEventRunAndCatch::Clear()
 	}
 }
 
-void CEventRunAndCatch::MainProc() // OK
+void CEventRunAndCatch::MainProc()
 {
 	DWORD elapsed = GetTickCount()-this->m_TickCount;
 
@@ -97,7 +97,7 @@ void CEventRunAndCatch::MainProc() // OK
 
 }
 
-void CEventRunAndCatch::CommandEventRunAndCatch(LPOBJ lpObj,char* arg) // OK 
+void CEventRunAndCatch::CommandEventRunAndCatch(LPOBJ lpObj,char* arg) 
 {
 
 	if(gServerInfo.m_EventRunAndCatchSwitch == 0)
@@ -134,7 +134,7 @@ void CEventRunAndCatch::CommandEventRunAndCatch(LPOBJ lpObj,char* arg) // OK
 	LogAdd(LOG_EVENT,"[EVENT RUN AND CATCH] Start by %s",lpObj->Name);
 }
 
-void CEventRunAndCatch::CommandEventRunAndCatchJoin(LPOBJ lpObj,char* arg) // OK 
+void CEventRunAndCatch::CommandEventRunAndCatchJoin(LPOBJ lpObj,char* arg) 
 {
 	if(gServerInfo.m_EventRunAndCatchSwitch == 0)
 	{
@@ -170,7 +170,7 @@ void CEventRunAndCatch::CommandEventRunAndCatchJoin(LPOBJ lpObj,char* arg) // OK
 	LogAdd(LOG_EVENT,"[EVENT RUN AND CATCH] Member add (%s)",lpObj->Name);
 }
 
-void CEventRunAndCatch::EventRunAndCatchHit(int aIndex,int bIndex) // OK 
+void CEventRunAndCatch::EventRunAndCatchHit(int aIndex,int bIndex) 
 {
 	if(gServerInfo.m_EventRunAndCatchSwitch == 0)
 	{

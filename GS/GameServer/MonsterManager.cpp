@@ -38,17 +38,17 @@ CMonsterManager gMonsterManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterManager::CMonsterManager() // OK
+CMonsterManager::CMonsterManager()
 {
 	this->Init();
 }
 
-CMonsterManager::~CMonsterManager() // OK
+CMonsterManager::~CMonsterManager()
 {
 
 }
 
-void CMonsterManager::Init() // OK
+void CMonsterManager::Init()
 {
 	for(int n=0;n < MAX_MONSTER_INFO;n++)
 	{
@@ -63,7 +63,7 @@ void CMonsterManager::Init() // OK
 	}
 }
 
-void CMonsterManager::Load(char* path) // OK
+void CMonsterManager::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -187,7 +187,7 @@ void CMonsterManager::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterManager::SetInfo(MONSTER_INFO info) // OK
+void CMonsterManager::SetInfo(MONSTER_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_MONSTER_INFO)
 	{
@@ -201,7 +201,7 @@ void CMonsterManager::SetInfo(MONSTER_INFO info) // OK
 	this->m_MonsterInfo[info.Index] = info;
 }
 
-MONSTER_INFO* CMonsterManager::GetInfo(int index) // OK
+MONSTER_INFO* CMonsterManager::GetInfo(int index)
 {
 	if(index < 0 || index >= MAX_MONSTER_INFO)
 	{
@@ -216,7 +216,7 @@ MONSTER_INFO* CMonsterManager::GetInfo(int index) // OK
 	return &this->m_MonsterInfo[index];
 }
 
-char* CMonsterManager::GetMonsterName(int index) // OK
+char* CMonsterManager::GetMonsterName(int index)
 {
 	MONSTER_INFO* MonsterInfo = this->GetInfo(index);
 
@@ -230,7 +230,7 @@ char* CMonsterManager::GetMonsterName(int index) // OK
 	}
 }
 
-void CMonsterManager::InitMonsterItem() // OK
+void CMonsterManager::InitMonsterItem()
 {
 	for(int n=0;n < MAX_MONSTER_LEVEL;n++)
 	{
@@ -238,7 +238,7 @@ void CMonsterManager::InitMonsterItem() // OK
 	}
 }
 
-void CMonsterManager::InsertMonsterItem(int level) // OK
+void CMonsterManager::InsertMonsterItem(int level)
 {
 	for(int n=0;n < MAX_ITEM;n++)
 	{
@@ -266,7 +266,7 @@ void CMonsterManager::InsertMonsterItem(int level) // OK
 	}
 }
 
-long CMonsterManager::GetMonsterItem(int level,int excellent,int socket) // OK
+long CMonsterManager::GetMonsterItem(int level,int excellent,int socket)
 {
 	if(level < 0 || level >= MAX_MONSTER_LEVEL)
 	{
@@ -304,7 +304,7 @@ long CMonsterManager::GetMonsterItem(int level,int excellent,int socket) // OK
 	return ((IndexCount==0)?-1:IndexTable[GetLargeRand()%IndexCount]);
 }
 
-void CMonsterManager::SetMonsterData() // OK
+void CMonsterManager::SetMonsterData()
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{

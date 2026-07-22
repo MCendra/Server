@@ -210,7 +210,7 @@ void CThanMaChien::Load(char* FilePath)
 }
 
 
-char* CThanMaChien::GetMessage(int index) // OK
+char* CThanMaChien::GetMessage(int index)
 {
 	std::map<int, MESSAGE_INFO_THANMACHIEN>::iterator it = this->m_MessageInfoBP.find(index);
 
@@ -276,12 +276,12 @@ void CThanMaChien::MainProc()
 	}
 }
 
-void CThanMaChien::ProcState_BLANK() // OK
+void CThanMaChien::ProcState_BLANK()
 {
 
 }
 
-void CThanMaChien::ProcState_EMPTY() // OK
+void CThanMaChien::ProcState_EMPTY()
 {
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= (this->m_WarningTime * 60))
 	{
@@ -306,7 +306,7 @@ void CThanMaChien::ProcState_EMPTY() // OK
 	}
 }
 
-void CThanMaChien::ProcState_STAND() // OK
+void CThanMaChien::ProcState_STAND()
 {
 	this->CheckUser();
 
@@ -333,7 +333,7 @@ void CThanMaChien::ProcState_STAND() // OK
 	}
 }
 
-void CThanMaChien::ProcState_START() // OK
+void CThanMaChien::ProcState_START()
 {
 	this->CheckUser();
 
@@ -356,7 +356,7 @@ void CThanMaChien::ProcState_START() // OK
 	}
 }
 
-void CThanMaChien::ProcState_CLEAN() // OK
+void CThanMaChien::ProcState_CLEAN()
 {
 	this->CheckUser();
 
@@ -366,7 +366,7 @@ void CThanMaChien::ProcState_CLEAN() // OK
 	}
 }
 
-void CThanMaChien::SetState(int state) // OK
+void CThanMaChien::SetState(int state)
 {
 	switch ((this->m_State = state))
 	{
@@ -388,12 +388,12 @@ void CThanMaChien::SetState(int state) // OK
 	}
 }
 
-void CThanMaChien::SetState_BLANK() // OK
+void CThanMaChien::SetState_BLANK()
 {
 
 }
 
-void CThanMaChien::SetState_EMPTY() // OK
+void CThanMaChien::SetState_EMPTY()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -406,7 +406,7 @@ void CThanMaChien::SetState_EMPTY() // OK
 	this->CheckSync();
 }
 
-void CThanMaChien::SetState_STAND() // OK
+void CThanMaChien::SetState_STAND()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -417,7 +417,7 @@ void CThanMaChien::SetState_STAND() // OK
 	this->TargetTime = (int)(time(0) + this->m_RemainTime);
 }
 
-void CThanMaChien::SetState_START() // OK
+void CThanMaChien::SetState_START()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -450,7 +450,7 @@ void CThanMaChien::SendTimeEventAll(int time, int State)
 }
 
 
-void CThanMaChien::SetState_CLEAN() // OK
+void CThanMaChien::SetState_CLEAN()
 {
 	this->EnterEnabled = 0;
 	this->AlarmMinSave = -1;
@@ -510,7 +510,7 @@ void CThanMaChien::SetState_CLEAN() // OK
 	this->TargetTime = (int)(time(0) + this->m_RemainTime);
 }
 
-void CThanMaChien::CheckSync() // OK
+void CThanMaChien::CheckSync()
 {
 	if (this->m_TMStartTime.empty() != 0)
 	{
@@ -538,7 +538,7 @@ void CThanMaChien::CheckSync() // OK
 	this->TargetTime = (int)ScheduleTime.GetTime();
 }
 
-int CThanMaChien::GetState() // OK
+int CThanMaChien::GetState()
 {
 	return this->m_State;
 }
@@ -714,22 +714,22 @@ bool CThanMaChien::CheckReqItems(LPOBJ lpObj)
 	return true;
 }
 
-int CThanMaChien::GetEnterEnabled() // OK
+int CThanMaChien::GetEnterEnabled()
 {
 	return this->EnterEnabled;
 }
 
-int CThanMaChien::GetEnteredUserCount() // OK
+int CThanMaChien::GetEnteredUserCount()
 {
 	return this->GetUserCount();
 }
 
-bool CThanMaChien::CheckEnteredUser(int aIndex) // OK
+bool CThanMaChien::CheckEnteredUser(int aIndex)
 {
 	return ((this->GetUser(aIndex) == 0) ? 0 : 1);
 }
 
-bool CThanMaChien::CheckPlayerTarget(LPOBJ lpObj) // OK
+bool CThanMaChien::CheckPlayerTarget(LPOBJ lpObj)
 {
 	if (this->GetState() == TM_EVENT_STATE_START)
 	{
@@ -744,7 +744,7 @@ bool CThanMaChien::CheckPlayerTarget(LPOBJ lpObj) // OK
 	return 0;
 }
 
-bool CThanMaChien::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CThanMaChien::CheckPlayerJoined(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->GetState() != TM_EVENT_STATE_BLANK)
 	{
@@ -779,7 +779,7 @@ bool CThanMaChien::CheckSelfTeam(LPOBJ lpObj, LPOBJ lpTarget)
 	return 0;
 }
 
-bool CThanMaChien::AddUser(int aIndex) // OK
+bool CThanMaChien::AddUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -807,7 +807,7 @@ bool CThanMaChien::AddUser(int aIndex) // OK
 	return 0;
 }
 
-bool CThanMaChien::DelUser(int aIndex) // OK
+bool CThanMaChien::DelUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -826,7 +826,7 @@ bool CThanMaChien::DelUser(int aIndex) // OK
 	return 1;
 }
 
-TM_EVENT_USER* CThanMaChien::GetUser(int aIndex) // OK
+TM_EVENT_USER* CThanMaChien::GetUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -843,7 +843,7 @@ TM_EVENT_USER* CThanMaChien::GetUser(int aIndex) // OK
 	return 0;
 }
 
-void CThanMaChien::CleanUser() // OK
+void CThanMaChien::CleanUser()
 {
 	for (int n = 0; n < MAX_THANMACHIEN_USER; n++)
 	{
@@ -852,7 +852,7 @@ void CThanMaChien::CleanUser() // OK
 	}
 }
 
-void CThanMaChien::ClearUser() // OK
+void CThanMaChien::ClearUser()
 {
 	for (int n = 0; n < MAX_THANMACHIEN_USER; n++)
 	{
@@ -877,7 +877,7 @@ void CThanMaChien::ClearUser() // OK
 	}
 }
 
-void CThanMaChien::CheckUser() // OK
+void CThanMaChien::CheckUser()
 {
 	for (int n = 0; n < MAX_THANMACHIEN_USER; n++)
 	{
@@ -900,7 +900,7 @@ void CThanMaChien::CheckUser() // OK
 	}
 }
 
-int CThanMaChien::GetUserCount() // OK
+int CThanMaChien::GetUserCount()
 {
 	int count = 0;
 
@@ -915,7 +915,7 @@ int CThanMaChien::GetUserCount() // OK
 	return count;
 }
 
-bool CThanMaChien::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level) // OK
+bool CThanMaChien::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level)
 {
 	if (this->m_ThanMaChienEnable == 0)
 	{
@@ -1037,7 +1037,7 @@ int CThanMaChien::ReturnMaxReset()
 	return Index;
 }
 
-void CThanMaChien::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CThanMaChien::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->m_ThanMaChienEnable == 0)
 	{
@@ -1084,7 +1084,7 @@ void CThanMaChien::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	this->SendBXHVeClient(0);
 }
 
-void CThanMaChien::NoticeSendToAll(int type, char* message, ...) // OK
+void CThanMaChien::NoticeSendToAll(int type, char* message, ...)
 {
 	char buff[256];
 
@@ -1144,7 +1144,7 @@ void CThanMaChien::StartTM()
 	this->Init();
 }
 
-void CThanMaChien::CalcUserRank() // OK
+void CThanMaChien::CalcUserRank()
 {
 	for (int stt = 0; stt < 10; stt++)
 	{

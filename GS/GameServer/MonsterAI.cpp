@@ -17,17 +17,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAI::CMonsterAI() // OK
+CMonsterAI::CMonsterAI()
 {
 
 }
 
-CMonsterAI::~CMonsterAI() // OK
+CMonsterAI::~CMonsterAI()
 {
 
 }
 
-void CMonsterAI::MonsterAIProc() // OK
+void CMonsterAI::MonsterAIProc()
 {
 	CMonsterAIRule::MonsterAIRuleProc();
 
@@ -48,7 +48,7 @@ void CMonsterAI::MonsterAIProc() // OK
 	}
 }
 
-BOOL CMonsterAI::RunAI(int aIndex,int MonsterClass) // OK
+BOOL CMonsterAI::RunAI(int aIndex,int MonsterClass)
 {
 	CMonsterAI::MonsterStateMsgProc(aIndex);
 
@@ -81,7 +81,7 @@ BOOL CMonsterAI::RunAI(int aIndex,int MonsterClass) // OK
 	return 1;
 }
 
-void CMonsterAI::MonsterStateMsgProc(int aIndex) // OK
+void CMonsterAI::MonsterStateMsgProc(int aIndex)
 {
 	for(int n=0;n < MAX_MONSTER_SEND_MSG;n++)
 	{
@@ -93,7 +93,7 @@ void CMonsterAI::MonsterStateMsgProc(int aIndex) // OK
 	}
 }
 
-void CMonsterAI::ProcessStateMsg(LPOBJ lpObj,int code,int aIndex,int SubCode) // OK
+void CMonsterAI::ProcessStateMsg(LPOBJ lpObj,int code,int aIndex,int SubCode)
 {
 	switch(code)
 	{
@@ -144,7 +144,7 @@ void CMonsterAI::ProcessStateMsg(LPOBJ lpObj,int code,int aIndex,int SubCode) //
 	}
 }
 
-BOOL CMonsterAI::UpdateCurrentAIUnit(int aIndex) // OK
+BOOL CMonsterAI::UpdateCurrentAIUnit(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -165,7 +165,7 @@ BOOL CMonsterAI::UpdateCurrentAIUnit(int aIndex) // OK
 	return 1;
 }
 
-void CMonsterAI::MonsterMoveProc() // OK
+void CMonsterAI::MonsterMoveProc()
 {
 	for(int n=0;n < MAX_OBJECT_MONSTER;n++)
 	{
@@ -176,7 +176,7 @@ void CMonsterAI::MonsterMoveProc() // OK
 	}
 }
 
-void CMonsterAI::MonsterMove(int aIndex) // OK
+void CMonsterAI::MonsterMove(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

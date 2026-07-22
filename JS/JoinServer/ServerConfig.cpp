@@ -23,32 +23,22 @@ constexpr char KEY_GLOBAL_PASSWORD[] = "GlobalPassword";
 constexpr char KEY_CASE_SENSITIVE[] = "CaseSensitive";
 constexpr char KEY_MD5_ENCRYPTIONS[] = "MD5Encryption";
 
-constexpr char DEFAULT_CONNECT_SERVER_ADDRESS[] = "127.0.0.1";
-constexpr int DEFAULT_CONNECT_SERVER_PORT_UDP = 55557;
-constexpr int DEFAULT_JOIN_SERVER_TCP_PORT = 55970;
-constexpr char DEFAULT_JOIN_SERVER_ODBC[] = "MuOnlineS6";
-constexpr char DEFAULT_JOIN_SERVER_USER[] = "sa";
-constexpr char DEFAULT_JOIN_SERVER_PASS[] = "$Magda314$$$";
-constexpr char DEFAULT_GLOBAL_PASSWORD[] = "";
-constexpr int DEFAULT_CASE_SENSITIVE= 1;
-constexpr int DEFAULT_MD5_ENCRYPTIONS = 1;
+constexpr char DEFAULT_CONFIG[] = R"ini([JoinServerInfo]
+CustomerName=
+CustomerHardwareId=
+ConnectServerAddress=127.0.0.1
+ConnectServerPort=55557
+JoinServerPort=55970
+JoinServerODBC=MuOnlineS6
+JoinServerUSER=sa
+JoinServerPASS=$Magda314$$$
+GlobalPassword=
+CaseSensitive=1
+MD5Encryption=1)ini";
 
-constexpr char DEFAULT_CONFIG[] = "[JoinServerInfo]\n"
-"CustomerName=\n"
-"CustomerHardwareId=\n"
-"ConnectServerAddress=%s\n"
-"ConnectServerPort=%d\n"
-"JoinServerPort=%d\n"
-"JoinServerODBC=%s\n"
-"JoinServerUSER=%s\n"
-"JoinServerPASS=%s\n"
-"GlobalPassword=%s\n"
-"CaseSensitive=%d\n"
-"MD5Encryption=%d\n";
-
-constexpr char DEFAULT_ALLOWABLE_IP_LIST[] = "0\n"
-"\"127.0.0.1\"\n"
-"end\n";
+constexpr char DEFAULT_ALLOWABLE_IP_LIST[] =  R"ini(0
+"127.0.0.1"
+end)ini";
 
 // Definición de las variables externas
 char ConfigFilePath[MAX_PATH];
@@ -89,9 +79,7 @@ bool CServerConfig::EnsureConfigFileExists() {
 			FileHandle file(ConfigFilePath, GENERIC_WRITE, CREATE_ALWAYS);
 			if (file.getHandle() != INVALID_HANDLE_VALUE) {
 				char buffer[2048];
-				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG, DEFAULT_CONNECT_SERVER_ADDRESS, DEFAULT_CONNECT_SERVER_PORT_UDP,
-					DEFAULT_JOIN_SERVER_TCP_PORT, DEFAULT_JOIN_SERVER_ODBC, DEFAULT_JOIN_SERVER_USER, DEFAULT_JOIN_SERVER_PASS,
-					DEFAULT_GLOBAL_PASSWORD, DEFAULT_CASE_SENSITIVE, DEFAULT_MD5_ENCRYPTIONS);
+				sprintf_s(buffer, sizeof(buffer), DEFAULT_CONFIG);
 
 				DWORD bytesWritten;
 				if (file.write(buffer, static_cast<DWORD>(strlen(buffer)), bytesWritten)) {

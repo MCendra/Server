@@ -121,17 +121,17 @@ CObjectManager gObjectManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CObjectManager::CObjectManager() // OK
+CObjectManager::CObjectManager()
 {
 
 }
 
-CObjectManager::~CObjectManager() // OK
+CObjectManager::~CObjectManager()
 {
 
 }
 
-void CObjectManager::ObjectMsgProc(LPOBJ lpObj) // OK
+void CObjectManager::ObjectMsgProc(LPOBJ lpObj)
 {
 	for(int n=0;n < MAX_MONSTER_SEND_MSG;n++)
 	{
@@ -151,7 +151,7 @@ void CObjectManager::ObjectMsgProc(LPOBJ lpObj) // OK
 	}
 }
 
-void CObjectManager::ObjectSetStateCreate(int aIndex) // OK
+void CObjectManager::ObjectSetStateCreate(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -242,7 +242,7 @@ void CObjectManager::ObjectSetStateCreate(int aIndex) // OK
 	}
 }
 
-void CObjectManager::ObjectSetStateProc() // OK
+void CObjectManager::ObjectSetStateProc()
 {
 	for(int n=0;n < MAX_OBJECT;n++)
 	{
@@ -498,7 +498,7 @@ void CObjectManager::ObjectSetStateProc() // OK
 	}
 }
 
-void CObjectManager::ObjectStateProc(LPOBJ lpObj,int MessageCode,int aIndex,int SubCode) // OK
+void CObjectManager::ObjectStateProc(LPOBJ lpObj,int MessageCode,int aIndex,int SubCode)
 {
 	if(gObjIsConnected(aIndex) == 0)
 	{
@@ -552,7 +552,7 @@ void CObjectManager::ObjectStateProc(LPOBJ lpObj,int MessageCode,int aIndex,int 
 	}
 }
 
-void CObjectManager::ObjectStateAttackProc(LPOBJ lpObj,int MessageCode,int aIndex,int SubCode1,int SubCode2) // OK
+void CObjectManager::ObjectStateAttackProc(LPOBJ lpObj,int MessageCode,int aIndex,int SubCode1,int SubCode2)
 {
 	if(gObjIsConnected(aIndex) == 0)
 	{
@@ -600,7 +600,7 @@ void CObjectManager::ObjectStateAttackProc(LPOBJ lpObj,int MessageCode,int aInde
 	}
 }
 
-void CObjectManager::ObjectMoveProc() // OK
+void CObjectManager::ObjectMoveProc()
 {
 	for(int n=0;n < MAX_OBJECT;n++)
 	{
@@ -677,7 +677,7 @@ void CObjectManager::ObjectMoveProc() // OK
 	}
 }
 
-void CObjectManager::ObjectMonsterAndMsgProc() // OK
+void CObjectManager::ObjectMonsterAndMsgProc()
 {
 	for(int n=0;n < MAX_OBJECT;n++)
 	{
@@ -720,7 +720,7 @@ void CObjectManager::ObjectMonsterAndMsgProc() // OK
 	}
 }
 
-bool CObjectManager::CharacterGameClose(int aIndex) // OK
+bool CObjectManager::CharacterGameClose(int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -930,7 +930,7 @@ bool CObjectManager::CharacterGameClose(int aIndex) // OK
 	return 1;
 }
 
-void CObjectManager::CharacterGameCloseSet(int aIndex,int type) // OK
+void CObjectManager::CharacterGameCloseSet(int aIndex,int type)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1003,7 +1003,7 @@ void CObjectManager::CharacterGameCloseSet(int aIndex,int type) // OK
 	lpObj->EnableDelCharacter = 1;
 }
 
-bool CObjectManager::CharacterMapServerMove(int aIndex,int map,int x,int y) // OK
+bool CObjectManager::CharacterMapServerMove(int aIndex,int map,int x,int y)
 {
 	if((gObj[aIndex].NextServerCode=gMapServerManager.CheckMapServerMove(aIndex,map,gObj[aIndex].LastServerCode)) != -1)
 	{
@@ -1017,7 +1017,7 @@ bool CObjectManager::CharacterMapServerMove(int aIndex,int map,int x,int y) // O
 	return 0;
 }
 
-void CObjectManager::CharacterUpdateMapEffect(LPOBJ lpObj) // OK
+void CObjectManager::CharacterUpdateMapEffect(LPOBJ lpObj)
 {
 	#if(GAMESERVER_TYPE==1)
 
@@ -1040,7 +1040,7 @@ void CObjectManager::CharacterUpdateMapEffect(LPOBJ lpObj) // OK
 	}
 }
 
-bool CObjectManager::CharacterGetRespawnLocation(LPOBJ lpObj) // OK
+bool CObjectManager::CharacterGetRespawnLocation(LPOBJ lpObj)
 {
 	bool result = 0;
 
@@ -1288,7 +1288,7 @@ bool CObjectManager::CharacterGetRespawnLocation(LPOBJ lpObj) // OK
 	return result;
 }
 
-void CObjectManager::CharacterCalcExperienceSplit(LPOBJ lpObj,LPOBJ lpMonster,int damage,int flag) // OK
+void CObjectManager::CharacterCalcExperienceSplit(LPOBJ lpObj,LPOBJ lpMonster,int damage,int flag)
 {
 	if(lpMonster->Type != OBJECT_MONSTER)
 	{
@@ -1322,7 +1322,7 @@ void CObjectManager::CharacterCalcExperienceSplit(LPOBJ lpObj,LPOBJ lpMonster,in
 	}
 }
 
-void CObjectManager::CharacterCalcExperienceAlone(LPOBJ lpObj,LPOBJ lpMonster,int damage,int flag,bool type,int AttackDamage) // OK
+void CObjectManager::CharacterCalcExperienceAlone(LPOBJ lpObj,LPOBJ lpMonster,int damage,int flag,bool type,int AttackDamage)
 {
 	if(lpMonster->Type != OBJECT_MONSTER)
 	{
@@ -1463,7 +1463,7 @@ void CObjectManager::CharacterCalcExperienceAlone(LPOBJ lpObj,LPOBJ lpMonster,in
 	}
 }
 
-void CObjectManager::CharacterCalcExperienceParty(LPOBJ lpObj,LPOBJ lpMonster,int damage,int flag) // OK
+void CObjectManager::CharacterCalcExperienceParty(LPOBJ lpObj,LPOBJ lpMonster,int damage,int flag)
 {
 	if(OBJECT_RANGE(lpObj->PartyNumber) == 0)
 	{
@@ -1688,7 +1688,7 @@ void CObjectManager::CharacterCalcExperienceParty(LPOBJ lpObj,LPOBJ lpMonster,in
 	}
 }
 
-bool CObjectManager::CharacterLevelUp(LPOBJ lpObj,DWORD AddExperience,int MaxLevelUp,int ExperienceType) // OK
+bool CObjectManager::CharacterLevelUp(LPOBJ lpObj,DWORD AddExperience,int MaxLevelUp,int ExperienceType)
 {
 
 	if(gMasterSkillTree.CheckMasterLevel(lpObj) == 0)
@@ -1819,7 +1819,7 @@ bool CObjectManager::CharacterLevelUp(LPOBJ lpObj,DWORD AddExperience,int MaxLev
 	return 1;
 }
 
-bool CObjectManager::CharacterLevelUpPointAdd(LPOBJ lpObj,int type,int amount) // OK
+bool CObjectManager::CharacterLevelUpPointAdd(LPOBJ lpObj,int type,int amount)
 {
 	if(lpObj->Type != OBJECT_USER)
 	{
@@ -1874,7 +1874,7 @@ bool CObjectManager::CharacterLevelUpPointAdd(LPOBJ lpObj,int type,int amount) /
 	return 1;
 }
 
-void CObjectManager::CharacterPetLevelUp(LPOBJ lpObj,DWORD AddExperience) // OK
+void CObjectManager::CharacterPetLevelUp(LPOBJ lpObj,DWORD AddExperience)
 {
 	if(lpObj->Inventory[8].m_Index == GET_ITEM(13,4)) // Dark Horse
 	{
@@ -2014,7 +2014,7 @@ char CObjectManager::gObjFixClassPacket(int DbClass)    //OK
 
 //mc
 
-void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
+void CObjectManager::CharacterMakePreviewCharSet(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -2339,7 +2339,7 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 	//-----------------------
 }
 
-bool CObjectManager::CharacterUseScroll(LPOBJ lpObj,CItem* lpItem) // OK
+bool CObjectManager::CharacterUseScroll(LPOBJ lpObj,CItem* lpItem)
 {
 	int skill,slot;
 
@@ -2391,7 +2391,7 @@ bool CObjectManager::CharacterUseScroll(LPOBJ lpObj,CItem* lpItem) // OK
 	return 1;
 }
 
-bool CObjectManager::CharacterUsePotion(LPOBJ lpObj,CItem* lpItem) // OK
+bool CObjectManager::CharacterUsePotion(LPOBJ lpObj,CItem* lpItem)
 {
 	if(gServerInfo.m_CheckAutoPotionHack != 0 && (GetTickCount()-lpObj->PotionTime) < ((DWORD)gServerInfo.m_CheckAutoPotionHackTolerance))
 	{
@@ -2502,7 +2502,7 @@ bool CObjectManager::CharacterUsePotion(LPOBJ lpObj,CItem* lpItem) // OK
 	return 1;
 }
 
-bool CObjectManager::CharacterUsePortal(LPOBJ lpObj,CItem* lpItem) // OK
+bool CObjectManager::CharacterUsePortal(LPOBJ lpObj,CItem* lpItem)
 {
 	if(lpObj->Interface.use != 0)
 	{
@@ -2678,7 +2678,7 @@ bool CObjectManager::CharacterUsePortal(LPOBJ lpObj,CItem* lpItem) // OK
 	return 1;
 }
 
-bool CObjectManager::CharacterUseJewelOfBles(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CObjectManager::CharacterUseJewelOfBles(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	if(INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2764,7 +2764,7 @@ bool CObjectManager::CharacterUseJewelOfBles(LPOBJ lpObj,int SourceSlot,int Targ
 	return 1;
 }
 
-bool CObjectManager::CharacterUseJewelOfSoul(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CObjectManager::CharacterUseJewelOfSoul(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	if(INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2846,7 +2846,7 @@ bool CObjectManager::CharacterUseJewelOfSoul(LPOBJ lpObj,int SourceSlot,int Targ
 	return 1;
 }
 
-bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	if(INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -2922,7 +2922,7 @@ bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj,int SourceSlot,int Targ
 	return 1;
 }
 
-bool CObjectManager::CharacterUseCustomJewel(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CObjectManager::CharacterUseCustomJewel(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	if(INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -3006,7 +3006,7 @@ bool CObjectManager::CharacterUseCustomJewel(LPOBJ lpObj,int SourceSlot,int Targ
 	return 1;
 }
 
-bool CObjectManager::CharacterUseTalismanOfResurrection(LPOBJ lpObj,int SourceSlot) // OK
+bool CObjectManager::CharacterUseTalismanOfResurrection(LPOBJ lpObj,int SourceSlot)
 {
 	if(lpObj->ResurrectionTalismanActive == 0)
 	{
@@ -3034,7 +3034,7 @@ bool CObjectManager::CharacterUseTalismanOfResurrection(LPOBJ lpObj,int SourceSl
 	return 1;
 }
 
-bool CObjectManager::CharacterUseTalismanOfMobility(LPOBJ lpObj,int SourceSlot) // OK
+bool CObjectManager::CharacterUseTalismanOfMobility(LPOBJ lpObj,int SourceSlot)
 {
 	if(lpObj->MobilityTalismanActive == 0)
 	{
@@ -3067,7 +3067,7 @@ bool CObjectManager::CharacterUseTalismanOfMobility(LPOBJ lpObj,int SourceSlot) 
 	return 1;
 }
 
-bool CObjectManager::CharacterUseCreationCard(LPOBJ lpObj,CItem* lpItem) // OK
+bool CObjectManager::CharacterUseCreationCard(LPOBJ lpObj,CItem* lpItem)
 {
 	switch(lpItem->m_Index)
 	{
@@ -3108,7 +3108,7 @@ bool CObjectManager::CharacterUseCreationCard(LPOBJ lpObj,CItem* lpItem) // OK
 	return 0;
 }
 
-bool CObjectManager::CharacterUseInventoryExpansion(LPOBJ lpObj,CItem* lpItem) // OK
+bool CObjectManager::CharacterUseInventoryExpansion(LPOBJ lpObj,CItem* lpItem)
 {
 	if(lpObj->ExtInventory >= 2)
 	{
@@ -3120,7 +3120,7 @@ bool CObjectManager::CharacterUseInventoryExpansion(LPOBJ lpObj,CItem* lpItem) /
 	return 1;
 }
 
-bool CObjectManager::CharacterUseWarehouseExpansion(LPOBJ lpObj,CItem* lpItem) // OK
+bool CObjectManager::CharacterUseWarehouseExpansion(LPOBJ lpObj,CItem* lpItem)
 {
 	if(lpObj->ExtWarehouse >= 1)
 	{
@@ -3132,7 +3132,7 @@ bool CObjectManager::CharacterUseWarehouseExpansion(LPOBJ lpObj,CItem* lpItem) /
 	return 1;
 }
 
-bool CObjectManager::CharacterUseTradeableSeal(LPOBJ lpObj,int SourceSlot,int TargetSlot) // OK
+bool CObjectManager::CharacterUseTradeableSeal(LPOBJ lpObj,int SourceSlot,int TargetSlot)
 {
 	if(INVENTORY_FULL_RANGE(SourceSlot) == 0)
 	{
@@ -3166,7 +3166,7 @@ bool CObjectManager::CharacterUseTradeableSeal(LPOBJ lpObj,int SourceSlot,int Ta
 	return 1;
 }
 
-void CObjectManager::CharacterMonsterDieHunt(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CObjectManager::CharacterMonsterDieHunt(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int HPValue = (int)(((lpObj->MaxLife+lpObj->AddLife)*lpObj->HuntHP)/100)+lpTarget->Level;
 	int SDValue = (int)(((lpObj->MaxShield+lpObj->AddShield)*lpObj->HuntSD)/100);
@@ -3220,7 +3220,7 @@ void CObjectManager::CharacterMonsterDieHunt(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	}
 }
 
-void CObjectManager::CharacterAutoRecuperation(LPOBJ lpObj) // OK
+void CObjectManager::CharacterAutoRecuperation(LPOBJ lpObj)
 {
 	int HPChange = 0;
 	int SDChange = 0;
@@ -3365,7 +3365,7 @@ void CObjectManager::CharacterAutoRecuperation(LPOBJ lpObj) // OK
 	}
 }
 
-void CObjectManager::CharacterItemDurationDown(LPOBJ lpObj) // OK
+void CObjectManager::CharacterItemDurationDown(LPOBJ lpObj)
 {
 	if(((lpObj->TimeCount++)%10) != 0)
 	{
@@ -3467,7 +3467,7 @@ void CObjectManager::CharacterItemDurationDown(LPOBJ lpObj) // OK
 	}
 }
 
-void CObjectManager::CharacterCalcBP(LPOBJ lpObj) // OK
+void CObjectManager::CharacterCalcBP(LPOBJ lpObj)
 {
 	switch(lpObj->Class)
 	{
@@ -3495,7 +3495,7 @@ void CObjectManager::CharacterCalcBP(LPOBJ lpObj) // OK
 	}
 }
 
-void CObjectManager::CharacterCalcSD(LPOBJ lpObj) // OK
+void CObjectManager::CharacterCalcSD(LPOBJ lpObj)
 {
 	int value = (lpObj->Strength+lpObj->AddStrength)+(lpObj->Dexterity+lpObj->AddDexterity)+(lpObj->Vitality+lpObj->AddVitality)+(lpObj->Energy+lpObj->AddEnergy);
 
@@ -3507,7 +3507,7 @@ void CObjectManager::CharacterCalcSD(LPOBJ lpObj) // OK
 	lpObj->MaxShield = (((value*gServerInfo.m_ShieldGaugeConstA)/10)+(((lpObj->Level+lpObj->MasterLevel)*(lpObj->Level+lpObj->MasterLevel))/gServerInfo.m_ShieldGaugeConstB))+(lpObj->Defense/2);
 }
 
-void CObjectManager::CharacterCalcPvPAccessoryOption(LPOBJ lpObj) // OK
+void CObjectManager::CharacterCalcPvPAccessoryOption(LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=802)
 
@@ -3546,7 +3546,7 @@ void CObjectManager::CharacterCalcPvPAccessoryOption(LPOBJ lpObj) // OK
 	#endif
 }
 
-void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
+void CObjectManager::CharacterCalcAttribute(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -4590,7 +4590,7 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	#endif
 }
 
-bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex) // OK
+bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex)
 {
 	SDHP_CHARACTER_INFO_RECV* lpMsg = (SDHP_CHARACTER_INFO_RECV*)aRecv;
 
@@ -4631,7 +4631,7 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex) // OK
 	lpObj->UseGuildMatchingJoin = lpMsg->UseGuildMatchingJoin;
 	#endif
 
-	//=== ObjectManager.cpp ->bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex) // OK
+	//=== ObjectManager.cpp ->bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex)
 	//lpObj->UserSkinPick = lpMsg->mUserSkinPick;
 
 #if(DANHHIEU_NEW)
@@ -5025,7 +5025,7 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv,int aIndex) // OK
 	return 1;
 }
 
-void CObjectManager::CharacterLifeCheck(LPOBJ lpObj,LPOBJ lpTarget,int damage,int DamageType,int flag,int type,int skill,int ShieldDamage) // OK
+void CObjectManager::CharacterLifeCheck(LPOBJ lpObj,LPOBJ lpTarget,int damage,int DamageType,int flag,int type,int skill,int ShieldDamage)
 {
 
 	if(lpObj->Connected != OBJECT_ONLINE)

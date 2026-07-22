@@ -11,7 +11,7 @@
 
 cRewardSystem gRewardSystem;
 
-cRewardSystem::cRewardSystem() // OK
+cRewardSystem::cRewardSystem()
 {
 	for( int n = 0; n < 7 ; ++n )
 	{
@@ -19,12 +19,12 @@ cRewardSystem::cRewardSystem() // OK
 	}
 }
 
-cRewardSystem::~cRewardSystem() // OK
+cRewardSystem::~cRewardSystem()
 {
 
 }
 
-void cRewardSystem::Load(char* path) // OK
+void cRewardSystem::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 

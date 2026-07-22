@@ -20,17 +20,17 @@ CRaklion gRaklion;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CRaklion::CRaklion() // OK
+CRaklion::CRaklion()
 {
 	this->ClearData();
 }
 
-CRaklion::~CRaklion() // OK
+CRaklion::~CRaklion()
 {
 
 }
 
-void CRaklion::ClearData() // OK
+void CRaklion::ClearData()
 {
 	this->m_IsComplete = 0;
 	this->m_AppearanceMSec = 0;
@@ -41,7 +41,7 @@ void CRaklion::ClearData() // OK
 	this->m_BossEggCountTotal = 0;
 }
 
-void CRaklion::Load(char* path) // OK
+void CRaklion::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -142,7 +142,7 @@ void CRaklion::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CRaklion::MainProc() // OK
+void CRaklion::MainProc()
 {
 	if (gServerInfo.m_RaklionEvent == 0)
 	{
@@ -191,7 +191,7 @@ void CRaklion::MainProc() // OK
 	}
 }
 
-void CRaklion::ProcState_IDLE() // OK
+void CRaklion::ProcState_IDLE()
 {
 	if (this->m_BossEggCountTotal > 0 && this->GetBossEggCount() == 0)
 	{
@@ -206,12 +206,12 @@ void CRaklion::ProcState_IDLE() // OK
 	}
 }
 
-void CRaklion::ProcState_NOTIFY1() // OK
+void CRaklion::ProcState_NOTIFY1()
 {
 	this->SetState(RAKLION_STATE_IDLE);
 }
 
-void CRaklion::ProcState_STANDBY() // OK
+void CRaklion::ProcState_STANDBY()
 {
 	if (((DWORD)this->m_AppearanceDelay * 1000) <= (GetTickCount() - this->m_AppearanceMSec))
 	{
@@ -220,17 +220,17 @@ void CRaklion::ProcState_STANDBY() // OK
 	}
 }
 
-void CRaklion::ProcState_NOTIFY2() // OK
+void CRaklion::ProcState_NOTIFY2()
 {
 	this->SetState(RAKLION_STATE_READY);
 }
 
-void CRaklion::ProcState_READY() // OK
+void CRaklion::ProcState_READY()
 {
 	this->SetState(RAKLION_STATE_START_BATTLE);
 }
 
-void CRaklion::ProcState_START_BATTLE() // OK
+void CRaklion::ProcState_START_BATTLE()
 {
 	if (((DWORD)this->m_BossZoneCloseDelay * 1000) <= (GetTickCount() - this->m_BossZoneCloseMSec))
 	{
@@ -243,7 +243,7 @@ void CRaklion::ProcState_START_BATTLE() // OK
 	this->m_RaklionBattleOfSelupan.Run();
 }
 
-void CRaklion::ProcState_NOTIFY3() // OK
+void CRaklion::ProcState_NOTIFY3()
 {
 	this->m_RaklionBattleOfSelupan.SelupanLifeCheck();
 
@@ -252,7 +252,7 @@ void CRaklion::ProcState_NOTIFY3() // OK
 	this->SetState(RAKLION_STATE_CLOSE_DOOR);
 }
 
-void CRaklion::ProcState_CLOSE_DOOR() // OK
+void CRaklion::ProcState_CLOSE_DOOR()
 {
 	if (gRaklionBattleUserMng.CheckBattleUsers() != 0)
 	{
@@ -273,12 +273,12 @@ void CRaklion::ProcState_CLOSE_DOOR() // OK
 	this->m_RaklionBattleOfSelupan.Run();
 }
 
-void CRaklion::ProcState_ALL_USER_DIE() // OK
+void CRaklion::ProcState_ALL_USER_DIE()
 {
 	this->SetState(RAKLION_STATE_NOTIFY4);
 }
 
-void CRaklion::ProcState_NOTIFY4() // OK
+void CRaklion::ProcState_NOTIFY4()
 {
 	if (((DWORD)this->m_BossZoneOpenDelay * 1000) <= (GetTickCount() - this->m_BossZoneOpenMSec))
 	{
@@ -287,12 +287,12 @@ void CRaklion::ProcState_NOTIFY4() // OK
 	}
 }
 
-void CRaklion::ProcState_END() // OK
+void CRaklion::ProcState_END()
 {
 	this->SetState(RAKLION_STATE_IDLE);
 }
 
-void CRaklion::SetState(int state) // OK
+void CRaklion::SetState(int state)
 {
 	switch (state)
 	{
@@ -334,21 +334,21 @@ void CRaklion::SetState(int state) // OK
 	gRaklionUtil.NotifyRaklionChangeState(this->GetRaklionState(), this->m_RaklionBattleOfSelupan.GetBattleOfSelupanState());
 }
 
-void CRaklion::SetState_IDLE() // OK
+void CRaklion::SetState_IDLE()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> IDLE",this->m_RaklionState);
 
 	this->SetRaklionState(RAKLION_STATE_IDLE);
 }
 
-void CRaklion::SetState_NOTIFY1() // OK
+void CRaklion::SetState_NOTIFY1()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> NOTIFY1",this->m_RaklionState);
 
 	this->SetRaklionState(RAKLION_STATE_NOTIFY1);
 }
 
-void CRaklion::SetState_STANDBY() // OK
+void CRaklion::SetState_STANDBY()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> STANDBY",this->m_RaklionState);
 
@@ -357,7 +357,7 @@ void CRaklion::SetState_STANDBY() // OK
 	this->SetRaklionState(RAKLION_STATE_STANDBY);
 }
 
-void CRaklion::SetState_NOTIFY2() // OK
+void CRaklion::SetState_NOTIFY2()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> NOTIFY2",this->m_RaklionState);
 
@@ -366,7 +366,7 @@ void CRaklion::SetState_NOTIFY2() // OK
 	this->SetRaklionState(RAKLION_STATE_NOTIFY2);
 }
 
-void CRaklion::SetState_READY() // OK
+void CRaklion::SetState_READY()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> READY",this->m_RaklionState);
 
@@ -375,7 +375,7 @@ void CRaklion::SetState_READY() // OK
 	this->SetRaklionState(RAKLION_STATE_READY);
 }
 
-void CRaklion::SetState_START_BATTLE() // OK
+void CRaklion::SetState_START_BATTLE()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> START_BATTLE",this->m_RaklionState);
 
@@ -384,7 +384,7 @@ void CRaklion::SetState_START_BATTLE() // OK
 	this->SetRaklionState(RAKLION_STATE_START_BATTLE);
 }
 
-void CRaklion::SetState_NOTIFY3() // OK
+void CRaklion::SetState_NOTIFY3()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> NOTIFY3",this->m_RaklionState);
 
@@ -393,14 +393,14 @@ void CRaklion::SetState_NOTIFY3() // OK
 	this->SetRaklionState(RAKLION_STATE_NOTIFY3);
 }
 
-void CRaklion::SetState_CLOSE_DOOR() // OK
+void CRaklion::SetState_CLOSE_DOOR()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> CLOSE_DOOR",this->m_RaklionState);
 
 	this->SetRaklionState(RAKLION_STATE_CLOSE_DOOR);
 }
 
-void CRaklion::SetState_ALL_USER_DIE() // OK
+void CRaklion::SetState_ALL_USER_DIE()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> ALL_USER_DIE",this->m_RaklionState);
 
@@ -411,7 +411,7 @@ void CRaklion::SetState_ALL_USER_DIE() // OK
 	this->SetRaklionState(RAKLION_STATE_ALL_USER_DIE);
 }
 
-void CRaklion::SetState_NOTIFY4() // OK
+void CRaklion::SetState_NOTIFY4()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> NOTIFY4",this->m_RaklionState);
 
@@ -424,7 +424,7 @@ void CRaklion::SetState_NOTIFY4() // OK
 	this->SetRaklionState(RAKLION_STATE_NOTIFY4);
 }
 
-void CRaklion::SetState_END() // OK
+void CRaklion::SetState_END()
 {
 	//LogAdd(LOG_BLACK,"[ RAKLION ] State(%d) -> END",this->m_RaklionState);
 
@@ -445,17 +445,17 @@ void CRaklion::SetState_END() // OK
 	this->SetRaklionState(RAKLION_STATE_END);
 }
 
-void CRaklion::SetRaklionState(int state) // OK
+void CRaklion::SetRaklionState(int state)
 {
 	this->m_RaklionState = state;
 }
 
-void CRaklion::SetRaklionDetailState(int state) // OK
+void CRaklion::SetRaklionDetailState(int state)
 {
 	this->m_RaklionBattleOfSelupan.SetBattleOfSelupanState(state);
 }
 
-void CRaklion::SelupanDie(int index) // OK
+void CRaklion::SelupanDie(int index)
 {
 	if (OBJECT_RANGE(this->m_RaklionBattleOfSelupan.GetSelupanObjIndex()) == 0)
 	{
@@ -470,7 +470,7 @@ void CRaklion::SelupanDie(int index) // OK
 	this->m_RaklionBattleOfSelupan.SetSelupanObjIndex(-1);
 }
 
-void CRaklion::RaklionMonsterDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CRaklion::RaklionMonsterDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpObj);
 
@@ -492,7 +492,7 @@ void CRaklion::RaklionMonsterDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-bool CRaklion::BossEggRegen() // OK
+bool CRaklion::BossEggRegen()
 {
 	if (this->m_BossEggCount >= this->m_BossEggMax)
 	{
@@ -504,7 +504,7 @@ bool CRaklion::BossEggRegen() // OK
 	return 1;
 }
 
-bool CRaklion::BossEggDie() // OK
+bool CRaklion::BossEggDie()
 {
 	if (this->m_BossEggCount <= 0)
 	{
@@ -516,7 +516,7 @@ bool CRaklion::BossEggDie() // OK
 	return 1;
 }
 
-void CRaklion::BossEggRegenAll() // OK
+void CRaklion::BossEggRegenAll()
 {
 	for (int n = 0; n < gMonsterSetBase.m_count; n++)
 	{
@@ -558,7 +558,7 @@ void CRaklion::BossEggRegenAll() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ] [ BossEggRegen ] : BossEgg(%d ea)",this->GetBossEggCount());
 }
 
-void CRaklion::BossEggDeleteAll() // OK
+void CRaklion::BossEggDeleteAll()
 {
 	for (int n = OBJECT_START_MONSTER; n < MAX_OBJECT_MONSTER; n++)
 	{
@@ -574,17 +574,17 @@ void CRaklion::BossEggDeleteAll() // OK
 	//LogAdd(LOG_BLACK,"[ RAKLION ] [ BossEggDelete ] : BossEgg(%d ea)",this->GetBossEggCount());
 }
 
-int CRaklion::GetRaklionState() // OK
+int CRaklion::GetRaklionState()
 {
 	return this->m_RaklionState;
 }
 
-int CRaklion::GetRaklionDetailState() // OK
+int CRaklion::GetRaklionDetailState()
 {
 	return this->m_RaklionBattleOfSelupan.GetBattleOfSelupanState();
 }
 
-int CRaklion::GetBossEggCount() // OK
+int CRaklion::GetBossEggCount()
 {
 	int count = 0;
 

@@ -13,17 +13,17 @@ C380ItemType g380ItemType;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-C380ItemType::C380ItemType() // OK
+C380ItemType::C380ItemType()
 {
 	this->m_380ItemTypeInfo.clear();
 }
 
-C380ItemType::~C380ItemType() // OK
+C380ItemType::~C380ItemType()
 {
 
 }
 
-void C380ItemType::Load(char* path) // OK
+void C380ItemType::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -80,7 +80,7 @@ void C380ItemType::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool C380ItemType::Check380ItemType(int index) // OK
+bool C380ItemType::Check380ItemType(int index)
 {
 	std::map<int,ITEM_380_TYPE_INFO>::iterator it = this->m_380ItemTypeInfo.find(index);
 
@@ -94,7 +94,7 @@ bool C380ItemType::Check380ItemType(int index) // OK
 	}
 }
 
-int C380ItemType::Get380ItemOptionIndex(int index,int number) // OK
+int C380ItemType::Get380ItemOptionIndex(int index,int number)
 {
 	std::map<int,ITEM_380_TYPE_INFO>::iterator it = this->m_380ItemTypeInfo.find(index);
 
@@ -108,7 +108,7 @@ int C380ItemType::Get380ItemOptionIndex(int index,int number) // OK
 	}
 }
 
-int C380ItemType::Get380ItemOptionValue(int index,int number) // OK
+int C380ItemType::Get380ItemOptionValue(int index,int number)
 {
 	std::map<int,ITEM_380_TYPE_INFO>::iterator it = this->m_380ItemTypeInfo.find(index);
 

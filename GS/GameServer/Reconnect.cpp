@@ -14,17 +14,17 @@ CReconnect gReconnect;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CReconnect::CReconnect() // OK
+CReconnect::CReconnect()
 {
 
 }
 
-CReconnect::~CReconnect() // OK
+CReconnect::~CReconnect()
 {
 
 }
 
-void CReconnect::MainProc() // OK
+void CReconnect::MainProc()
 {
 	for (std::map<std::string, RECONNECT_INFO>::iterator it = this->m_ReconnectInfo.begin(); it != this->m_ReconnectInfo.end();)
 	{
@@ -40,7 +40,7 @@ void CReconnect::MainProc() // OK
 }
 
 
-void CReconnect::SetReconnectInfo(LPOBJ lpObj) // OK
+void CReconnect::SetReconnectInfo(LPOBJ lpObj)
 {
 	RECONNECT_INFO info;
 
@@ -76,7 +76,7 @@ void CReconnect::SetReconnectInfo(LPOBJ lpObj) // OK
 	}
 }
 
-void CReconnect::GetReconnectInfo(LPOBJ lpObj) // OK
+void CReconnect::GetReconnectInfo(LPOBJ lpObj)
 {
 	std::map<std::string, RECONNECT_INFO>::iterator it = this->m_ReconnectInfo.find(std::string(lpObj->Name));
 
@@ -92,7 +92,7 @@ void CReconnect::GetReconnectInfo(LPOBJ lpObj) // OK
 	}
 }
 
-bool CReconnect::CheckResumeParty(RECONNECT_INFO* lpInfo) // OK
+bool CReconnect::CheckResumeParty(RECONNECT_INFO* lpInfo)
 {
 	int count = 0;
 
@@ -110,7 +110,7 @@ bool CReconnect::CheckResumeParty(RECONNECT_INFO* lpInfo) // OK
 	return ((count>1) ? 1 : gParty.IsParty(lpInfo->PartyNumber));
 }
 
-void CReconnect::ResumeParty(LPOBJ lpObj, RECONNECT_INFO* lpInfo) // OK
+void CReconnect::ResumeParty(LPOBJ lpObj, RECONNECT_INFO* lpInfo)
 {
 	if (this->CheckResumeParty(lpInfo) != 0)
 	{
@@ -133,7 +133,7 @@ void CReconnect::ResumeParty(LPOBJ lpObj, RECONNECT_INFO* lpInfo) // OK
 	}
 }
 
-void CReconnect::ResumeCommand(LPOBJ lpObj, RECONNECT_INFO* lpInfo) // OK
+void CReconnect::ResumeCommand(LPOBJ lpObj, RECONNECT_INFO* lpInfo)
 {
 	lpObj->AutoAddPointCount = lpInfo->AutoAddPointCount;
 
@@ -148,7 +148,7 @@ void CReconnect::ResumeCommand(LPOBJ lpObj, RECONNECT_INFO* lpInfo) // OK
 	memcpy(lpObj->AutoPartyPassword, lpInfo->AutoPartyPassword, sizeof(lpObj->AutoPartyPassword));
 }
 
-void CReconnect::ResumeGensVictimList(LPOBJ lpObj, RECONNECT_INFO* lpInfo) // OK
+void CReconnect::ResumeGensVictimList(LPOBJ lpObj, RECONNECT_INFO* lpInfo)
 {
 	memcpy(lpObj->GensVictimList, lpInfo->GensVictimList, sizeof(lpInfo->GensVictimList));
 }

@@ -15,17 +15,17 @@ CCustomWing gCustomWing;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomWing::CCustomWing() // OK
+CCustomWing::CCustomWing()
 {
 	this->Init();
 }
 
-CCustomWing::~CCustomWing() // OK
+CCustomWing::~CCustomWing()
 {
 
 }
 
-void CCustomWing::Init() // OK
+void CCustomWing::Init()
 {
 	for(int n=0;n < MAX_CUSTOM_WING;n++)
 	{
@@ -33,7 +33,7 @@ void CCustomWing::Init() // OK
 	}
 }
 
-void CCustomWing::Load(char* path) // OK
+void CCustomWing::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -127,7 +127,7 @@ void CCustomWing::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CCustomWing::SetInfo(CUSTOM_WING_INFO info) // OK
+void CCustomWing::SetInfo(CUSTOM_WING_INFO info)
 {
 	if(info.Index < 0 || info.Index >= MAX_CUSTOM_WING)
 	{
@@ -137,7 +137,7 @@ void CCustomWing::SetInfo(CUSTOM_WING_INFO info) // OK
 	this->m_CustomWingInfo[info.Index] = info;
 }
 
-CUSTOM_WING_INFO* CCustomWing::GetInfo(int index) // OK
+CUSTOM_WING_INFO* CCustomWing::GetInfo(int index)
 {
 	if(index < 0 || index >= MAX_CUSTOM_WING)
 	{
@@ -152,7 +152,7 @@ CUSTOM_WING_INFO* CCustomWing::GetInfo(int index) // OK
 	return &this->m_CustomWingInfo[index];
 }
 
-CUSTOM_WING_INFO* CCustomWing::GetInfoByItem(int ItemIndex) // OK
+CUSTOM_WING_INFO* CCustomWing::GetInfoByItem(int ItemIndex)
 {
 	for(int n=0;n < MAX_CUSTOM_WING;n++)
 	{
@@ -172,7 +172,7 @@ CUSTOM_WING_INFO* CCustomWing::GetInfoByItem(int ItemIndex) // OK
 	return 0;
 }
 
-bool CCustomWing::CheckCustomWing(int index) // OK
+bool CCustomWing::CheckCustomWing(int index)
 {
 	if(this->GetInfo(index) != 0)
 	{
@@ -182,7 +182,7 @@ bool CCustomWing::CheckCustomWing(int index) // OK
 	return 0;
 }
 
-bool CCustomWing::CheckCustomWingByItem(int ItemIndex) // OK
+bool CCustomWing::CheckCustomWingByItem(int ItemIndex)
 {
 	if(this->GetInfoByItem(ItemIndex) != 0)
 	{
@@ -192,7 +192,7 @@ bool CCustomWing::CheckCustomWingByItem(int ItemIndex) // OK
 	return 0;
 }
 
-int CCustomWing::GetCustomWingIndex(int ItemIndex) // OK
+int CCustomWing::GetCustomWingIndex(int ItemIndex)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -204,7 +204,7 @@ int CCustomWing::GetCustomWingIndex(int ItemIndex) // OK
 	return lpInfo->Index;
 }
 
-int CCustomWing::GetCustomWingDefense(int ItemIndex,int ItemLevel) // OK
+int CCustomWing::GetCustomWingDefense(int ItemIndex,int ItemLevel)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -216,7 +216,7 @@ int CCustomWing::GetCustomWingDefense(int ItemIndex,int ItemLevel) // OK
 	return (lpInfo->DefenseConstA*ItemLevel);
 }
 
-int CCustomWing::GetCustomWingIncDamage(int ItemIndex,int ItemLevel) // OK
+int CCustomWing::GetCustomWingIncDamage(int ItemIndex,int ItemLevel)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -228,7 +228,7 @@ int CCustomWing::GetCustomWingIncDamage(int ItemIndex,int ItemLevel) // OK
 	return (lpInfo->IncDamageConstA+(ItemLevel*lpInfo->IncDamageConstB));
 }
 
-int CCustomWing::GetCustomWingDecDamage(int ItemIndex,int ItemLevel) // OK
+int CCustomWing::GetCustomWingDecDamage(int ItemIndex,int ItemLevel)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -240,7 +240,7 @@ int CCustomWing::GetCustomWingDecDamage(int ItemIndex,int ItemLevel) // OK
 	return (lpInfo->DecDamageConstA-(ItemLevel*lpInfo->DecDamageConstB));
 }
 
-int CCustomWing::GetCustomWingOptionIndex(int ItemIndex,int OptionNumber) // OK
+int CCustomWing::GetCustomWingOptionIndex(int ItemIndex,int OptionNumber)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -262,7 +262,7 @@ int CCustomWing::GetCustomWingOptionIndex(int ItemIndex,int OptionNumber) // OK
 	return 0;
 }
 
-int CCustomWing::GetCustomWingOptionValue(int ItemIndex,int OptionNumber) // OK
+int CCustomWing::GetCustomWingOptionValue(int ItemIndex,int OptionNumber)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -284,7 +284,7 @@ int CCustomWing::GetCustomWingOptionValue(int ItemIndex,int OptionNumber) // OK
 	return 0;
 }
 
-int CCustomWing::GetCustomWingNewOptionIndex(int ItemIndex,int OptionNumber) // OK
+int CCustomWing::GetCustomWingNewOptionIndex(int ItemIndex,int OptionNumber)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -308,7 +308,7 @@ int CCustomWing::GetCustomWingNewOptionIndex(int ItemIndex,int OptionNumber) // 
 	return 0;
 }
 
-int CCustomWing::GetCustomWingNewOptionValue(int ItemIndex,int OptionNumber) // OK
+int CCustomWing::GetCustomWingNewOptionValue(int ItemIndex,int OptionNumber)
 {
 	CUSTOM_WING_INFO* lpInfo = this->GetInfoByItem(ItemIndex);
 
@@ -447,7 +447,7 @@ void CCustomWing::OpcionAdd(int aIndex, int index, int value)
 		break;
 	}
 }
-void CCustomWing::CalcItemCustomOption(LPOBJ lpObj, bool flag) // OK
+void CCustomWing::CalcItemCustomOption(LPOBJ lpObj, bool flag)
 {
 	if (flag != 0)
 	{

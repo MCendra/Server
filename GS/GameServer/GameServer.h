@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "MiniDump.h"
 #include "Log.h" // Incluye el archivo de encabezado ServerLog y ServerDisplayer
+#include "ServerConfig.h"
 #include "BloodCastle.h"
 #include "CastleDeep.h"
 #include "CastleSiege.h"
@@ -58,6 +59,6 @@
 //LRESULT CALLBACK About(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam);
 //LRESULT CALLBACK UserOnline(HWND hDlg,UINT message,WPARAM wParam,LPARAM lParam);
 //antiflood
-LRESULT CALLBACK IPBanned(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam); // OK
+LRESULT CALLBACK IPBanned(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 HWND hWndComboBox;
 HWND hWndComboBox1;

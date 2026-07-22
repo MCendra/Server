@@ -12,7 +12,7 @@ CProtect gProtect;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CProtect::CProtect() // OK
+CProtect::CProtect()
 {
 	#if(PROTECT_STATE==1)
 
@@ -37,12 +37,12 @@ CProtect::CProtect() // OK
 	#endif
 }
 
-CProtect::~CProtect() // OK
+CProtect::~CProtect()
 {
 
 }
 
-bool CProtect::GetComputerHardwareId() // OK
+bool CProtect::GetComputerHardwareId()
 {
 	#if(PROTECT_STATE==1)
 
@@ -88,7 +88,7 @@ bool CProtect::GetComputerHardwareId() // OK
 	#endif
 }
 
-bool CProtect::ConnectToAuthServer(char* IpAddress,WORD port) // OK
+bool CProtect::ConnectToAuthServer(char* IpAddress,WORD port)
 {
 	#if(PROTECT_STATE==1)
 
@@ -145,7 +145,7 @@ bool CProtect::ConnectToAuthServer(char* IpAddress,WORD port) // OK
 	#endif
 }
 
-bool CProtect::AuthServerDataSend(eAuthServerType ServerType) // OK
+bool CProtect::AuthServerDataSend(eAuthServerType ServerType)
 {
 	#if(PROTECT_STATE==1)
 
@@ -198,7 +198,7 @@ bool CProtect::AuthServerDataSend(eAuthServerType ServerType) // OK
 	#endif
 }
 
-void CProtect::StartAuth(eAuthServerType ServerType) // OK
+void CProtect::StartAuth(eAuthServerType ServerType)
 {
 	#if(PROTECT_STATE==1)
 
@@ -316,7 +316,7 @@ void CProtect::StartAuth(eAuthServerType ServerType) // OK
 	#endif
 }
 
-inline void CProtect::ErrorMessageBox() // OK
+inline void CProtect::ErrorMessageBox()
 {
 	#if(PROTECT_STATE==1)
 
@@ -331,7 +331,7 @@ inline void CProtect::ErrorMessageBox() // OK
 	#endif
 }
 
-inline void CProtect::SafeExitProcess() // OK
+inline void CProtect::SafeExitProcess()
 {
 	#if(PROTECT_STATE==1)
 
@@ -344,7 +344,7 @@ inline void CProtect::SafeExitProcess() // OK
 	#endif
 }
 
-void CProtect::ProtectBlock(DWORD size) // OK
+void CProtect::ProtectBlock(DWORD size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -395,7 +395,7 @@ void CProtect::ProtectBlock(DWORD size) // OK
 	#endif
 }
 
-void CProtect::ReleaseBlock(DWORD size) // OK
+void CProtect::ReleaseBlock(DWORD size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -446,7 +446,7 @@ void CProtect::ReleaseBlock(DWORD size) // OK
 	#endif
 }
 
-void CProtect::DecryptBlock(BYTE* data,int size) // OK
+void CProtect::DecryptBlock(BYTE* data,int size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -468,7 +468,7 @@ void CProtect::DecryptBlock(BYTE* data,int size) // OK
 	#endif
 }
 
-void CProtect::EncryptBlock(BYTE* data,int size) // OK
+void CProtect::EncryptBlock(BYTE* data,int size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -490,7 +490,7 @@ void CProtect::EncryptBlock(BYTE* data,int size) // OK
 	#endif
 }
 
-inline void CProtect::InsertMemoryMacro(BYTE* data,BYTE* info,int size) // OK
+inline void CProtect::InsertMemoryMacro(BYTE* data,BYTE* info,int size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -508,7 +508,7 @@ inline void CProtect::InsertMemoryMacro(BYTE* data,BYTE* info,int size) // OK
 	#endif
 }
 
-inline void CProtect::RemoveMemoryMacro(BYTE* data,BYTE* info,int size) // OK
+inline void CProtect::RemoveMemoryMacro(BYTE* data,BYTE* info,int size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -526,7 +526,7 @@ inline void CProtect::RemoveMemoryMacro(BYTE* data,BYTE* info,int size) // OK
 	#endif
 }
 
-inline bool CProtect::VerifyMemoryMacro(BYTE* data,BYTE* info,int size) // OK
+inline bool CProtect::VerifyMemoryMacro(BYTE* data,BYTE* info,int size)
 {
 	#if(PROTECT_STATE==1)
 
@@ -547,7 +547,7 @@ inline bool CProtect::VerifyMemoryMacro(BYTE* data,BYTE* info,int size) // OK
 	#endif
 }
 
-bool CProtect::GetInsertStartBlock(DWORD start_offset,DWORD final_offset,DWORD* start_block) // OK
+bool CProtect::GetInsertStartBlock(DWORD start_offset,DWORD final_offset,DWORD* start_block)
 {
 	#if(PROTECT_STATE==1)
 
@@ -589,7 +589,7 @@ bool CProtect::GetInsertStartBlock(DWORD start_offset,DWORD final_offset,DWORD* 
 	#endif
 }
 
-bool CProtect::GetInsertFinalBlock(DWORD start_offset,DWORD final_offset,DWORD* final_block) // OK
+bool CProtect::GetInsertFinalBlock(DWORD start_offset,DWORD final_offset,DWORD* final_block)
 {
 	#if(PROTECT_STATE==1)
 
@@ -631,7 +631,7 @@ bool CProtect::GetInsertFinalBlock(DWORD start_offset,DWORD final_offset,DWORD* 
 	#endif
 }
 
-bool CProtect::GetRemoveStartBlock(DWORD start_offset,DWORD final_offset,DWORD* start_block) // OK
+bool CProtect::GetRemoveStartBlock(DWORD start_offset,DWORD final_offset,DWORD* start_block)
 {
 	#if(PROTECT_STATE==1)
 
@@ -673,7 +673,7 @@ bool CProtect::GetRemoveStartBlock(DWORD start_offset,DWORD final_offset,DWORD* 
 	#endif
 }
 
-bool CProtect::GetRemoveFinalBlock(DWORD start_offset,DWORD final_offset,DWORD* final_block) // OK
+bool CProtect::GetRemoveFinalBlock(DWORD start_offset,DWORD final_offset,DWORD* final_block)
 {
 	#if(PROTECT_STATE==1)
 
@@ -715,7 +715,7 @@ bool CProtect::GetRemoveFinalBlock(DWORD start_offset,DWORD final_offset,DWORD* 
 	#endif
 }
 
-char* CProtect::GetEncryptedString(BYTE* string,int size) // OK
+char* CProtect::GetEncryptedString(BYTE* string,int size)
 {
 	#if(PROTECT_STATE==1)
 

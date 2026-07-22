@@ -14,17 +14,17 @@ CKanturuEntranceNPC gKanturuEntranceNPC;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CKanturuEntranceNPC::CKanturuEntranceNPC() // OK
+CKanturuEntranceNPC::CKanturuEntranceNPC()
 {
 
 }
 
-CKanturuEntranceNPC::~CKanturuEntranceNPC() // OK
+CKanturuEntranceNPC::~CKanturuEntranceNPC()
 {
 
 }
 
-void CKanturuEntranceNPC::CGKanturuEnterInfoRecv(int aIndex) // OK
+void CKanturuEntranceNPC::CGKanturuEnterInfoRecv(int aIndex)
 {
 	PMSG_KANTURU_ENTER_INFO_SEND pMsg;
 
@@ -43,7 +43,7 @@ void CKanturuEntranceNPC::CGKanturuEnterInfoRecv(int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,sizeof(pMsg));
 }
 
-void CKanturuEntranceNPC::CGKanturuEnterRecv(int aIndex) // OK
+void CKanturuEntranceNPC::CGKanturuEnterRecv(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

@@ -17,17 +17,17 @@ CItemValueTrade gItemValueTrade;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CItemValueTrade::CItemValueTrade() // OK
+CItemValueTrade::CItemValueTrade()
 {
 	this->m_ItemValueTradeInfo.clear();
 }
 
-CItemValueTrade::~CItemValueTrade() // OK
+CItemValueTrade::~CItemValueTrade()
 {
 
 }
 
-void CItemValueTrade::Load(char* path) // OK
+void CItemValueTrade::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -84,7 +84,7 @@ void CItemValueTrade::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-bool CItemValueTrade::CheckItemValueTrade(LPOBJ lpObj,LPOBJ lpTarget) // OK
+bool CItemValueTrade::CheckItemValueTrade(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int Money = 0;
 	int Coin1 = 0;

@@ -13,17 +13,17 @@ CResetTable gResetTable;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CResetTable::CResetTable() // OK
+CResetTable::CResetTable()
 {
 	this->m_ResetTableInfo.clear();
 }
 
-CResetTable::~CResetTable() // OK
+CResetTable::~CResetTable()
 {
 
 }
 
-void CResetTable::Load(char* path) // OK
+void CResetTable::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -97,7 +97,7 @@ void CResetTable::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-int CResetTable::GetResetLevel(LPOBJ lpObj) // OK
+int CResetTable::GetResetLevel(LPOBJ lpObj)
 {
 	for(std::vector<RESET_TABLE_INFO>::iterator it=this->m_ResetTableInfo.begin();it != this->m_ResetTableInfo.end();it++)
 	{
@@ -117,7 +117,7 @@ int CResetTable::GetResetLevel(LPOBJ lpObj) // OK
 	return gServerInfo.m_CommandResetLevel[lpObj->AccountLevel];
 }
 
-int CResetTable::GetResetMoney(LPOBJ lpObj) // OK
+int CResetTable::GetResetMoney(LPOBJ lpObj)
 {
 	for(std::vector<RESET_TABLE_INFO>::iterator it=this->m_ResetTableInfo.begin();it != this->m_ResetTableInfo.end();it++)
 	{
@@ -137,7 +137,7 @@ int CResetTable::GetResetMoney(LPOBJ lpObj) // OK
 	return gServerInfo.m_CommandResetMoney[lpObj->AccountLevel];
 }
 
-int CResetTable::GetResetPoint(LPOBJ lpObj) // OK
+int CResetTable::GetResetPoint(LPOBJ lpObj)
 {
 	int point = 0;
 
@@ -169,7 +169,7 @@ int CResetTable::GetResetPoint(LPOBJ lpObj) // OK
 }
 
 
-int CResetTable::GetResetPointKeep(LPOBJ lpObj) // OK
+int CResetTable::GetResetPointKeep(LPOBJ lpObj)
 {
 
 	for (std::vector<RESET_TABLE_INFO>::iterator it = this->m_ResetTableInfo.begin(); it != this->m_ResetTableInfo.end(); it++)

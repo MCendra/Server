@@ -23,7 +23,7 @@ CDuel gDuel;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDuel::CDuel() // OK
+CDuel::CDuel()
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -44,12 +44,12 @@ CDuel::CDuel() // OK
 #endif
 }
 
-CDuel::~CDuel() // OK
+CDuel::~CDuel()
 {
 
 }
 
-void CDuel::MainProc() // OK
+void CDuel::MainProc()
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -81,12 +81,12 @@ void CDuel::MainProc() // OK
 #endif
 }
 
-void CDuel::ProcState_EMPTY(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::ProcState_EMPTY(DUEL_ARENA_INFO* lpInfo)
 {
 
 }
 
-void CDuel::ProcState_START(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::ProcState_START(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -111,7 +111,7 @@ void CDuel::ProcState_START(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::ProcState_CLEAN(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::ProcState_CLEAN(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -128,7 +128,7 @@ void CDuel::ProcState_CLEAN(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::SetState(DUEL_ARENA_INFO* lpInfo, int state) // OK
+void CDuel::SetState(DUEL_ARENA_INFO* lpInfo, int state)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -148,7 +148,7 @@ void CDuel::SetState(DUEL_ARENA_INFO* lpInfo, int state) // OK
 #endif
 }
 
-void CDuel::SetState_EMPTY(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::SetState_EMPTY(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -159,7 +159,7 @@ void CDuel::SetState_EMPTY(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::SetState_START(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::SetState_START(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -170,7 +170,7 @@ void CDuel::SetState_START(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::SetState_CLEAN(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::SetState_CLEAN(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -193,7 +193,7 @@ void CDuel::SetState_CLEAN(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-bool CDuel::AddDuelArena(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CDuel::AddDuelArena(LPOBJ lpObj, LPOBJ lpTarget)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -253,7 +253,7 @@ bool CDuel::AddDuelArena(LPOBJ lpObj, LPOBJ lpTarget) // OK
 #endif
 }
 
-DUEL_ARENA_INFO* CDuel::GetDuelArenaByGladiator(int aIndex) // OK
+DUEL_ARENA_INFO* CDuel::GetDuelArenaByGladiator(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -297,7 +297,7 @@ DUEL_ARENA_INFO* CDuel::GetDuelArenaByGladiator(int aIndex) // OK
 #endif
 }
 
-DUEL_ARENA_INFO* CDuel::GetDuelArenaBySpectator(int aIndex) // OK
+DUEL_ARENA_INFO* CDuel::GetDuelArenaBySpectator(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -341,7 +341,7 @@ DUEL_ARENA_INFO* CDuel::GetDuelArenaBySpectator(int aIndex) // OK
 #endif
 }
 
-bool CDuel::AddDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
+bool CDuel::AddDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -373,7 +373,7 @@ bool CDuel::AddDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
 #endif
 }
 
-bool CDuel::DelDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
+bool CDuel::DelDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -401,7 +401,7 @@ bool CDuel::DelDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
 #endif
 }
 
-int* CDuel::GetDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
+int* CDuel::GetDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -427,7 +427,7 @@ int* CDuel::GetDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
 #endif
 }
 
-bool CDuel::AddDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
+bool CDuel::AddDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -459,7 +459,7 @@ bool CDuel::AddDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
 #endif
 }
 
-bool CDuel::DelDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
+bool CDuel::DelDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -487,7 +487,7 @@ bool CDuel::DelDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
 #endif
 }
 
-int* CDuel::GetDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
+int* CDuel::GetDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -513,7 +513,7 @@ int* CDuel::GetDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo, int aIndex) // OK
 #endif
 }
 
-void CDuel::CheckDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::CheckDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -552,7 +552,7 @@ void CDuel::CheckDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::CheckDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::CheckDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -584,7 +584,7 @@ void CDuel::CheckDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::ClearDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::ClearDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -601,7 +601,7 @@ void CDuel::ClearDuelArenaGladiator(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::ClearDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::ClearDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -622,7 +622,7 @@ void CDuel::ClearDuelArenaSpectator(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-int CDuel::GetDuelArenaGladiatorCount(DUEL_ARENA_INFO* lpInfo) // OK
+int CDuel::GetDuelArenaGladiatorCount(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -645,7 +645,7 @@ int CDuel::GetDuelArenaGladiatorCount(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-int CDuel::GetDuelArenaSpectatorCount(DUEL_ARENA_INFO* lpInfo) // OK
+int CDuel::GetDuelArenaSpectatorCount(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -668,7 +668,7 @@ int CDuel::GetDuelArenaSpectatorCount(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-bool CDuel::CheckDuel(LPOBJ lpObj, LPOBJ lpTarget) // OK
+bool CDuel::CheckDuel(LPOBJ lpObj, LPOBJ lpTarget)
 {
 
 #if(CHECK_USER == 1)
@@ -712,7 +712,7 @@ bool CDuel::CheckDuel(LPOBJ lpObj, LPOBJ lpTarget) // OK
 }
 
 
-void CDuel::CheckDuelScore(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CDuel::CheckDuelScore(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->CheckDuel(lpObj, lpTarget) == 0)
 	{
@@ -865,7 +865,7 @@ void CDuel::CheckDuelScore(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	}
 }
 
-void CDuel::CheckDuelUser() // OK
+void CDuel::CheckDuelUser()
 {
 	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 	{
@@ -909,7 +909,7 @@ void CDuel::CheckDuelUser() // OK
 	}
 }
 
-void CDuel::ResetDuel(LPOBJ lpObj) // OK
+void CDuel::ResetDuel(LPOBJ lpObj)
 {
 	gDarkSpirit[lpObj->Index].ResetTarget(lpObj->DuelUser);
 
@@ -920,7 +920,7 @@ void CDuel::ResetDuel(LPOBJ lpObj) // OK
 	lpObj->DuelTickCount = 0;
 }
 
-void CDuel::RespawnDuelUser(LPOBJ lpObj) // OK
+void CDuel::RespawnDuelUser(LPOBJ lpObj)
 {
 	gMap[lpObj->Map].GetMapRandomPos(&lpObj->X, &lpObj->Y, 18);
 
@@ -968,7 +968,7 @@ void CDuel::RespawnDuelUser(LPOBJ lpObj) // OK
 #endif
 }
 
-void CDuel::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
+void CDuel::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget)
 {
 	if (this->CheckDuel(lpObj, lpTarget) == 0)
 	{
@@ -991,7 +991,7 @@ void CDuel::UserDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 #endif
 }
 
-void CDuel::CGDuelStartRecv(PMSG_DUEL_START_RECV* lpMsg, int aIndex) // OK
+void CDuel::CGDuelStartRecv(PMSG_DUEL_START_RECV* lpMsg, int aIndex)
 {
 	if (gServerInfo.m_DuelSwitch == 0)
 	{
@@ -1147,7 +1147,7 @@ void CDuel::CGDuelStartRecv(PMSG_DUEL_START_RECV* lpMsg, int aIndex) // OK
 	this->GCDuelOkSend(bIndex, aIndex);
 }
 
-void CDuel::CGDuelOkRecv(PMSG_DUEL_OK_RECV* lpMsg, int aIndex) // OK
+void CDuel::CGDuelOkRecv(PMSG_DUEL_OK_RECV* lpMsg, int aIndex)
 {
 
 	LogAdd(LOG_RED, "[THACH DAU] NUT OK");
@@ -1325,7 +1325,7 @@ void CDuel::CGDuelOkRecv(PMSG_DUEL_OK_RECV* lpMsg, int aIndex) // OK
 	this->GCDuelScoreSend(aIndex, bIndex);
 }
 
-void CDuel::CGDuelEndRecv(int aIndex) // OK
+void CDuel::CGDuelEndRecv(int aIndex)
 {
 
 	LogAdd(LOG_RED, "[THACH DAU] NUT NO");
@@ -1385,7 +1385,7 @@ void CDuel::CGDuelEndRecv(int aIndex) // OK
 	}
 }
 
-void CDuel::CGDuelWatchRecv(PMSG_DUEL_WATCH_RECV* lpMsg, int aIndex) // OK
+void CDuel::CGDuelWatchRecv(PMSG_DUEL_WATCH_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1457,7 +1457,7 @@ void CDuel::CGDuelWatchRecv(PMSG_DUEL_WATCH_RECV* lpMsg, int aIndex) // OK
 #endif
 }
 
-void CDuel::CGDuelButtonRecv(PMSG_DUEL_BUTTON_RECV* lpMsg, int aIndex) // OK
+void CDuel::CGDuelButtonRecv(PMSG_DUEL_BUTTON_RECV* lpMsg, int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1512,7 +1512,7 @@ void CDuel::CGDuelButtonRecv(PMSG_DUEL_BUTTON_RECV* lpMsg, int aIndex) // OK
 #endif
 }
 
-void CDuel::GCDuelStartSend(int aIndex, BYTE result, int bIndex) // OK
+void CDuel::GCDuelStartSend(int aIndex, BYTE result, int bIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1547,7 +1547,7 @@ void CDuel::GCDuelStartSend(int aIndex, BYTE result, int bIndex) // OK
 #endif
 }
 
-void CDuel::GCDuelOkSend(int aIndex, int bIndex) // OK
+void CDuel::GCDuelOkSend(int aIndex, int bIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1578,7 +1578,7 @@ void CDuel::GCDuelOkSend(int aIndex, int bIndex) // OK
 #endif
 }
 
-void CDuel::GCDuelEndSend(int aIndex, BYTE result) // OK
+void CDuel::GCDuelEndSend(int aIndex, BYTE result)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1606,7 +1606,7 @@ void CDuel::GCDuelEndSend(int aIndex, BYTE result) // OK
 #endif
 }
 
-void CDuel::GCDuelScoreSend(int aIndex, int bIndex) // OK
+void CDuel::GCDuelScoreSend(int aIndex, int bIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1647,7 +1647,7 @@ void CDuel::GCDuelScoreSend(int aIndex, int bIndex) // OK
 #endif
 }
 
-void CDuel::GCDuelScoreSend(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::GCDuelScoreSend(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1675,7 +1675,7 @@ void CDuel::GCDuelScoreSend(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::GCDuelInterfaceSend(DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::GCDuelInterfaceSend(DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1708,7 +1708,7 @@ void CDuel::GCDuelInterfaceSend(DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::GCDuelNpcInfoSend(int aIndex) // OK
+void CDuel::GCDuelNpcInfoSend(int aIndex)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1774,7 +1774,7 @@ void CDuel::GCDuelNpcInfoSend(int aIndex) // OK
 #endif
 }
 
-void CDuel::GCDuelGladiatorAddSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::GCDuelGladiatorAddSend(int aIndex, DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1815,7 +1815,7 @@ void CDuel::GCDuelGladiatorAddSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::GCDuelSpectatorAddSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::GCDuelSpectatorAddSend(int aIndex, DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1836,7 +1836,7 @@ void CDuel::GCDuelSpectatorAddSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::GCDuelGladiatorDelSend(int aIndex, BYTE result) // OK
+void CDuel::GCDuelGladiatorDelSend(int aIndex, BYTE result)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1851,7 +1851,7 @@ void CDuel::GCDuelGladiatorDelSend(int aIndex, BYTE result) // OK
 #endif
 }
 
-void CDuel::GCDuelSpectatorDelSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::GCDuelSpectatorDelSend(int aIndex, DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1872,7 +1872,7 @@ void CDuel::GCDuelSpectatorDelSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::GCDuelSpectatorListSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
+void CDuel::GCDuelSpectatorListSend(int aIndex, DUEL_ARENA_INFO* lpInfo)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1910,7 +1910,7 @@ void CDuel::GCDuelSpectatorListSend(int aIndex, DUEL_ARENA_INFO* lpInfo) // OK
 #endif
 }
 
-void CDuel::GCDuelWinSend(int aIndex, char* WinnerName, char* LoserName) // OK
+void CDuel::GCDuelWinSend(int aIndex, char* WinnerName, char* LoserName)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1927,7 +1927,7 @@ void CDuel::GCDuelWinSend(int aIndex, char* WinnerName, char* LoserName) // OK
 #endif
 }
 
-void CDuel::GCDuelWinSend(DUEL_ARENA_INFO* lpInfo, char* WinnerName, char* LoserName) // OK
+void CDuel::GCDuelWinSend(DUEL_ARENA_INFO* lpInfo, char* WinnerName, char* LoserName)
 {
 #if(GAMESERVER_UPDATE>=402)
 
@@ -1950,7 +1950,7 @@ void CDuel::GCDuelWinSend(DUEL_ARENA_INFO* lpInfo, char* WinnerName, char* Loser
 #endif
 }
 
-void CDuel::GCDuelRoundStartSend(DUEL_ARENA_INFO* lpInfo, BYTE flag) // OK
+void CDuel::GCDuelRoundStartSend(DUEL_ARENA_INFO* lpInfo, BYTE flag)
 {
 #if(GAMESERVER_UPDATE>=402)
 

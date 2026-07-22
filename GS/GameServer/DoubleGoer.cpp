@@ -23,7 +23,7 @@ CDoubleGoer gDoubleGoer;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CDoubleGoer::CDoubleGoer() // OK
+CDoubleGoer::CDoubleGoer()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -54,12 +54,12 @@ CDoubleGoer::CDoubleGoer() // OK
 	#endif
 }
 
-CDoubleGoer::~CDoubleGoer() // OK
+CDoubleGoer::~CDoubleGoer()
 {
 
 }
 
-void CDoubleGoer::Load(char* path) // OK
+void CDoubleGoer::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -194,7 +194,7 @@ void CDoubleGoer::Load(char* path) // OK
 	#endif
 }
 
-void CDoubleGoer::MainProc() // OK
+void CDoubleGoer::MainProc()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -228,12 +228,12 @@ void CDoubleGoer::MainProc() // OK
 	#endif
 }
 
-void CDoubleGoer::ProcState_EMPTY() // OK
+void CDoubleGoer::ProcState_EMPTY()
 {
 
 }
 
-void CDoubleGoer::ProcState_STAND() // OK
+void CDoubleGoer::ProcState_STAND()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -266,7 +266,7 @@ void CDoubleGoer::ProcState_STAND() // OK
 	#endif
 }
 
-void CDoubleGoer::ProcState_START() // OK
+void CDoubleGoer::ProcState_START()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -336,7 +336,7 @@ void CDoubleGoer::ProcState_START() // OK
 	#endif
 }
 
-void CDoubleGoer::ProcState_CLEAN() // OK
+void CDoubleGoer::ProcState_CLEAN()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -363,7 +363,7 @@ void CDoubleGoer::ProcState_CLEAN() // OK
 	#endif
 }
 
-void CDoubleGoer::SetState(int state) // OK
+void CDoubleGoer::SetState(int state)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -388,7 +388,7 @@ void CDoubleGoer::SetState(int state) // OK
 	#endif
 }
 
-void CDoubleGoer::SetState_EMPTY() // OK
+void CDoubleGoer::SetState_EMPTY()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -449,7 +449,7 @@ void CDoubleGoer::SetState_EMPTY() // OK
 	#endif
 }
 
-void CDoubleGoer::SetState_STAND() // OK
+void CDoubleGoer::SetState_STAND()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -469,7 +469,7 @@ void CDoubleGoer::SetState_STAND() // OK
 	#endif
 }
 
-void CDoubleGoer::SetState_START() // OK
+void CDoubleGoer::SetState_START()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -491,7 +491,7 @@ void CDoubleGoer::SetState_START() // OK
 	#endif
 }
 
-void CDoubleGoer::SetState_CLEAN() // OK
+void CDoubleGoer::SetState_CLEAN()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -547,7 +547,7 @@ void CDoubleGoer::SetState_CLEAN() // OK
 	#endif
 }
 
-void CDoubleGoer::SetStage0() // OK
+void CDoubleGoer::SetStage0()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -563,7 +563,7 @@ void CDoubleGoer::SetStage0() // OK
 	#endif
 }
 
-void CDoubleGoer::SetStage1() // OK
+void CDoubleGoer::SetStage1()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -579,7 +579,7 @@ void CDoubleGoer::SetStage1() // OK
 	#endif
 }
 
-void CDoubleGoer::SetStage2() // OK
+void CDoubleGoer::SetStage2()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -597,12 +597,12 @@ void CDoubleGoer::SetStage2() // OK
 	#endif
 }
 
-void CDoubleGoer::SetStage3() // OK
+void CDoubleGoer::SetStage3()
 {
 
 }
 
-int CDoubleGoer::GetState() // OK
+int CDoubleGoer::GetState()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -615,7 +615,7 @@ int CDoubleGoer::GetState() // OK
 	#endif
 }
 
-bool CDoubleGoer::AddUser(int aIndex) // OK
+bool CDoubleGoer::AddUser(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -649,7 +649,7 @@ bool CDoubleGoer::AddUser(int aIndex) // OK
 	#endif
 }
 
-bool CDoubleGoer::DelUser(int aIndex) // OK
+bool CDoubleGoer::DelUser(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -681,7 +681,7 @@ bool CDoubleGoer::DelUser(int aIndex) // OK
 	#endif
 }
 
-DOUBLE_GOER_USER* CDoubleGoer::GetUser(int aIndex) // OK
+DOUBLE_GOER_USER* CDoubleGoer::GetUser(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -707,7 +707,7 @@ DOUBLE_GOER_USER* CDoubleGoer::GetUser(int aIndex) // OK
 	#endif
 }
 
-void CDoubleGoer::CleanUser() // OK
+void CDoubleGoer::CleanUser()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -719,7 +719,7 @@ void CDoubleGoer::CleanUser() // OK
 	#endif
 }
 
-void CDoubleGoer::ClearUser() // OK
+void CDoubleGoer::ClearUser()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -738,7 +738,7 @@ void CDoubleGoer::ClearUser() // OK
 	#endif
 }
 
-void CDoubleGoer::CheckUser() // OK
+void CDoubleGoer::CheckUser()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -765,7 +765,7 @@ void CDoubleGoer::CheckUser() // OK
 	#endif
 }
 
-int CDoubleGoer::GetUserCount() // OK
+int CDoubleGoer::GetUserCount()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -788,7 +788,7 @@ int CDoubleGoer::GetUserCount() // OK
 	#endif
 }
 
-bool CDoubleGoer::AddMonster(int aIndex) // OK
+bool CDoubleGoer::AddMonster(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -822,7 +822,7 @@ bool CDoubleGoer::AddMonster(int aIndex) // OK
 	#endif
 }
 
-bool CDoubleGoer::DelMonster(int aIndex) // OK
+bool CDoubleGoer::DelMonster(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -848,7 +848,7 @@ bool CDoubleGoer::DelMonster(int aIndex) // OK
 	#endif
 }
 
-int* CDoubleGoer::GetMonster(int aIndex) // OK
+int* CDoubleGoer::GetMonster(int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -874,7 +874,7 @@ int* CDoubleGoer::GetMonster(int aIndex) // OK
 	#endif
 }
 
-void CDoubleGoer::CleanMonster() // OK
+void CDoubleGoer::CleanMonster()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -886,7 +886,7 @@ void CDoubleGoer::CleanMonster() // OK
 	#endif
 }
 
-void CDoubleGoer::ClearMonster() // OK
+void CDoubleGoer::ClearMonster()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -902,7 +902,7 @@ void CDoubleGoer::ClearMonster() // OK
 	#endif
 }
 
-int CDoubleGoer::GetMonsterCount() // OK
+int CDoubleGoer::GetMonsterCount()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -925,7 +925,7 @@ int CDoubleGoer::GetMonsterCount() // OK
 	#endif
 }
 
-void CDoubleGoer::SetSlaughterer() // OK
+void CDoubleGoer::SetSlaughterer()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -991,7 +991,7 @@ void CDoubleGoer::SetSlaughterer() // OK
 	#endif
 }
 
-void CDoubleGoer::SetMadSlaughterer() // OK
+void CDoubleGoer::SetMadSlaughterer()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1057,7 +1057,7 @@ void CDoubleGoer::SetMadSlaughterer() // OK
 	#endif
 }
 
-void CDoubleGoer::SetIceWalker() // OK
+void CDoubleGoer::SetIceWalker()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1123,7 +1123,7 @@ void CDoubleGoer::SetIceWalker() // OK
 	#endif
 }
 
-void CDoubleGoer::SetSilverRewardChest(int px,int py) // OK
+void CDoubleGoer::SetSilverRewardChest(int px,int py)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1164,7 +1164,7 @@ void CDoubleGoer::SetSilverRewardChest(int px,int py) // OK
 	#endif
 }
 
-void CDoubleGoer::SetGoldenRewardChest(int px,int py) // OK
+void CDoubleGoer::SetGoldenRewardChest(int px,int py)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1205,7 +1205,7 @@ void CDoubleGoer::SetGoldenRewardChest(int px,int py) // OK
 	#endif
 }
 
-void CDoubleGoer::SetMonster(int MonsterClass) // OK
+void CDoubleGoer::SetMonster(int MonsterClass)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1270,7 +1270,7 @@ void CDoubleGoer::SetMonster(int MonsterClass) // OK
 	#endif
 }
 
-void CDoubleGoer::NpcSartiganTheAngel(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CDoubleGoer::NpcSartiganTheAngel(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1316,7 +1316,7 @@ void CDoubleGoer::NpcSartiganTheAngel(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CDoubleGoer::NpcSilverRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CDoubleGoer::NpcSilverRewardChest(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1368,7 +1368,7 @@ void CDoubleGoer::NpcSilverRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CDoubleGoer::NpcGoldenRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CDoubleGoer::NpcGoldenRewardChest(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1420,7 +1420,7 @@ void CDoubleGoer::NpcGoldenRewardChest(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	#endif
 }
 
-void CDoubleGoer::CheckMonsterPosition() // OK
+void CDoubleGoer::CheckMonsterPosition()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1504,7 +1504,7 @@ void CDoubleGoer::CheckMonsterPosition() // OK
 	#endif
 }
 
-float CDoubleGoer::GetMonsterLevel(float value) // OK
+float CDoubleGoer::GetMonsterLevel(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1519,7 +1519,7 @@ float CDoubleGoer::GetMonsterLevel(float value) // OK
 	#endif
 }
 
-float CDoubleGoer::GetMonsterLife(float value) // OK
+float CDoubleGoer::GetMonsterLife(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1534,7 +1534,7 @@ float CDoubleGoer::GetMonsterLife(float value) // OK
 	#endif
 }
 
-float CDoubleGoer::GetMonsterDamageMin(float value) // OK
+float CDoubleGoer::GetMonsterDamageMin(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1549,7 +1549,7 @@ float CDoubleGoer::GetMonsterDamageMin(float value) // OK
 	#endif
 }
 
-float CDoubleGoer::GetMonsterDamageMax(float value) // OK
+float CDoubleGoer::GetMonsterDamageMax(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1564,7 +1564,7 @@ float CDoubleGoer::GetMonsterDamageMax(float value) // OK
 	#endif
 }
 
-float CDoubleGoer::GetMonsterDefense(float value) // OK
+float CDoubleGoer::GetMonsterDefense(float value)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1579,7 +1579,7 @@ float CDoubleGoer::GetMonsterDefense(float value) // OK
 	#endif
 }
 
-void CDoubleGoer::SetEntranceZone() // OK
+void CDoubleGoer::SetEntranceZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1602,7 +1602,7 @@ void CDoubleGoer::SetEntranceZone() // OK
 	#endif
 }
 
-void CDoubleGoer::DelEntranceZone() // OK
+void CDoubleGoer::DelEntranceZone()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1625,7 +1625,7 @@ void CDoubleGoer::DelEntranceZone() // OK
 	#endif
 }
 
-void CDoubleGoer::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CDoubleGoer::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1651,7 +1651,7 @@ void CDoubleGoer::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CDoubleGoer::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CDoubleGoer::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1715,7 +1715,7 @@ void CDoubleGoer::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	#endif
 }
 
-void CDoubleGoer::NoticeSendToAll(int type,char* message,...) // OK
+void CDoubleGoer::NoticeSendToAll(int type,char* message,...)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1737,7 +1737,7 @@ void CDoubleGoer::NoticeSendToAll(int type,char* message,...) // OK
 	#endif
 }
 
-void CDoubleGoer::DataSendToAll(BYTE* lpMsg,int size) // OK
+void CDoubleGoer::DataSendToAll(BYTE* lpMsg,int size)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1752,7 +1752,7 @@ void CDoubleGoer::DataSendToAll(BYTE* lpMsg,int size) // OK
 	#endif
 }
 
-void CDoubleGoer::CGDoubleGoerEnterRecv(PMSG_DOUBLE_GOER_ENTER_RECV* lpMsg,int aIndex) // OK
+void CDoubleGoer::CGDoubleGoerEnterRecv(PMSG_DOUBLE_GOER_ENTER_RECV* lpMsg,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1893,7 +1893,7 @@ void CDoubleGoer::CGDoubleGoerEnterRecv(PMSG_DOUBLE_GOER_ENTER_RECV* lpMsg,int a
 	#endif
 }
 
-void CDoubleGoer::GCDoubleGoerMonsterPositionSend() // OK
+void CDoubleGoer::GCDoubleGoerMonsterPositionSend()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1943,7 +1943,7 @@ void CDoubleGoer::GCDoubleGoerMonsterPositionSend() // OK
 	#endif
 }
 
-void CDoubleGoer::GCDoubleGoerStateSend(int state,int aIndex) // OK
+void CDoubleGoer::GCDoubleGoerStateSend(int state,int aIndex)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1965,7 +1965,7 @@ void CDoubleGoer::GCDoubleGoerStateSend(int state,int aIndex) // OK
 	#endif
 }
 
-void CDoubleGoer::GCDoubleGoerBossPositionSend() // OK
+void CDoubleGoer::GCDoubleGoerBossPositionSend()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -1987,7 +1987,7 @@ void CDoubleGoer::GCDoubleGoerBossPositionSend() // OK
 	#endif
 }
 
-void CDoubleGoer::GCDoubleGoerInterfaceSend() // OK
+void CDoubleGoer::GCDoubleGoerInterfaceSend()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2033,7 +2033,7 @@ void CDoubleGoer::GCDoubleGoerInterfaceSend() // OK
 	#endif
 }
 
-void CDoubleGoer::GCDoubleGoerResultSend(int aIndex,int result) // OK
+void CDoubleGoer::GCDoubleGoerResultSend(int aIndex,int result)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -2048,7 +2048,7 @@ void CDoubleGoer::GCDoubleGoerResultSend(int aIndex,int result) // OK
 	#endif
 }
 
-void CDoubleGoer::GCDoubleGoerMonsterInfoSend() // OK
+void CDoubleGoer::GCDoubleGoerMonsterInfoSend()
 {
 	#if(GAMESERVER_UPDATE>=501)
 

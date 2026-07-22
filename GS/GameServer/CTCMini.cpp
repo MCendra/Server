@@ -27,7 +27,7 @@ CCTCmini gCTCMini;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCTCmini::CCTCmini() // OK
+CCTCmini::CCTCmini()
 {
 
 	this->m_State = CTC_STATE_BLANK;
@@ -90,12 +90,12 @@ void CCTCmini::Clear()
 	this->m_Active = 0;
 
 }
-CCTCmini::~CCTCmini() // OK
+CCTCmini::~CCTCmini()
 {
 
 }
 
-void CCTCmini::Init() // OK
+void CCTCmini::Init()
 {
 	if (this->m_Enabled == 0)
 	{
@@ -106,7 +106,7 @@ void CCTCmini::Init() // OK
 		this->SetState(CTC_STATE_EMPTY);
 	}
 }
-void CCTCmini::Load(char* path) // OK
+void CCTCmini::Load(char* path)
 {
 	this->m_CTCMinitartTime.clear();
 	this->Clear();
@@ -220,7 +220,7 @@ bool CCTCmini::CheckMapWin(int aIndex,int MapCheck)
 	}
 	return 0;
 }
-void CCTCmini::MainProc() // OK
+void CCTCmini::MainProc()
 {
 	DWORD elapsed = GetTickCount() - this->m_TickCount;
 
@@ -339,12 +339,12 @@ void CCTCmini::MainProc() // OK
 	}
 }
 
-void CCTCmini::ProcState_BLANK() // OK
+void CCTCmini::ProcState_BLANK()
 {
 
 }
 
-void CCTCmini::ProcState_EMPTY() // OK
+void CCTCmini::ProcState_EMPTY()
 {
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= (this->m_WarningTime * 60))
@@ -404,7 +404,7 @@ void CCTCmini::ProcState_EMPTY() // OK
 	}
 }
 
-void CCTCmini::ProcState_START() // OK
+void CCTCmini::ProcState_START()
 {
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= 300)
@@ -455,7 +455,7 @@ void CCTCmini::ProcState_START() // OK
 	//=======
 }
 
-void CCTCmini::SetState(int state) // OK
+void CCTCmini::SetState(int state)
 {
 	this->m_State = state;
 
@@ -473,17 +473,17 @@ void CCTCmini::SetState(int state) // OK
 	}
 }
 
-void CCTCmini::SetState_BLANK() // OK
+void CCTCmini::SetState_BLANK()
 {
 
 }
 
-void CCTCmini::SetState_EMPTY() // OK
+void CCTCmini::SetState_EMPTY()
 {
 	this->CheckSync();
 }
 
-void CCTCmini::SetState_START() // OK
+void CCTCmini::SetState_START()
 {
 	this->m_Active = 2;
 
@@ -499,7 +499,7 @@ void CCTCmini::SetState_START() // OK
 
 }
 
-void CCTCmini::CheckSync() // OK
+void CCTCmini::CheckSync()
 {
 
 	if (this->m_CTCMinitartTime.empty() != 0)
@@ -789,7 +789,7 @@ void CCTCmini::SavePheWinIni() // Set Guild Chien Thang
 }
 
 
-void CCTCmini::SetChar(int cIndex, int CongVao) // OK
+void CCTCmini::SetChar(int cIndex, int CongVao)
 {
 
 	if (this->GetChar(cIndex) == 0)
@@ -799,7 +799,7 @@ void CCTCmini::SetChar(int cIndex, int CongVao) // OK
 
 }
 
-void CCTCmini::AddChar(int cIndex, int CongVao) // OK
+void CCTCmini::AddChar(int cIndex, int CongVao)
 {
 	for (int n = 0; n < MAX_CTC_CHAR; n++)
 	{
@@ -817,7 +817,7 @@ void CCTCmini::AddChar(int cIndex, int CongVao) // OK
 	}
 }
 
-int CCTCmini::GetCongVao(int cIndex) // OK
+int CCTCmini::GetCongVao(int cIndex)
 {
 	for (int n = 0; n < MAX_CTC_CHAR; n++)
 	{
@@ -829,7 +829,7 @@ int CCTCmini::GetCongVao(int cIndex) // OK
 	return 0;
 }
 
-bool CCTCmini::GetChar(int cIndex) // OK
+bool CCTCmini::GetChar(int cIndex)
 {
 	for (int n = 0; n < MAX_CTC_CHAR; n++)
 	{
@@ -840,7 +840,7 @@ bool CCTCmini::GetChar(int cIndex) // OK
 	}
 	return 0;
 }
-CTC_CHAR* CCTCmini::GetUser(int aIndex) // OK
+CTC_CHAR* CCTCmini::GetUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -856,7 +856,7 @@ CTC_CHAR* CCTCmini::GetUser(int aIndex) // OK
 	}
 	return 0;
 }
-bool CCTCmini::DelUser(int aIndex) // OK
+bool CCTCmini::DelUser(int aIndex)
 {
 	if (OBJECT_RANGE(aIndex) == 0)
 	{
@@ -880,7 +880,7 @@ bool CCTCmini::DelUser(int aIndex) // OK
 	GDCharacterInfoSaveSend(aIndex);
 	return 1;
 }
-void CCTCmini::CheckChar() // OK
+void CCTCmini::CheckChar()
 {
 	for (int n = 0; n < MAX_CTC_CHAR; n++)
 	{
@@ -906,7 +906,7 @@ void CCTCmini::CheckChar() // OK
 
 //=================================================================================================================
 
-bool CCTCmini::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget, int Type) // OK
+bool CCTCmini::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget, int Type)
 {
 	if (Type == 1) //Attack
 	{
@@ -935,7 +935,7 @@ bool CCTCmini::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget, int Type) // OK
 	}
 	return 0;
 }
-void CCTCmini::SetEntranceZone() // OK
+void CCTCmini::SetEntranceZone()
 {
 #if(GAMESERVER_UPDATE>=501)
 
@@ -1049,7 +1049,7 @@ void CCTCmini::SetEntranceZone() // OK
 #endif
 }
 
-void CCTCmini::DelEntranceZone() // OK
+void CCTCmini::DelEntranceZone()
 {
 #if(GAMESERVER_UPDATE>=501)
 
@@ -1137,7 +1137,7 @@ void CCTCmini::DelEntranceZone() // OK
 #endif
 }
 
-void CCTCmini::XoaTruChiDinh(BYTE n) // OK
+void CCTCmini::XoaTruChiDinh(BYTE n)
 {
 	for (int x = XoaCong[n][0]; x <= XoaCong[n][2]; x++)
 	{
@@ -1156,7 +1156,7 @@ void CCTCmini::XoaTruChiDinh(BYTE n) // OK
 	}
 
 }
-void CCTCmini::TestCTCMini() // OK
+void CCTCmini::TestCTCMini()
 {
 	SetEntranceZone(); //Set dia hinh
 	DelEntranceZone(); //Xoa dia hinh
@@ -1229,7 +1229,7 @@ void CCTCmini::TestCTCMini() // OK
 	}
 
 }
-void CCTCmini::ThemTruPhe(int n, int Phe) // OK
+void CCTCmini::ThemTruPhe(int n, int Phe)
 {
 	IndexTru[n] = gObjAddMonster(MapCTC);
 
@@ -1261,7 +1261,7 @@ void CCTCmini::ThemTruPhe(int n, int Phe) // OK
 		return;
 	}
 }
-int CCTCmini::SoTruDaChiem(int Phe, int aIndex) // OK 
+int CCTCmini::SoTruDaChiem(int Phe, int aIndex) 
 {
 	int TruDaChiem = 0;
 	for (int n = 0; n < 3; n++) //Them Tru
@@ -1380,7 +1380,7 @@ bool CCTCmini::MonsterDie(int aIndexMonster, int aIndexUser)
 }
 
 
-bool CCTCmini::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level) // OK
+bool CCTCmini::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level)
 {
 
 	if (this->m_Enabled == 0)

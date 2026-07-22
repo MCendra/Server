@@ -12,12 +12,12 @@ CCustomMoveEvent gCustomMoveEvent;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomMoveEvent::CCustomMoveEvent() // OK
+CCustomMoveEvent::CCustomMoveEvent()
 {
 
 }
 
-CCustomMoveEvent::~CCustomMoveEvent() // OK
+CCustomMoveEvent::~CCustomMoveEvent()
 {
 
 }

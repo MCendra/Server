@@ -13,17 +13,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIAutomataInfo::CMonsterAIAutomataInfo() // OK
+CMonsterAIAutomataInfo::CMonsterAIAutomataInfo()
 {
 	this->Reset();
 }
 
-CMonsterAIAutomataInfo::~CMonsterAIAutomataInfo() // OK
+CMonsterAIAutomataInfo::~CMonsterAIAutomataInfo()
 {
 
 }
 
-void CMonsterAIAutomataInfo::Reset() // OK
+void CMonsterAIAutomataInfo::Reset()
 {
 	this->m_AutomataNumber = -1;
 
@@ -35,7 +35,7 @@ void CMonsterAIAutomataInfo::Reset() // OK
 	memset(this->m_AIStateTransCount,0,sizeof(this->m_AIStateTransCount));
 }
 
-CMonsterAIState* CMonsterAIAutomataInfo::RunAutomataInfo(int aIndex) // OK
+CMonsterAIState* CMonsterAIAutomataInfo::RunAutomataInfo(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 

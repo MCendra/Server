@@ -1,25 +1,18 @@
-// PacketManager.h: interface for the CPacketManager class.
-//
-//////////////////////////////////////////////////////////////////////
-
+// PacketManager.h
 #pragma once
 
 #if(GAMESERVER_UPDATE>=701)
-
-#include "..\\..\\Util\\cryptopp\\cryptlib.h"
-#include "..\\..\\Util\\cryptopp\\modes.h"
-#include "..\\..\\Util\\cryptopp\\des.h"
-
+#include "cryptopp\\cryptlib.h"
+#include "cryptopp\\modes.h"
+#include "cryptopp\\des.h"
 using namespace CryptoPP;
-
 #endif
 
+#pragma pack(push,1)
 struct ENCDEC_HEADER
 {
-	#pragma pack(1)
-	WORD header;
-	DWORD size;
-	#pragma pack()
+	WORD Header;
+	DWORD Size;
 };
 
 struct ENCDEC_DATA
@@ -28,35 +21,36 @@ struct ENCDEC_DATA
 	DWORD Key[4];
 	DWORD Xor[4];
 };
+#pragma pack(pop)
 
 class CPacketManager
 {
 public:
 	CPacketManager();
-	virtual ~CPacketManager();
+	~CPacketManager() = default;
 	void Init();
-	bool LoadEncryptionKey(char* name);
-	bool LoadDecryptionKey(char* name);
-	bool LoadKey(char* name,WORD header,bool type);
+	bool LoadEncryptionKey(const char* name);
+	bool LoadDecryptionKey(const char* name);
+	bool LoadKey(const char* name, WORD header, bool type);
 	int Encrypt(BYTE* lpTarget,BYTE* lpSource,int size);
 	int Decrypt(BYTE* lpTarget,BYTE* lpSource,int size);
 	int EncryptBlock(BYTE* lpTarget,BYTE* lpSource,int size);
 	int DecryptBlock(BYTE* lpTarget,BYTE* lpSource);
-	int AddBits(BYTE* lpTarget,int TargetBitPos,BYTE* lpSource,int SourceBitPos,int size);
+	int AddBits(BYTE* lpTarget,int targetBitPos,BYTE* lpSource,int sourceBitPos,int size);
 	int GetByteOfBit(int value);
-	void Shift(BYTE* lpBuff,int size,int ShiftSize);
+	void Shift(BYTE* lpBuff,int size,int shiftSize);
 	bool AddData(BYTE* lpBuff,int size);
 	bool ExtractPacket(BYTE* lpBuff);
 	void XorData(int start,int end);
 private:
-	#if(GAMESERVER_UPDATE>=701)
+#if(GAMESERVER_UPDATE>=701)
 	ECB_Mode<DES_XEX3>::Encryption m_Encryption;
 	ECB_Mode<DES_XEX3>::Decryption m_Decryption;
-	#else
+#else
 	ENCDEC_DATA m_Encryption;
 	ENCDEC_DATA m_Decryption;
 	DWORD m_SaveLoadXor[4];
-	#endif
+#endif
 	BYTE m_buff[2048];
 	DWORD m_size;
 	BYTE m_XorFilter[32];

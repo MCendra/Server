@@ -176,17 +176,17 @@ struct PMSG_ANS_NOTIFYCROWNSTATE
 
 struct _CS_SCHEDULE_DATA
 {
-	_CS_SCHEDULE_DATA() // OK
+	_CS_SCHEDULE_DATA()
 	{
 		this->Clear();
 	}
 
-	virtual ~_CS_SCHEDULE_DATA() // OK
+	virtual ~_CS_SCHEDULE_DATA()
 	{
 
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->m_bIN_USE = 0;
 		this->m_iSTATE = -1;
@@ -206,18 +206,18 @@ struct _CS_SCHEDULE_DATA
 
 struct _CS_NPC_DATA
 {
-	_CS_NPC_DATA() // OK
+	_CS_NPC_DATA()
 	{
 		this->Clear();
 		this->m_iCS_GATE_LEVER_INDEX = -1;
 	}
 
-	virtual ~_CS_NPC_DATA() // OK
+	virtual ~_CS_NPC_DATA()
 	{
 
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->m_bIN_USE = 0;
 		this->m_iNPC_NUM = -1;
@@ -248,7 +248,7 @@ struct _CS_NPC_DATA
 		this->m_iCsNpcExistVal = 0;
 	}
 
-	void SetBaseValue() // OK
+	void SetBaseValue()
 	{
 		this->m_iNPC_DF_LEVEL = this->m_iNPC_BASE_DF_LEVEL;
 		this->m_iNPC_RG_LEVEL = this->m_iNPC_BASE_RG_LEVEL;
@@ -305,17 +305,17 @@ struct _CS_NPC_DATA
 
 struct _CS_REG_GUILD_DATA
 {
-	_CS_REG_GUILD_DATA() // OK
+	_CS_REG_GUILD_DATA()
 	{
 		this->Clear();
 	}
 
-	virtual ~_CS_REG_GUILD_DATA() // OK
+	virtual ~_CS_REG_GUILD_DATA()
 	{
 
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->m_bIN_USE = 0;
 		this->m_strGuildName = "";
@@ -337,17 +337,17 @@ struct _CS_REG_GUILD_DATA
 
 struct _CS_TOTAL_GUILD_DATA
 {
-	_CS_TOTAL_GUILD_DATA() // OK
+	_CS_TOTAL_GUILD_DATA()
 	{
 		this->Clear();
 	}
 
-	virtual ~_CS_TOTAL_GUILD_DATA() // OK
+	virtual ~_CS_TOTAL_GUILD_DATA()
 	{
 
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->m_bIN_USE = 0;
 		this->m_iCsGuildID = 0;
@@ -363,17 +363,17 @@ struct _CS_TOTAL_GUILD_DATA
 
 struct _CS_MINIMAP_DATA
 {
-	_CS_MINIMAP_DATA() // OK
+	_CS_MINIMAP_DATA()
 	{
 		this->Clear();
 	}
 
-	virtual ~_CS_MINIMAP_DATA() // OK
+	virtual ~_CS_MINIMAP_DATA()
 	{
 
 	}
 
-	void Clear() // OK
+	void Clear()
 	{
 		this->m_iGuildMasterIndex = -1;
 		memset(this->m_szGuildName,0,sizeof(this->m_szGuildName));

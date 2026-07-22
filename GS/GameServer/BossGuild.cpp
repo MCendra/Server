@@ -35,7 +35,7 @@ CBossGuild gBossGuild;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CBossGuild::CBossGuild() // OK
+CBossGuild::CBossGuild()
 {
 
 	this->m_State = BOSSGUILD_STATE_BLANK;
@@ -86,12 +86,12 @@ void CBossGuild::Clear()
 	this->m_Active = 0;
 
 }
-CBossGuild::~CBossGuild() // OK
+CBossGuild::~CBossGuild()
 {
 
 }
 
-void CBossGuild::Init() // OK
+void CBossGuild::Init()
 {
 	if (this->m_Enabled == 0)
 	{
@@ -102,7 +102,7 @@ void CBossGuild::Init() // OK
 		this->SetState(BOSSGUILD_STATE_EMPTY);
 	}
 }
-void CBossGuild::Load(char* path) // OK
+void CBossGuild::Load(char* path)
 {
 	this->m_BossGuildStartTime.clear();
 	ZeroMemory(this->WinnerNameOLD, sizeof(this->WinnerNameOLD));
@@ -267,7 +267,7 @@ void CBossGuild::Load(char* path) // OK
 	//==============================
 }
 
-void CBossGuild::MainProc() // OK
+void CBossGuild::MainProc()
 {
 	DWORD elapsed = GetTickCount() - this->m_TickCount;
 
@@ -462,13 +462,13 @@ void CBossGuild::MainProc() // OK
 	}
 }
 
-void CBossGuild::ProcState_BLANK() // OK
+void CBossGuild::ProcState_BLANK()
 {
 
 }
 
 // ok
-void CBossGuild::ProcState_EMPTY() // OK
+void CBossGuild::ProcState_EMPTY()
 {
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= (this->m_WarningTime * 60))
@@ -503,7 +503,7 @@ void CBossGuild::ProcState_EMPTY() // OK
 }
 
 // ok
-void CBossGuild::ProcState_START() // OK
+void CBossGuild::ProcState_START()
 {
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= 300)
 	{
@@ -530,7 +530,7 @@ void CBossGuild::ProcState_START() // OK
 }
 
 // ok
-void CBossGuild::SetState(int state) // OK
+void CBossGuild::SetState(int state)
 {
 	this->m_State = state;
 
@@ -549,19 +549,19 @@ void CBossGuild::SetState(int state) // OK
 }
 
 // ok
-void CBossGuild::SetState_BLANK() // OK
+void CBossGuild::SetState_BLANK()
 {
 
 }
 
 // ok
-void CBossGuild::SetState_EMPTY() // OK
+void CBossGuild::SetState_EMPTY()
 {
 	this->CheckSync();
 }
 
 // ok
-void CBossGuild::SetState_START() // OK
+void CBossGuild::SetState_START()
 {
 	this->m_Active = 2;
 
@@ -586,7 +586,7 @@ void CBossGuild::SetState_START() // OK
 }
 
 // ok
-void CBossGuild::CheckSync() // OK
+void CBossGuild::CheckSync()
 {
 	if (this->m_BossGuildStartTime.empty() != 0)
 	{
@@ -765,7 +765,7 @@ void CBossGuild::AddGuild(int gIndex) // Set Guild tham gia Su Kien
 }
 
 // ok
-bool CBossGuild::GetGuild(int gIndex) // OK
+bool CBossGuild::GetGuild(int gIndex)
 {
 	for (int n = 0; n < MAX_GUILD; n++)
 	{
@@ -778,7 +778,7 @@ bool CBossGuild::GetGuild(int gIndex) // OK
 }
 
 // ok
-void CBossGuild::SetChar(int cIndex, int CongVao) // OK
+void CBossGuild::SetChar(int cIndex, int CongVao)
 {
 
 	if (this->GetChar(cIndex) == 0)
@@ -789,7 +789,7 @@ void CBossGuild::SetChar(int cIndex, int CongVao) // OK
 }
 
 // ok
-void CBossGuild::AddChar(int cIndex, int CongVao) // OK
+void CBossGuild::AddChar(int cIndex, int CongVao)
 {
 	for (int n = 0; n < MAX_CHAR; n++)
 	{
@@ -807,7 +807,7 @@ void CBossGuild::AddChar(int cIndex, int CongVao) // OK
 }
 
 // ok
-int CBossGuild::GetCongVao(int cIndex) // OK
+int CBossGuild::GetCongVao(int cIndex)
 {
 	for (int n = 0; n < MAX_CHAR; n++)
 	{
@@ -820,7 +820,7 @@ int CBossGuild::GetCongVao(int cIndex) // OK
 }
 
 // ok
-bool CBossGuild::GetChar(int cIndex) // OK
+bool CBossGuild::GetChar(int cIndex)
 {
 	for (int n = 0; n < MAX_CHAR; n++)
 	{
@@ -833,7 +833,7 @@ bool CBossGuild::GetChar(int cIndex) // OK
 }
 
 // ok
-void CBossGuild::CheckChar() // OK
+void CBossGuild::CheckChar()
 {
 	for (int n = 0; n < MAX_CHAR; n++)
 	{
@@ -851,7 +851,7 @@ void CBossGuild::CheckChar() // OK
 }
 
 // chua ro lam
-bool CBossGuild::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget, int Type) // OK
+bool CBossGuild::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget, int Type)
 {
 	if (Type == 1) //Attack
 	{
@@ -888,7 +888,7 @@ bool CBossGuild::CheckPlayerTarget(LPOBJ lpObj, LPOBJ lpTarget, int Type) // OK
 }
 
 // ok
-bool CBossGuild::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level) // OK
+bool CBossGuild::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x, int* y, int* dir, int* level)
 {
 
 	if (this->m_Enabled == 0)
@@ -913,7 +913,7 @@ bool CBossGuild::GetUserRespawnLocation(LPOBJ lpObj, int* gate, int* map, int* x
 	return 0;
 }
 
-void CBossGuild::StartBossPhuThuy() // OK
+void CBossGuild::StartBossPhuThuy()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Pháp Sư");
 	int qtd = 1;
@@ -955,7 +955,7 @@ void CBossGuild::StartBossPhuThuy() // OK
 	}
 }
 
-void CBossGuild::StartBossChienBinh() // OK
+void CBossGuild::StartBossChienBinh()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Chiến Binh");
 	int qtd = 1;
@@ -997,7 +997,7 @@ void CBossGuild::StartBossChienBinh() // OK
 	}
 }
 
-void CBossGuild::StartBossTienNu() // OK
+void CBossGuild::StartBossTienNu()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Tiên Nữ");
 	int qtd = 1;
@@ -1039,7 +1039,7 @@ void CBossGuild::StartBossTienNu() // OK
 	}
 }
 
-void CBossGuild::StartBossThuatSi() // OK
+void CBossGuild::StartBossThuatSi()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Thuật Sĩ");
 	int qtd = 1;
@@ -1081,7 +1081,7 @@ void CBossGuild::StartBossThuatSi() // OK
 	}
 }
 
-void CBossGuild::StartBossThietBinh() // OK
+void CBossGuild::StartBossThietBinh()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Thiết Binh");
 	int qtd = 1;
@@ -1124,7 +1124,7 @@ void CBossGuild::StartBossThietBinh() // OK
 	}
 }
 
-void CBossGuild::StartBossDauSi() // OK
+void CBossGuild::StartBossDauSi()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Đấu Sĩ ");
 	int qtd = 1;
@@ -1166,7 +1166,7 @@ void CBossGuild::StartBossDauSi() // OK
 	}
 }
 
-void CBossGuild::StartBossChuaTe() // OK
+void CBossGuild::StartBossChuaTe()
 {
 	LogAdd(LOG_RED, "[BossGuild] Bắt Đầu Boss Chúa Tể");
 	int qtd = 1;
@@ -1208,7 +1208,7 @@ void CBossGuild::StartBossChuaTe() // OK
 	}
 }
 
-void CBossGuild::ClearMonster() // OK
+void CBossGuild::ClearMonster()
 {
 	for (int n = 0; n < MAX_OBJECT_MONSTER; n++)
 	{

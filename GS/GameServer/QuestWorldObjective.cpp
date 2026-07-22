@@ -18,7 +18,7 @@ CQuestWorldObjective gQuestWorldObjective;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CQuestWorldObjective::CQuestWorldObjective() // OK
+CQuestWorldObjective::CQuestWorldObjective()
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -27,12 +27,12 @@ CQuestWorldObjective::CQuestWorldObjective() // OK
 	#endif
 }
 
-CQuestWorldObjective::~CQuestWorldObjective() // OK
+CQuestWorldObjective::~CQuestWorldObjective()
 {
 
 }
 
-void CQuestWorldObjective::Load(char* path) // OK
+void CQuestWorldObjective::Load(char* path)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -110,7 +110,7 @@ void CQuestWorldObjective::Load(char* path) // OK
 	#endif
 }
 
-void CQuestWorldObjective::SetInfo(QUEST_WORLD_OBJECTIVE_INFO info) // OK
+void CQuestWorldObjective::SetInfo(QUEST_WORLD_OBJECTIVE_INFO info)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -124,7 +124,7 @@ void CQuestWorldObjective::SetInfo(QUEST_WORLD_OBJECTIVE_INFO info) // OK
 	#endif
 }
 
-QUEST_WORLD_OBJECTIVE_INFO* CQuestWorldObjective::GetInfo(int index) // OK
+QUEST_WORLD_OBJECTIVE_INFO* CQuestWorldObjective::GetInfo(int index)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -142,7 +142,7 @@ QUEST_WORLD_OBJECTIVE_INFO* CQuestWorldObjective::GetInfo(int index) // OK
 	#endif
 }
 
-int CQuestWorldObjective::GetQuestWorldObjectiveCount(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo) // OK
+int CQuestWorldObjective::GetQuestWorldObjectiveCount(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -185,7 +185,7 @@ int CQuestWorldObjective::GetQuestWorldObjectiveCount(LPOBJ lpObj,QUEST_WORLD_OB
 	#endif
 }
 
-int CQuestWorldObjective::GetQuestWorldObjectiveKillCount(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo) // OK
+int CQuestWorldObjective::GetQuestWorldObjectiveKillCount(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -205,7 +205,7 @@ int CQuestWorldObjective::GetQuestWorldObjectiveKillCount(LPOBJ lpObj,QUEST_WORL
 	#endif
 }
 
-bool CQuestWorldObjective::GetQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int QuestGroup,QUEST_WORLD_OBJECTIVE* lpObjective,int ObjectiveNumber) // OK
+bool CQuestWorldObjective::GetQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int QuestGroup,QUEST_WORLD_OBJECTIVE* lpObjective,int ObjectiveNumber)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -269,7 +269,7 @@ bool CQuestWorldObjective::GetQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int
 	#endif
 }
 
-bool CQuestWorldObjective::CheckQuestWorldObjectiveRequisite(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo) // OK
+bool CQuestWorldObjective::CheckQuestWorldObjectiveRequisite(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -292,7 +292,7 @@ bool CQuestWorldObjective::CheckQuestWorldObjectiveRequisite(LPOBJ lpObj,QUEST_W
 	#endif
 }
 
-bool CQuestWorldObjective::CheckQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int QuestGroup) // OK
+bool CQuestWorldObjective::CheckQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int QuestGroup)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -335,7 +335,7 @@ bool CQuestWorldObjective::CheckQuestWorldObjective(LPOBJ lpObj,int QuestIndex,i
 	#endif
 }
 
-void CQuestWorldObjective::AddQuestWorldObjectiveKillCount(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo) // OK
+void CQuestWorldObjective::AddQuestWorldObjectiveKillCount(LPOBJ lpObj,QUEST_WORLD_OBJECTIVE_INFO* lpInfo)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -351,7 +351,7 @@ void CQuestWorldObjective::AddQuestWorldObjectiveKillCount(LPOBJ lpObj,QUEST_WOR
 	#endif
 }
 
-void CQuestWorldObjective::RemoveQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int QuestGroup) // OK
+void CQuestWorldObjective::RemoveQuestWorldObjective(LPOBJ lpObj,int QuestIndex,int QuestGroup)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -413,7 +413,7 @@ void CQuestWorldObjective::RemoveQuestWorldObjective(LPOBJ lpObj,int QuestIndex,
 	#endif
 }
 
-void CQuestWorldObjective::PressButton(LPOBJ lpObj,int QuestIndex,int QuestGroup) // OK
+void CQuestWorldObjective::PressButton(LPOBJ lpObj,int QuestIndex,int QuestGroup)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -456,7 +456,7 @@ void CQuestWorldObjective::PressButton(LPOBJ lpObj,int QuestIndex,int QuestGroup
 	#endif
 }
 
-void CQuestWorldObjective::MonsterKill(LPOBJ lpMonster) // OK
+void CQuestWorldObjective::MonsterKill(LPOBJ lpMonster)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -504,7 +504,7 @@ void CQuestWorldObjective::MonsterKill(LPOBJ lpMonster) // OK
 	#endif
 }
 
-void CQuestWorldObjective::MonsterKillParty(LPOBJ lpMonster,int PartyNumber) // OK
+void CQuestWorldObjective::MonsterKillParty(LPOBJ lpMonster,int PartyNumber)
 {
 	#if(GAMESERVER_UPDATE>=501)
 
@@ -550,7 +550,7 @@ void CQuestWorldObjective::MonsterKillParty(LPOBJ lpMonster,int PartyNumber) // 
 	#endif
 }
 
-/*bool CQuestWorldObjective::MonsterItemDrop(LPOBJ lpMonster) // OK
+/*bool CQuestWorldObjective::MonsterItemDrop(LPOBJ lpMonster)
 {
 	int aIndex = gObjMonsterGetTopHitDamageUser(lpMonster);
 

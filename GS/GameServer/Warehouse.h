@@ -139,8 +139,8 @@ public:
 	void GDWarehouseGuildItemSend(int aIndex,char* account);
 	void GDWarehouseGuildItemSaveSend(int aIndex);
 
-	void GDWarehouseGuildConsult(int aIndex, char* account); // OK
-	void DGWarehouseGuildOpenRecv(SDHP_WAREHOUSE_GUILD_STATUS_RECV* lpMsg); // OK
+	void GDWarehouseGuildConsult(int aIndex, char* account);
+	void DGWarehouseGuildOpenRecv(SDHP_WAREHOUSE_GUILD_STATUS_RECV* lpMsg);
 };
 
 extern CWarehouse gWarehouse;

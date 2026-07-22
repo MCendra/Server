@@ -25,7 +25,7 @@ CReiDoMU gReiDoMU;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CReiDoMU::CReiDoMU() // OK
+CReiDoMU::CReiDoMU()
 {
 	this->m_State = REI_STATE_BLANK;
 	this->m_RemainTime = 0;
@@ -54,12 +54,12 @@ CReiDoMU::CReiDoMU() // OK
 	this->Clear();
 }
 
-CReiDoMU::~CReiDoMU() // OK
+CReiDoMU::~CReiDoMU()
 {
 
 }
 
-void CReiDoMU::Init() // OK
+void CReiDoMU::Init()
 {
 	if (gServerInfo.m_ReiDoMUEvent == 0)
 	{
@@ -71,7 +71,7 @@ void CReiDoMU::Init() // OK
 	}
 }
 
-void CReiDoMU::Load(char* path) // OK
+void CReiDoMU::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -186,7 +186,7 @@ void CReiDoMU::Load(char* path) // OK
 }
 
 
-void CReiDoMU::MainProc() // OK
+void CReiDoMU::MainProc()
 {
 	DWORD elapsed = GetTickCount() - this->m_TickCount;
 
@@ -371,12 +371,12 @@ void CReiDoMU::MainProc() // OK
 
 }
 
-void CReiDoMU::ProcState_BLANK() // OK
+void CReiDoMU::ProcState_BLANK()
 {
 
 }
 
-void CReiDoMU::ProcState_EMPTY() // OK
+void CReiDoMU::ProcState_EMPTY()
 {
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= (this->m_WarningTime * 60))
@@ -409,7 +409,7 @@ void CReiDoMU::ProcState_EMPTY() // OK
 	}
 }
 
-void CReiDoMU::ProcState_START() // OK
+void CReiDoMU::ProcState_START()
 {
 
 	if (this->m_RemainTime > 0 && this->m_RemainTime <= 300)
@@ -443,7 +443,7 @@ void CReiDoMU::ProcState_START() // OK
 	}
 }
 
-void CReiDoMU::SetState(int state) // OK
+void CReiDoMU::SetState(int state)
 {
 	this->m_State = state;
 
@@ -461,17 +461,17 @@ void CReiDoMU::SetState(int state) // OK
 	}
 }
 
-void CReiDoMU::SetState_BLANK() // OK
+void CReiDoMU::SetState_BLANK()
 {
 
 }
 
-void CReiDoMU::SetState_EMPTY() // OK
+void CReiDoMU::SetState_EMPTY()
 {
 	this->CheckSync();
 }
 
-void CReiDoMU::SetState_START() // OK
+void CReiDoMU::SetState_START()
 {
 	this->m_Active = 1;
 
@@ -483,7 +483,7 @@ void CReiDoMU::SetState_START() // OK
 
 }
 
-void CReiDoMU::CheckSync() // OK
+void CReiDoMU::CheckSync()
 {
 
 	if (this->m_ReiDoMUStartTime.empty() != 0)
@@ -536,7 +536,7 @@ void CReiDoMU::Clear()
 	this->rank5 = -1;
 }
 
-void CReiDoMU::CommandReiDoMU(LPOBJ lpObj, char* arg) // OK
+void CReiDoMU::CommandReiDoMU(LPOBJ lpObj, char* arg)
 {
 
 	GUILD_INFO_STRUCT * lpGuildInfo = lpObj->Guild;
@@ -596,7 +596,7 @@ void CReiDoMU::CommandReiDoMU(LPOBJ lpObj, char* arg) // OK
 	LogAdd(LOG_EVENT, "[Chiếm Thành] Nhân Vật %s Đã Chiếm Thành", lpObj->Name);
 }
 
-void CReiDoMU::SetGuild(int gIndex) // OK
+void CReiDoMU::SetGuild(int gIndex)
 {
 
 	if (this->GetGuild(gIndex) == 0)
@@ -617,7 +617,7 @@ void CReiDoMU::SetGuild(int gIndex) // OK
 	}
 }
 
-void CReiDoMU::AddGuild(int gIndex) // OK
+void CReiDoMU::AddGuild(int gIndex)
 {
 	for (int n = 0; n < MAX_REI_GUILD; n++)
 	{
@@ -633,7 +633,7 @@ void CReiDoMU::AddGuild(int gIndex) // OK
 	}
 }
 
-bool CReiDoMU::GetGuild(int gIndex) // OK
+bool CReiDoMU::GetGuild(int gIndex)
 {
 	for (int n = 0; n < MAX_REI_GUILD; n++)
 	{
@@ -645,7 +645,7 @@ bool CReiDoMU::GetGuild(int gIndex) // OK
 	return 0;
 }
 
-void CReiDoMU::SetGuildTop() // OK
+void CReiDoMU::SetGuildTop()
 {
 	for (int n = 0; n < MAX_REI_GUILD; n++)
 	{
@@ -657,7 +657,7 @@ void CReiDoMU::SetGuildTop() // OK
 	}
 }
 
-void CReiDoMU::AddTime() // OK
+void CReiDoMU::AddTime()
 {
 	for (int n = 0; n < MAX_REI_GUILD; n++)
 	{
@@ -668,7 +668,7 @@ void CReiDoMU::AddTime() // OK
 	}
 }
 
-void CReiDoMU::SetChar(int cIndex) // OK
+void CReiDoMU::SetChar(int cIndex)
 {
 
 	if (this->GetChar(cIndex) == 0)
@@ -685,7 +685,7 @@ void CReiDoMU::SetChar(int cIndex) // OK
 	}
 }
 
-void CReiDoMU::AddChar(int cIndex) // OK
+void CReiDoMU::AddChar(int cIndex)
 {
 	for (int n = 0; n < MAX_REI_CHAR; n++)
 	{
@@ -702,7 +702,7 @@ void CReiDoMU::AddChar(int cIndex) // OK
 	}
 }
 
-bool CReiDoMU::GetChar(int cIndex) // OK
+bool CReiDoMU::GetChar(int cIndex)
 {
 	for (int n = 0; n < MAX_REI_CHAR; n++)
 	{
@@ -714,7 +714,7 @@ bool CReiDoMU::GetChar(int cIndex) // OK
 	return 0;
 }
 
-void CReiDoMU::CheckChar() // OK
+void CReiDoMU::CheckChar()
 {
 	for (int n = 0; n < MAX_REI_CHAR; n++)
 	{
@@ -731,7 +731,7 @@ void CReiDoMU::CheckChar() // OK
 	return;
 }
 
-void CReiDoMU::CalcUserRank() // OK
+void CReiDoMU::CalcUserRank()
 {
 	for (int n = 0; n < MAX_REI_CHAR; n++)
 	{
@@ -807,7 +807,7 @@ void CReiDoMU::CalcUserRank() // OK
 	}
 }
 
-void CReiDoMU::GDRankingKingGuildSaveSend(char* name, DWORD Score) // OK
+void CReiDoMU::GDRankingKingGuildSaveSend(char* name, DWORD Score)
 {
 	SDHP_RANKING_KING_GUILD_SAVE_SEND pMsg;
 
@@ -820,7 +820,7 @@ void CReiDoMU::GDRankingKingGuildSaveSend(char* name, DWORD Score) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CReiDoMU::GDRankingKingPlayerSaveSend(int aIndex, DWORD Score) // OK
+void CReiDoMU::GDRankingKingPlayerSaveSend(int aIndex, DWORD Score)
 {
 
 	if (gObjIsConnectedGP(aIndex) == 0)

@@ -27,7 +27,7 @@ CBloodCastle gBloodCastle;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CBloodCastle::CBloodCastle() // OK
+CBloodCastle::CBloodCastle()
 {
 	for(int n=0;n < MAX_BC_LEVEL;n++)
 	{
@@ -67,12 +67,12 @@ CBloodCastle::CBloodCastle() // OK
 	memset(this->m_BloodCastleNpcLife,0,sizeof(this->m_BloodCastleNpcLife));
 }
 
-CBloodCastle::~CBloodCastle() // OK
+CBloodCastle::~CBloodCastle()
 {
 
 }
 
-void CBloodCastle::Init() // OK
+void CBloodCastle::Init()
 {
 	for(int n=0;n < MAX_BC_LEVEL;n++)
 	{
@@ -87,7 +87,7 @@ void CBloodCastle::Init() // OK
 	}
 }
 
-void CBloodCastle::Load(char* path) // OK
+void CBloodCastle::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -234,7 +234,7 @@ void CBloodCastle::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CBloodCastle::MainProc() // OK
+void CBloodCastle::MainProc()
 {
 	for(int n=0;n < MAX_BC_LEVEL;n++)
 	{
@@ -307,12 +307,12 @@ void CBloodCastle::MainProc() // OK
 	}
 }
 
-void CBloodCastle::ProcState_BLANK(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ProcState_BLANK(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 
 }
 
-void CBloodCastle::ProcState_EMPTY(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ProcState_EMPTY(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(lpLevel->RemainTime > 0 && lpLevel->RemainTime <= (this->m_WarningTime*60))
 	{
@@ -359,7 +359,7 @@ void CBloodCastle::ProcState_EMPTY(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::ProcState_STAND(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ProcState_STAND(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -391,7 +391,7 @@ void CBloodCastle::ProcState_STAND(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::ProcState_START(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ProcState_START(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -457,7 +457,7 @@ void CBloodCastle::ProcState_START(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::ProcState_CLEAN(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ProcState_CLEAN(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	this->CheckUser(lpLevel);
 
@@ -480,7 +480,7 @@ void CBloodCastle::ProcState_CLEAN(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::SetState(BLOOD_CASTLE_LEVEL* lpLevel,int state) // OK
+void CBloodCastle::SetState(BLOOD_CASTLE_LEVEL* lpLevel,int state)
 {
 	lpLevel->State = state;
 
@@ -504,12 +504,12 @@ void CBloodCastle::SetState(BLOOD_CASTLE_LEVEL* lpLevel,int state) // OK
 	}
 }
 
-void CBloodCastle::SetState_BLANK(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetState_BLANK(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	//LogAdd(LOG_BLACK,"[Blood Castle] (%d) SetState BLANK",(lpLevel->Level+1));
 }
 
-void CBloodCastle::SetState_EMPTY(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetState_EMPTY(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -553,7 +553,7 @@ void CBloodCastle::SetState_EMPTY(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Blood Castle] (%d) SetState EMPTY",(lpLevel->Level+1));
 }
 
-void CBloodCastle::SetState_STAND(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetState_STAND(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -566,7 +566,7 @@ void CBloodCastle::SetState_STAND(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Blood Castle] (%d) SetState STAND",(lpLevel->Level+1));
 }
 
-void CBloodCastle::SetState_START(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetState_START(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -647,7 +647,7 @@ void CBloodCastle::SetState_START(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Blood Castle] (%d) SetState START",(lpLevel->Level+1));
 }
 
-void CBloodCastle::SetState_CLEAN(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetState_CLEAN(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	lpLevel->EnterEnabled = 0;
 	lpLevel->MinutesLeft = -1;
@@ -710,7 +710,7 @@ void CBloodCastle::SetState_CLEAN(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Blood Castle] (%d) SetState CLEAN",(lpLevel->Level+1));
 }
 
-void CBloodCastle::SetStage0(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetStage0(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(lpLevel->CurMonster < lpLevel->MaxMonster)
 	{
@@ -728,7 +728,7 @@ void CBloodCastle::SetStage0(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	this->NoticeSendToAll(lpLevel,0,gMessage.GetMessage(4));
 }
 
-void CBloodCastle::SetStage1(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetStage1(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if((GetTickCount()-lpLevel->BridgeOpenTime) < 3000)
 	{
@@ -749,7 +749,7 @@ void CBloodCastle::SetStage1(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::SetStage2(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetStage2(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(OBJECT_RANGE(lpLevel->GateIndex) != 0)
 	{
@@ -793,7 +793,7 @@ void CBloodCastle::SetStage2(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::SetStage3(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetStage3(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(lpLevel->CurMonster < lpLevel->MaxMonster)
 	{
@@ -814,12 +814,12 @@ void CBloodCastle::SetStage3(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::SetStage4(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetStage4(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 
 }
 
-void CBloodCastle::CheckSync(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::CheckSync(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(this->m_BloodCastleStartTime.empty() != 0)
 	{
@@ -849,7 +849,7 @@ void CBloodCastle::CheckSync(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	//LogAdd(LOG_BLACK,"[Blood Castle] (%d) Sync Start Time. [%d] min remain",(lpLevel->Level+1),(lpLevel->RemainTime/60));
 }
 
-int CBloodCastle::GetState(int level) // OK
+int CBloodCastle::GetState(int level)
 {
 	if(BC_LEVEL_RANGE(level) == 0)
 	{
@@ -859,7 +859,7 @@ int CBloodCastle::GetState(int level) // OK
 	return this->m_BloodCastleLevel[level].State;
 }
 
-int CBloodCastle::GetRemainTime(int level) // OK
+int CBloodCastle::GetRemainTime(int level)
 {
 	if(BC_LEVEL_RANGE(level) == 0)
 	{
@@ -890,7 +890,7 @@ int CBloodCastle::GetRemainTime(int level) // OK
 	return (((RemainTime%60)==0)?(RemainTime/60):((RemainTime/60)+1));
 }
 
-int CBloodCastle::GetEnterEnabled(int level) // OK
+int CBloodCastle::GetEnterEnabled(int level)
 {
 	if(BC_LEVEL_RANGE(level) == 0)
 	{
@@ -900,7 +900,7 @@ int CBloodCastle::GetEnterEnabled(int level) // OK
 	return this->m_BloodCastleLevel[level].EnterEnabled;
 }
 
-int CBloodCastle::GetEnteredUserCount(int level) // OK
+int CBloodCastle::GetEnteredUserCount(int level)
 {
 	if(BC_LEVEL_RANGE(level) == 0)
 	{
@@ -910,7 +910,7 @@ int CBloodCastle::GetEnteredUserCount(int level) // OK
 	return this->GetUserCount(&this->m_BloodCastleLevel[level]);
 }
 
-bool CBloodCastle::AddUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CBloodCastle::AddUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -939,7 +939,7 @@ bool CBloodCastle::AddUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CBloodCastle::DelUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CBloodCastle::DelUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -970,7 +970,7 @@ bool CBloodCastle::DelUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-BLOOD_CASTLE_USER* CBloodCastle::GetUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+BLOOD_CASTLE_USER* CBloodCastle::GetUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -988,7 +988,7 @@ BLOOD_CASTLE_USER* CBloodCastle::GetUser(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 	return 0;
 }
 
-void CBloodCastle::CleanUser(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::CleanUser(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_BC_USER;n++)
 	{
@@ -999,7 +999,7 @@ void CBloodCastle::CleanUser(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::ClearUser(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ClearUser(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_BC_USER;n++)
 	{
@@ -1017,7 +1017,7 @@ void CBloodCastle::ClearUser(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::CheckUser(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::CheckUser(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_BC_USER;n++)
 	{
@@ -1040,7 +1040,7 @@ void CBloodCastle::CheckUser(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CBloodCastle::GetUserCount(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+int CBloodCastle::GetUserCount(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -1055,7 +1055,7 @@ int CBloodCastle::GetUserCount(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-int CBloodCastle::GetUserAbleLevel(LPOBJ lpObj) // OK
+int CBloodCastle::GetUserAbleLevel(LPOBJ lpObj)
 {
 	int level = -1;
 
@@ -1139,7 +1139,7 @@ int CBloodCastle::GetUserAbleLevel(LPOBJ lpObj) // OK
 	return level;
 }
 
-void CBloodCastle::GiveUserRewardExperience(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+void CBloodCastle::GiveUserRewardExperience(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	BLOOD_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1174,7 +1174,7 @@ void CBloodCastle::GiveUserRewardExperience(BLOOD_CASTLE_LEVEL* lpLevel,int aInd
 	GCRewardExperienceSend(lpUser->Index,lpUser->RewardExperience);
 }
 
-void CBloodCastle::GiveUserRewardMoney(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+void CBloodCastle::GiveUserRewardMoney(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	BLOOD_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1204,7 +1204,7 @@ void CBloodCastle::GiveUserRewardMoney(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) /
 	GCMoneySend(lpUser->Index,gObj[lpUser->Index].Money);
 }
 
-void CBloodCastle::GiveUserRewardItem(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+void CBloodCastle::GiveUserRewardItem(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	BLOOD_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -1250,7 +1250,7 @@ void CBloodCastle::GiveUserRewardItem(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) //
 	}
 }
 
-void CBloodCastle::SearchUserDropEventItem(int aIndex) // OK
+void CBloodCastle::SearchUserDropEventItem(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1305,7 +1305,7 @@ void CBloodCastle::SearchUserDropEventItem(int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CBloodCastle::SearchUserDeleteEventItem(int aIndex) // OK
+void CBloodCastle::SearchUserDeleteEventItem(int aIndex)
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
@@ -1349,7 +1349,7 @@ void CBloodCastle::SearchUserDeleteEventItem(int aIndex) // OK
 	lpLevel->EventItemLevel = -1;
 }
 
-bool CBloodCastle::AddMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CBloodCastle::AddMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1375,7 +1375,7 @@ bool CBloodCastle::AddMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-bool CBloodCastle::DelMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+bool CBloodCastle::DelMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1393,7 +1393,7 @@ bool CBloodCastle::DelMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 1;
 }
 
-int* CBloodCastle::GetMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
+int* CBloodCastle::GetMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex)
 {
 	if(OBJECT_RANGE(aIndex) == 0)
 	{
@@ -1411,7 +1411,7 @@ int* CBloodCastle::GetMonster(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex) // OK
 	return 0;
 }
 
-void CBloodCastle::CleanMonster(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::CleanMonster(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_BC_MONSTER;n++)
 	{
@@ -1419,7 +1419,7 @@ void CBloodCastle::CleanMonster(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::ClearMonster(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::ClearMonster(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < MAX_BC_MONSTER;n++)
 	{
@@ -1431,7 +1431,7 @@ void CBloodCastle::ClearMonster(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-int CBloodCastle::GetMonsterCount(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+int CBloodCastle::GetMonsterCount(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	int count = 0;
 
@@ -1446,7 +1446,7 @@ int CBloodCastle::GetMonsterCount(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	return count;
 }
 
-void CBloodCastle::SetGate(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetGate(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(OBJECT_RANGE(lpLevel->GateIndex) != 0)
 	{
@@ -1494,7 +1494,7 @@ void CBloodCastle::SetGate(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	lpLevel->GateIndex = index;
 }
 
-void CBloodCastle::SetSaintStatue(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetSaintStatue(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	if(OBJECT_RANGE(lpLevel->SaintStatueIndex) != 0)
 	{
@@ -1542,7 +1542,7 @@ void CBloodCastle::SetSaintStatue(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	lpLevel->SaintStatueIndex = index;
 }
 
-void CBloodCastle::SetMonster(BLOOD_CASTLE_LEVEL* lpLevel,int MonsterClass) // OK
+void CBloodCastle::SetMonster(BLOOD_CASTLE_LEVEL* lpLevel,int MonsterClass)
 {
 	for(int n=0;n < gMonsterSetBase.m_count;n++)
 	{
@@ -1584,7 +1584,7 @@ void CBloodCastle::SetMonster(BLOOD_CASTLE_LEVEL* lpLevel,int MonsterClass) // O
 	}
 }
 
-void CBloodCastle::NpcAngelKing(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CBloodCastle::NpcAngelKing(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(gServerInfo.m_BloodCastleEvent == 0)
 	{
@@ -1652,7 +1652,7 @@ void CBloodCastle::NpcAngelKing(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	GCServerCommandSend(lpObj->Index,1,23,0);
 }
 
-void CBloodCastle::NpcAngelMessenger(LPOBJ lpNpc,LPOBJ lpObj) // OK
+void CBloodCastle::NpcAngelMessenger(LPOBJ lpNpc,LPOBJ lpObj)
 {
 	if(gServerInfo.m_BloodCastleEvent == 0)
 	{
@@ -1693,7 +1693,7 @@ void CBloodCastle::NpcAngelMessenger(LPOBJ lpNpc,LPOBJ lpObj) // OK
 	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-bool CBloodCastle::CheckEventItemSerial(int map,CMapItem* lpItem) // OK
+bool CBloodCastle::CheckEventItemSerial(int map,CMapItem* lpItem)
 {
 	int level = GET_BC_LEVEL(map);
 
@@ -1715,7 +1715,7 @@ bool CBloodCastle::CheckEventItemSerial(int map,CMapItem* lpItem) // OK
 	return 0;
 }
 
-void CBloodCastle::SetEventItemSerial(int map,int index,int serial) // OK
+void CBloodCastle::SetEventItemSerial(int map,int index,int serial)
 {
 	int level = GET_BC_LEVEL(map);
 
@@ -1735,7 +1735,7 @@ void CBloodCastle::SetEventItemSerial(int map,int index,int serial) // OK
 	}
 }
 
-void CBloodCastle::DropEventItem(int map,int number,int aIndex) // OK
+void CBloodCastle::DropEventItem(int map,int number,int aIndex)
 {
 	int level = GET_BC_LEVEL(map);
 
@@ -1757,7 +1757,7 @@ void CBloodCastle::DropEventItem(int map,int number,int aIndex) // OK
 	this->NoticeSendToAll(&this->m_BloodCastleLevel[level],0,gMessage.GetMessage(8),gObj[aIndex].Name);
 }
 
-void CBloodCastle::GetEventItem(int map,int aIndex,CMapItem* lpItem) // OK
+void CBloodCastle::GetEventItem(int map,int aIndex,CMapItem* lpItem)
 {
 	int level = GET_BC_LEVEL(map);
 
@@ -1775,7 +1775,7 @@ void CBloodCastle::GetEventItem(int map,int aIndex,CMapItem* lpItem) // OK
 	this->NoticeSendToAll(&this->m_BloodCastleLevel[level],0,gMessage.GetMessage(9),gObj[aIndex].Name);
 }
 
-void CBloodCastle::SetEntranceZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetEntranceZone(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int x=gBloodCastleEntranceZone[0];x <= gBloodCastleEntranceZone[2];x++)
 	{
@@ -1794,7 +1794,7 @@ void CBloodCastle::SetEntranceZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::DelEntranceZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::DelEntranceZone(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int x=gBloodCastleEntranceZone[0];x <= gBloodCastleEntranceZone[2];x++)
 	{
@@ -1813,7 +1813,7 @@ void CBloodCastle::DelEntranceZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::SetBridgeZone(BLOOD_CASTLE_LEVEL* lpLevel,bool send) // OK
+void CBloodCastle::SetBridgeZone(BLOOD_CASTLE_LEVEL* lpLevel,bool send)
 {
 	if(send == 0)
 	{
@@ -1837,7 +1837,7 @@ void CBloodCastle::SetBridgeZone(BLOOD_CASTLE_LEVEL* lpLevel,bool send) // OK
 	}
 }
 
-void CBloodCastle::DelBridgeZone(BLOOD_CASTLE_LEVEL* lpLevel,bool send) // OK
+void CBloodCastle::DelBridgeZone(BLOOD_CASTLE_LEVEL* lpLevel,bool send)
 {
 	if(send == 0)
 	{
@@ -1861,7 +1861,7 @@ void CBloodCastle::DelBridgeZone(BLOOD_CASTLE_LEVEL* lpLevel,bool send) // OK
 	}
 }
 
-void CBloodCastle::SetGateZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::SetGateZone(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < 3;n++)
 	{
@@ -1883,7 +1883,7 @@ void CBloodCastle::SetGateZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::DelGateZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::DelGateZone(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(int n=0;n < 3;n++)
 	{
@@ -1905,7 +1905,7 @@ void CBloodCastle::DelGateZone(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CBloodCastle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 	int level = GET_BC_LEVEL(lpObj->Map);
 
@@ -1933,7 +1933,7 @@ void CBloodCastle::UserDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	this->DelUser(&this->m_BloodCastleLevel[level],lpObj->Index);
 }
 
-void CBloodCastle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
+void CBloodCastle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget)
 {
 
 
@@ -2037,7 +2037,7 @@ void CBloodCastle::MonsterDieProc(LPOBJ lpObj,LPOBJ lpTarget) // OK
 		//======Blood VIP danh quai roi ngoc
 }
 
-void CBloodCastle::CheckDelayScore(BLOOD_CASTLE_LEVEL* lpLevel) // OK
+void CBloodCastle::CheckDelayScore(BLOOD_CASTLE_LEVEL* lpLevel)
 {
 	for(std::vector<BLOOD_CASTLE_DELAY_SCORE>::iterator it=lpLevel->DelayScore.begin();it != lpLevel->DelayScore.end();)
 	{
@@ -2056,7 +2056,7 @@ void CBloodCastle::CheckDelayScore(BLOOD_CASTLE_LEVEL* lpLevel) // OK
 	}
 }
 
-void CBloodCastle::NoticeSendToAll(BLOOD_CASTLE_LEVEL* lpLevel,int type,char* message,...) // OK
+void CBloodCastle::NoticeSendToAll(BLOOD_CASTLE_LEVEL* lpLevel,int type,char* message,...)
 {
 	char buff[256];
 
@@ -2074,7 +2074,7 @@ void CBloodCastle::NoticeSendToAll(BLOOD_CASTLE_LEVEL* lpLevel,int type,char* me
 	}
 }
 
-void CBloodCastle::DataSendToAll(BLOOD_CASTLE_LEVEL* lpLevel,BYTE* lpMsg,int size) // OK
+void CBloodCastle::DataSendToAll(BLOOD_CASTLE_LEVEL* lpLevel,BYTE* lpMsg,int size)
 {
 	for(int n=0;n < MAX_BC_USER;n++)
 	{
@@ -2085,7 +2085,7 @@ void CBloodCastle::DataSendToAll(BLOOD_CASTLE_LEVEL* lpLevel,BYTE* lpMsg,int siz
 	}
 }
 
-void CBloodCastle::CGBloodCastleEnterRecv(PMSG_BLOOD_CASTLE_ENTER_RECV* lpMsg,int aIndex) // OK
+void CBloodCastle::CGBloodCastleEnterRecv(PMSG_BLOOD_CASTLE_ENTER_RECV* lpMsg,int aIndex)
 {
 	if(gServerInfo.m_BloodCastleEvent == 0)
 	{
@@ -2230,7 +2230,7 @@ void CBloodCastle::CGBloodCastleEnterRecv(PMSG_BLOOD_CASTLE_ENTER_RECV* lpMsg,in
 	}
 }
 
-void CBloodCastle::GCBloodCastleScoreSend(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex,int type) // OK
+void CBloodCastle::GCBloodCastleScoreSend(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex,int type)
 {
 	BLOOD_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -2258,7 +2258,7 @@ void CBloodCastle::GCBloodCastleScoreSend(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CBloodCastle::GCBloodCastleDelayScoreSend(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex,int type) // OK
+void CBloodCastle::GCBloodCastleDelayScoreSend(BLOOD_CASTLE_LEVEL* lpLevel,int aIndex,int type)
 {
 	BLOOD_CASTLE_USER* lpUser = this->GetUser(lpLevel,aIndex);
 
@@ -2290,7 +2290,7 @@ void CBloodCastle::GCBloodCastleDelayScoreSend(BLOOD_CASTLE_LEVEL* lpLevel,int a
 	lpLevel->DelayScore.push_back(DelayScore);
 }
 
-void CBloodCastle::GCBloodCastleStateSend(BLOOD_CASTLE_LEVEL* lpLevel,int state) // OK
+void CBloodCastle::GCBloodCastleStateSend(BLOOD_CASTLE_LEVEL* lpLevel,int state)
 {
 	PMSG_BLOOD_CASTLE_STATE_SEND pMsg;
 
@@ -2311,7 +2311,7 @@ void CBloodCastle::GCBloodCastleStateSend(BLOOD_CASTLE_LEVEL* lpLevel,int state)
 	this->DataSendToAll(lpLevel,(BYTE*)&pMsg,pMsg.header.size);
 }
 
-void CBloodCastle::GCBloodCastleSimpleStateSend(BLOOD_CASTLE_LEVEL* lpLevel,int state,int aIndex) // OK
+void CBloodCastle::GCBloodCastleSimpleStateSend(BLOOD_CASTLE_LEVEL* lpLevel,int state,int aIndex)
 {
 	PMSG_BLOOD_CASTLE_STATE_SEND pMsg;
 

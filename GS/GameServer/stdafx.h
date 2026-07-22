@@ -81,7 +81,6 @@
 #endif
 #define THANMA           1 // ON
 
-#define MOCNAP           1 // ON
 
 #define RANKINGGOC  					0 // Mới
 
@@ -104,11 +103,11 @@
 
 #define GuardMessage 					1 // Mới
 
-#define DANHHIEU_NEW					1 // Mới
 
-#define TULUYEN_NEW						1 // Mới
 
-#define OFFLINE_MODE_NEW        1 // ON
+
+
+
 
 #define GHRS_TOP1_NEW					1 // ON 
 
@@ -166,9 +165,8 @@
 
 #define	MEMBER_ONLINE				    1 // Mới
 
-#define VONGQUAY_NEW                    1 // Mới
 
-#define NGAN_HANG_NGOC                  1 // Mới
+
 
 #define BUFF_VUKHI_ICON					1 // Mới
 
@@ -178,13 +176,12 @@
 
 #define BOSS_GUILD						0 // Mới
 
-#define NEWBOSSGUILD					0 // Mới
 
 #define SKY_EVENT						1 // Mới
 
 #define	FixDupeItem  					1 // Mới
 
-#define	MOVE_ITEM  						1 // Mới
+
 
 #define BUY_TINH_NANG_NEW				1 // Mới
 
@@ -192,11 +189,9 @@
 
 #define CTCMINI							1 // Mới
 
-#define MOVETAP 						1 // Mới
 
-#define TEAMVSTEAM						1 // Mới
 
-#define HONCHIENCLASS					1 // Mới
+
 
 #define FIXVT   						1 //Mới
 
@@ -204,7 +199,6 @@
 
 #define ANTIHACKGS						1
 
-#define SACHTHUOCTINH_NEW				1 
 
 #define EVENT_MAPBAOTIEU   				1
 
@@ -212,19 +206,15 @@
 //=============================================================================================>
 #define HAISLOTRING      1 // ON
 
-#define USE_FAKE_ONLINE						TRUE
 
 
 
 #define FLAG					1
 
-#define CHONPHEDOILAP		1
 //=============================================================================================>
 //-- Need All Types
 #define PG_CUSTOM			 1
-#define ALLBOTSSTRUC		 1
 
-#define BOT_BUFFER			 1
 
 #ifndef BOTHUMUADORAC
 #define BOTHUMUADORAC		 1
@@ -238,23 +228,20 @@
 #define BOT_STATUE 1
 #endif
 
-#define BOT_STORE            1
+
 
 #define BOT_ONLINE           1
 
 #define BOT_ATTACK   		 1
 
 
-#ifndef OANTUTI
-#define OANTUTI 1
-#endif
 
-#define B_HON_HOAN	1
+
 #define B_BUFF_PHE	1
 #define CUSTOM_EVENTBOSS_BB	1
-#define EVENT_END_LESS    1
 
-#define FLAG_SKIN							1
+
+
 //=============================================================================================>
 
 

@@ -15,17 +15,17 @@ CMonsterAIUnitInfo CMonsterAIUnit::m_MonsterAIUnitInfoArray[MAX_MONSTER_AI_UNIT_
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMonsterAIUnit::CMonsterAIUnit() // OK
+CMonsterAIUnit::CMonsterAIUnit()
 {
 	CMonsterAIUnit::DelAllAIUnit();
 }
 
-CMonsterAIUnit::~CMonsterAIUnit() // OK
+CMonsterAIUnit::~CMonsterAIUnit()
 {
 
 }
 
-void CMonsterAIUnit::LoadData(char* path) // OK
+void CMonsterAIUnit::LoadData(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -128,7 +128,7 @@ void CMonsterAIUnit::LoadData(char* path) // OK
 	delete lpMemScript;
 }
 
-void CMonsterAIUnit::DelAllAIUnit() // OK
+void CMonsterAIUnit::DelAllAIUnit()
 {
 	CMonsterAIUnit::m_DataLoad = 0;
 
@@ -138,7 +138,7 @@ void CMonsterAIUnit::DelAllAIUnit() // OK
 	}
 }
 
-CMonsterAIUnitInfo* CMonsterAIUnit::FindAIUnitInfo(int UnitNumber) // OK
+CMonsterAIUnitInfo* CMonsterAIUnit::FindAIUnitInfo(int UnitNumber)
 {
 	if(UnitNumber < 0 || UnitNumber >= MAX_MONSTER_AI_UNIT_INFO)
 	{

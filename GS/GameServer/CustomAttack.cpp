@@ -25,17 +25,17 @@ CCustomAttack gCustomAttack;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCustomAttack::CCustomAttack() // OK
+CCustomAttack::CCustomAttack()
 {
 
 }
 
-CCustomAttack::~CCustomAttack() // OK
+CCustomAttack::~CCustomAttack()
 {
 
 }
 
-void CCustomAttack::ReadCustomAttackInfo(char* section,char* path) // OK
+void CCustomAttack::ReadCustomAttackInfo(char* section,char* path)
 {
 	this->m_CustomAttackTime[0] = GetPrivateProfileInt(section,"CustomAttackTime_AL0",0,path);
 
@@ -64,7 +64,7 @@ void CCustomAttack::ReadCustomAttackInfo(char* section,char* path) // OK
 	this->m_CustomAttackAutoResume[3] = GetPrivateProfileInt(section,"CustomAttackAutoResume_AL3",0,path);
 }
 
-bool CCustomAttack::CommandCustomAttack(LPOBJ lpObj,char* arg) // OK
+bool CCustomAttack::CommandCustomAttack(LPOBJ lpObj,char* arg)
 {
 	if(lpObj->AttackCustom != 0)
 	{
@@ -152,7 +152,7 @@ bool CCustomAttack::CommandCustomAttack(LPOBJ lpObj,char* arg) // OK
 	return 1;
 }
 
-bool CCustomAttack::CommandCustomAttackOffline(LPOBJ lpObj,char* arg) // OK
+bool CCustomAttack::CommandCustomAttackOffline(LPOBJ lpObj,char* arg)
 {
 	if(lpObj->AttackCustom == 0)
 	{
@@ -183,7 +183,7 @@ bool CCustomAttack::CommandCustomAttackOffline(LPOBJ lpObj,char* arg) // OK
 	return 1;
 }
 
-bool CCustomAttack::GetAttackSkill(LPOBJ lpObj,int* SkillNumber,int SetSkill) // OK
+bool CCustomAttack::GetAttackSkill(LPOBJ lpObj,int* SkillNumber,int SetSkill)
 {
 	CSkill* lpSkill = 0;
 
@@ -245,7 +245,7 @@ bool CCustomAttack::GetAttackSkill(LPOBJ lpObj,int* SkillNumber,int SetSkill) //
 	}
 }
 
-bool CCustomAttack::GetTargetMonster(LPOBJ lpObj,int SkillNumber,int* MonsterIndex) // OK
+bool CCustomAttack::GetTargetMonster(LPOBJ lpObj,int SkillNumber,int* MonsterIndex)
 {
 	int NearestDistance = 100;
 
@@ -284,7 +284,7 @@ bool CCustomAttack::GetTargetMonster(LPOBJ lpObj,int SkillNumber,int* MonsterInd
 	return ((NearestDistance == 100) ? 0 : 1);
 }
 
-void CCustomAttack::OnAttackClose(LPOBJ lpObj) // OK
+void CCustomAttack::OnAttackClose(LPOBJ lpObj)
 {
 	if(lpObj->AttackCustom != 0)
 	{
@@ -307,7 +307,7 @@ void CCustomAttack::OnAttackClose(LPOBJ lpObj) // OK
 	}
 }
 
-void CCustomAttack::OnAttackSecondProc(LPOBJ lpObj) // OK
+void CCustomAttack::OnAttackSecondProc(LPOBJ lpObj)
 {
 	if(lpObj->AttackCustomOffline != 0)
 	{
@@ -328,7 +328,7 @@ void CCustomAttack::OnAttackSecondProc(LPOBJ lpObj) // OK
 	}
 }
 
-void CCustomAttack::OnAttackAlreadyConnected(LPOBJ lpObj) // OK
+void CCustomAttack::OnAttackAlreadyConnected(LPOBJ lpObj)
 {
 	if(lpObj->AttackCustomOffline != 0)
 	{
@@ -339,7 +339,7 @@ void CCustomAttack::OnAttackAlreadyConnected(LPOBJ lpObj) // OK
 	}
 }
 
-void CCustomAttack::OnAttackMonsterAndMsgProc(LPOBJ lpObj) // OK
+void CCustomAttack::OnAttackMonsterAndMsgProc(LPOBJ lpObj)
 {
 	CSkill* lpSkill;
 
@@ -800,7 +800,7 @@ void CCustomAttack::ElfBuffs(LPOBJ lpObj)
 	}
 }
 #endif
-void CCustomAttack::SendSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber) // OK
+void CCustomAttack::SendSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber)
 {
 	PMSG_SKILL_ATTACK_RECV pMsg;
 
@@ -833,7 +833,7 @@ void CCustomAttack::SendSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber) // O
 	gSkillManager.CGSkillAttackRecv(&pMsg,lpObj->Index);
 }
 
-void CCustomAttack::SendMultiSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber) // OK
+void CCustomAttack::SendMultiSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber)
 {
 	this->SendDurationSkillAttack(lpObj,aIndex,SkillNumber);
 
@@ -920,7 +920,7 @@ void CCustomAttack::SendMultiSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber)
 	gSkillManager.CGMultiSkillAttackRecv((PMSG_MULTI_SKILL_ATTACK_RECV*)send,lpObj->Index,0);
 }
 
-void CCustomAttack::SendDurationSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber) // OK
+void CCustomAttack::SendDurationSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber)
 {
 	PMSG_DURATION_SKILL_ATTACK_RECV pMsg;
 
@@ -969,7 +969,7 @@ void CCustomAttack::SendDurationSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumb
 	gSkillManager.CGDurationSkillAttackRecv(&pMsg,lpObj->Index);
 }
 
-void CCustomAttack::SendRFSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber) // OK
+void CCustomAttack::SendRFSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber)
 {
 	PMSG_SKILL_DARK_SIDE_RECV Msg;
 
@@ -1016,7 +1016,7 @@ void CCustomAttack::SendRFSkillAttack(LPOBJ lpObj,int aIndex,int SkillNumber) //
 	gSkillManager.CGRageFighterSkillAttackRecv(&pMsg,lpObj->Index);
 }
 
-void CCustomAttack::GetTargetParty(LPOBJ lpObj,int SkillNumber) // OK
+void CCustomAttack::GetTargetParty(LPOBJ lpObj,int SkillNumber)
 {
 	int NearestDistance = 100;
 
@@ -1059,7 +1059,7 @@ void CCustomAttack::GetTargetParty(LPOBJ lpObj,int SkillNumber) // OK
 	return;
 }
 
-void CCustomAttack::DGCustomAttackResumeSend(int aIndex) // OK
+void CCustomAttack::DGCustomAttackResumeSend(int aIndex)
 {
 #if GAMESERVER_CLIENTE_UPDATE >= 11
 
@@ -1083,7 +1083,7 @@ void CCustomAttack::DGCustomAttackResumeSend(int aIndex) // OK
 #endif
 }
 
-void CCustomAttack::DGCustomAttackResumeRecv(SDHP_CARESUME_RECV* lpMsg) // OK
+void CCustomAttack::DGCustomAttackResumeRecv(SDHP_CARESUME_RECV* lpMsg)
 {
 #if GAMESERVER_CLIENTE_UPDATE >= 11
 

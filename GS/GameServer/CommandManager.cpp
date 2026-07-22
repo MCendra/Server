@@ -70,17 +70,17 @@ CCommandManager gCommandManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCommandManager::CCommandManager() // OK
+CCommandManager::CCommandManager()
 {
 
 }
 
-CCommandManager::~CCommandManager() // OK
+CCommandManager::~CCommandManager()
 {
 
 }
 
-void CCommandManager::Init() // OK
+void CCommandManager::Init()
 {
 	for (int n = 0; n < MAX_COMMAND; n++)
 	{
@@ -90,7 +90,7 @@ void CCommandManager::Init() // OK
 	}
 }
 
-void CCommandManager::MainProc() // OK
+void CCommandManager::MainProc()
 {
 	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
 	{
@@ -111,7 +111,7 @@ void CCommandManager::MainProc() // OK
 	}
 }
 
-void CCommandManager::Add(char* label, int code) // OK
+void CCommandManager::Add(char* label, int code)
 {
 	for (int n = 0; n < MAX_COMMAND; n++)
 	{
@@ -126,7 +126,7 @@ void CCommandManager::Add(char* label, int code) // OK
 	}
 }
 
-long CCommandManager::GetNumber(char* arg, int pos) // OK
+long CCommandManager::GetNumber(char* arg, int pos)
 {
 	int count = 0, p = 0;
 
@@ -152,7 +152,7 @@ long CCommandManager::GetNumber(char* arg, int pos) // OK
 	return atoi(buffer);
 }
 
-void CCommandManager::GetString(char* arg, char* out, int size, int pos) // OK
+void CCommandManager::GetString(char* arg, char* out, int size, int pos)
 {
 	int count = 0, p = 0;
 
@@ -178,7 +178,7 @@ void CCommandManager::GetString(char* arg, char* out, int size, int pos) // OK
 	memcpy(out, buffer, (size - 1));
 }
 
-long CCommandManager::GetCommandCode(char* label) // OK
+long CCommandManager::GetCommandCode(char* label)
 {
 	for (int n = 0; n < MAX_COMMAND; n++)
 	{
@@ -196,7 +196,7 @@ long CCommandManager::GetCommandCode(char* label) // OK
 	return 0;
 }
 
-bool CCommandManager::ManagementCore(LPOBJ lpObj, char* message, int Npc) // OK
+bool CCommandManager::ManagementCore(LPOBJ lpObj, char* message, int Npc)
 {
 	if (lpObj->Interface.type == INTERFACE_TRADE)
 	{
@@ -762,7 +762,7 @@ void CCommandManager::RemoveRequisites(LPOBJ lpObj, int IdCommand)
 }
 
 #if(MOCNAP == 1)
-bool CCommandManager::CommandSetMocNap(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSetMocNap(LPOBJ lpObj, char* arg)
 {
 	char name[11] = { 0 };
 
@@ -789,7 +789,7 @@ bool CCommandManager::CommandSetMocNap(LPOBJ lpObj, char* arg) // OK
 }
 #endif
 
-bool CCommandManager::CommandMove(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMove(LPOBJ lpObj, char* arg)
 {
 	MOVE_INFO MoveInfo;
 
@@ -809,7 +809,7 @@ bool CCommandManager::CommandMove(LPOBJ lpObj, char* arg) // OK
 	return 0;
 }
 
-bool CCommandManager::CommandPost(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandPost(LPOBJ lpObj, char* arg)
 {
 
 	gFilter.CheckSyntax(arg);
@@ -861,7 +861,7 @@ bool CCommandManager::CommandPost(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandAddPoint(LPOBJ lpObj, char* arg, int type) // OK
+bool CCommandManager::CommandAddPoint(LPOBJ lpObj, char* arg, int type)
 {
 	if (gServerInfo.m_CommandResetKeepDLCommandPoint[lpObj->AccountLevel] != 0 && lpObj->Class == CLASS_DL && type == 4)
 	{
@@ -913,7 +913,7 @@ bool CCommandManager::CommandAddPoint(LPOBJ lpObj, char* arg, int type) // OK
 	return 1;
 }
 
-void CCommandManager::CommandAddPointAuto(LPOBJ lpObj, char* arg, int type) // OK
+void CCommandManager::CommandAddPointAuto(LPOBJ lpObj, char* arg, int type)
 {
 	if (gServerInfo.m_CommandAddPointAutoEnable[lpObj->AccountLevel] == 0)
 	{
@@ -963,7 +963,7 @@ void CCommandManager::CommandAddPointAuto(LPOBJ lpObj, char* arg, int type) // O
 	}
 }
 
-bool CCommandManager::CommandPKClear(LPOBJ lpObj, char* arg, int Npc) // OK
+bool CCommandManager::CommandPKClear(LPOBJ lpObj, char* arg, int Npc)
 {
 	if (lpObj->PKLevel <= 3)
 	{
@@ -1003,7 +1003,7 @@ bool CCommandManager::CommandPKClear(LPOBJ lpObj, char* arg, int Npc) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandMoney(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMoney(LPOBJ lpObj, char* arg)
 {
 	int money = this->GetNumber(arg, 0);
 
@@ -1032,7 +1032,7 @@ bool CCommandManager::CommandMoney(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandChange(LPOBJ lpObj, char* arg, int Npc) // OK
+bool CCommandManager::CommandChange(LPOBJ lpObj, char* arg, int Npc)
 {
 	int ChangeUp = lpObj->ChangeUp;
 
@@ -1083,7 +1083,7 @@ bool CCommandManager::CommandChange(LPOBJ lpObj, char* arg, int Npc) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandWare(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandWare(LPOBJ lpObj, char* arg)
 {
 
 	if (lpObj->Interface.use != 0 || lpObj->State == OBJECT_DELCMD || lpObj->DieRegen != 0 || lpObj->Teleport != 0 || lpObj->LoadWarehouse != 0)
@@ -1126,7 +1126,7 @@ bool CCommandManager::CommandWare(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandReset(LPOBJ lpObj, char* arg, int Npc) // OK
+bool CCommandManager::CommandReset(LPOBJ lpObj, char* arg, int Npc)
 {
 	char mode[5] = { 0 };
 
@@ -1247,7 +1247,7 @@ bool CCommandManager::CommandReset(LPOBJ lpObj, char* arg, int Npc) // OK
 	return 0;
 }
 
-void CCommandManager::CommandResetAuto(LPOBJ lpObj, char* arg, int Npc) // OK
+void CCommandManager::CommandResetAuto(LPOBJ lpObj, char* arg, int Npc)
 {
 
 
@@ -1311,7 +1311,7 @@ void CCommandManager::CommandResetAuto(LPOBJ lpObj, char* arg, int Npc) // OK
 	}
 }
 
-bool CCommandManager::CommandGMMove(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandGMMove(LPOBJ lpObj, char* arg)
 {
 
 	char name[11] = { 0 };
@@ -1339,7 +1339,7 @@ bool CCommandManager::CommandGMMove(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandGMPost(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandGMPost(LPOBJ lpObj, char* arg)
 {
 	gNotice.GCNoticeSendToAll(0, 0, 0, 0, 0, 0, "[%s] %s", lpObj->Name, arg);
 
@@ -1348,7 +1348,7 @@ bool CCommandManager::CommandGMPost(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandTrack(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandTrack(LPOBJ lpObj, char* arg)
 {
 	char name[11] = { 0 };
 
@@ -1369,7 +1369,7 @@ bool CCommandManager::CommandTrack(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandTrace(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandTrace(LPOBJ lpObj, char* arg)
 {
 	char name[11] = { 0 };
 
@@ -1390,7 +1390,7 @@ bool CCommandManager::CommandTrace(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandDisconnect(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandDisconnect(LPOBJ lpObj, char* arg)
 {
 
 
@@ -1415,7 +1415,7 @@ bool CCommandManager::CommandDisconnect(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandFireworks(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandFireworks(LPOBJ lpObj, char* arg)
 {
 	for (int n = 0; n < 15; n++)
 	{
@@ -1427,7 +1427,7 @@ bool CCommandManager::CommandFireworks(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandMake(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMake(LPOBJ lpObj, char* arg)
 {
 	int qtd = 0, section, type, level, skill, luck, option, exc, set, socket;
 
@@ -1486,7 +1486,7 @@ bool CCommandManager::CommandMake(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandMakeSet(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMakeSet(LPOBJ lpObj, char* arg)
 {
 	int type = this->GetNumber(arg, 0);
 	int level = this->GetNumber(arg, 1);
@@ -1516,7 +1516,7 @@ bool CCommandManager::CommandMakeSet(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandDrop(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandDrop(LPOBJ lpObj, char* arg)
 {
 	int section = this->GetNumber(arg, 0);
 	int type = this->GetNumber(arg, 1);
@@ -1544,7 +1544,7 @@ bool CCommandManager::CommandDrop(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandSkin(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSkin(LPOBJ lpObj, char* arg)
 {
 	char name[11] = { 0 };
 
@@ -1569,7 +1569,7 @@ bool CCommandManager::CommandSkin(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandSetMoney(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSetMoney(LPOBJ lpObj, char* arg)
 {
 
 
@@ -1614,7 +1614,7 @@ bool CCommandManager::CommandSetMoney(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandSetVIP(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSetVIP(LPOBJ lpObj, char* arg)
 {
 	char account[11] = { 0 };
 
@@ -1640,7 +1640,7 @@ bool CCommandManager::CommandSetVIP(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandNotice(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandNotice(LPOBJ lpObj, char* arg)
 {
 	GDGlobalNoticeSend(gMapServerManager.GetMapServerGroup(), 0, 0, 0, 0, 0, 0, arg);
 
@@ -1649,7 +1649,7 @@ bool CCommandManager::CommandNotice(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandMasterReset(LPOBJ lpObj, char* arg, int Npc) // OK
+bool CCommandManager::CommandMasterReset(LPOBJ lpObj, char* arg, int Npc)
 {
 	if (lpObj->Interface.use != 0 || lpObj->State == OBJECT_DELCMD || lpObj->DieRegen != 0 || lpObj->Teleport != 0 || lpObj->PShopOpen != 0 || lpObj->SkillSummonPartyTime != 0)
 	{
@@ -1742,7 +1742,7 @@ bool CCommandManager::CommandMasterReset(LPOBJ lpObj, char* arg, int Npc) // OK
 	return 0;
 }
 
-bool CCommandManager::CommandGuildWar(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandGuildWar(LPOBJ lpObj, char* arg)
 {
 	char GuildName[9] = { 0 };
 
@@ -1756,7 +1756,7 @@ bool CCommandManager::CommandGuildWar(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandBattleSoccer(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandBattleSoccer(LPOBJ lpObj, char* arg)
 {
 
 
@@ -1773,7 +1773,7 @@ bool CCommandManager::CommandBattleSoccer(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandRequest(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandRequest(LPOBJ lpObj, char* arg)
 {
 	char mode[5] = { 0 };
 
@@ -1814,7 +1814,7 @@ bool CCommandManager::CommandRequest(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandHide(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandHide(LPOBJ lpObj, char* arg)
 {
 	if (gEffectManager.CheckEffect(lpObj, EFFECT_INVISIBILITY) == 0)
 	{
@@ -1836,7 +1836,7 @@ bool CCommandManager::CommandHide(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-void CCommandManager::CommandAddPointAutoProc(LPOBJ lpObj) // OK
+void CCommandManager::CommandAddPointAutoProc(LPOBJ lpObj)
 {
 	if (lpObj->LevelUpPoint == 0 || lpObj->AutoAddPointCount == 0)
 	{
@@ -1901,7 +1901,7 @@ void CCommandManager::CommandAddPointAutoProc(LPOBJ lpObj) // OK
 	GCNewCharacterInfoSend(lpObj);
 }
 
-void CCommandManager::CommandResetAutoProc(LPOBJ lpObj) // OK
+void CCommandManager::CommandResetAutoProc(LPOBJ lpObj)
 {
 	if (lpObj->Interface.use != 0 || lpObj->State == OBJECT_DELCMD || lpObj->DieRegen != 0 || lpObj->Teleport != 0 || lpObj->PShopOpen != 0 || lpObj->SkillSummonPartyTime != 0)
 	{
@@ -1974,7 +1974,7 @@ void CCommandManager::CommandResetAutoProc(LPOBJ lpObj) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg) // OK
+void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
@@ -2260,7 +2260,7 @@ void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg) // OK
 	gLog.Output(LOG_RESET, "[Tài Khoản: %s] - [Nhân Vật: %s] - (Reset: %d)", lpObj->Account, lpObj->Name, lpObj->Reset);
 }
 
-void CCommandManager::DGCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* lpMsg) // OK
+void CCommandManager::DGCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* lpMsg)
 {
 	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
@@ -2443,7 +2443,7 @@ void CCommandManager::DGCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* l
 	gLog.Output(LOG_COMMAND, "[CommandMasterReset] Account:[%s] Name:[%s] - (MasterReset: %d)", lpObj->Account, lpObj->Name, lpObj->MasterReset);
 }
 
-bool CCommandManager::CommandClearInventory(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandClearInventory(LPOBJ lpObj, char* arg)
 {
 
 
@@ -2468,7 +2468,7 @@ bool CCommandManager::CommandClearInventory(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandMarry(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMarry(LPOBJ lpObj, char* arg)
 {
 
 #if(CHECK_USER == 1)
@@ -2656,7 +2656,7 @@ bool CCommandManager::CommandMarry(LPOBJ lpObj, char* arg) // OK
 	return 0;
 }
 
-void CCommandManager::DGCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg) // OK
+void CCommandManager::DGCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg)
 {
 	LPOBJ lpObj = &gObj[lpMsg->index];
 	LPOBJ lpTarget = gObjFind(lpMsg->marryname);
@@ -2994,7 +2994,7 @@ void CCommandManager::DGCommandMarryRecv(SDHP_COMMAND_MARRY_RECV* lpMsg) // OK
 	gLog.Output(LOG_COMMAND, "[CommandMarry][%s][%d][%d][%d] Account:[%s] Name: Account:[%s] Name:[%s]", lpObj->Account, lpMsg->countyou, lpMsg->counthim, lpMsg->marriedon, lpMsg->marryname, lpMsg->NameGet1, lpMsg->NameGet2);
 }
 
-bool CCommandManager::CommandOpenWarehouse(LPOBJ lpObj) // OK
+bool CCommandManager::CommandOpenWarehouse(LPOBJ lpObj)
 {
 #if(CHECK_USER == 1)
 	if (lpObj->Interface.type == INTERFACE_CHAOS_BOX
@@ -3049,7 +3049,7 @@ bool CCommandManager::CommandOpenWarehouse(LPOBJ lpObj) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandChangeClass(LPOBJ lpObj, char* arg, int Npc) // OK
+bool CCommandManager::CommandChangeClass(LPOBJ lpObj, char* arg, int Npc)
 {
 //#if(CHECK_USER == 1)
 //	if (lpObj->Interface.type == INTERFACE_CHAOS_BOX
@@ -3365,7 +3365,7 @@ bool CCommandManager::CommandChangeClass(LPOBJ lpObj, char* arg, int Npc) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandReward(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandReward(LPOBJ lpObj, char* arg)
 {
 	char name[11] = { 0 };
 
@@ -3452,7 +3452,7 @@ bool CCommandManager::CommandReward(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandRewardAll(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandRewardAll(LPOBJ lpObj, char* arg)
 {
 	int type = this->GetNumber(arg, 0);
 	int value = this->GetNumber(arg, 1);
@@ -3506,7 +3506,7 @@ bool CCommandManager::CommandRewardAll(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandReload(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandReload(LPOBJ lpObj, char* arg)
 {
 
 	char name[20] = { 0 };
@@ -3595,7 +3595,7 @@ bool CCommandManager::CommandReload(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandRename(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandRename(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 2)
 
@@ -3691,7 +3691,7 @@ bool CCommandManager::CommandRename(LPOBJ lpObj, char* arg) // OK
 	return 0;
 }
 
-void CCommandManager::DGCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg) // OK
+void CCommandManager::DGCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg)
 {
 
 #if (GAMESERVER_CLIENTE_UPDATE >= 2)
@@ -3741,7 +3741,7 @@ void CCommandManager::DGCommandRenameRecv(SDHP_COMMAND_RENAME_RECV* lpMsg) // OK
 
 
 }
-bool CCommandManager::CommandInfo(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandInfo(LPOBJ lpObj, char* arg)
 {
 
 
@@ -3773,7 +3773,7 @@ bool CCommandManager::CommandInfo(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandBlocChar(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandBlocChar(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 2 )
 
@@ -3818,7 +3818,7 @@ bool CCommandManager::CommandBlocChar(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandBlocCharRecv(SDHP_COMMAND_BLOC_RECV* lpMsg) // OK
+bool CCommandManager::CommandBlocCharRecv(SDHP_COMMAND_BLOC_RECV* lpMsg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 11 )
 
@@ -3835,7 +3835,7 @@ bool CCommandManager::CommandBlocCharRecv(SDHP_COMMAND_BLOC_RECV* lpMsg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandBlocAcc(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandBlocAcc(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 2)
 
@@ -3881,7 +3881,7 @@ bool CCommandManager::CommandBlocAcc(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandBlocAccRecv(SDHP_COMMAND_BLOC_RECV* lpMsg) // OK
+bool CCommandManager::CommandBlocAccRecv(SDHP_COMMAND_BLOC_RECV* lpMsg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 11 )
 
@@ -4258,7 +4258,7 @@ bool CCommandManager::CommandReMaster(LPOBJ lpObj, char* arg, int Npc)
 	return 1;
 }
 
-bool CCommandManager::CommandStartBC(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartBC(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 6)
 	gBloodCastle.StartBC();
@@ -4268,7 +4268,7 @@ bool CCommandManager::CommandStartBC(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartDS(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartDS(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 6)
 	gDevilSquare.StartDS();
@@ -4277,7 +4277,7 @@ bool CCommandManager::CommandStartDS(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartCC(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartCC(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 6)
 	gChaosCastle.StartCC();
@@ -4286,7 +4286,7 @@ bool CCommandManager::CommandStartCC(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartIT(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartIT(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 6)
 	gIllusionTemple.StartIT();
@@ -4295,7 +4295,7 @@ bool CCommandManager::CommandStartIT(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartQuiz(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartQuiz(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 	gCustomQuiz.StartQuiz();
@@ -4304,7 +4304,7 @@ bool CCommandManager::CommandStartQuiz(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartDrop(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartDrop(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 	gCustomEventDrop.StartDrop();
@@ -4313,7 +4313,7 @@ bool CCommandManager::CommandStartDrop(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartKing(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartKing(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 	gReiDoMU.StartKing();
@@ -4323,7 +4323,7 @@ bool CCommandManager::CommandStartKing(LPOBJ lpObj, char* arg) // OK
 }
 
 #if(TEAMVSTEAM == 1)
-bool CCommandManager::CommandStartTvT(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartTvT(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 	gTvTEvent.StartTvT();
@@ -4333,7 +4333,7 @@ bool CCommandManager::CommandStartTvT(LPOBJ lpObj, char* arg) // OK
 }
 #endif
 
-bool CCommandManager::CommandStartInvasion(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartInvasion(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 13)
 
@@ -4350,7 +4350,7 @@ bool CCommandManager::CommandStartInvasion(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandStartCustomArena(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandStartCustomArena(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 13)
 
@@ -4366,7 +4366,7 @@ bool CCommandManager::CommandStartCustomArena(LPOBJ lpObj, char* arg) // OK
 #endif
 	return 1;
 }
-bool CCommandManager::CommandQuyetDau(LPOBJ lpObj, char* arg) // OK //TIM QUYET DAU CA CUOC WCOIN
+bool CCommandManager::CommandQuyetDau(LPOBJ lpObj, char* arg) //TIM QUYET DAU CA CUOC WCOIN
 {
 	if (gServerInfo.m_QuyetDau == 0)
 	{
@@ -4497,7 +4497,7 @@ bool CCommandManager::CommandQuyetDau(LPOBJ lpObj, char* arg) // OK //TIM QUYET 
 	return 1;
 }
 
-bool CCommandManager::CommandQuyetDauOK(LPOBJ lpObj, char* arg) // OK // TIM QUYET DAU CA CUOC
+bool CCommandManager::CommandQuyetDauOK(LPOBJ lpObj, char* arg) // TIM QUYET DAU CA CUOC
 {
 
 	if (gServerInfo.m_LoaiTienNhan == 1)
@@ -4674,7 +4674,7 @@ bool CCommandManager::CommandUnLock(LPOBJ lpObj, char* arg)
 	return 0;
 }
 
-bool CCommandManager::CommandMoveAll(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMoveAll(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 8)
 
@@ -4700,7 +4700,7 @@ bool CCommandManager::CommandMoveAll(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandMoveGuild(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandMoveGuild(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 8)
 	char name[9] = { 0 };
@@ -4748,7 +4748,7 @@ bool CCommandManager::CommandMoveGuild(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandSpot(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSpot(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 
@@ -4801,7 +4801,7 @@ bool CCommandManager::CommandSpot(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandSetCoin(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSetCoin(LPOBJ lpObj, char* arg)
 {
 #if (GAMESERVER_CLIENTE_UPDATE >= 9)
 
@@ -4841,7 +4841,7 @@ bool CCommandManager::CommandSetCoin(LPOBJ lpObj, char* arg) // OK
 
 }
 
-bool CCommandManager::CommandSetLevel(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSetLevel(LPOBJ lpObj, char* arg)
 {
 	char name[11] = { 0 };
 
@@ -4870,7 +4870,7 @@ bool CCommandManager::CommandSetLevel(LPOBJ lpObj, char* arg) // OK
 	gLog.Output(LOG_COMMAND, "[CommandSetLevel] Account:[%s] Name:[%s] - (Name:%s, Level: %d)", lpObj->Account, lpObj->Name, name, level);
 }
 
-bool CCommandManager::CommandSet(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandSet(LPOBJ lpObj, char* arg)
 {
 
 	int section = this->GetNumber(arg, 0);
@@ -4916,7 +4916,7 @@ bool CCommandManager::CommandSet(LPOBJ lpObj, char* arg) // OK
 	return 1;
 }
 
-bool CCommandManager::CommandDropAll(LPOBJ lpObj, char* arg) // OK
+bool CCommandManager::CommandDropAll(LPOBJ lpObj, char* arg)
 {
 
 	int section = this->GetNumber(arg, 0);
@@ -4982,7 +4982,7 @@ bool CCommandManager::CommandSetPass(LPOBJ lpObj, char* arg)
 
 #if(HONCHIENCLASS == 1)
 
-void CCommandManager::CommandPKEvent(LPOBJ lpObj) // OK
+void CCommandManager::CommandPKEvent(LPOBJ lpObj)
 {
 
 	if (lpObj->SurvivorState > 0)

@@ -13,17 +13,17 @@ CCastleSiegeCrown gCastleSiegeCrown;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCastleSiegeCrown::CCastleSiegeCrown() // OK
+CCastleSiegeCrown::CCastleSiegeCrown()
 {
 
 }
 
-CCastleSiegeCrown::~CCastleSiegeCrown() // OK
+CCastleSiegeCrown::~CCastleSiegeCrown()
 {
 
 }
 
-void CCastleSiegeCrown::CastleSiegeCrownAct(int aIndex) // OK
+void CCastleSiegeCrown::CastleSiegeCrownAct(int aIndex)
 {
 	#if(GAMESERVER_TYPE==1)
 

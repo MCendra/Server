@@ -16,17 +16,17 @@ CSetItemType gSetItemType;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSetItemType::CSetItemType() // OK
+CSetItemType::CSetItemType()
 {
 	this->Init();
 }
 
-CSetItemType::~CSetItemType() // OK
+CSetItemType::~CSetItemType()
 {
 
 }
 
-void CSetItemType::Init() // OK
+void CSetItemType::Init()
 {
 	for(int n=0;n < MAX_SET_ITEM_TYPE;n++)
 	{
@@ -36,7 +36,7 @@ void CSetItemType::Init() // OK
 	this->m_count = 0;
 }
 
-void CSetItemType::Load(char* path) // OK
+void CSetItemType::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -93,7 +93,7 @@ void CSetItemType::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-void CSetItemType::SetInfo(SET_ITEM_TYPE_INFO info) // OK
+void CSetItemType::SetInfo(SET_ITEM_TYPE_INFO info)
 {
 	if(this->m_count < 0 || this->m_count >= MAX_SET_ITEM_TYPE)
 	{
@@ -103,7 +103,7 @@ void CSetItemType::SetInfo(SET_ITEM_TYPE_INFO info) // OK
 	this->m_SetItemTypeInfo[this->m_count++] = info;
 }
 
-SET_ITEM_TYPE_INFO* CSetItemType::GetInfo(int index) // OK
+SET_ITEM_TYPE_INFO* CSetItemType::GetInfo(int index)
 {
 	for(int n=0;n < this->m_count;n++)
 	{
@@ -121,12 +121,12 @@ SET_ITEM_TYPE_INFO* CSetItemType::GetInfo(int index) // OK
 	return 0;
 }
 
-bool CSetItemType::CheckSetItemType(int index) // OK
+bool CSetItemType::CheckSetItemType(int index)
 {
 	return ((this->GetInfo(index)==0)?0:1);
 }
 
-int CSetItemType::GetSetItemOptionIndex(int index,int number) // OK
+int CSetItemType::GetSetItemOptionIndex(int index,int number)
 {
 	SET_ITEM_TYPE_INFO* lpInfo = this->GetInfo(index);
 
@@ -143,7 +143,7 @@ int CSetItemType::GetSetItemOptionIndex(int index,int number) // OK
 	return lpInfo->OptionIndex[number];
 }
 
-int CSetItemType::GetSetItemStatType(int index) // OK
+int CSetItemType::GetSetItemStatType(int index)
 {
 	SET_ITEM_TYPE_INFO* lpInfo = this->GetInfo(index);
 
@@ -155,7 +155,7 @@ int CSetItemType::GetSetItemStatType(int index) // OK
 	return lpInfo->StatType;
 }
 
-int CSetItemType::GetRandomSetItem() // OK
+int CSetItemType::GetRandomSetItem()
 {
 	int IndexTable[MAX_SET_ITEM_TYPE],IndexTableCount=0;
 
@@ -172,7 +172,7 @@ int CSetItemType::GetRandomSetItem() // OK
 	return ((IndexTableCount==0)?-1:IndexTable[GetLargeRand()%IndexTableCount]);
 }
 
-void CSetItemType::MakeRandomSetItem(int aIndex,int map,int x,int y) // OK
+void CSetItemType::MakeRandomSetItem(int aIndex,int map,int x,int y)
 {
 	WORD ItemIndex = this->GetRandomSetItem();
 

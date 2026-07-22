@@ -86,7 +86,7 @@ struct ENDLESS_REWARDDB
 };
 struct ENDLESS_USER
 {
-	void Clear() // OK
+	void Clear()
 	{
 		this->Index = -1;
 		this->Available = false;

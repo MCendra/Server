@@ -19,20 +19,20 @@ CustomDeathMessage gCustomDeathMessage;
 //////////////////////////////////////////////////////////////////////
 
 
-CustomDeathMessage::CustomDeathMessage() // OK
+CustomDeathMessage::CustomDeathMessage()
 {
 	this->m_CustomDeathMessage.clear();
 }
 
 
-CustomDeathMessage::~CustomDeathMessage() // OK
+CustomDeathMessage::~CustomDeathMessage()
 {
 
 
 }
 
 
-void CustomDeathMessage::Load(char* path) // OK
+void CustomDeathMessage::Load(char* path)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -93,7 +93,7 @@ void CustomDeathMessage::Load(char* path) // OK
 }
 
 
-void CustomDeathMessage::GetDeathText(LPOBJ lpTarget, LPOBJ lpObj, int index) // OK
+void CustomDeathMessage::GetDeathText(LPOBJ lpTarget, LPOBJ lpObj, int index)
 {
 #if GAMESERVER_CLIENTE_UPDATE >= 4
 
@@ -114,7 +114,7 @@ void CustomDeathMessage::GetDeathText(LPOBJ lpTarget, LPOBJ lpObj, int index) //
 }
 
 
-bool CustomDeathMessage::GetInfo(int index,CUSTOMDEATHMESSAGE_INFO* lpInfo) // OK
+bool CustomDeathMessage::GetInfo(int index,CUSTOMDEATHMESSAGE_INFO* lpInfo)
 {
 
 	std::map<int,CUSTOMDEATHMESSAGE_INFO>::iterator it = this->m_CustomDeathMessage.find(index);
